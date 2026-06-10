@@ -28,23 +28,23 @@ BassMap PL to pierwsza scentralizowana wyszukiwarka wydarzeń drum'n'bass w Pols
 
 ## At a glance
 
-| ID   | Change ID               | Outcome (user can …)                                                          | Prerequisites | PRD refs              | Status   |
-| ---- | ----------------------- | ----------------------------------------------------------------------------- | ------------- | --------------------- | -------- |
-| F-01 | event-data-foundation   | (foundation) schemat wydarzeń w bazie z migracjami i politykami RLS           | —             | Business Logic, NFR   | done     |
-| F-02 | admin-role-guard        | (foundation) ścieżki zapisu chronione rolą admina                               | —             | Access Control        | blocked  |
-| S-01 | admin-event-management  | admin dodaje, edytuje i usuwa wydarzenia DnB                                  | F-01, F-02    | FR-006, FR-007        | proposed |
-| S-02 | fan-event-discovery     | fan filtruje po mieście/podgatunku, widzi listę, mapę i szczegóły wydarzenia  | F-01, S-01    | US-01, FR-001–FR-005  | blocked  |
-| F-03 | production-deploy       | (foundation) aplikacja działa pod publicznym adresem z poprawnymi sekretami   | S-01          | NFR Operating cost    | proposed |
+| ID   | Change ID              | Outcome (user can …)                                                         | Prerequisites | PRD refs             | Status   |
+| ---- | ---------------------- | ---------------------------------------------------------------------------- | ------------- | -------------------- | -------- |
+| F-01 | event-data-foundation  | (foundation) schemat wydarzeń w bazie z migracjami i politykami RLS          | —             | Business Logic, NFR  | done     |
+| F-02 | admin-role-guard       | (foundation) ścieżki zapisu chronione rolą admina                            | —             | Access Control       | done     |
+| S-01 | admin-event-management | admin dodaje, edytuje i usuwa wydarzenia DnB                                 | F-01, F-02    | FR-006, FR-007       | proposed |
+| S-02 | fan-event-discovery    | fan filtruje po mieście/podgatunku, widzi listę, mapę i szczegóły wydarzenia | F-01, S-01    | US-01, FR-001–FR-005 | blocked  |
+| F-03 | production-deploy      | (foundation) aplikacja działa pod publicznym adresem z poprawnymi sekretami  | S-01          | NFR Operating cost   | proposed |
 
 ## Streams
 
 Nawigacja — grupy elementów współdzielących łańcuch zależności. Kanoniczna kolejność jest w grafie poniżej.
 
-| Stream | Theme              | Chain                              | Note                                                                 |
-| ------ | ------------------ | ---------------------------------- | -------------------------------------------------------------------- |
-| A      | Dane wydarzeń      | `F-01` → `S-01` → `S-02`           | Główna ścieżka pod cel sygnału od rynku — od schematu do odkrywania. |
-| B      | Kontrola admina    | `F-02` → `S-01`                    | Dołącza do Stream A przy `S-01`; blokuje zapis bez roli admina.      |
-| C      | Wdrożenie produkcyjne | `F-03`                          | Po `S-01`; równolegle z końcówką `S-02` pod walidację z prawdziwym URL. |
+| Stream | Theme                 | Chain                    | Note                                                                    |
+| ------ | --------------------- | ------------------------ | ----------------------------------------------------------------------- |
+| A      | Dane wydarzeń         | `F-01` → `S-01` → `S-02` | Główna ścieżka pod cel sygnału od rynku — od schematu do odkrywania.    |
+| B      | Kontrola admina       | `F-02` → `S-01`          | Dołącza do Stream A przy `S-01`; blokuje zapis bez roli admina.         |
+| C      | Wdrożenie produkcyjne | `F-03`                   | Po `S-01`; równolegle z końcówką `S-02` pod walidację z prawdziwym URL. |
 
 ## Baseline
 
@@ -82,10 +82,9 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** —
 - **Parallel with:** F-01
 - **Blockers:** —
-- **Unknowns:**
-  - Jak wyznaczyć konto admina w Supabase (metadata, allowlist e-maili, custom claim)? — Owner: user. Block: yes.
+- **Unknowns:** —
 - **Risk:** Istniejący scaffold auth obsługuje logowanie, ale nie rozróżnia admina od zwykłego użytkownika — bez tego S-01 nie spełnia guardrails.
-- **Status:** blocked
+- **Status:** done
 
 ### F-03: Wdrożenie produkcyjne
 
@@ -135,19 +134,18 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 **Sync rule (agents):** `roadmap.md` and the GitHub board stay aligned throughout work — not only at generation or archive. When picking up, blocking, or finishing a slice/foundation: update `Status` here, the matching issue, and the project column in the **same session** (`Todo` / `In Progress` / `Done`; close issue on `done`). See @AGENTS.md §Roadmap & external backlog.
 
-| Roadmap ID | Change ID               | GitHub | Suggested issue title                              | Ready for `/10x-plan` | Notes                                      |
-| ---------- | ----------------------- | ------ | -------------------------------------------------- | --------------------- | ------------------------------------------ |
-| F-01       | event-data-foundation   | #1     | Schemat wydarzeń: migracje + RLS                   | yes                   | Pierwszy krok — odblokowuje całą ścieżkę   |
-| F-02       | admin-role-guard        | #2     | Rola admina: guard zapisu wydarzeń                 | no                    | Zablokowane: sposób wyznaczenia admina     |
-| S-01       | admin-event-management  | #3     | Panel admina: CRUD wydarzeń DnB                    | no                    | Wymaga F-01 + F-02                        |
-| S-02       | fan-event-discovery     | #4     | Odkrywanie: lista, filtry, mapa, szczegóły         | no                    | Gwiazda przewodnia; wymaga S-01 + unknowns |
-| F-03       | production-deploy       | #5     | Deploy produkcyjny na Cloudflare                   | no                    | Po S-01; równolegle z końcówką S-02        |
+| Roadmap ID | Change ID              | GitHub | Suggested issue title                      | Ready for `/10x-plan` | Notes                                      |
+| ---------- | ---------------------- | ------ | ------------------------------------------ | --------------------- | ------------------------------------------ |
+| F-01       | event-data-foundation  | #1     | Schemat wydarzeń: migracje + RLS           | yes                   | Pierwszy krok — odblokowuje całą ścieżkę   |
+| F-02       | admin-role-guard       | #2     | Rola admina: guard zapisu wydarzeń         | —                     | Archived → `context/archive/2026-06-10-admin-role-guard/` |
+| S-01       | admin-event-management | #3     | Panel admina: CRUD wydarzeń DnB            | yes                   | Wymaga F-01 ✅ + F-02 ✅                                  |
+| S-02       | fan-event-discovery    | #4     | Odkrywanie: lista, filtry, mapa, szczegóły | no                    | Gwiazda przewodnia; wymaga S-01 + unknowns |
+| F-03       | production-deploy      | #5     | Deploy produkcyjny na Cloudflare           | no                    | Po S-01; równolegle z końcówką S-02        |
 
 ## Open Roadmap Questions
 
-1. **Jak wyznaczyć konto admina w Supabase?** — Owner: user. Block: F-02, S-01.
-2. **Jak wyznaczać współrzędne pinezek na mapie — centroid miasta czy geokodowanie venue?** — Owner: user. Block: S-02.
-3. **Czy na start wystarczy domyślny adres Cloudflare, czy potrzebna jest własna domena?** — Owner: user. Block: F-03 (planowanie, nie roadmap-wide).
+1. **Jak wyznaczać współrzędne pinezek na mapie — centroid miasta czy geokodowanie venue?** — Owner: user. Block: S-02.
+2. **Czy na start wystarczy domyślny adres Cloudflare, czy potrzebna jest własna domena?** — Owner: user. Block: F-03 (planowanie, nie roadmap-wide).
 
 ## Parked
 
@@ -162,3 +160,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 ## Done
 
 - **F-01: (foundation) tabela wydarzeń z migracjami, politykami RLS i regułami biznesowymi (nadchodzące vs przeszłe, wymagane pola, tagi podgatunków ze stałej listy 25 wartości — PRD §Business Logic).** — Archived 2026-06-11 → `context/archive/2026-06-10-event-data-foundation/`. Lesson: —.
+- **F-02: (foundation) tylko użytkownicy z rolą admina mogą dodawać, edytować i usuwać wydarzenia; publiczny odczyt bez logowania.** — Archived 2026-06-10 → `context/archive/2026-06-10-admin-role-guard/`. Lesson: allowlist e-mail musi dokładnie pasować do konta Auth (literówka w seedzie = brak roli admina).
