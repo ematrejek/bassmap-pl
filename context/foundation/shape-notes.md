@@ -15,7 +15,7 @@ BassMap PL is the first centralized search engine for drum'n'bass events in Pola
 
 ## User & Persona
 
-**Primary persona**: DnB fan in Poland. They want to find upcoming DnB events near them, discover events by subgenre (neuro, liquid, dancefloor, jump up), and see full event details (venue, lineup, ticket link, price) — all in one place, in Polish, without having to hunt across social media.
+**Primary persona**: DnB fan in Poland. They want to find upcoming DnB events near them, discover events by subgenre from a fixed DnB catalog (25 values — see PRD §Business Logic), and see full event details (venue, lineup, ticket link, price) — all in one place, in Polish, without having to hunt across social media.
 
 ## Access Control
 
@@ -54,7 +54,7 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
   > Socrates: No counter-argument; it stands as written.
 
-- FR-003: Fan can filter events by subgenre (neuro / liquid / dancefloor / jump up). Priority: must-have
+- FR-003: Fan can filter events by subgenre from the fixed 25-value catalog (see PRD §Business Logic). Priority: must-have
 
   > Socrates: No counter-argument; it stands as written.
 
@@ -95,7 +95,7 @@ BassMap surfaces upcoming DnB events near the user, filtered by subgenre, and hi
 Supporting rules:
 
 - An event is "upcoming" if its date is today or in the future (local Polish time). Past events are hidden from the public list and map automatically.
-- Subgenre tags are set by the admin at entry time. An event can have multiple subgenre tags.
+- Subgenre tags are set by the admin at entry time. An event can have multiple subgenre tags, each from the fixed 25-value catalog (PRD §Business Logic).
 - An event requires: name, date, city, venue. Lineup, ticket link, and price are optional.
 - Events are visible publicly only after admin verification (admin-added events are immediately published; any future organizer-submitted events require explicit admin approval).
 

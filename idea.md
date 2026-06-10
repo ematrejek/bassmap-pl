@@ -18,7 +18,7 @@ BassMap PL is a portal where:
 - v2.0/3.0 - a forum for people traveling to the event by car: you can form groups and carpool to parties together,
 - you will learn about travel options to major events in Europe (only the biggest ones; more local ones in v3.0) with full travel and accommodation details,
 - you will read reviews about events by a given organizer or artist (v3.0),
-- using convenient filters, you will find a party tailored to your style (neuro, liquid, dancefloor, jump up).
+- using convenient filters, you will find a party tailored to your style (Neurofunk, Liquid DnB, Jump-up, Halftime, and 21 other DnB subgenres from a fixed catalog).
 
 **Key features:**
 

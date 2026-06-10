@@ -3,6 +3,7 @@ project: BassMap PL
 version: 1
 status: draft
 created: 2026-06-09
+updated: 2026-06-10
 context_type: greenfield
 product_type: web-app
 target_scale:
@@ -21,7 +22,7 @@ BassMap PL is the first centralized search engine for drum'n'bass events in Pola
 
 ## User & Persona
 
-**Primary persona**: DnB fan in Poland. They want to find upcoming DnB events near them, discover events by subgenre (neuro, liquid, dancefloor, jump up), and see full event details (venue, lineup, ticket link, price) — all in one place, in Polish, without having to hunt across social media.
+**Primary persona**: DnB fan in Poland. They want to find upcoming DnB events near them, discover events by subgenre from the fixed DnB catalog (e.g. Neurofunk, Liquid DnB, Jump-up, Halftime — see Business Logic), and see full event details (venue, lineup, ticket link, price) — all in one place, in Polish, without having to hunt across social media.
 
 ## Success Criteria
 
@@ -59,9 +60,9 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
   > Socrates: No counter-argument; it stands as written.
 
-- FR-003: Fan can filter events by subgenre (neuro / liquid / dancefloor / jump up). Priority: must-have
+- FR-003: Fan can filter events by subgenre from the fixed catalog (25 values — see Business Logic). An event may match multiple subgenre filters when tagged accordingly. Priority: must-have
 
-  > Socrates: No counter-argument; it stands as written.
+  > Socrates: Counter-argument considered: "four broad buckets are enough for MVP." Resolution: expanded to 25 scene-accurate subgenres (closed enum); filter UI may group or search, but stored values are only from the catalog.
 
 - FR-004: Fan can view full event details (name, date, venue, lineup, ticket link, price). Priority: must-have
 
@@ -100,7 +101,37 @@ BassMap surfaces upcoming DnB events near the user, filtered by subgenre, and hi
 Supporting rules:
 
 - An event is "upcoming" if its date is today or in the future (local Polish time). Past events are hidden from the public list and map automatically.
-- Subgenre tags are set by the admin at entry time. An event can have multiple subgenre tags.
+- Subgenre tags are set by the admin at entry time. An event can have multiple subgenre tags. Each tag must be one of the **25 closed-catalog values** below (no free text). UI shows display labels; storage uses stable identifiers (e.g. `jump_up`, `hardcore_oldschool`).
+
+  **Subgenre catalog (display label → storage id):**
+
+  | Display label | Storage id |
+  | ------------- | ---------- |
+  | Jungle | `jungle` |
+  | Hardcore (oldschool) | `hardcore_oldschool` |
+  | Liquid DnB | `liquid_dnb` |
+  | Liquid Funk | `liquid_funk` |
+  | Jump-up | `jump_up` |
+  | Anthem DnB | `anthem_dnb` |
+  | Darkstep | `darkstep` |
+  | Neurofunk | `neurofunk` |
+  | Techstep | `techstep` |
+  | Doomcore | `doomcore` |
+  | Funk DnB | `funk_dnb` |
+  | Jazz-step | `jazz_step` |
+  | Soul DnB | `soul_dnb` |
+  | Drumfunk | `drumfunk` |
+  | Abstract DnB | `abstract_dnb` |
+  | Autonomic | `autonomic` |
+  | Halftime | `halftime` |
+  | Sambass | `sambass` |
+  | Clownstep | `clownstep` |
+  | Trancestep | `trancestep` |
+  | Drumstep | `drumstep` |
+  | Crossbreed | `crossbreed` |
+  | Ragga DnB | `ragga_dnb` |
+  | Ambient DnB | `ambient_dnb` |
+  | Intelligent DnB | `intelligent_dnb` |
 - An event requires: name, date, city, venue. Lineup, ticket link, and price are optional.
 - Events are visible publicly only after admin verification (admin-added events are immediately published; any future organizer-submitted events require explicit admin approval).
 

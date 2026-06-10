@@ -4,6 +4,7 @@ version: 1
 status: draft
 created: 2026-06-10
 updated: 2026-06-10
+subgenre_catalog_version: 1
 prd_version: 1
 main_goal: market-feedback
 top_blocker: skills
@@ -61,7 +62,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### F-01: Schemat danych wydarzeń
 
-- **Outcome:** (foundation) tabela wydarzeń z migracjami, politykami RLS i regułami biznesowymi (nadchodzące vs przeszłe, wymagane pola, tagi podgatunków).
+- **Outcome:** (foundation) tabela wydarzeń z migracjami, politykami RLS i regułami biznesowymi (nadchodzące vs przeszłe, wymagane pola, tagi podgatunków ze stałej listy 25 wartości — PRD §Business Logic).
 - **Change ID:** event-data-foundation
 - **PRD refs:** Business Logic, NFR Scale path, Access Control
 - **Unlocks:** S-01, S-02; reguła ukrywania przeszłych eventów; wielokrotne tagi podgatunków
