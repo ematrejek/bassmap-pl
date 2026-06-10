@@ -9,20 +9,13 @@
   "files": {
     "skills": {
       "10x-init": {
-        "files": [
-          "SKILL.md"
-        ]
+        "files": ["SKILL.md"]
       },
       "10x-shape": {
-        "files": [
-          "references/prd-schema.md",
-          "SKILL.md"
-        ]
+        "files": ["references/prd-schema.md", "SKILL.md"]
       },
       "10x-prd": {
-        "files": [
-          "SKILL.md"
-        ]
+        "files": ["SKILL.md"]
       }
     },
     "prompts": [],

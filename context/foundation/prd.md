@@ -54,38 +54,36 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 - FR-001: Fan can view a list of upcoming DnB events sorted by date. Priority: must-have
 
   > Socrates: Counter-argument considered: "a list without curation is noise." Resolution: kept; list is the primary discovery surface. Curation adds value in v2.
-  >
+
 - FR-002: Fan can filter events by city. Priority: must-have
 
   > Socrates: No counter-argument; it stands as written.
-  >
+
 - FR-003: Fan can filter events by subgenre (neuro / liquid / dancefloor / jump up). Priority: must-have
 
   > Socrates: No counter-argument; it stands as written.
-  >
+
 - FR-004: Fan can view full event details (name, date, venue, lineup, ticket link, price). Priority: must-have
 
   > Socrates: Counter-argument considered: "lineup may not be available at submission time." Resolution: kept; lineup field is optional — event can be published without a complete lineup.
-  >
+
 - FR-005: Fan can view events on an interactive map of Poland. Priority: must-have
 
   > Socrates: No counter-argument; it stands as written.
-  >
+
 - FR-008: Fan can filter events by date range. Priority: nice-to-have
 
   > Socrates: Counter-argument considered: "default sort by date already handles most cases." Resolution: demoted to nice-to-have; default ascending date sort is sufficient for MVP.
-  >
 
 ### Admin management
 
 - FR-006: Admin can add an event directly. Priority: must-have
 
   > Socrates: Counter-argument considered: "admin bottleneck limits scale." Resolution: kept for MVP; organizer self-service is v2. Admin-only entry keeps data quality high at launch.
-  >
+
 - FR-007: Admin can edit or remove an event. Priority: must-have
 
   > Socrates: No counter-argument; it stands as written.
-  >
 
 ## Non-Functional Requirements
 
@@ -110,7 +108,7 @@ Supporting rules:
 
 - **Anonymous fan**: full read access — no login required to browse events, filter, or view event details.
 - **Fan (optional account)**: creates an account to access future extras (favorites, notifications). Account creation is optional — all core browsing is public.
-- **Organizer**: submits events for admin review. *Note: organizer self-service is post-MVP (v2). In MVP, only admins add events.*
+- **Organizer**: submits events for admin review. _Note: organizer self-service is post-MVP (v2). In MVP, only admins add events._
 - **Admin**: full write access — adds, edits, and removes events directly.
 
 Auth model: optional login (email + password or OAuth). Browsing is fully public.
@@ -126,7 +124,7 @@ Auth model: optional login (email + password or OAuth). Browsing is fully public
 
 ## Open Questions
 
-*(none — resolved 2026-06-09)*
+_(none — resolved 2026-06-09)_
 
 Resolved decisions:
 

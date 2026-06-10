@@ -93,7 +93,7 @@ flowchart LR
 - [x] `npm run lint` + `npm run build` — sukces (2026-06-10)
 - [x] `npm run deploy` — `https://bassmap-pl.ematrejek.workers.dev`
 - [x] Smoke test produkcyjny — `/` 200, `/auth/*` 200, `/dashboard` → 302 `/auth/signin`
-- [ ] Redirecty auth w Supabase Dashboard (ręcznie — patrz Faza 0.1)
+- [x] Redirecty auth w Supabase (site_url + uri_allow_list) — 2026-06-10
 - [ ] Push zmian do `main` (uruchomienie CI/CD)
 
 ---
