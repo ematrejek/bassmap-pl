@@ -1,11 +1,12 @@
 ---
 change-id: admin-role-guard
 title: Ochrona roli admina (F-02)
-status: implemented
+status: archived
 roadmap-id: F-02
 github-issue: 2
 created: 2026-06-10
 updated: 2026-06-10
+archived_at: 2026-06-10T21:41:55Z
 ---
 
 Warstwa aplikacyjna guarda admina — middleware, RPC `is_admin()`, guardy API, trasy `/admin/*`. Odblokowuje S-01 (panel CRUD wydarzeń).
