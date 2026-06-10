@@ -333,24 +333,24 @@ Typy domenowe, realistyczny seed lokalny, aktualizacja README.
 
 #### Automated
 
-- [ ] 1.1 `npx supabase db reset` kończy się kodem 0 (po seed w Phase 3; w Phase 1: migracja stosuje się bez błędu)
+- [x] 1.1 `npx supabase db reset` kończy się kodem 0 (po seed w Phase 3; w Phase 1: migracja stosuje się bez błędu)
 - [x] 1.2 Plik migracji istnieje pod `supabase/migrations/`
 
 #### Manual
 
-- [ ] 1.3 Studio: tabela `events` z oczekiwanymi kolumnami i enumami
-- [ ] 1.4 INSERT bez wymaganych pól → błąd constraint
+- [x] 1.3 Studio: tabela `events` z oczekiwanymi kolumnami i enumami
+- [x] 1.4 INSERT bez wymaganych pól → błąd constraint
 
 ### Phase 2: RLS, funkcje pomocnicze i admin allowlist
 
 #### Automated
 
-- [ ] 2.1 `npx supabase db reset` bez błędów RLS przy seedzie
+- [x] 2.1 `npx supabase db reset` bez błędów RLS przy seedzie
 - [x] 2.2 `npm run lint` bez regresji
 
 #### Manual
 
-- [ ] 2.3 Anon SELECT: tylko published + nadchodzące
+- [x] 2.3 Anon SELECT: tylko published + nadchodzące
 - [ ] 2.4 Użytkownik spoza allowlist: INSERT odrzucony
 - [ ] 2.5 Użytkownik z allowlist: INSERT sukces
 
@@ -358,11 +358,11 @@ Typy domenowe, realistyczny seed lokalny, aktualizacja README.
 
 #### Automated
 
-- [ ] 3.1 `npx supabase db reset` — exit 0
+- [x] 3.1 `npx supabase db reset` — exit 0
 - [x] 3.2 `npm run lint` — exit 0
 - [x] 3.3 `npm run build` — exit 0
 
 #### Manual
 
-- [ ] 3.4 Studio: 3–5 seed eventów widocznych przy anon SELECT
-- [ ] 3.5 Seed pokrywa lineup, is_free, ticket_url/price
+- [x] 3.4 Studio: 3–5 seed eventów widocznych przy anon SELECT
+- [x] 3.5 Seed pokrywa lineup, is_free, ticket_url/price

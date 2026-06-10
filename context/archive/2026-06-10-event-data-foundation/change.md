@@ -1,10 +1,10 @@
 ---
 change_id: event-data-foundation
 title: Event data foundation
-status: implementing
+status: archived
 created: 2026-06-10
-updated: 2026-06-10
-archived_at: null
+updated: 2026-06-11
+archived_at: 2026-06-11T00:00:00Z
 ---
 
 ## Notes

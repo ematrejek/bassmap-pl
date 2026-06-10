@@ -3,7 +3,7 @@ project: BassMap PL
 version: 1
 status: draft
 created: 2026-06-10
-updated: 2026-06-10
+updated: 2026-06-11
 subgenre_catalog_version: 1
 prd_version: 1
 main_goal: market-feedback
@@ -30,7 +30,7 @@ BassMap PL to pierwsza scentralizowana wyszukiwarka wydarzeń drum'n'bass w Pols
 
 | ID   | Change ID               | Outcome (user can …)                                                          | Prerequisites | PRD refs              | Status   |
 | ---- | ----------------------- | ----------------------------------------------------------------------------- | ------------- | --------------------- | -------- |
-| F-01 | event-data-foundation   | (foundation) schemat wydarzeń w bazie z migracjami i politykami RLS           | —             | Business Logic, NFR   | ready    |
+| F-01 | event-data-foundation   | (foundation) schemat wydarzeń w bazie z migracjami i politykami RLS           | —             | Business Logic, NFR   | done     |
 | F-02 | admin-role-guard        | (foundation) ścieżki zapisu chronione rolą admina                               | —             | Access Control        | blocked  |
 | S-01 | admin-event-management  | admin dodaje, edytuje i usuwa wydarzenia DnB                                  | F-01, F-02    | FR-006, FR-007        | proposed |
 | S-02 | fan-event-discovery     | fan filtruje po mieście/podgatunku, widzi listę, mapę i szczegóły wydarzenia  | F-01, S-01    | US-01, FR-001–FR-005  | blocked  |
@@ -53,7 +53,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **Frontend:** present (partial UI) — Astro 6 SSR + React 19 + Tailwind 4; routing plikowy w `src/pages/`; shadcn/ui z kilkoma komponentami (`src/components/ui/`)
 - **Backend / API:** partial — Astro SSR na Cloudflare; trasy API tylko auth (`src/pages/api/auth/`)
-- **Data:** partial — klient Supabase (`src/lib/supabase.ts`) tylko dla auth; brak migracji wydarzeń i `supabase/migrations/`
+- **Data:** partial — migracja `events` + RLS + seed w `supabase/`; klient SSR nadal tylko auth (odczyt/zapis eventów w S-01/S-02)
 - **Auth:** present — Supabase Auth, sesje cookie SSR, middleware chroni `/dashboard` (`src/middleware.ts`)
 - **Deploy / infra:** partial — `wrangler.jsonc`, workflowy CI/deploy; sekrety dokumentowane, brak pełnej weryfikacji produkcyjnej
 - **Observability:** partial — `observability.enabled` w Wrangler; brak logowania i error trackingu w aplikacji
@@ -71,7 +71,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Bez schematu żaden pionowy slice nie ma danych — fundament musi być pierwszy mimo że nie jest widoczny dla fana.
-- **Status:** ready
+- **Status:** done
 
 ### F-02: Ochrona roli admina
 
@@ -160,3 +160,5 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Wydarzenia poza Polską** — Why parked: PRD §Non-Goals v2+.
 
 ## Done
+
+- **F-01: (foundation) tabela wydarzeń z migracjami, politykami RLS i regułami biznesowymi (nadchodzące vs przeszłe, wymagane pola, tagi podgatunków ze stałej listy 25 wartości — PRD §Business Logic).** — Archived 2026-06-11 → `context/archive/2026-06-10-event-data-foundation/`. Lesson: —.
