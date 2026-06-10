@@ -117,9 +117,9 @@ CREATE POLICY admin_allowlist_select_admin
   TO authenticated
   USING (public.is_admin());
 
--- Seed placeholder — replace with your dev email before testing INSERT as admin
+-- Dev admin allowlist
 INSERT INTO public.admin_allowlist (email)
-VALUES ('admin@example.com')
+VALUES ('matejekemilia@gmail.com')
 ON CONFLICT (email) DO NOTHING;
 
 -- ---------------------------------------------------------------------------
@@ -149,6 +149,12 @@ CREATE POLICY events_select_public
     status = 'published'
     AND public.is_upcoming(starts_at)
   );
+
+CREATE POLICY events_select_admin
+  ON public.events
+  FOR SELECT
+  TO authenticated
+  USING (public.is_admin());
 
 CREATE POLICY events_insert_admin
   ON public.events

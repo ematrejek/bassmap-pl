@@ -1,8 +1,8 @@
 -- Local dev seed for F-01 event data foundation.
--- Replace admin@example.com with your dev email to test INSERT as admin.
+-- Dev admin allowlist — matejekemilia@gmail.com
 
 INSERT INTO public.admin_allowlist (email)
-VALUES ('admin@example.com')
+VALUES ('matejekemilia@gmail.com')
 ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO public.events (

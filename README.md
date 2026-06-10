@@ -117,7 +117,7 @@ The local Studio UI is available at `http://localhost:54323`.
 npx supabase db reset
 ```
 
-Database schema lives in `supabase/migrations/`; sample DnB events and a dev admin allowlist entry are in `supabase/seed.sql`. Replace `admin@example.com` in the seed (or migration) with your email before testing admin INSERT.
+Database schema lives in `supabase/migrations/`; sample DnB events and a dev admin allowlist entry are in `supabase/seed.sql`. The dev admin email (`matejekemilia@gmail.com`) is seeded in both files for local INSERT testing — replace it with your own email if you use a different Supabase Auth account.
 
 ### Using a cloud Supabase project instead
 
