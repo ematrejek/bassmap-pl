@@ -305,9 +305,9 @@ Placeholder panelu admina do testów guarda, strona 403 po polsku, warunkowy lin
 
 #### Automated
 
-- [x] 3.1 `npm run lint` przechodzi
-- [x] 3.2 `npm run build` przechodzi
+- [x] 3.1 `npm run lint` przechodzi — 8101ec8
+- [x] 3.2 `npm run build` przechodzi — 8101ec8
 
 #### Manual
 
-- [x] 3.3 Admin: `/admin` OK + link w nav; nie-admin: 403; anon: signin; `/dashboard` bez regresji
+- [x] 3.3 Admin: `/admin` OK + link w nav; nie-admin: 403; anon: signin; `/dashboard` bez regresji — 8101ec8

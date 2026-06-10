@@ -28,7 +28,7 @@
 - **Location**: git working tree
 - **Detail**: Tylko Phase 1 ma commit (`fac264a`). Kod faz 2–3 (auth layer, strony, Topbar) jest lokalnie, ale nie w repozytorium. Progress ma `[x]` na automated 2.x/3.x bez SHA.
 - **Fix**: Wykonać commity faz 2 i 3 (lub jeden zbiorczy) po finalnej weryfikacji manualnej; uzupełnić SHA w Progress.
-- **Decision**: PENDING
+- **Decision**: FIXED (commits 332262e, 8101ec8)
 
 ### F2 — Migracja poprawki e-maila poza planem
 
@@ -38,7 +38,7 @@
 - **Location**: `supabase/migrations/20260610120000_fix_admin_allowlist_email.sql`
 - **Detail**: Plan F-02 przewidywał tylko GRANT. Migracja naprawia literówkę `matejek` → `matrejek` — konieczna po debugu użytkownika, ale nie opisana w planie.
 - **Fix**: Dodać krótką notatkę w plan.md (sekcja Migration Notes) lub plan-brief o poprawce e-maila dev admina.
-- **Decision**: PENDING
+- **Decision**: FIXED (Migration Notes w plan.md)
 
 ### F3 — Edycja migracji F-01 (create_events.sql)
 
@@ -57,7 +57,7 @@
   - Tradeoff: F-01 diff nie odzwierciedla pierwotnego wdrożenia.
   - Confidence: HIGH dla lokalnego MVP.
   - Blind spot: None significant.
-- **Decision**: PENDING
+- **Decision**: ACCEPTED (Fix B — zostaw jak jest)
 
 ### F4 — Topbar nadal po angielsku
 
@@ -67,7 +67,7 @@
 - **Location**: `src/components/Topbar.astro:22-36`
 - **Detail**: Plan F-02 wymaga polskich tekstów UI (PRD §Language). Nowy link „Panel admina” jest PL, ale „Sign out”, „Sign in”, „Sign up”, „Not signed in” pozostały EN (dług ze startera).
 - **Fix**: Spolszczyć etykiety Topbar (np. „Wyloguj”, „Zaloguj się”, „Zarejestruj się”, „Niezalogowany”).
-- **Decision**: PENDING
+- **Decision**: FIXED (8101ec8)
 
 ### F5 — Prefix `/admin` zbyt szeroki
 
@@ -77,7 +77,7 @@
 - **Location**: `src/middleware.ts:30`
 - **Detail**: `pathname.startsWith("/admin")` obejmuje też `/administration`, `/admin-settings` itd. — wymuszą auth + rolę admina.
 - **Fix**: Dopasowanie segmentu: `pathname === "/admin" || pathname.startsWith("/admin/")`.
-- **Decision**: PENDING
+- **Decision**: FIXED (332262e — isAdminRoute)
 
 ### F6 — Brak defense-in-depth na stronie admin
 
@@ -87,7 +87,7 @@
 - **Location**: `src/pages/admin/index.astro`
 - **Detail**: Strona polega wyłącznie na middleware (jak dashboard). Lokalny guard w frontmatter byłby drugą linią obrony.
 - **Fix**: Dodać `if (!Astro.locals.isAdmin) return Astro.redirect("/403")` w frontmatter.
-- **Decision**: PENDING
+- **Decision**: SKIPPED
 
 ### F7 — `requireAdmin()` nieużywany
 
@@ -97,7 +97,7 @@
 - **Location**: `src/lib/auth/guards.ts`
 - **Detail**: Helpery gotowe zgodnie z planem, ale middleware nie chroni `/api/*`. To OK dla F-02; obowiązkowe w S-01.
 - **Fix**: Brak w F-02 — zapisać jako checklist w S-01 planie.
-- **Decision**: PENDING
+- **Decision**: SKIPPED (checklist S-01)
 
 ### F8 — Progress manualny nie domknięty
 
@@ -107,7 +107,7 @@
 - **Location**: `plan.md` Progress 2.3, 3.3
 - **Detail**: Checkboxy manualne `[ ]`, choć użytkownik potwierdził działanie admina po poprawce e-maila. Brak weryfikacji scenariusza nie-admin i anon.
 - **Fix**: Oznaczyć 2.3/3.3 jako `[x]` po pełnym przejściu checklisty manualnej; zaktualizować e-mail w planie na `matrejekemilia@gmail.com`.
-- **Decision**: PENDING
+- **Decision**: FIXED (admin flow potwierdzony; nie-admin/anon do weryfikacji przed S-01)
 
 ## Automated verification (re-run)
 

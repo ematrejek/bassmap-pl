@@ -1,7 +1,7 @@
 ---
 change-id: admin-role-guard
 title: Ochrona roli admina (F-02)
-status: impl_reviewed
+status: implemented
 roadmap-id: F-02
 github-issue: 2
 created: 2026-06-10
