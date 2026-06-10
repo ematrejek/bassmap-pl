@@ -52,3 +52,15 @@ Full server-side rendering (`output: "server"` in astro.config.mjs). All pages a
 ## CI
 
 GitHub Actions workflow (`.github/workflows/ci.yml`) runs lint + build on every push and PR to master. Requires `SUPABASE_URL` and `SUPABASE_KEY` repository secrets for the build step.
+
+## Roadmap sync (GitHub Project)
+
+Product roadmap: `context/foundation/roadmap.md`. External mirror: GitHub Issues (`label:roadmap`) + project [Bassmap PL Roadmap](https://github.com/users/ematrejek/projects/2) (owner `ematrejek`, project `2`). Index issue: #6.
+
+While implementing or planning a change, **update the board in the same session** — do not leave `roadmap.md` and GitHub out of sync:
+
+- Start work → project item **In Progress**; PR references the issue (`Refs #N` / `Closes #N`).
+- `roadmap.md` status or unknowns change → update issue + board column that session.
+- Archive/complete → `roadmap.md` `done`, close issue, board **Done**.
+
+Issue mapping: see `## Backlog Handoff` in `roadmap.md` (F-01 = #1 … S-02 = #4). CLI: `gh project item-list 2 --owner ematrejek`.

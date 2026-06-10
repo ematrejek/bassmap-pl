@@ -46,3 +46,16 @@ Commits use descriptive sentences (e.g. `Initial scaffold: BassMap PL from 10x-a
 ## Architecture
 
 Auth: @src/lib/supabase.ts (cookie SSR client) + @src/middleware.ts. Auth API in `src/pages/api/auth/`. Deploy: `npx wrangler deploy` (@wrangler.jsonc). Supabase local setup: @README.md.
+
+## Roadmap & external backlog
+
+Canonical roadmap: @context/foundation/roadmap.md. Public backlog (issues + board): [GitHub Issues `label:roadmap`](https://github.com/ematrejek/bassmap-pl/issues?q=label%3Aroadmap), index [#6](https://github.com/ematrejek/bassmap-pl/issues/6), project [Bassmap PL Roadmap](https://github.com/users/ematrejek/projects/2) (`gh project item-list 2 --owner ematrejek`).
+
+**Keep both in sync during work** — not only at plan/archive time:
+
+1. When picking up a slice/foundation (`/10x-plan`, `/10x-implement`): move the matching issue to **In Progress** on the project board; link the PR to the issue (`Closes #N` or `Refs #N`).
+2. When status changes in `roadmap.md` (`ready` → `blocked`, unknown resolved, etc.): update the issue body/status field on the board the same session.
+3. When a change archives (`/10x-archive`): flip `Status` in `roadmap.md` to `done`, **close** the GitHub issue, move the board item to **Done**.
+4. Map `roadmap.md` status → board: `ready`/`proposed` → Todo; in active plan/implement → In Progress; `blocked` → keep open, ensure **Blocked by** links are current; `done` → Done + closed issue.
+
+Use `gh` (needs `project` scope): `gh project item-edit`, `gh issue close`, `gh issue comment`. Match tickets by **Change ID** or Roadmap ID table in `## Backlog Handoff`.
