@@ -6,7 +6,7 @@ Wdrożenie warstwy aplikacyjnej ochrony roli admina (F-02): synchronizacja z ist
 
 ## Current State Analysis
 
-- **F-01 done:** `admin_allowlist`, funkcja `is_admin()` porównująca `auth.jwt() ->> 'email'` z allowlistą, RLS na `events` (zapis tylko admin). Seed: `matejekemilia@gmail.com` w migracji i `seed.sql`.
+- **F-01 done:** `admin_allowlist`, funkcja `is_admin()` porównująca `auth.jwt() ->> 'email'` z allowlistą, RLS na `events` (zapis tylko admin). Seed: `matrejekemilia@gmail.com` w migracji i `seed.sql`.
 - **Middleware** (`src/middleware.ts`): ustawia `context.locals.user`; chroni tylko `/dashboard` — każdy zalogowany przechodzi, bez sprawdzenia roli.
 - **Locals** (`src/env.d.ts`): tylko `user: User | null` — brak `isAdmin`.
 - **Brak** tras `/admin/*`, helperów `requireAdmin`, strony 403, warunkowego linku admin w nav.
@@ -248,7 +248,7 @@ Placeholder panelu admina do testów guarda, strona 403 po polsku, warunkowy lin
 ### Manual Testing Steps:
 
 1. `npx supabase start` (jeśli nie działa) + `npx supabase db reset`.
-2. Zarejestruj / zaloguj konto na `matejekemilia@gmail.com` (lub e-mail z allowlisty).
+2. Zarejestruj / zaloguj konto na `matrejekemilia@gmail.com` (lub e-mail z allowlisty).
 3. Wejdź na `/admin` — oczekuj placeholder panelu.
 4. Sprawdź Topbar na `/` — link „Panel admina” widoczny.
 5. Wyloguj; zarejestruj konto na **innym** e-mailu.
@@ -263,7 +263,8 @@ Placeholder panelu admina do testów guarda, strona 403 po polsku, warunkowy lin
 
 ## Migration Notes
 
-- Lokalnie: `npx supabase db reset` stosuje nową migrację GRANT.
+- Lokalnie: `npx supabase db reset` stosuje migrację GRANT oraz seed z poprawnym e-mailem dev admina.
+- **Poprawka e-maila dev admina (impl review):** pierwotny seed miał literówkę `matejekemilia@gmail.com`; poprawiono na `matrejekemilia@gmail.com` w F-01 migracji, seedzie oraz migracji upgrade `20260610120000_fix_admin_allowlist_email.sql` dla istniejących DB.
 - Produkcja (przyszły deploy): `supabase db push` lub migracja przez CI — poza scope F-02, ale migracja musi trafić do repo przed produkcyjnym S-01.
 - Dodanie admina w produkcji: `INSERT INTO public.admin_allowlist (email) VALUES ('...')` przez SQL Editor (service role). Użytkownik musi mieć konto Auth na tym e-mailu.
 
@@ -283,30 +284,30 @@ Placeholder panelu admina do testów guarda, strona 403 po polsku, warunkowy lin
 
 #### Automated
 
-- [x] 1.1 `npx supabase db reset` kończy się sukcesem (migracja + seed)
+- [x] 1.1 `npx supabase db reset` kończy się sukcesem (migracja + seed) — fac264a
 
 #### Manual
 
-- [x] 1.2 Plik migracji GRANT istnieje; brak regresji RLS F-01
+- [x] 1.2 Plik migracji GRANT istnieje; brak regresji RLS F-01 — fac264a
 
 ### Phase 2: Warstwa auth (helpery + middleware + typy)
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` przechodzi bez błędów
-- [ ] 2.2 `npm run build` przechodzi
+- [x] 2.1 `npm run lint` przechodzi bez błędów — 332262e
+- [x] 2.2 `npm run build` przechodzi — 332262e
 
 #### Manual
 
-- [ ] 2.3 Zalogowany admin: `isAdmin true`; nie-admin / anon: `isAdmin false`
+- [x] 2.3 Zalogowany admin: `isAdmin true`; nie-admin / anon: `isAdmin false` — 332262e
 
 ### Phase 3: Strony admin/403 i nawigacja
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` przechodzi
-- [ ] 3.2 `npm run build` przechodzi
+- [x] 3.1 `npm run lint` przechodzi
+- [x] 3.2 `npm run build` przechodzi
 
 #### Manual
 
-- [ ] 3.3 Admin: `/admin` OK + link w nav; nie-admin: 403; anon: signin; `/dashboard` bez regresji
+- [x] 3.3 Admin: `/admin` OK + link w nav; nie-admin: 403; anon: signin; `/dashboard` bez regresji

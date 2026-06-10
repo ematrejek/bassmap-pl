@@ -119,7 +119,7 @@ CREATE POLICY admin_allowlist_select_admin
 
 -- Dev admin allowlist
 INSERT INTO public.admin_allowlist (email)
-VALUES ('matejekemilia@gmail.com')
+VALUES ('matrejekemilia@gmail.com')
 ON CONFLICT (email) DO NOTHING;
 
 -- ---------------------------------------------------------------------------
