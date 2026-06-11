@@ -60,7 +60,7 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
     <div className="space-y-6">
       <div>
         <h1 className="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-          Wydarzenia DnB w Polsce
+          Find the place, drop the bass!
         </h1>
         <p className="mt-1 text-sm text-blue-100/60">
           Filtruj po mieście i podgatunku — znajdź imprezę na liście lub mapie.
