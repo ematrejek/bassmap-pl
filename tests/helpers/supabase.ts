@@ -10,9 +10,13 @@
  * Integration tests run only against local Supabase (127.0.0.1 / localhost) — never production.
  * Integration suites should use `describe.skipIf(!isSupabaseConfigured())` and
  * call `logSkipIfNotConfigured()` once so missing env exits 0 with a warning.
+ * Requires migration 20260611140000_fix_is_admin_use_uid.sql applied locally for admin tests.
  */
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+
+const INTEGRATION_ADMIN_EMAIL = "integration-fan-read-admin@example.com";
+const INTEGRATION_ADMIN_PASSWORD = "IntegrationFanReadAdmin!2026";
 
 let skipWarningLogged = false;
 
@@ -94,6 +98,9 @@ export async function createAuthenticatedClient(email: string, password: string)
   if (!url || !key) {
     throw new Error("SUPABASE_URL and SUPABASE_KEY are required for authenticated client");
   }
+  if (!isLocalSupabaseUrl(url)) {
+    throw new Error("Refusing authenticated client: SUPABASE_URL must be local Supabase, not production");
+  }
   const client = createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
   });
@@ -102,4 +109,30 @@ export async function createAuthenticatedClient(email: string, password: string)
     throw new Error(`Failed to sign in test user: ${error.message}`);
   }
   return client;
+}
+
+async function ensureIntegrationAdminAllowlisted(serviceClient: SupabaseClient): Promise<void> {
+  const createResult = await serviceClient.auth.admin.createUser({
+    email: INTEGRATION_ADMIN_EMAIL,
+    password: INTEGRATION_ADMIN_PASSWORD,
+    email_confirm: true,
+  });
+
+  if (createResult.error && !createResult.error.message.toLowerCase().includes("already")) {
+    throw new Error(`Failed to create integration admin user: ${createResult.error.message}`);
+  }
+
+  const allowlistResult = await serviceClient
+    .from("admin_allowlist")
+    .upsert({ email: INTEGRATION_ADMIN_EMAIL }, { onConflict: "email" });
+
+  if (allowlistResult.error) {
+    throw new Error(`Failed to upsert integration admin allowlist: ${allowlistResult.error.message}`);
+  }
+}
+
+export async function createAdminClient(): Promise<SupabaseClient> {
+  const serviceClient = createServiceClient();
+  await ensureIntegrationAdminAllowlisted(serviceClient);
+  return createAuthenticatedClient(INTEGRATION_ADMIN_EMAIL, INTEGRATION_ADMIN_PASSWORD);
 }

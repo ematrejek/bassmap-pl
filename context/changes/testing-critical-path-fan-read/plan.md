@@ -352,8 +352,8 @@ Ship durable patterns so future tests (Phase 2 rollout, `/10x-tdd`) follow the s
 
 #### Automated
 
-- [x] 2.1 Fan-read list tests pass with local Supabase + env (sub-phases 2a, 2b)
-- [x] 2.2 Tests skipped cleanly without Supabase env
+- [x] 2.1 Fan-read list tests pass with local Supabase + env (sub-phases 2a, 2b) — 5481a1b
+- [x] 2.2 Tests skipped cleanly without Supabase env — 5481a1b
 
 #### Manual
 
@@ -363,7 +363,7 @@ Ship durable patterns so future tests (Phase 2 rollout, `/10x-tdd`) follow the s
 
 #### Automated
 
-- [ ] 3.1 Admin fan-read tests pass (sub-phases 3a–3c)
+- [x] 3.1 Admin fan-read tests pass (sub-phases 3a–3c)
 
 #### Manual
 
