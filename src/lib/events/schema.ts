@@ -17,6 +17,16 @@ const ticketUrlSchema = z
   .nullable()
   .or(z.literal("").transform(() => null));
 
+const latitudeSchema = z
+  .number({ required_error: "Szerokość geograficzna jest wymagana" })
+  .min(-90, "Szerokość geograficzna musi być między -90 a 90")
+  .max(90, "Szerokość geograficzna musi być między -90 a 90");
+
+const longitudeSchema = z
+  .number({ required_error: "Długość geograficzna jest wymagana" })
+  .min(-180, "Długość geograficzna musi być między -180 a 180")
+  .max(180, "Długość geograficzna musi być między -180 a 180");
+
 const commonEventFields = {
   name: z.string().min(1, "Nazwa wydarzenia jest wymagana"),
   startsAt: startsAtSchema,
@@ -38,8 +48,8 @@ const eventCreateAddressSchema = z.object({
 
 const eventCreateCoordinatesSchema = z.object({
   locationMode: z.literal("coordinates"),
-  latitude: z.number({ required_error: "Szerokość geograficzna jest wymagana" }),
-  longitude: z.number({ required_error: "Długość geograficzna jest wymagana" }),
+  latitude: latitudeSchema,
+  longitude: longitudeSchema,
   addressStreet: z.string().optional().nullable(),
   addressNumber: z.string().optional().nullable(),
   ...commonEventFields,
@@ -73,8 +83,8 @@ const eventUpdatePartialSchema = z
     locationMode: z.enum(["address", "coordinates"]).optional(),
     addressStreet: z.string().min(1, "Ulica jest wymagana").optional().nullable(),
     addressNumber: z.string().min(1, "Numer budynku jest wymagany").optional().nullable(),
-    latitude: z.number().optional(),
-    longitude: z.number().optional(),
+    latitude: latitudeSchema.optional(),
+    longitude: longitudeSchema.optional(),
   })
   .superRefine((data, ctx) => {
     if (data.locationMode === "coordinates") {

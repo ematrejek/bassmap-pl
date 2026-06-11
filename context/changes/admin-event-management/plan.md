@@ -23,7 +23,7 @@ Implementacja panelu admina do zarządzania wydarzeniami DnB (S-01): lista wydar
 
 ## Desired End State
 
-1. Admin na `/admin` widzi posortowaną tabelę wydarzeń (nazwa, data, miasto, status, akcje).
+1. Admin na `/admin` widzi posortowaną tabelę wydarzeń (nazwa, data, miasto, status, akcje) — od **najbliższej** daty (`starts_at` ASC).
 2. Admin tworzy wydarzenie na `/admin/events/new` — **domyślnie** podaje adres; system geokoduje i zapisuje współrzędne.
 3. Admin może zaznaczyć „Brak adresu — podaję współrzędne” (impreza tajna) i wpisać lat/lng ręcznie — bez pól ulicy/numeru.
 4. Admin edytuje na `/admin/events/[id]/edit`; zmiana adresu w trybie adresowym ponownie geokoduje współrzędne.
@@ -38,6 +38,10 @@ Implementacja panelu admina do zarządzania wydarzeniami DnB (S-01): lista wydar
 - PUT/DELETE jako nie-admin → 403 JSON.
 - Niepoprawny adres (geokodowanie bez wyniku) → 400 z komunikatem po polsku.
 - Formularz z 0 podgatunków lub tylko lat bez lng → błąd walidacji, brak zapisu.
+
+## Addendum (impl-review 2026-06-11): podgatunek `dancefloor`
+
+Podczas implementacji Fazy 3 dodano wartość enum `dancefloor` do katalogu podgatunków — brakowało jej w zamkniętej liście z F-01, a jest potrzebna w formularzu admina. Pliki: `supabase/migrations/20260611120000_add_dancefloor_subgenre.sql`, `src/types.ts` (`Subgenre`, `SUBGENRE_VALUES`, `SUBGENRE_LABELS`).
 
 ## What We're NOT Doing
 
@@ -144,7 +148,7 @@ Dodać migrację nullable adresu, serwis Nominatim, zod z `locationMode`, mapper
 **Contract**:
 
 - `resolveCoordinates(parsed: ParsedEventInput): Promise<{ latitude: number; longitude: number } | { error: string }>` — jeśli `locationMode === 'address'` → `geocodeAddress()`; jeśli `coordinates` → zwróć lat/lng z inputu.
-- `listEventsForAdmin(supabase)` → `Event[]` — SELECT wszystkich, ORDER BY `starts_at` DESC.
+- `listEventsForAdmin(supabase)` → `Event[]` — SELECT wszystkich, ORDER BY `starts_at` ASC (najbliższe wydarzenia pierwsze).
 - `getEventById(supabase, id)` → `Event | null`
 - `createEvent(supabase, input)` — wywołaj `resolveCoordinates` → INSERT z coords + `status: 'published'`
 - `updateEvent(supabase, id, input)` — przy zmianie adresu w trybie `address` ponownie geokoduj
@@ -427,21 +431,21 @@ Formularz React wspólny dla tworzenia i edycji; strony Astro; usuwanie z dialog
 
 #### Automated
 
-- [x] 2.1 `npm run lint` przechodzi
-- [x] 2.2 `npm run build` przechodzi
+- [x] 2.1 `npm run lint` przechodzi — 8e31bce
+- [x] 2.2 `npm run build` przechodzi — 8e31bce
 
 #### Manual
 
-- [x] 2.3 `/admin` jako admin pokazuje seed events
-- [x] 2.4 `/admin` jako nie-admin → redirect 403
-- [x] 2.5 Sortowanie od najbliższej daty; link „Dodaj wydarzenie” działa
+- [x] 2.3 `/admin` jako admin pokazuje seed events — 8e31bce
+- [x] 2.4 `/admin` jako nie-admin → redirect 403 — 8e31bce
+- [x] 2.5 Sortowanie od najbliższej daty; link „Dodaj wydarzenie” działa — 8e31bce
 
 ### Phase 3: Formularze create/edit i usuwanie
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` przechodzi
-- [ ] 3.2 `npm run build` przechodzi
+- [x] 3.1 `npm run lint` przechodzi
+- [x] 3.2 `npm run build` przechodzi
 
 #### Manual
 

@@ -1,3 +1,5 @@
+import { ServerError } from "@/components/auth/ServerError";
+import DeleteEventButton from "@/components/admin/DeleteEventButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -27,11 +29,13 @@ function statusBadgeClass(status: EventStatus): string {
 
 interface Props {
   events: Event[];
+  listError?: string | null;
 }
 
-export default function AdminEventsTable({ events }: Props) {
+export default function AdminEventsTable({ events, listError }: Props) {
   return (
     <div className="space-y-6">
+      <ServerError message={listError} />
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
@@ -87,15 +91,7 @@ export default function AdminEventsTable({ events }: Props) {
                       >
                         <a href={`/admin/events/${event.id}/edit`}>Edytuj</a>
                       </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        disabled
-                        className="border-white/10 text-blue-100/40"
-                        title="Usuwanie w następnym kroku (faza 3)"
-                      >
-                        Usuń
-                      </Button>
+                      <DeleteEventButton eventId={event.id} eventName={event.name} />
                     </div>
                   </TableCell>
                 </TableRow>

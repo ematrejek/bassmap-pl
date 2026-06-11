@@ -24,7 +24,8 @@ export type Subgenre =
   | "crossbreed"
   | "ragga_dnb"
   | "ambient_dnb"
-  | "intelligent_dnb";
+  | "intelligent_dnb"
+  | "dancefloor";
 
 export const SUBGENRES: readonly Subgenre[] = [
   "jungle",
@@ -52,6 +53,7 @@ export const SUBGENRES: readonly Subgenre[] = [
   "ragga_dnb",
   "ambient_dnb",
   "intelligent_dnb",
+  "dancefloor",
 ] as const;
 
 export const SUBGENRE_LABELS: Record<Subgenre, string> = {
@@ -80,6 +82,7 @@ export const SUBGENRE_LABELS: Record<Subgenre, string> = {
   ragga_dnb: "Ragga DnB",
   ambient_dnb: "Ambient DnB",
   intelligent_dnb: "Intelligent DnB",
+  dancefloor: "Dancefloor",
 };
 
 export type EventStatus = "draft" | "pending" | "published" | "rejected";

@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { geocodeAddress } from "@/lib/geocoding/nominatim";
+import { parseDatetimeLocalWarsaw } from "@/lib/events/format";
 import { mapEventRow, toEventInsertRow, toEventUpdateRow, type EventRow } from "@/lib/events/mapper";
 import type { ParsedEventCreate, ParsedEventUpdate } from "@/lib/events/schema";
 import type { Event, EventInsert } from "@/types";
@@ -14,6 +15,14 @@ function mapSupabaseError(message: string): string {
     return "Podaj obie współrzędne lub żadnej";
   }
   return "Nie udało się zapisać wydarzenia";
+}
+
+function toStoredStartsAt(startsAt: string): string | { error: string } {
+  const iso = parseDatetimeLocalWarsaw(startsAt);
+  if (!iso) {
+    return { error: "Nieprawidłowa data i godzina" };
+  }
+  return iso;
 }
 
 function inferLocationMode(event: Event): "address" | "coordinates" {
@@ -79,14 +88,14 @@ export async function resolveCoordinates(
   });
 }
 
-export async function listEventsForAdmin(supabase: SupabaseClient): Promise<Event[]> {
+export async function listEventsForAdmin(supabase: SupabaseClient): Promise<ServiceResult<Event[]>> {
   const response = await supabase.from("events").select("*").order("starts_at", { ascending: true });
 
   if (response.error) {
-    return [];
+    return { error: "Nie udało się załadować listy wydarzeń" };
   }
 
-  return (response.data as EventRow[]).map(mapEventRow);
+  return { data: (response.data as EventRow[]).map(mapEventRow) };
 }
 
 export async function getEventById(supabase: SupabaseClient, id: string): Promise<Event | null> {
@@ -104,10 +113,14 @@ export async function getEventById(supabase: SupabaseClient, id: string): Promis
   return mapEventRow(row);
 }
 
-function parsedCreateToInsert(parsed: ParsedEventCreate, coords: { latitude: number; longitude: number }): EventInsert {
+function parsedCreateToInsert(
+  parsed: ParsedEventCreate,
+  coords: { latitude: number; longitude: number },
+  startsAtIso: string,
+): EventInsert {
   const base: EventInsert = {
     name: parsed.name,
-    startsAt: new Date(parsed.startsAt).toISOString(),
+    startsAt: startsAtIso,
     city: parsed.city,
     venueName: parsed.venueName,
     subgenres: parsed.subgenres,
@@ -136,12 +149,17 @@ function parsedCreateToInsert(parsed: ParsedEventCreate, coords: { latitude: num
 }
 
 export async function createEvent(supabase: SupabaseClient, parsed: ParsedEventCreate): Promise<ServiceResult<Event>> {
+  const startsAt = toStoredStartsAt(parsed.startsAt);
+  if ("error" in startsAt) {
+    return { error: startsAt.error };
+  }
+
   const coords = await resolveCoordinates(parsed);
   if ("error" in coords) {
     return { error: coords.error };
   }
 
-  const insert = toEventInsertRow(parsedCreateToInsert(parsed, coords));
+  const insert = toEventInsertRow(parsedCreateToInsert(parsed, coords, startsAt));
   const response = await supabase.from("events").insert(insert).select("*").single();
 
   if (response.error) {
@@ -165,7 +183,13 @@ export async function updateEvent(
   const patch: Partial<EventInsert> = {};
 
   if (parsed.name !== undefined) patch.name = parsed.name;
-  if (parsed.startsAt !== undefined) patch.startsAt = new Date(parsed.startsAt).toISOString();
+  if (parsed.startsAt !== undefined) {
+    const startsAt = toStoredStartsAt(parsed.startsAt);
+    if ("error" in startsAt) {
+      return { error: startsAt.error };
+    }
+    patch.startsAt = startsAt;
+  }
   if (parsed.city !== undefined) patch.city = parsed.city;
   if (parsed.venueName !== undefined) patch.venueName = parsed.venueName;
   if (parsed.subgenres !== undefined) patch.subgenres = parsed.subgenres;
