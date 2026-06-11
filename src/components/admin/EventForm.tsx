@@ -198,9 +198,9 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
           />
         </div>
 
-        <div className="space-y-2">
+        <div className="space-y-2 sm:col-span-2">
           <Label htmlFor="venueName" className="text-blue-100/80">
-            Miejsce (venue)
+            Miejsce / opis lokalizacji
           </Label>
           <Input
             id="venueName"
@@ -208,15 +208,18 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
             onChange={(e) => {
               setVenueName(e.target.value);
             }}
-            placeholder="np. Proxima"
+            placeholder="np. Proxima, pod mostem Łazienkowskim, nad Wisłą"
             className={fieldClass}
             required
           />
+          <p className="text-xs text-blue-100/50">
+            Nie musi to być nazwa klubu — wystarczy krótki opis, gdzie jest impreza (ważne dla fanów na liście i mapie).
+          </p>
         </div>
       </div>
 
       <div className="rounded-xl border border-white/10 bg-white/5 p-4">
-        <div className="flex items-start gap-3">
+        <label htmlFor="coordinatesMode" className="flex cursor-pointer items-start gap-3">
           <Checkbox
             id="coordinatesMode"
             checked={coordinatesMode}
@@ -226,14 +229,12 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
             className="mt-0.5 border-white/30 data-[state=checked]:bg-purple-600"
           />
           <div>
-            <Label htmlFor="coordinatesMode" className="cursor-pointer text-white">
-              Brak adresu — podaję współrzędne
-            </Label>
+            <span className="text-sm font-medium text-white">Brak adresu — podaję współrzędne</span>
             <p className="mt-1 text-xs text-blue-100/50">
               Dla imprez „tajnych” bez ulicy. W trybie adresowym współrzędne uzupełni system.
             </p>
           </div>
-        </div>
+        </label>
 
         {!coordinatesMode ? (
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
@@ -315,7 +316,11 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
         </div>
         <div className="grid max-h-48 grid-cols-1 gap-2 overflow-y-auto rounded-xl border border-white/10 bg-white/5 p-3 sm:grid-cols-2">
           {SUBGENRES.map((subgenre) => (
-            <div key={subgenre} className="flex items-center gap-2">
+            <label
+              key={subgenre}
+              htmlFor={`subgenre-${subgenre}`}
+              className="flex cursor-pointer items-center gap-2 rounded-md px-1 py-0.5 hover:bg-white/5"
+            >
               <Checkbox
                 id={`subgenre-${subgenre}`}
                 checked={subgenres.includes(subgenre)}
@@ -324,10 +329,8 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
                 }}
                 className="border-white/30 data-[state=checked]:bg-purple-600"
               />
-              <Label htmlFor={`subgenre-${subgenre}`} className="cursor-pointer text-sm text-white/90">
-                {SUBGENRE_LABELS[subgenre]}
-              </Label>
-            </div>
+              <span className="text-sm text-white/90">{SUBGENRE_LABELS[subgenre]}</span>
+            </label>
           ))}
         </div>
       </div>
@@ -388,7 +391,7 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
         </div>
       </div>
 
-      <div className="flex items-center gap-2">
+      <label htmlFor="isFree" className="flex w-fit cursor-pointer items-center gap-2">
         <Checkbox
           id="isFree"
           checked={isFree}
@@ -397,10 +400,8 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
           }}
           className="border-white/30 data-[state=checked]:bg-purple-600"
         />
-        <Label htmlFor="isFree" className="cursor-pointer text-white">
-          Wstęp wolny
-        </Label>
-      </div>
+        <span className="text-sm font-medium text-white">Wstęp wolny</span>
+      </label>
 
       <ServerError message={serverError} />
 

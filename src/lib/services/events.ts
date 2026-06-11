@@ -1,11 +1,16 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { geocodeAddress } from "@/lib/geocoding/nominatim";
-import { parseDatetimeLocalWarsaw } from "@/lib/events/format";
+import type { FanEventFilters } from "@/lib/events/fan-schema";
+import { getStartOfTodayWarsawUtcIso, parseDatetimeLocalWarsaw } from "@/lib/events/format";
 import { mapEventRow, toEventInsertRow, toEventUpdateRow, type EventRow } from "@/lib/events/mapper";
 import type { ParsedEventCreate, ParsedEventUpdate } from "@/lib/events/schema";
 import type { Event, EventInsert } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
+
+function isStartsAtError(value: string | { error: string }): value is { error: string } {
+  return typeof value !== "string";
+}
 
 function mapSupabaseError(message: string): string {
   if (message.includes("events_subgenres_min_one")) {
@@ -113,6 +118,75 @@ export async function getEventById(supabase: SupabaseClient, id: string): Promis
   return mapEventRow(row);
 }
 
+export async function listPublishedEvents(
+  supabase: SupabaseClient,
+  filters?: FanEventFilters,
+): Promise<ServiceResult<Event[]>> {
+  let query = supabase
+    .from("events")
+    .select("*")
+    .eq("status", "published")
+    .gte("starts_at", getStartOfTodayWarsawUtcIso())
+    .order("starts_at", { ascending: true });
+
+  if (filters?.city) {
+    query = query.eq("city", filters.city);
+  }
+
+  if (filters && filters.subgenres.length > 0) {
+    const orConditions = filters.subgenres.map((subgenre) => `subgenres.cs.{${subgenre}}`).join(",");
+    query = query.or(orConditions);
+  }
+
+  const response = await query;
+
+  if (response.error) {
+    return { error: "Nie udało się załadować wydarzeń" };
+  }
+
+  return { data: (response.data as EventRow[]).map(mapEventRow) };
+}
+
+export async function listDistinctCities(supabase: SupabaseClient): Promise<ServiceResult<string[]>> {
+  const response = await supabase
+    .from("events")
+    .select("city")
+    .eq("status", "published")
+    .gte("starts_at", getStartOfTodayWarsawUtcIso())
+    .order("city");
+
+  if (response.error) {
+    return { error: "Nie udało się załadować listy miast" };
+  }
+
+  const rows = response.data as { city: string }[];
+  const unique = [...new Set(rows.map((row) => row.city))];
+  unique.sort((a, b) => a.localeCompare(b, "pl"));
+
+  return { data: unique };
+}
+
+export async function getPublishedEventById(supabase: SupabaseClient, id: string): Promise<Event | null> {
+  const response = await supabase
+    .from("events")
+    .select("*")
+    .eq("id", id)
+    .eq("status", "published")
+    .gte("starts_at", getStartOfTodayWarsawUtcIso())
+    .maybeSingle();
+
+  if (response.error) {
+    return null;
+  }
+
+  const row = response.data as EventRow | null;
+  if (!row) {
+    return null;
+  }
+
+  return mapEventRow(row);
+}
+
 function parsedCreateToInsert(
   parsed: ParsedEventCreate,
   coords: { latitude: number; longitude: number },
@@ -150,7 +224,7 @@ function parsedCreateToInsert(
 
 export async function createEvent(supabase: SupabaseClient, parsed: ParsedEventCreate): Promise<ServiceResult<Event>> {
   const startsAt = toStoredStartsAt(parsed.startsAt);
-  if ("error" in startsAt) {
+  if (isStartsAtError(startsAt)) {
     return { error: startsAt.error };
   }
 
@@ -185,7 +259,7 @@ export async function updateEvent(
   if (parsed.name !== undefined) patch.name = parsed.name;
   if (parsed.startsAt !== undefined) {
     const startsAt = toStoredStartsAt(parsed.startsAt);
-    if ("error" in startsAt) {
+    if (isStartsAtError(startsAt)) {
       return { error: startsAt.error };
     }
     patch.startsAt = startsAt;

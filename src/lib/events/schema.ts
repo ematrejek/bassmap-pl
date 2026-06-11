@@ -13,6 +13,9 @@ const startsAtSchema = z
 const ticketUrlSchema = z
   .string()
   .url("Nieprawidłowy adres URL biletów")
+  .refine((value) => value.startsWith("http://") || value.startsWith("https://"), {
+    message: "Adres biletów musi zaczynać się od http:// lub https://",
+  })
   .optional()
   .nullable()
   .or(z.literal("").transform(() => null));
@@ -31,7 +34,7 @@ const commonEventFields = {
   name: z.string().min(1, "Nazwa wydarzenia jest wymagana"),
   startsAt: startsAtSchema,
   city: z.string().min(1, "Miasto jest wymagane"),
-  venueName: z.string().min(1, "Nazwa miejsca jest wymagana"),
+  venueName: z.string().min(1, "Podaj miejsce lub opis lokalizacji (np. „pod mostem Łazienkowskim”)"),
   subgenres: z.array(subgenreSchema).min(1, "Wybierz co najmniej jeden podgatunek"),
   lineup: z.array(z.string()).optional().nullable(),
   ticketUrl: ticketUrlSchema,
@@ -74,7 +77,7 @@ const eventUpdatePartialSchema = z
     name: z.string().min(1, "Nazwa wydarzenia jest wymagana").optional(),
     startsAt: startsAtSchema.optional(),
     city: z.string().min(1, "Miasto jest wymagane").optional(),
-    venueName: z.string().min(1, "Nazwa miejsca jest wymagana").optional(),
+    venueName: z.string().min(1, "Podaj miejsce lub opis lokalizacji (np. „pod mostem Łazienkowskim”)").optional(),
     subgenres: z.array(subgenreSchema).min(1, "Wybierz co najmniej jeden podgatunek").optional(),
     lineup: z.array(z.string()).optional().nullable(),
     ticketUrl: ticketUrlSchema,

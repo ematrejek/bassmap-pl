@@ -1,3 +1,5 @@
+import type { Event } from "@/types";
+
 const EVENT_DATE_FORMATTER = new Intl.DateTimeFormat("pl-PL", {
   timeZone: "Europe/Warsaw",
   day: "numeric",
@@ -66,6 +68,18 @@ function getTimezoneOffsetMs(utcTimestamp: number, timeZone: string): number {
   return toUtcMs(tzParts) - toUtcMs(utcParts);
 }
 
+/** Początek dzisiejszego dnia kalendarzowego w Europe/Warsaw jako ISO UTC (filtr „nadchodzące”). */
+export function getStartOfTodayWarsawUtcIso(): string {
+  const formatter = new Intl.DateTimeFormat("sv-SE", {
+    timeZone: "Europe/Warsaw",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  });
+  const datePart = formatter.format(new Date());
+  return parseDatetimeLocalWarsaw(`${datePart}T00:00`) ?? new Date().toISOString();
+}
+
 /** Wartość z `<input type="datetime-local">` (czas warszawski) → ISO UTC. */
 export function parseDatetimeLocalWarsaw(value: string): string | null {
   const match = DATETIME_LOCAL_PATTERN.exec(value.trim());
@@ -96,4 +110,33 @@ export function parseDatetimeLocalWarsaw(value: string): string | null {
   }
 
   return date.toISOString();
+}
+
+export function formatEventPrice(event: Pick<Event, "isFree" | "price">): string {
+  if (event.isFree) {
+    return "Wstęp wolny";
+  }
+  if (event.price && event.price.trim().length > 0) {
+    return event.price.trim();
+  }
+  return "Cena do ustalenia";
+}
+
+export function formatEventVenueLine(event: Pick<Event, "venueName" | "city">): string {
+  return `${event.venueName}, ${event.city}`;
+}
+
+export function formatEventAddress(event: Pick<Event, "addressStreet" | "addressNumber" | "venueName">): string | null {
+  if (event.addressStreet === null && event.addressNumber === null) {
+    return null;
+  }
+
+  const parts: string[] = [];
+  if (event.addressStreet) {
+    parts.push(event.addressNumber ? `${event.addressStreet} ${event.addressNumber}` : event.addressStreet);
+  } else if (event.addressNumber) {
+    parts.push(event.addressNumber);
+  }
+
+  return parts.length > 0 ? parts.join(", ") : null;
 }

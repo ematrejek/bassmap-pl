@@ -1,0 +1,102 @@
+---
+import Topbar from "@/components/Topbar.astro";
+import { formatEventAddress, formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
+import { getPublishedEventById } from "@/lib/services/events";
+import { createClient } from "@/lib/supabase";
+import Layout from "@/layouts/Layout.astro";
+import { SUBGENRE_LABELS } from "@/types";
+
+export const prerender = false;
+
+const { id } = Astro.params;
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const event = supabase && id ? await getPublishedEventById(supabase, id) : null;
+
+if (!event) {
+  Astro.response.status = 404;
+}
+---
+
+<Layout title={event ? `${event.name} — BassMap PL` : "Nie znaleziono — BassMap PL"}>
+  <div class="bg-cosmic relative min-h-screen w-full overflow-hidden">
+    <div class="relative z-10 p-4 sm:p-8">
+      <Topbar />
+
+      <div class="mx-auto max-w-2xl px-2 py-8 sm:px-4">
+        {
+          !event ? (
+            <div class="rounded-2xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-xl">
+              <h1 class="text-2xl font-bold text-white">Nie znaleziono wydarzenia</h1>
+              <p class="mt-2 text-blue-100/70">
+                To wydarzenie nie istnieje, zakończyło się lub nie jest już publicznie dostępne.
+              </p>
+              <a
+                href="/"
+                class="mt-6 inline-flex h-9 items-center justify-center rounded-md border border-white/20 bg-purple-600/80 px-4 text-sm font-medium text-white hover:bg-purple-500/90"
+              >
+                ← Wróć do listy
+              </a>
+            </div>
+          ) : (
+            <article class="space-y-6 rounded-2xl border border-white/10 bg-white/5 p-6 text-white backdrop-blur-xl sm:p-8">
+              <div>
+                <a href="/" class="text-sm text-purple-300 transition-colors hover:text-purple-100 hover:underline">
+                  ← Wróć do listy
+                </a>
+              </div>
+
+              <header class="space-y-3">
+                <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
+                  {event.name}
+                </h1>
+                <p class="text-lg text-blue-100/80">{formatEventDate(event.startsAt)}</p>
+                <p class="text-blue-100/70">{formatEventVenueLine(event)}</p>
+                {formatEventAddress(event) ? (
+                  <p class="text-sm text-blue-100/60">{formatEventAddress(event)}</p>
+                ) : (
+                  <p class="text-sm text-blue-100/60 italic">Dokładny adres zostanie podany na miejscu wydarzenia.</p>
+                )}
+                <p class="text-lg font-medium text-purple-200">{formatEventPrice(event)}</p>
+              </header>
+
+              <section class="space-y-2">
+                <h2 class="text-sm font-semibold tracking-wide text-blue-100/80 uppercase">Podgatunki</h2>
+                <div class="flex flex-wrap gap-2">
+                  {event.subgenres.map((subgenre) => (
+                    <span class="inline-flex items-center rounded-full border border-purple-400/30 bg-purple-500/10 px-2 py-0.5 text-xs font-medium text-purple-100">
+                      {SUBGENRE_LABELS[subgenre]}
+                    </span>
+                  ))}
+                </div>
+              </section>
+
+              <section class="space-y-2">
+                <h2 class="text-sm font-semibold tracking-wide text-blue-100/80 uppercase">Lineup</h2>
+                {event.lineup && event.lineup.length > 0 ? (
+                  <ul class="list-inside list-disc space-y-1 text-blue-100/80">
+                    {event.lineup.map((artist) => (
+                      <li>{artist}</li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p class="text-blue-100/60">Brak potwierdzonego lineupu.</p>
+                )}
+              </section>
+
+              {event.ticketUrl && (
+                <a
+                  href={event.ticketUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex h-9 items-center justify-center rounded-md border border-white/20 bg-purple-600/80 px-4 text-sm font-medium text-white hover:bg-purple-500/90"
+                >
+                  Kup bilet
+                </a>
+              )}
+            </article>
+          )
+        }
+      </div>
+    </div>
+  </div>
+</Layout>
