@@ -451,6 +451,6 @@ Pełna weryfikacja end-to-end MVP na produkcji oraz aktualizacja dokumentacji op
 
 #### Manual
 
-- [ ] 4.3 Smoke test fan: lista, filtry, mapa, `/events/[id]`
-- [ ] 4.4 Smoke test admin: CRUD, geokodowanie, `/403` dla nie-admina
+- [x] 4.3 Smoke test fan: lista, filtry, mapa, `/events/[id]`
+- [x] 4.4 Smoke test admin: CRUD, geokodowanie, `/403` dla nie-admina
 - [x] 4.5 `deploy-plan.md` i `README.md` zaktualizowane; gałąź `main` w docs

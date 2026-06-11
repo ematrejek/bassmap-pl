@@ -1,7 +1,7 @@
 ---
 change-id: production-deploy
 title: Wdrożenie produkcyjne MVP — Supabase prod, domena .pl, CI/CD (F-03)
-status: implementing
+status: implemented
 roadmap-id: F-03
 github-issue: 5
 created: 2026-06-11
