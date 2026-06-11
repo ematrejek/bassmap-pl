@@ -60,3 +60,5 @@ Canonical roadmap: @context/foundation/roadmap.md. Public backlog (issues + boar
 4. Map `roadmap.md` status → board: `ready`/`proposed` → Todo; in active plan/implement → In Progress; `blocked` → keep open, ensure **Blocked by** links are current; `done` → Done + closed issue.
 
 Use `gh` (needs `project` scope): `gh project item-edit`, `gh issue close`, `gh issue comment`. Match tickets by **Change ID** or Roadmap ID table in `## Backlog Handoff`.
+
+**Public homepage roadmap:** fan-facing “On the roadmap” list lives in @src/data/public-roadmap.ts. When adding, starting, or finishing a user-visible slice, update that file in the **same session** (add upcoming items; remove shipped ones). Keep copy short and in English.
