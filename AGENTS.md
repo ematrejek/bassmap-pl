@@ -10,6 +10,7 @@ BassMap PL is a Polish DnB event-discovery web app on Astro 6 SSR with React 19 
 - API routes: uppercase `GET`/`POST` exports, zod input validation — follow @src/pages/api/auth/signin.ts.
 - Supabase migrations in `supabase/migrations/` as `YYYYMMDDHHmmss_short_description.sql`; enable RLS with granular per-operation policies on new tables.
 - `SUPABASE_URL` and `SUPABASE_KEY` are server-only (`astro:env`); copy @.env.example to `.env` (Node) and `.dev.vars` (Cloudflare local dev).
+- ALWAYS explain EVERYTHING to the user in simple language, explain all technical terms. The user does know absolutely nothing about programming. Don't ask technical questions without explanation what/why/what for.
 
 ## Project Structure
 
@@ -41,7 +42,7 @@ TypeScript strict (Astro config). ESLint: `@typescript-eslint/strictTypeChecked`
 
 ## Commit & Pull Request Guidelines
 
-Commits use descriptive sentences (e.g. `Initial scaffold: BassMap PL from 10x-astro-starter.`). Before PR to `master`, run `npm run lint` and `npm run build`. CI template: @.github.scaffold/workflows/ci.yml — needs `SUPABASE_URL` and `SUPABASE_KEY` as GitHub secrets.
+Commits use descriptive sentences (e.g. `Initial scaffold: BassMap PL from 10x-astro-starter.`). Before PR to `main`, run `npm run lint` and `npm run build`. CI: `.github/workflows/ci.yml` — needs `SUPABASE_URL` and `SUPABASE_KEY` as GitHub secrets.
 
 ## Architecture
 

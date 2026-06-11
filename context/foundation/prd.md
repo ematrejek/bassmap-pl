@@ -105,33 +105,34 @@ Supporting rules:
 
   **Subgenre catalog (display label → storage id):**
 
-  | Display label | Storage id |
-  | ------------- | ---------- |
-  | Jungle | `jungle` |
+  | Display label        | Storage id           |
+  | -------------------- | -------------------- |
+  | Jungle               | `jungle`             |
   | Hardcore (oldschool) | `hardcore_oldschool` |
-  | Liquid DnB | `liquid_dnb` |
-  | Liquid Funk | `liquid_funk` |
-  | Jump-up | `jump_up` |
-  | Anthem DnB | `anthem_dnb` |
-  | Darkstep | `darkstep` |
-  | Neurofunk | `neurofunk` |
-  | Techstep | `techstep` |
-  | Doomcore | `doomcore` |
-  | Funk DnB | `funk_dnb` |
-  | Jazz-step | `jazz_step` |
-  | Soul DnB | `soul_dnb` |
-  | Drumfunk | `drumfunk` |
-  | Abstract DnB | `abstract_dnb` |
-  | Autonomic | `autonomic` |
-  | Halftime | `halftime` |
-  | Sambass | `sambass` |
-  | Clownstep | `clownstep` |
-  | Trancestep | `trancestep` |
-  | Drumstep | `drumstep` |
-  | Crossbreed | `crossbreed` |
-  | Ragga DnB | `ragga_dnb` |
-  | Ambient DnB | `ambient_dnb` |
-  | Intelligent DnB | `intelligent_dnb` |
+  | Liquid DnB           | `liquid_dnb`         |
+  | Liquid Funk          | `liquid_funk`        |
+  | Jump-up              | `jump_up`            |
+  | Anthem DnB           | `anthem_dnb`         |
+  | Darkstep             | `darkstep`           |
+  | Neurofunk            | `neurofunk`          |
+  | Techstep             | `techstep`           |
+  | Doomcore             | `doomcore`           |
+  | Funk DnB             | `funk_dnb`           |
+  | Jazz-step            | `jazz_step`          |
+  | Soul DnB             | `soul_dnb`           |
+  | Drumfunk             | `drumfunk`           |
+  | Abstract DnB         | `abstract_dnb`       |
+  | Autonomic            | `autonomic`          |
+  | Halftime             | `halftime`           |
+  | Sambass              | `sambass`            |
+  | Clownstep            | `clownstep`          |
+  | Trancestep           | `trancestep`         |
+  | Drumstep             | `drumstep`           |
+  | Crossbreed           | `crossbreed`         |
+  | Ragga DnB            | `ragga_dnb`          |
+  | Ambient DnB          | `ambient_dnb`        |
+  | Intelligent DnB      | `intelligent_dnb`    |
+
 - An event requires: name, date, city, venue. Lineup, ticket link, and price are optional.
 - Events are visible publicly only after admin verification (admin-added events are immediately published; any future organizer-submitted events require explicit admin approval).
 

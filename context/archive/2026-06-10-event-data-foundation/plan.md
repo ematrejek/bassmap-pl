@@ -58,33 +58,33 @@ Kolejność w migracji ma znaczenie: enumy → tabele → funkcje → RLS → in
 
 ### Katalog podgatunków (kanoniczna lista)
 
-| Identyfikator enum / TS | Etykieta UI |
-| ----------------------- | ----------- |
-| `jungle` | Jungle |
-| `hardcore_oldschool` | Hardcore (oldschool) |
-| `liquid_dnb` | Liquid DnB |
-| `liquid_funk` | Liquid Funk |
-| `jump_up` | Jump-up |
-| `anthem_dnb` | Anthem DnB |
-| `darkstep` | Darkstep |
-| `neurofunk` | Neurofunk |
-| `techstep` | Techstep |
-| `doomcore` | Doomcore |
-| `funk_dnb` | Funk DnB |
-| `jazz_step` | Jazz-step |
-| `soul_dnb` | Soul DnB |
-| `drumfunk` | Drumfunk |
-| `abstract_dnb` | Abstract DnB |
-| `autonomic` | Autonomic |
-| `halftime` | Halftime |
-| `sambass` | Sambass |
-| `clownstep` | Clownstep |
-| `trancestep` | Trancestep |
-| `drumstep` | Drumstep |
-| `crossbreed` | Crossbreed |
-| `ragga_dnb` | Ragga DnB |
-| `ambient_dnb` | Ambient DnB |
-| `intelligent_dnb` | Intelligent DnB |
+| Identyfikator enum / TS | Etykieta UI          |
+| ----------------------- | -------------------- |
+| `jungle`                | Jungle               |
+| `hardcore_oldschool`    | Hardcore (oldschool) |
+| `liquid_dnb`            | Liquid DnB           |
+| `liquid_funk`           | Liquid Funk          |
+| `jump_up`               | Jump-up              |
+| `anthem_dnb`            | Anthem DnB           |
+| `darkstep`              | Darkstep             |
+| `neurofunk`             | Neurofunk            |
+| `techstep`              | Techstep             |
+| `doomcore`              | Doomcore             |
+| `funk_dnb`              | Funk DnB             |
+| `jazz_step`             | Jazz-step            |
+| `soul_dnb`              | Soul DnB             |
+| `drumfunk`              | Drumfunk             |
+| `abstract_dnb`          | Abstract DnB         |
+| `autonomic`             | Autonomic            |
+| `halftime`              | Halftime             |
+| `sambass`               | Sambass              |
+| `clownstep`             | Clownstep            |
+| `trancestep`            | Trancestep           |
+| `drumstep`              | Drumstep             |
+| `crossbreed`            | Crossbreed           |
+| `ragga_dnb`             | Ragga DnB            |
+| `ambient_dnb`           | Ambient DnB          |
+| `intelligent_dnb`       | Intelligent DnB      |
 
 > **Źródło prawdy katalogu:** `context/foundation/prd.md` §Business Logic (zsynchronizowane z tym planem).
 

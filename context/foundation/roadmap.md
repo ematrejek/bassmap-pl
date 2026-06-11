@@ -34,7 +34,7 @@ BassMap PL to pierwsza scentralizowana wyszukiwarka wydarzeń drum'n'bass w Pols
 | F-02 | admin-role-guard       | (foundation) ścieżki zapisu chronione rolą admina                            | —             | Access Control       | done     |
 | S-01 | admin-event-management | admin dodaje, edytuje i usuwa wydarzenia DnB                                 | F-01, F-02    | FR-006, FR-007       | done     |
 | S-02 | fan-event-discovery    | fan filtruje po mieście/podgatunku, widzi listę, mapę i szczegóły wydarzenia | F-01, S-01    | US-01, FR-001–FR-005 | done     |
-| F-03 | production-deploy      | (foundation) aplikacja działa pod publicznym adresem z poprawnymi sekretami  | S-01          | NFR Operating cost   | proposed |
+| F-03 | production-deploy      | (foundation) aplikacja działa pod publicznym adresem z poprawnymi sekretami  | S-01          | NFR Operating cost   | ready    |
 
 ## Streams
 
@@ -95,10 +95,9 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** S-01
 - **Parallel with:** S-02
 - **Blockers:** —
-- **Unknowns:**
-  - Czy domena własna jest wymagana na start, czy wystarczy domyślny adres `*.workers.dev`? — Owner: user. Block: no.
+- **Unknowns:** —
 - **Risk:** Przy blokerze umiejętności pierwszy deploy bywa zaskoczeniem — lepiej po zasileniu bazy pierwszymi eventami niż na pustej aplikacji.
-- **Status:** proposed
+- **Status:** ready — plan: `context/changes/production-deploy/plan.md`
 
 ## Slices
 
@@ -138,11 +137,11 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | F-02       | admin-role-guard       | #2     | Rola admina: guard zapisu wydarzeń         | —                     | Archived → `context/archive/2026-06-10-admin-role-guard/` |
 | S-01       | admin-event-management | #3     | Panel admina: CRUD wydarzeń DnB            | —                     | Archived → `context/archive/2026-06-10-admin-event-management/` |
 | S-02       | fan-event-discovery    | #4     | Odkrywanie: lista, filtry, mapa, szczegóły | —                     | Archived → `context/archive/2026-06-11-fan-event-discovery/` |
-| F-03       | production-deploy      | #5     | Deploy produkcyjny na Cloudflare           | no                    | Po S-01; równolegle z końcówką S-02        |
+| F-03       | production-deploy      | #5     | Deploy produkcyjny na Cloudflare           | —                     | Plan: `context/changes/production-deploy/` |
 
-## Open Roadmap Questions
+## Resolved (2026-06-11) — F-03 domena
 
-1. **Czy na start wystarczy domyślny adres Cloudflare, czy potrzebna jest własna domena?** — Owner: user. Block: F-03 (planowanie, nie roadmap-wide).
+- **Domena na start:** własna `.pl` — zakup u polskiego rejestratora, DNS (nameservery) w Cloudflare, Custom Domain na Workerze. Cloudflare nie rejestruje `.pl`, ale obsługuje je jako strefę DNS.
 
 ## Resolved (2026-06-10)
 

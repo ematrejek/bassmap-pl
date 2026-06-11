@@ -419,38 +419,38 @@ Pełna weryfikacja end-to-end MVP na produkcji oraz aktualizacja dokumentacji op
 
 #### Automated
 
-- [x] 2.1 `npx wrangler deployments list` — Worker `bassmap-pl` istnieje
-- [x] 2.2 `npm run build` — sukces
+- [x] 2.1 `npx wrangler deployments list` — Worker `bassmap-pl` istnieje — c49cabc
+- [x] 2.2 `npm run build` — sukces — c49cabc
 
 #### Manual
 
-- [x] 2.3 Strefa CF Active; Custom Domain Active z certyfikatem
-- [x] 2.4 `curl -I https://<domena.pl>` — 200 lub 302
-- [x] 2.5 Supabase Auth URLs wskazują domenę `.pl`
+- [x] 2.3 Strefa CF Active; Custom Domain Active z certyfikatem — c49cabc
+- [x] 2.4 `curl -I https://<domena.pl>` — 200 lub 302 — c49cabc
+- [x] 2.5 Supabase Auth URLs wskazują domenę `.pl` — c49cabc
 
 ### Phase 3: Deploy kodu MVP (CI/CD)
 
 #### Automated
 
-- [ ] 3.1 GitHub Actions CI — success na push do `main`
-- [ ] 3.2 GitHub Actions Deploy — success
-- [ ] 3.3 `npm run lint` — sukces
-- [ ] 3.4 `npm run build` — sukces
+- [x] 3.1 GitHub Actions CI — success na push do `main`
+- [x] 3.2 GitHub Actions Deploy — success
+- [x] 3.3 `npm run lint` — sukces
+- [x] 3.4 `npm run build` — sukces
 
 #### Manual
 
-- [ ] 3.5 Strona główna MVP pod domeną `.pl` (nie stary scaffold)
-- [ ] 3.6 Brak banneru Supabase; `/auth/signin` renderuje się
+- [x] 3.5 Strona główna MVP pod domeną `.pl` (nie stary scaffold)
+- [x] 3.6 Brak banneru Supabase; `/auth/signin` renderuje się
 
 ### Phase 4: Smoke test MVP i dokumentacja
 
 #### Automated
 
-- [ ] 4.1 `npm run lint` — sukces po edycjach docs
-- [ ] 4.2 `npm run build` — sukces
+- [x] 4.1 `npm run lint` — sukces po edycjach docs
+- [x] 4.2 `npm run build` — sukces
 
 #### Manual
 
 - [ ] 4.3 Smoke test fan: lista, filtry, mapa, `/events/[id]`
 - [ ] 4.4 Smoke test admin: CRUD, geokodowanie, `/403` dla nie-admina
-- [ ] 4.5 `deploy-plan.md` i `README.md` zaktualizowane; gałąź `main` w docs
+- [x] 4.5 `deploy-plan.md` i `README.md` zaktualizowane; gałąź `main` w docs

@@ -156,25 +156,41 @@ Route protection is handled in `src/middleware.ts`. Add paths to the `PROTECTED_
 
 ## Deployment
 
-This project deploys to [Cloudflare Workers](https://workers.cloudflare.com/).
+Produkcja: **https://bassmap.pl** (Cloudflare Worker `bassmap-pl`). Pełny plan operacyjny: [context/deployment/deploy-plan.md](context/deployment/deploy-plan.md).
 
-1. Build the project:
+### Migracje bazy produkcyjnej
+
+Przed deployem kodu wymagającego schematu `events`:
+
+```bash
+npx supabase login
+npx supabase link --project-ref dpqndrmvrkfahzyubrns
+npx supabase db push
+```
+
+### Deploy aplikacji
+
+Auto-deploy: każdy push/merge do gałęzi **`main`** uruchamia GitHub Actions (CI + Deploy).
+
+Ręczny deploy:
 
 ```bash
 npm run build
-```
-
-2. Deploy with Wrangler:
-
-```bash
 npx wrangler deploy
 ```
 
-Set `SUPABASE_URL` and `SUPABASE_KEY` as secrets in your Cloudflare dashboard or via `npx wrangler secret put`.
+Sekrety runtime Workera: `SUPABASE_URL`, `SUPABASE_KEY` (`npx wrangler secret put` lub Dashboard).
+
+### Smoke test prod (skrót)
+
+- `/` — lista/mapа wydarzeń MVP
+- `/auth/signin` — logowanie; brak banneru Supabase
+- `/admin` — panel admina (tylko allowlist)
+- `/events/[id]` — szczegóły wydarzenia
 
 ## CI
 
-GitHub Actions runs lint + build on every push and PR to `master`. Configure `SUPABASE_URL` and `SUPABASE_KEY` as repository secrets in GitHub for the build step.
+GitHub Actions runs lint + build on every push and PR to **`main`**. Deploy workflow (`deploy.yml`) odpala się na push do `main`. Wymaga sekretów: `SUPABASE_URL`, `SUPABASE_KEY`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
 
 ## License
 

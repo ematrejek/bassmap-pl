@@ -16,18 +16,18 @@ Po wdrożeniu `npx supabase db reset` tworzy tabelę `events` z pełnym adresem 
 
 ## Key Decisions Made
 
-| Decision | Choice | Why | Source |
-| -------- | ------ | --- | ------ |
-| Podgatunki | `subgenre[]` enum (25 wartości) | Wiele tagów na event; tylko ze stałej listy (PRD §Business Logic); etykiety UI przez `SUBGENRE_LABELS` | PRD / Plan |
-| Data wydarzenia | `timestamptz` | Poprawna granica „dziś” w Europe/Warsaw + godzina | Plan |
-| Miasto | `text` wolny | MVP z jednym adminem; filtr bez słownika miast | Plan |
-| Adres | `venue_name` + `address_street` + `address_number` | Dokładne miejsce ważniejsze niż sama nazwa klubu | Plan |
-| Współrzędne | `latitude`/`longitude` nullable | Admin zwykle nie zna współrzędnych; geokodowanie w S-01 | Plan |
-| Lineup | `lineup text[]` nullable | Opcjonalna lista artystów | Plan |
-| Bilety / cena | `is_free` + `ticket_url` + `price` nullable | Flaga free vs płatne; cena opcjonalna | Plan |
-| Weryfikacja | `event_status` enum | draft / pending / published / rejected — gotowe na organizatora v2 | Plan |
-| Zapis | `admin_allowlist` + `is_admin()` | Na start tylko Ty; most do F-02 | Plan |
-| Seed | 3–5 eventów w `seed.sql` | Lokalny dev bez ręcznego INSERT | Plan |
+| Decision        | Choice                                             | Why                                                                                                    | Source     |
+| --------------- | -------------------------------------------------- | ------------------------------------------------------------------------------------------------------ | ---------- |
+| Podgatunki      | `subgenre[]` enum (25 wartości)                    | Wiele tagów na event; tylko ze stałej listy (PRD §Business Logic); etykiety UI przez `SUBGENRE_LABELS` | PRD / Plan |
+| Data wydarzenia | `timestamptz`                                      | Poprawna granica „dziś” w Europe/Warsaw + godzina                                                      | Plan       |
+| Miasto          | `text` wolny                                       | MVP z jednym adminem; filtr bez słownika miast                                                         | Plan       |
+| Adres           | `venue_name` + `address_street` + `address_number` | Dokładne miejsce ważniejsze niż sama nazwa klubu                                                       | Plan       |
+| Współrzędne     | `latitude`/`longitude` nullable                    | Admin zwykle nie zna współrzędnych; geokodowanie w S-01                                                | Plan       |
+| Lineup          | `lineup text[]` nullable                           | Opcjonalna lista artystów                                                                              | Plan       |
+| Bilety / cena   | `is_free` + `ticket_url` + `price` nullable        | Flaga free vs płatne; cena opcjonalna                                                                  | Plan       |
+| Weryfikacja     | `event_status` enum                                | draft / pending / published / rejected — gotowe na organizatora v2                                     | Plan       |
+| Zapis           | `admin_allowlist` + `is_admin()`                   | Na start tylko Ty; most do F-02                                                                        | Plan       |
+| Seed            | 3–5 eventów w `seed.sql`                           | Lokalny dev bez ręcznego INSERT                                                                        | Plan       |
 
 ## Scope
 
@@ -54,11 +54,11 @@ Kolejne slice'y (F-02, S-01) podłączą się do tego schematu bez jego przebudo
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| ----- | ---------------- | -------- |
-| 1. Schemat SQL | Tabela `events` + enumy + constrainty | Literówka w CHECK na subgenres |
-| 2. RLS + admin | Public read, admin write, allowlist | Zły e-mail w allowlist → brak zapisu |
-| 3. Typy + seed | `src/types.ts`, `seed.sql`, README | Seed z datami w przeszłości → niewidoczne przy RLS |
+| Phase          | What it delivers                      | Key risk                                           |
+| -------------- | ------------------------------------- | -------------------------------------------------- |
+| 1. Schemat SQL | Tabela `events` + enumy + constrainty | Literówka w CHECK na subgenres                     |
+| 2. RLS + admin | Public read, admin write, allowlist   | Zły e-mail w allowlist → brak zapisu               |
+| 3. Typy + seed | `src/types.ts`, `seed.sql`, README    | Seed z datami w przeszłości → niewidoczne przy RLS |
 
 **Prerequisites:** Docker + `npx supabase start`, `.env` z `SUPABASE_URL`/`SUPABASE_KEY`.
 
