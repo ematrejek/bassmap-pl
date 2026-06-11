@@ -1,11 +1,12 @@
 ---
 change-id: fan-event-discovery
 title: Odkrywanie wydarzeń przez fana — lista, filtry, mapa, szczegóły (S-02)
-status: impl_reviewed
+status: archived
 roadmap-id: S-02
 github-issue: 4
 created: 2026-06-11
 updated: 2026-06-11
+archived_at: 2026-06-11T16:00:00Z
 impl-review: context/changes/fan-event-discovery/reviews/impl-review.md
 ---
 
