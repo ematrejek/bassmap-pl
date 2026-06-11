@@ -97,7 +97,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Przy blokerze umiejętności pierwszy deploy bywa zaskoczeniem — lepiej po zasileniu bazy pierwszymi eventami niż na pustej aplikacji.
-- **Status:** done — archived: `context/changes/production-deploy/` (prod: https://bassmap.pl)
+- **Status:** done
 
 ## Slices
 
@@ -168,3 +168,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **F-02: (foundation) tylko użytkownicy z rolą admina mogą dodawać, edytować i usuwać wydarzenia; publiczny odczyt bez logowania.** — Archived 2026-06-10 → `context/archive/2026-06-10-admin-role-guard/`. Lesson: allowlist e-mail musi dokładnie pasować do konta Auth (literówka w seedzie = brak roli admina).
 - **S-01: admin dodaje, edytuje i usuwa wydarzenia DnB z wymaganymi polami (nazwa, data, miasto, venue) i opcjonalnymi (lineup, link biletowy, cena, tagi podgatunków); adres geokodowany automatycznie (Nominatim) lub ręczne współrzędne w trybie „lokalizacja tajna”.** — Archived 2026-06-11 → `context/archive/2026-06-10-admin-event-management/`. Lesson: —.
 - **S-02: fan filtruje nadchodzące wydarzenia po mieście i podgatunku, widzi listę posortowaną po dacie, pinezki na interaktywnej mapie Polski i pełne szczegóły po kliknięciu.** — Archived 2026-06-11 → `context/archive/2026-06-11-fan-event-discovery/`. Lesson: jawne filtry fan read niezależnie od RLS (`context/foundation/lessons.md`).
+- **F-03: (foundation) aplikacja dostępna pod publicznym adresem Cloudflare z poprawnie ustawionymi sekretami Supabase.** — Archived 2026-06-11 → `context/archive/2026-06-11-production-deploy/`. Lesson: propagacja DNS u rejestratora .pl może opóźniać dostęp z lokalnego Wi‑Fi — LTE / publiczny DNS szybciej potwierdzają poprawną konfigurację.
