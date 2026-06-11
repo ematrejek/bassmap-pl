@@ -1,7 +1,7 @@
 ---
 change_id: testing-critical-path-fan-read
 title: Testing critical path fan read
-status: implementing
+status: implemented
 created: 2026-06-11
 updated: 2026-06-11
 archived_at: null

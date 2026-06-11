@@ -373,9 +373,9 @@ Ship durable patterns so future tests (Phase 2 rollout, `/10x-tdd`) follow the s
 
 #### Automated
 
-- [x] 4.1 `npm test` still passes after doc updates
-- [x] 4.2 `npm run lint` passes
+- [x] 4.1 `npm test` still passes after doc updates — 0735a37
+- [x] 4.2 `npm run lint` passes — 0735a37
 
 #### Manual
 
-- [x] 4.3 test-plan §6.2 and §6.6 are actionable standalone
+- [x] 4.3 test-plan §6.2 and §6.6 are actionable standalone — 0735a37
