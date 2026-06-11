@@ -340,20 +340,20 @@ Ship durable patterns so future tests (Phase 2 rollout, `/10x-tdd`) follow the s
 
 #### Automated
 
-- [x] 1.1 `npm test` exits 0 and runs smoke test
-- [x] 1.2 `npm run lint` passes
-- [x] 1.3 `npm run build` passes
+- [x] 1.1 `npm test` exits 0 and runs smoke test — 49e0234
+- [x] 1.2 `npm run lint` passes — 49e0234
+- [x] 1.3 `npm run build` passes — 49e0234
 
 #### Manual
 
-- [x] 1.4 Developer can connect helpers to local Supabase using documented env vars
+- [x] 1.4 Developer can connect helpers to local Supabase using documented env vars — 49e0234
 
 ### Phase 2: Risk #1 — Public list not falsely empty (anon)
 
 #### Automated
 
-- [ ] 2.1 Fan-read list tests pass with local Supabase + env (sub-phases 2a, 2b)
-- [ ] 2.2 Tests skipped cleanly without Supabase env
+- [x] 2.1 Fan-read list tests pass with local Supabase + env (sub-phases 2a, 2b)
+- [x] 2.2 Tests skipped cleanly without Supabase env
 
 #### Manual
 

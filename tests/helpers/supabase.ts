@@ -7,6 +7,7 @@
  * - SUPABASE_SERVICE_ROLE_KEY — service_role secret (fixture insert/delete only)
  *
  * Put values in `.env.test`, `.env`, or export in your shell before `npm test`.
+ * Integration tests run only against local Supabase (127.0.0.1 / localhost) — never production.
  * Integration suites should use `describe.skipIf(!isSupabaseConfigured())` and
  * call `logSkipIfNotConfigured()` once so missing env exits 0 with a warning.
  */
@@ -20,13 +21,41 @@ function getEnv(name: string): string | undefined {
   return value && value.trim() !== "" ? value.trim() : undefined;
 }
 
+function isLocalSupabaseUrl(url: string): boolean {
+  try {
+    const hostname = new URL(url).hostname.toLowerCase();
+    return hostname === "127.0.0.1" || hostname === "localhost" || hostname === "[::1]";
+  } catch {
+    return false;
+  }
+}
+
 export function isSupabaseConfigured(): boolean {
-  return Boolean(getEnv("SUPABASE_URL") && getEnv("SUPABASE_KEY") && getEnv("SUPABASE_SERVICE_ROLE_KEY"));
+  const url = getEnv("SUPABASE_URL");
+  if (!url || !getEnv("SUPABASE_KEY") || !getEnv("SUPABASE_SERVICE_ROLE_KEY")) {
+    return false;
+  }
+  return isLocalSupabaseUrl(url);
 }
 
 export function logSkipIfNotConfigured(): void {
-  if (!isSupabaseConfigured() && !skipWarningLogged) {
+  if (skipWarningLogged) {
+    return;
+  }
+
+  const url = getEnv("SUPABASE_URL");
+  if (url && !isLocalSupabaseUrl(url)) {
     skipWarningLogged = true;
+    // eslint-disable-next-line no-console -- intentional skip notice for developers
+    console.warn(
+      "Integration tests skipped: SUPABASE_URL must point to local Supabase (127.0.0.1 or localhost), not production.",
+    );
+    return;
+  }
+
+  if (!isSupabaseConfigured()) {
+    skipWarningLogged = true;
+    // eslint-disable-next-line no-console -- intentional skip notice for developers
     console.warn("Integration tests skipped: local Supabase not configured.");
   }
 }
@@ -37,9 +66,12 @@ export function createServiceClient(): SupabaseClient {
   if (!url || !key) {
     throw new Error("SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are required for service client");
   }
+  if (!isLocalSupabaseUrl(url)) {
+    throw new Error("Refusing service client: SUPABASE_URL must be local Supabase, not production");
+  }
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
-  });
+  }) as SupabaseClient;
 }
 
 export function createAnonClient(): SupabaseClient {
@@ -48,9 +80,12 @@ export function createAnonClient(): SupabaseClient {
   if (!url || !key) {
     throw new Error("SUPABASE_URL and SUPABASE_KEY are required for anon client");
   }
+  if (!isLocalSupabaseUrl(url)) {
+    throw new Error("Refusing anon client: SUPABASE_URL must be local Supabase, not production");
+  }
   return createClient(url, key, {
     auth: { persistSession: false, autoRefreshToken: false },
-  });
+  }) as SupabaseClient;
 }
 
 export async function createAuthenticatedClient(email: string, password: string): Promise<SupabaseClient> {
