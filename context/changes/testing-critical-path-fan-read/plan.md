@@ -363,7 +363,7 @@ Ship durable patterns so future tests (Phase 2 rollout, `/10x-tdd`) follow the s
 
 #### Automated
 
-- [x] 3.1 Admin fan-read tests pass (sub-phases 3a–3c)
+- [x] 3.1 Admin fan-read tests pass (sub-phases 3a–3c) — 1e09382
 
 #### Manual
 
@@ -373,9 +373,9 @@ Ship durable patterns so future tests (Phase 2 rollout, `/10x-tdd`) follow the s
 
 #### Automated
 
-- [ ] 4.1 `npm test` still passes after doc updates
-- [ ] 4.2 `npm run lint` passes
+- [x] 4.1 `npm test` still passes after doc updates
+- [x] 4.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 4.3 test-plan §6.2 and §6.6 are actionable standalone
+- [x] 4.3 test-plan §6.2 and §6.6 are actionable standalone
