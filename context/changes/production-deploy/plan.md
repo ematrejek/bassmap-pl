@@ -446,11 +446,11 @@ Pełna weryfikacja end-to-end MVP na produkcji oraz aktualizacja dokumentacji op
 
 #### Automated
 
-- [x] 4.1 `npm run lint` — sukces po edycjach docs
-- [x] 4.2 `npm run build` — sukces
+- [x] 4.1 `npm run lint` — sukces po edycjach docs — 413dce2
+- [x] 4.2 `npm run build` — sukces — 413dce2
 
 #### Manual
 
-- [x] 4.3 Smoke test fan: lista, filtry, mapa, `/events/[id]`
-- [x] 4.4 Smoke test admin: CRUD, geokodowanie, `/403` dla nie-admina
-- [x] 4.5 `deploy-plan.md` i `README.md` zaktualizowane; gałąź `main` w docs
+- [x] 4.3 Smoke test fan: lista, filtry, mapa, `/events/[id]` — 413dce2
+- [x] 4.4 Smoke test admin: CRUD, geokodowanie, `/403` dla nie-admina — 413dce2
+- [x] 4.5 `deploy-plan.md` i `README.md` zaktualizowane; gałąź `main` w docs — 413dce2
