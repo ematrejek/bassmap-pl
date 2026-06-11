@@ -405,28 +405,28 @@ Pełna weryfikacja end-to-end MVP na produkcji oraz aktualizacja dokumentacji op
 
 #### Automated
 
-- [x] 1.1 `npx supabase db push` kończy się bez błędu (exit code 0)
-- [x] 1.2 `npm run lint` — sukces
-- [x] 1.3 `npm run build` — sukces
+- [x] 1.1 `npx supabase db push` kończy się bez błędu (exit code 0) — cc3a94e
+- [x] 1.2 `npm run lint` — sukces — cc3a94e
+- [x] 1.3 `npm run build` — sukces — cc3a94e
 
 #### Manual
 
-- [x] 1.4 Supabase Studio: tabele `events` i `admin_allowlist` istnieją
-- [x] 1.5 Allowlist zawiera `matrejekemilia@gmail.com`; konto Auth istnieje
-- [x] 1.6 RLS: anon INSERT na `events` odrzucony
+- [x] 1.4 Supabase Studio: tabele `events` i `admin_allowlist` istnieją — cc3a94e
+- [x] 1.5 Allowlist zawiera `matrejekemilia@gmail.com`; konto Auth istnieje — cc3a94e
+- [x] 1.6 RLS: anon INSERT na `events` odrzucony — cc3a94e
 
 ### Phase 2: Domena `.pl` i DNS w Cloudflare
 
 #### Automated
 
-- [ ] 2.1 `npx wrangler deployments list` — Worker `bassmap-pl` istnieje
-- [ ] 2.2 `npm run build` — sukces
+- [x] 2.1 `npx wrangler deployments list` — Worker `bassmap-pl` istnieje
+- [x] 2.2 `npm run build` — sukces
 
 #### Manual
 
-- [ ] 2.3 Strefa CF Active; Custom Domain Active z certyfikatem
-- [ ] 2.4 `curl -I https://<domena.pl>` — 200 lub 302
-- [ ] 2.5 Supabase Auth URLs wskazują domenę `.pl`
+- [x] 2.3 Strefa CF Active; Custom Domain Active z certyfikatem
+- [x] 2.4 `curl -I https://<domena.pl>` — 200 lub 302
+- [x] 2.5 Supabase Auth URLs wskazują domenę `.pl`
 
 ### Phase 3: Deploy kodu MVP (CI/CD)
 
