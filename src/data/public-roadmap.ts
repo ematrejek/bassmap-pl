@@ -9,12 +9,12 @@
  * Keep 3–6 short items in plain English (fans read this). One line = one upcoming capability.
  * Internal-only work (migrations, CI, refactors) does not belong here.
  */
-export type PublicRoadmapItem = {
+export interface PublicRoadmapItem {
   /** Stable id for edits (e.g. roadmap S-03 slug). */
   id: string;
   /** Shown on the homepage. */
   label: string;
-};
+}
 
 export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
   {

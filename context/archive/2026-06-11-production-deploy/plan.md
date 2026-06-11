@@ -453,4 +453,8 @@ Pełna weryfikacja end-to-end MVP na produkcji oraz aktualizacja dokumentacji op
 
 - [x] 4.3 Smoke test fan: lista, filtry, mapa, `/events/[id]` — 413dce2
 - [x] 4.4 Smoke test admin: CRUD, geokodowanie, `/403` dla nie-admina — 413dce2
-- [x] 4.5 `deploy-plan.md` i `README.md` zaktualizowane; gałąź `main` w docs — 413dce2
+- [x] 4.5 `deploy-plan.md` i `README.md` zaktualizowane; gałąź `main` w docs — 81b8a8d (treść docs); 413dce2 (domknięcie progress)
+
+## Epilog (impl-review 2026-06-11)
+
+Commity `chore(production-deploy): …` w repo aktualizują głównie **Progress** w `plan.md` — nie zawierają diffu operacji manualnych (Supabase `db push`, DNS/nameservery, smoke test w przeglądarce). To oczekiwane dla F-03: dowód wdrożenia to GitHub Actions Deploy (success), zaktualizowany `deploy-plan.md` oraz checklist manualny w Progress, nie pliki migracji/SQL w commitach deployowych.

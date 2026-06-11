@@ -1,18 +1,15 @@
-import type { PostgrestError, SupabaseClient, User } from "@supabase/supabase-js";
+import type { SupabaseClient, User } from "@supabase/supabase-js";
 
 export async function resolveIsAdmin(supabase: SupabaseClient, user: User | null): Promise<boolean> {
-  if (!user) {
+  if (!user?.id) {
     return false;
   }
 
-  const result = (await supabase.rpc("is_admin")) as {
-    data: boolean | null;
-    error: PostgrestError | null;
-  };
+  const response = await supabase.rpc("is_admin");
 
-  if (result.error || typeof result.data !== "boolean") {
+  if (response.error) {
     return false;
   }
 
-  return result.data;
+  return response.data === true;
 }

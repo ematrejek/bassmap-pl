@@ -5,7 +5,7 @@ project_name: bassmap-pl
 hints:
   language_family: js
   team_size: solo
-  deployment_target: cloudflare-pages
+  deployment_target: cloudflare-workers
   ci_provider: github-actions
   ci_default_flow: auto-deploy-on-merge
   bootstrapper_confidence: first-class
@@ -21,4 +21,4 @@ hints:
 
 ## Why this stack
 
-Solo beginner shipping a Polish DnB event-discovery web app in three after-hours weeks with zero operating cost. The recommended default for (web-app, js) is 10x-astro-starter: Astro + React + TypeScript for the UI, Supabase for the event database and admin auth, Cloudflare Pages for free hosting. It clears all four agent-friendly gates (typed, conventional, popular in training data, well documented). PRD needs a public event list with filters, an interactive Poland map, and an admin write path — auth is admin-only in MVP (no fan accounts per non-goals). Map rendering (e.g. Leaflet) is an add-on, not bundled in the starter. Deployment locks to cloudflare-pages; CI on GitHub Actions with auto-deploy-on-merge.
+Solo beginner shipping a Polish DnB event-discovery web app in three after-hours weeks with zero operating cost. The recommended default for (web-app, js) is 10x-astro-starter: Astro + React + TypeScript for the UI, Supabase for the event database and admin auth, Cloudflare Workers for free hosting (Astro 6 + `@astrojs/cloudflare` v13 — not Pages; see [infrastructure.md](./infrastructure.md)). It clears all four agent-friendly gates (typed, conventional, popular in training data, well documented). PRD needs a public event list with filters, an interactive Poland map, and an admin write path — auth is admin-only in MVP (no fan accounts per non-goals). Map rendering (e.g. Leaflet) is an add-on, not bundled in the starter. Deployment locks to cloudflare-workers via `wrangler deploy`; CI on GitHub Actions with auto-deploy-on-merge.
