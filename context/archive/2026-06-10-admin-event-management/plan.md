@@ -444,8 +444,8 @@ Formularz React wspólny dla tworzenia i edycji; strony Astro; usuwanie z dialog
 
 #### Automated
 
-- [x] 3.1 `npm run lint` przechodzi
-- [x] 3.2 `npm run build` przechodzi
+- [x] 3.1 `npm run lint` przechodzi — 51c5a7c
+- [x] 3.2 `npm run build` przechodzi — 51c5a7c
 
 #### Manual
 

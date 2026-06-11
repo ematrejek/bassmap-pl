@@ -1,11 +1,12 @@
 ---
 change-id: admin-event-management
 title: Panel admina — CRUD wydarzeń DnB (S-01)
-status: impl_reviewed
+status: archived
 roadmap-id: S-01
 github-issue: 3
 created: 2026-06-10
 updated: 2026-06-11
+archived_at: 2026-06-11T12:00:00Z
 impl-review: context/changes/admin-event-management/reviews/impl-review.md
 ---
 

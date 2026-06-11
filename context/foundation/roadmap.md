@@ -3,7 +3,7 @@ project: BassMap PL
 version: 1
 status: draft
 created: 2026-06-10
-updated: 2026-06-10
+updated: 2026-06-11
 subgenre_catalog_version: 1
 prd_version: 1
 main_goal: market-feedback
@@ -32,7 +32,7 @@ BassMap PL to pierwsza scentralizowana wyszukiwarka wydarzeń drum'n'bass w Pols
 | ---- | ---------------------- | ---------------------------------------------------------------------------- | ------------- | -------------------- | -------- |
 | F-01 | event-data-foundation  | (foundation) schemat wydarzeń w bazie z migracjami i politykami RLS          | —             | Business Logic, NFR  | done     |
 | F-02 | admin-role-guard       | (foundation) ścieżki zapisu chronione rolą admina                            | —             | Access Control       | done     |
-| S-01 | admin-event-management | admin dodaje, edytuje i usuwa wydarzenia DnB                                 | F-01, F-02    | FR-006, FR-007       | in progress |
+| S-01 | admin-event-management | admin dodaje, edytuje i usuwa wydarzenia DnB                                 | F-01, F-02    | FR-006, FR-007       | done     |
 | S-02 | fan-event-discovery    | fan filtruje po mieście/podgatunku, widzi listę, mapę i szczegóły wydarzenia | F-01, S-01    | US-01, FR-001–FR-005 | proposed |
 | F-03 | production-deploy      | (foundation) aplikacja działa pod publicznym adresem z poprawnymi sekretami  | S-01          | NFR Operating cost   | proposed |
 
@@ -112,7 +112,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Admin jest jedynym źródłem danych w MVP — bez tego slice'a S-02 nie ma czego pokazać fanowi.
-- **Status:** in progress (plan: `context/changes/admin-event-management/plan.md`, faza 1)
+- **Status:** done
 
 ### S-02: Odkrywanie wydarzeń przez fana
 
@@ -137,7 +137,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | ---------- | ---------------------- | ------ | ------------------------------------------ | --------------------- | ------------------------------------------ |
 | F-01       | event-data-foundation  | #1     | Schemat wydarzeń: migracje + RLS           | yes                   | Pierwszy krok — odblokowuje całą ścieżkę   |
 | F-02       | admin-role-guard       | #2     | Rola admina: guard zapisu wydarzeń         | —                     | Archived → `context/archive/2026-06-10-admin-role-guard/` |
-| S-01       | admin-event-management | #3     | Panel admina: CRUD wydarzeń DnB            | —                     | Plan: `context/changes/admin-event-management/` · F-01 ✅ F-02 ✅ |
+| S-01       | admin-event-management | #3     | Panel admina: CRUD wydarzeń DnB            | —                     | Archived → `context/archive/2026-06-10-admin-event-management/` |
 | S-02       | fan-event-discovery    | #4     | Odkrywanie: lista, filtry, mapa, szczegóły | yes                   | Po S-01; współrzędne z S-01 (geokodowanie) |
 | F-03       | production-deploy      | #5     | Deploy produkcyjny na Cloudflare           | no                    | Po S-01; równolegle z końcówką S-02        |
 
@@ -163,3 +163,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **F-01: (foundation) tabela wydarzeń z migracjami, politykami RLS i regułami biznesowymi (nadchodzące vs przeszłe, wymagane pola, tagi podgatunków ze stałej listy 25 wartości — PRD §Business Logic).** — Archived 2026-06-11 → `context/archive/2026-06-10-event-data-foundation/`. Lesson: —.
 - **F-02: (foundation) tylko użytkownicy z rolą admina mogą dodawać, edytować i usuwać wydarzenia; publiczny odczyt bez logowania.** — Archived 2026-06-10 → `context/archive/2026-06-10-admin-role-guard/`. Lesson: allowlist e-mail musi dokładnie pasować do konta Auth (literówka w seedzie = brak roli admina).
+- **S-01: admin dodaje, edytuje i usuwa wydarzenia DnB z wymaganymi polami (nazwa, data, miasto, venue) i opcjonalnymi (lineup, link biletowy, cena, tagi podgatunków); adres geokodowany automatycznie (Nominatim) lub ręczne współrzędne w trybie „lokalizacja tajna”.** — Archived 2026-06-11 → `context/archive/2026-06-10-admin-event-management/`. Lesson: —.
