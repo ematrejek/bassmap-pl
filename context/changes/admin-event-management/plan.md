@@ -410,31 +410,31 @@ Formularz React wspólny dla tworzenia i edycji; strony Astro; usuwanie z dialog
 
 #### Automated
 
-- [x] 1.1 `npm install` kończy się bez błędów
-- [x] 1.2 `npm run lint` przechodzi
-- [x] 1.3 `npm run build` przechodzi
+- [x] 1.1 `npm install` kończy się bez błędów — f53b76a
+- [x] 1.2 `npm run lint` przechodzi — f53b76a
+- [x] 1.3 `npm run build` przechodzi — f53b76a
 
 #### Manual
 
-- [x] 1.4 `npx supabase db reset` stosuje migrację nullable adresu
-- [x] 1.5 POST tryb `address` — wiersz w Studio z auto współrzędnymi
-- [x] 1.6 POST tryb `coordinates` — wiersz bez ulicy/numeru
-- [x] 1.7 POST z nieistniejącym adresem → 400 geokodowania
-- [x] 1.8 POST bez sesji → 401; nie-admin → 403; pusty `subgenres` → 400
-- [x] 1.9 PUT zmienia adres i współrzędne; DELETE usuwa
+- [x] 1.4 `npx supabase db reset` stosuje migrację nullable adresu — f53b76a
+- [x] 1.5 POST tryb `address` — wiersz w Studio z auto współrzędnymi — f53b76a
+- [x] 1.6 POST tryb `coordinates` — wiersz bez ulicy/numeru — f53b76a
+- [x] 1.7 POST z nieistniejącym adresem → 400 geokodowania — f53b76a
+- [x] 1.8 POST bez sesji → 401; nie-admin → 403; pusty `subgenres` → 400 — f53b76a
+- [x] 1.9 PUT zmienia adres i współrzędne; DELETE usuwa — f53b76a
 
 ### Phase 2: Lista wydarzeń admina
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` przechodzi
-- [ ] 2.2 `npm run build` przechodzi
+- [x] 2.1 `npm run lint` przechodzi
+- [x] 2.2 `npm run build` przechodzi
 
 #### Manual
 
-- [ ] 2.3 `/admin` jako admin pokazuje seed events
-- [ ] 2.4 `/admin` jako nie-admin → redirect 403
-- [ ] 2.5 Sortowanie od najnowszej daty; link „Dodaj wydarzenie” działa
+- [x] 2.3 `/admin` jako admin pokazuje seed events
+- [x] 2.4 `/admin` jako nie-admin → redirect 403
+- [x] 2.5 Sortowanie od najbliższej daty; link „Dodaj wydarzenie” działa
 
 ### Phase 3: Formularze create/edit i usuwanie
 

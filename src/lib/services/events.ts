@@ -80,7 +80,7 @@ export async function resolveCoordinates(
 }
 
 export async function listEventsForAdmin(supabase: SupabaseClient): Promise<Event[]> {
-  const response = await supabase.from("events").select("*").order("starts_at", { ascending: false });
+  const response = await supabase.from("events").select("*").order("starts_at", { ascending: true });
 
   if (response.error) {
     return [];
