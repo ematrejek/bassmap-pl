@@ -3,7 +3,7 @@ project: BassMap PL
 version: 1
 status: draft
 created: 2026-06-10
-updated: 2026-06-11
+updated: 2026-06-10
 subgenre_catalog_version: 1
 prd_version: 1
 main_goal: market-feedback
@@ -32,8 +32,8 @@ BassMap PL to pierwsza scentralizowana wyszukiwarka wydarzeń drum'n'bass w Pols
 | ---- | ---------------------- | ---------------------------------------------------------------------------- | ------------- | -------------------- | -------- |
 | F-01 | event-data-foundation  | (foundation) schemat wydarzeń w bazie z migracjami i politykami RLS          | —             | Business Logic, NFR  | done     |
 | F-02 | admin-role-guard       | (foundation) ścieżki zapisu chronione rolą admina                            | —             | Access Control       | done     |
-| S-01 | admin-event-management | admin dodaje, edytuje i usuwa wydarzenia DnB                                 | F-01, F-02    | FR-006, FR-007       | proposed |
-| S-02 | fan-event-discovery    | fan filtruje po mieście/podgatunku, widzi listę, mapę i szczegóły wydarzenia | F-01, S-01    | US-01, FR-001–FR-005 | blocked  |
+| S-01 | admin-event-management | admin dodaje, edytuje i usuwa wydarzenia DnB                                 | F-01, F-02    | FR-006, FR-007       | in progress |
+| S-02 | fan-event-discovery    | fan filtruje po mieście/podgatunku, widzi listę, mapę i szczegóły wydarzenia | F-01, S-01    | US-01, FR-001–FR-005 | proposed |
 | F-03 | production-deploy      | (foundation) aplikacja działa pod publicznym adresem z poprawnymi sekretami  | S-01          | NFR Operating cost   | proposed |
 
 ## Streams
@@ -104,7 +104,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-01: Zarządzanie wydarzeniami przez admina
 
-- **Outcome:** admin dodaje, edytuje i usuwa wydarzenia DnB z wymaganymi polami (nazwa, data, miasto, venue) i opcjonalnymi (lineup, link biletowy, cena, tagi podgatunków).
+- **Outcome:** admin dodaje, edytuje i usuwa wydarzenia DnB z wymaganymi polami (nazwa, data, miasto, venue) i opcjonalnymi (lineup, link biletowy, cena, tagi podgatunków); adres geokodowany automatycznie (Nominatim) lub ręczne współrzędne w trybie „lokalizacja tajna”.
 - **Change ID:** admin-event-management
 - **PRD refs:** FR-006, FR-007
 - **Prerequisites:** F-01, F-02
@@ -112,7 +112,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Admin jest jedynym źródłem danych w MVP — bez tego slice'a S-02 nie ma czego pokazać fanowi.
-- **Status:** proposed
+- **Status:** in progress (plan: `context/changes/admin-event-management/plan.md`, faza 1)
 
 ### S-02: Odkrywanie wydarzeń przez fana
 
@@ -123,10 +123,9 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Parallel with:** F-03
 - **Blockers:** —
 - **Unknowns:**
-  - Jak wyznaczać współrzędne pinezek na mapie — centroid miasta vs geokodowanie venue? — Owner: user. Block: yes.
   - Która biblioteka map (np. Leaflet) i jakie ograniczenia licencyjne/kosztowe przy zerowym budżecie MVP? — Owner: team. Block: no.
-- **Risk:** Mapa i geolokalizacja to największa luka umiejętnościowa (top blocker) — slice jest gwiazdą przewodnią, więc nie odkładamy go, ale planowanie mapy wymaga rozstrzygnięcia współrzędnych.
-- **Status:** blocked
+- **Risk:** Mapa i geolokalizacja to największa luka umiejętnościowa (top blocker) — współrzędne są zasilane w S-01 (geokodowanie przy zapisie); S-02 skupia się na wyświetleniu mapy i filtrów. Eventy bez współrzędnych (stary seed) nie mają pinezki — akceptowalne do uzupełnienia w panelu admina.
+- **Status:** proposed (współrzędne: rozstrzygnięte w planie S-01 — geokodowanie venue przy zapisie, S-02 czyta z DB)
 
 ## Backlog Handoff
 
@@ -138,14 +137,17 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | ---------- | ---------------------- | ------ | ------------------------------------------ | --------------------- | ------------------------------------------ |
 | F-01       | event-data-foundation  | #1     | Schemat wydarzeń: migracje + RLS           | yes                   | Pierwszy krok — odblokowuje całą ścieżkę   |
 | F-02       | admin-role-guard       | #2     | Rola admina: guard zapisu wydarzeń         | —                     | Archived → `context/archive/2026-06-10-admin-role-guard/` |
-| S-01       | admin-event-management | #3     | Panel admina: CRUD wydarzeń DnB            | yes                   | Wymaga F-01 ✅ + F-02 ✅                                  |
-| S-02       | fan-event-discovery    | #4     | Odkrywanie: lista, filtry, mapa, szczegóły | no                    | Gwiazda przewodnia; wymaga S-01 + unknowns |
+| S-01       | admin-event-management | #3     | Panel admina: CRUD wydarzeń DnB            | —                     | Plan: `context/changes/admin-event-management/` · F-01 ✅ F-02 ✅ |
+| S-02       | fan-event-discovery    | #4     | Odkrywanie: lista, filtry, mapa, szczegóły | yes                   | Po S-01; współrzędne z S-01 (geokodowanie) |
 | F-03       | production-deploy      | #5     | Deploy produkcyjny na Cloudflare           | no                    | Po S-01; równolegle z końcówką S-02        |
 
 ## Open Roadmap Questions
 
-1. **Jak wyznaczać współrzędne pinezek na mapie — centroid miasta czy geokodowanie venue?** — Owner: user. Block: S-02.
-2. **Czy na start wystarczy domyślny adres Cloudflare, czy potrzebna jest własna domena?** — Owner: user. Block: F-03 (planowanie, nie roadmap-wide).
+1. **Czy na start wystarczy domyślny adres Cloudflare, czy potrzebna jest własna domena?** — Owner: user. Block: F-03 (planowanie, nie roadmap-wide).
+
+## Resolved (2026-06-10)
+
+- **Współrzędne pinezek:** geokodowanie adresu venue przy zapisie w S-01 (Nominatim/OSM); tryb alternatywny — ręczne współrzędne dla imprez bez adresu. S-02 wyświetla `latitude`/`longitude` z bazy — bez geokodowania w runtime.
 
 ## Parked
 

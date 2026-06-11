@@ -90,8 +90,8 @@ export interface Event {
   startsAt: string;
   city: string;
   venueName: string;
-  addressStreet: string;
-  addressNumber: string;
+  addressStreet: string | null;
+  addressNumber: string | null;
   latitude: number | null;
   longitude: number | null;
   subgenres: Subgenre[];
@@ -109,8 +109,8 @@ export interface EventInsert {
   startsAt: string;
   city: string;
   venueName: string;
-  addressStreet: string;
-  addressNumber: string;
+  addressStreet: string | null;
+  addressNumber: string | null;
   subgenres: Subgenre[];
   latitude?: number | null;
   longitude?: number | null;
