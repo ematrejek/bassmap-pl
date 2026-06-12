@@ -3,7 +3,7 @@ import { listPublishedEvents } from "@/lib/services/events";
 
 describe("vitest smoke", () => {
   it("runs and resolves @/ path alias", () => {
-    expect(true).toBe(true);
+    expect(true).toBe(false); // intentional CI gate check — revert before merge
     expect(typeof listPublishedEvents).toBe("function");
   });
 });
