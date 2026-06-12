@@ -1,8 +1,10 @@
 -- Local dev seed for F-01 event data foundation.
--- Dev admin allowlist — matrejekemilia@gmail.com
+-- Dev admin allowlist
 
 INSERT INTO public.admin_allowlist (email)
-VALUES ('matrejekemilia@gmail.com')
+VALUES
+  ('matrejekemilia@gmail.com'),
+  ('zgoda89@gmail.com')
 ON CONFLICT (email) DO NOTHING;
 
 INSERT INTO public.events (

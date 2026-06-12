@@ -5,10 +5,11 @@ Integration tests need **local Supabase in Docker** — never production.
 ## Setup
 
 1. Start local Supabase: `npx supabase start`
-2. Copy `.env.test.example` → `.env.test`
-3. Fill keys from: `npx supabase status --output json`  
+2. Apply migrations: `npx supabase migration up` (needs `20260611140000_fix_is_admin_use_uid` for admin tests)
+3. Copy `.env.test.example` → `.env.test`
+4. Fill keys from: `npx supabase status --output json`  
    (or ask a teammate to generate `.env.test` the same way)
-4. Run: `npm test`
+5. Run: `npm test`
 
 ## Rules
 

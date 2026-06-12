@@ -369,11 +369,11 @@ Document mutation/auth integration pattern for future rollout phases.
 
 #### Automated
 
-- [x] 4.1 Data-integrity delete tests pass (sub-phases 4a, 4b) — d42fcda
+- [x] 4.1 Data-integrity delete tests pass (sub-phases 4a, 4b) — f0c7127
 
 #### Manual
 
-- [x] 4.2 None — d42fcda
+- [x] 4.2 None — f0c7127
 
 
 ### Phase 5: Cookbook and test-plan §6 sync

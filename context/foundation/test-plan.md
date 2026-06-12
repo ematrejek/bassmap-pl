@@ -256,9 +256,10 @@ contributors should respect these unless the underlying assumption changes.
 
 ## 8. Freshness Ledger
 
-- Strategy (§1–§5) last reviewed: 2026-06-11
-- Stack versions last verified: 2026-06-11
-- AI-native tool references last verified: 2026-06-11
+- Strategy (§1–§5) last reviewed: 2026-06-12
+- Stack versions last verified: 2026-06-12
+- AI-native tool references last verified: 2026-06-12
+- Rollout §3 Phases 1–2 archived: 2026-06-12
 
 Refresh (`/10x-test-plan --refresh`) when:
 
