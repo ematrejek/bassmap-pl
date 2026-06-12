@@ -7,6 +7,7 @@ export default defineConfig(({ mode }) => ({
     environment: "node",
     include: ["tests/**/*.test.ts"],
     env: loadEnv(mode, process.cwd(), ""),
+    fileParallelism: false,
   },
   resolve: {
     alias: {

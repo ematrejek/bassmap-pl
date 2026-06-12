@@ -359,21 +359,22 @@ Document mutation/auth integration pattern for future rollout phases.
 
 #### Automated
 
-- [x] 3.1 Allow mutation + RPC tests pass (sub-phases 3a, 3b)
+- [x] 3.1 Allow mutation + RPC tests pass (sub-phases 3a, 3b) — e364061
 
 #### Manual
 
-- [x] 3.2 None
+- [x] 3.2 None — e364061
 
 ### Phase 4: Risk #3 — Scoped delete count stability
 
 #### Automated
 
-- [ ] 4.1 Data-integrity delete tests pass (sub-phases 4a, 4b)
+- [x] 4.1 Data-integrity delete tests pass (sub-phases 4a, 4b) — d42fcda
 
 #### Manual
 
-- [ ] 4.2 None
+- [x] 4.2 None — d42fcda
+
 
 ### Phase 5: Cookbook and test-plan §6 sync
 
