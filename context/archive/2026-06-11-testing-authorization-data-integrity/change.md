@@ -1,10 +1,10 @@
 ---
 change_id: testing-authorization-data-integrity
 title: Test rollout phase 2 — authorization and data integrity
-status: implemented
+status: archived
 created: 2026-06-11
 updated: 2026-06-12
-archived_at: null
+archived_at: 2026-06-12T08:56:00Z
 ---
 
 ## Notes
