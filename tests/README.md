@@ -16,4 +16,5 @@ Integration tests need **local Supabase in Docker** — never production.
 - Fixtures insert a few rows and delete **only those IDs** in cleanup.
 - Env vars and client helpers: `tests/helpers/supabase.ts`
 
-Full cookbook: `context/foundation/test-plan.md` §6.2.
+Full cookbook: `context/foundation/test-plan.md` §6.2 (fan read),
+§6.4 (auth / mutations).

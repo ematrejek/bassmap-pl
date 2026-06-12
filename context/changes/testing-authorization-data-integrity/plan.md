@@ -380,9 +380,9 @@ Document mutation/auth integration pattern for future rollout phases.
 
 #### Automated
 
-- [ ] 5.1 `npm test` still passes after doc updates
-- [ ] 5.2 `npm run lint` passes
+- [x] 5.1 `npm test` still passes after doc updates
+- [x] 5.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 5.3 §6.4 actionable standalone
+- [x] 5.3 §6.4 actionable standalone

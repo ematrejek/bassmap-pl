@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-11
+> Last updated: 2026-06-12
 
 ## 1. Strategy
 
@@ -69,7 +69,7 @@ orchestrator updates Status as artifacts appear on disk.
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|------------|-----------------|---------------|------------|--------|---------------|
 | 1 | Critical-path fan read | Bootstrap Vitest; prove fan list is not falsely empty and respects published/upcoming filters | #1, #6 | bootstrap + integration | done | testing-critical-path-fan-read |
-| 2 | Authorization and data integrity | Non-admin cannot mutate events; admin access works; no mass data loss on guarded paths | #3, #4, #5 | integration | not started | — |
+| 2 | Authorization and data integrity | Non-admin cannot mutate events; admin access works; no mass data loss on guarded paths | #3, #4, #5 | integration | done | testing-authorization-data-integrity |
 | 3 | Location and discovery hot-spots | Correct coordinates/fallback; reject bad input at API boundary | #2, #7 | unit + integration | not started | — |
 | 4 | Quality-gates wiring | `npm test` required in CI alongside lint + build | cross-cutting | CI gate | not started | — |
 
@@ -166,7 +166,59 @@ TBD — not in initial rollout; add only when integration cannot catch the failu
 
 ### 6.4 Adding a test for a new API endpoint
 
-TBD — see §3 Phase 2 for auth/RLS mutation guard pattern.
+Use this pattern for **auth + mutation** integration tests (shipped in
+`testing-authorization-data-integrity`). Prefer calling **service functions**
+(`createEvent`, `updateEvent`, `deleteEvent`) with Supabase clients — not
+only Astro HTTP routes or middleware redirects.
+
+**Where:** `tests/integration/auth-mutation-*.test.ts`,
+`tests/integration/data-integrity-delete.test.ts`
+
+**Prerequisites:** Same as §6.2 (local Supabase, `.env.test`, localhost guard).
+Migration `20260611140000_fix_is_admin_use_uid.sql` must be applied for admin /
+`is_admin` RPC tests.
+
+**Harness:**
+
+- `createAnonClient()` — unauthenticated mutations (Risk #4)
+- `createNonAdminClient()` — signed-in user **without** allowlist row
+- `createAdminClient()` — allowlisted integration admin
+- `tests/helpers/mutation-fixtures.ts` — `buildMutationCreatePayload`,
+  `insertMutationFixtureRow`, `countEvents`, `deleteMutationFixtureIds`
+- Fixture prefix `integration-auth-mutation`; city `TestMutation` (draft rows
+  for deny/update probes)
+
+**Steps:**
+
+1. Gate with `describe.skipIf(!isSupabaseConfigured())` + `logSkipIfNotConfigured()`.
+2. `beforeAll` / `afterAll`: track fixture IDs; cleanup via
+   `deleteMutationFixtureIds(serviceClient, ids)` only — never unscoped
+   `DELETE`.
+3. **Deny (Risk #4):** call `createEvent` / `updateEvent` / `deleteEvent` with
+   anon or `createNonAdminClient()`; expect `{ error }`; on update, read back
+   via service role and assert row unchanged.
+4. **Allow (Risk #5):** `createAdminClient()` + `rpc("is_admin")` → `true`;
+   admin mutations succeed.
+5. **Delete integrity (Risk #3):** `countEvents(serviceClient)` before/after
+   `deleteEvent(admin, id)` — assert `after === before - 1`; missing id →
+   `{ error }` and count unchanged.
+6. Mutation payloads: **`locationMode: "coordinates"`** (avoids Nominatim HTTP
+   during `createEvent` / `updateEvent`).
+
+**Reuse:** `tests/unit/require-admin.test.ts` for API guard (`requireAdmin`
+401/403) without DB.
+
+**Anti-patterns:**
+
+- Testing only `/admin` middleware — direct Supabase/service calls bypass it
+- Raw `.from("events").insert` without the service under test (unless
+  debugging ambiguous service errors)
+- Unscoped delete in tests or asserting absolute seed row counts
+- Pointing env at cloud/production Supabase
+
+**CI:** `npm test` locally; `vitest.config.ts` sets `fileParallelism: false`
+so integration files sharing one local DB do not race. CI hard-fail is rollout
+§3 Phase 4.
 
 ### 6.5 Adding a test for a new content-build rule
 
@@ -183,6 +235,17 @@ Not applicable — SSR pages, not static content build.
 - Integration specs: `tests/integration/fan-read-list.test.ts` (Risk #1),
   `tests/integration/fan-read-admin.test.ts` (Risk #6)
 - Contributor setup: `tests/README.md`
+
+**§3 Phase 2 — Authorization and data integrity (`testing-authorization-data-integrity`):**
+
+- Non-admin client: `createNonAdminClient()` in `tests/helpers/supabase.ts`
+- Mutation fixtures: `tests/helpers/mutation-fixtures.ts`
+- Unit guard: `tests/unit/require-admin.test.ts`
+- Integration specs: `tests/integration/auth-mutation-deny.test.ts` (Risk #4),
+  `tests/integration/auth-mutation-allow.test.ts` (Risk #5),
+  `tests/integration/data-integrity-delete.test.ts` (Risk #3)
+- Sequential integration files: `fileParallelism: false` in `vitest.config.ts`
+- Cookbook: §6.4
 
 ## 7. What We Deliberately Don't Test
 
