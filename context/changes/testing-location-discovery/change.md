@@ -1,7 +1,7 @@
 ---
 change_id: testing-location-discovery
 title: Test rollout phase 3 — location and discovery hot-spots
-status: implementing
+status: implemented
 created: 2026-06-12
 updated: 2026-06-12
 archived_at: null

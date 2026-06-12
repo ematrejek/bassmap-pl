@@ -436,9 +436,9 @@ Document unit-test pattern for future rollout phases; record shipped paths.
 
 #### Automated
 
-- [ ] 5.1 `npm test` still passes after doc updates
-- [ ] 5.2 `npm run lint` passes
+- [x] 5.1 `npm test` still passes after doc updates
+- [x] 5.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 5.3 §6.1 actionable standalone
+- [x] 5.3 §6.1 actionable standalone

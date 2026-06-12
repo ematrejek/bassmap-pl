@@ -70,7 +70,7 @@ orchestrator updates Status as artifacts appear on disk.
 |---|------------|-----------------|---------------|------------|--------|---------------|
 | 1 | Critical-path fan read | Bootstrap Vitest; prove fan list is not falsely empty and respects published/upcoming filters | #1, #6 | bootstrap + integration | done | testing-critical-path-fan-read |
 | 2 | Authorization and data integrity | Non-admin cannot mutate events; admin access works; no mass data loss on guarded paths | #3, #4, #5 | integration | done | testing-authorization-data-integrity |
-| 3 | Location and discovery hot-spots | Correct coordinates/fallback; reject bad input at API boundary | #2, #7 | unit + integration | not started | — |
+| 3 | Location and discovery hot-spots | Correct coordinates/fallback; reject bad input at API boundary | #2, #7 | unit + integration | done | testing-location-discovery |
 | 4 | Quality-gates wiring | `npm test` required in CI alongside lint + build | cross-cutting | CI gate | not started | — |
 
 ## 4. Stack
@@ -118,7 +118,41 @@ the relevant rollout phase ships; before that, the sub-section reads
 
 ### 6.1 Adding a unit test
 
-TBD — see §3 Phase 3 for validation/mapper unit patterns.
+Use this pattern for **pure logic** tests — map fallback, Zod parsers, URL
+filter sanitization, datetime helpers (shipped in
+`testing-location-discovery`). No Supabase, no Docker, no mocks of internals.
+
+**Where:** `tests/unit/*.test.ts`
+
+**Prerequisites:**
+
+- `npm test` only — no `.env.test` required for unit suites
+- Import production code via `@/…` path alias (see `vitest.config.ts`)
+
+**Steps:**
+
+1. Create `tests/unit/<domain>.test.ts` next to existing unit specs.
+2. Import the function under test from `src/lib/…` (e.g. `resolveMapCoordinates`,
+   `parseEventCreate`, `parseFanFilters`, `parseDatetimeLocalWarsaw`).
+3. Use table-driven `it(…)` cases with explicit oracles — expected coordinates,
+   `success: false`, filtered arrays, `null` parse results.
+4. For invalid admin payloads, spread `buildMutationCreatePayload()` from
+   `tests/helpers/mutation-fixtures.ts` and override one field (no DB).
+5. Label sub-phases in test titles when mapping to rollout risks (e.g. `(2a)`).
+
+**Reuse:**
+
+- `tests/unit/require-admin.test.ts` — mock `App.Locals` for API guards
+- `tests/helpers/mutation-fixtures.ts` — valid `ParsedEventCreate` baseline
+
+**Anti-patterns:**
+
+- Calling Supabase or starting Docker for pure functions
+- Leaflet / component mount tests when a `src/lib/` helper is the oracle
+- Snapshotting Zod error strings copied from implementation
+- `as unknown` casts when `parse*(input: unknown)` already accepts the payload
+
+**CI:** Unit suites always run; integration may skip without env (§6.2).
 
 ### 6.2 Adding an integration test
 
@@ -247,6 +281,15 @@ Not applicable — SSR pages, not static content build.
 - Sequential integration files: `fileParallelism: false` in `vitest.config.ts`
 - Cookbook: §6.4
 
+**§3 Phase 3 — Location and discovery hot-spots (`testing-location-discovery`):**
+
+- Unit specs: `tests/unit/city-centers.test.ts` (Risk #2),
+  `tests/unit/event-schema.test.ts`, `tests/unit/fan-schema.test.ts`,
+  `tests/unit/event-format.test.ts` (Risk #7)
+- Integration smoke: `tests/integration/location-coords-persist.test.ts`
+  (admin `createEvent` persists lat/lng)
+- Cookbook: §6.1
+
 ## 7. What We Deliberately Don't Test
 
 Exclusions agreed during the rollout (Phase 2 interview, Q5). Future
@@ -260,6 +303,7 @@ contributors should respect these unless the underlying assumption changes.
 - Stack versions last verified: 2026-06-12
 - AI-native tool references last verified: 2026-06-12
 - Rollout §3 Phases 1–2 archived: 2026-06-12
+- Rollout §3 Phase 3 shipped: 2026-06-12
 
 Refresh (`/10x-test-plan --refresh`) when:
 
