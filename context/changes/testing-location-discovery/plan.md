@@ -425,12 +425,12 @@ Document unit-test pattern for future rollout phases; record shipped paths.
 
 #### Automated
 
-- [ ] 4.1 Location-coords-persist integration passes with local Supabase (sub-phase 4a)
-- [ ] 4.2 Suite skipped cleanly without Supabase env
+- [x] 4.1 Location-coords-persist integration passes with local Supabase (sub-phase 4a) — ce8fbcc
+- [x] 4.2 Suite skipped cleanly without Supabase env — ce8fbcc
 
 #### Manual
 
-- [ ] 4.3 None
+- [x] 4.3 None — ce8fbcc
 
 ### Phase 5: Cookbook and test-plan §6 sync
 
