@@ -21,7 +21,7 @@ jobs:
       - run: npm run lint
       - uses: supabase/setup-cli@v2
       - name: Start local Supabase
-        run: supabase start -x studio,imgproxy,edge-runtime,logflare
+        run: supabase start -x studio,imgproxy,edge-runtime,logflare,vector
       - name: Export local Supabase env for tests
         run: |
           supabase status -o env \
