@@ -9,6 +9,7 @@ on:
 jobs:
   ci:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -18,6 +19,18 @@ jobs:
       - run: npm ci
       - run: npx astro sync
       - run: npm run lint
+      - uses: supabase/setup-cli@v2
+      - name: Start local Supabase
+        run: supabase start -x studio,imgproxy,edge-runtime,logflare
+      - name: Export local Supabase env for tests
+        run: |
+          supabase status -o env \
+            --override-name api.url=SUPABASE_URL \
+            --override-name auth.anon_key=SUPABASE_KEY \
+            --override-name auth.service_role_key=SUPABASE_SERVICE_ROLE_KEY \
+            >> .env.test
+      - name: Run tests
+        run: bash scripts/ci-supabase-test.sh
       - run: npm run build
         env:
           SUPABASE_URL: ${{ secrets.SUPABASE_URL }}

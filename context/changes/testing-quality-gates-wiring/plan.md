@@ -281,12 +281,12 @@ No database migration. CI uses existing `supabase/migrations/` applied by `supab
 
 #### Automated
 
-- [x] 1.1 `bash -n scripts/ci-supabase-test.sh` passes
-- [x] 1.2 With local Supabase + `.env.test`, `bash scripts/ci-supabase-test.sh` exits 0
+- [x] 1.1 `bash -n scripts/ci-supabase-test.sh` passes — 6b66f5c
+- [x] 1.2 With local Supabase + `.env.test`, `bash scripts/ci-supabase-test.sh` exits 0 — 6b66f5c
 
 #### Manual
 
-- [x] 1.3 Skip-detection error message is clear when integration suites do not run in CI context
+- [x] 1.3 Skip-detection error message is clear when integration suites do not run in CI context — 6b66f5c
 
 ### Phase 2: CI workflow — `ci.yml`
 
