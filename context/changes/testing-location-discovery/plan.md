@@ -402,12 +402,12 @@ Document unit-test pattern for future rollout phases; record shipped paths.
 
 #### Automated
 
-- [ ] 2.1 Event-schema unit tests pass (sub-phases 2a–2f)
-- [ ] 2.2 `npm run lint` passes
+- [x] 2.1 Event-schema unit tests pass (sub-phases 2a–2f) — 040a5e1
+- [x] 2.2 `npm run lint` passes — 040a5e1
 
 #### Manual
 
-- [ ] 2.3 None
+- [x] 2.3 None — 040a5e1
 
 ### Phase 3: Risk #7 — Fan filters and datetime format unit tests
 
