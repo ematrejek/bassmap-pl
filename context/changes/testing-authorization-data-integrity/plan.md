@@ -348,8 +348,8 @@ Document mutation/auth integration pattern for future rollout phases.
 
 #### Automated
 
-- [x] 2.1 Deny mutation tests pass with local Supabase + env (sub-phases 2a, 2b)
-- [x] 2.2 Tests skipped cleanly without Supabase env
+- [x] 2.1 Deny mutation tests pass with local Supabase + env (sub-phases 2a, 2b) — 5d4dcec
+- [x] 2.2 Tests skipped cleanly without Supabase env — 5d4dcec
 
 #### Manual
 
@@ -359,11 +359,11 @@ Document mutation/auth integration pattern for future rollout phases.
 
 #### Automated
 
-- [ ] 3.1 Allow mutation + RPC tests pass (sub-phases 3a, 3b)
+- [x] 3.1 Allow mutation + RPC tests pass (sub-phases 3a, 3b)
 
 #### Manual
 
-- [ ] 3.2 None
+- [x] 3.2 None
 
 ### Phase 4: Risk #3 — Scoped delete count stability
 
