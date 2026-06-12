@@ -7,6 +7,15 @@
 # `unset` alone is not enough because this script reloads `.env.test` when present.
 set -euo pipefail
 
+strip_quotes() {
+  local value="$1"
+  if [[ "${value}" == \"*\" && "${value}" == *\" ]]; then
+    value="${value#\"}"
+    value="${value%\"}"
+  fi
+  printf '%s' "${value}"
+}
+
 load_env_file() {
   local file="$1"
   local line key value
@@ -15,7 +24,7 @@ load_env_file() {
     [[ -z "${line}" || "${line}" == \#* ]] && continue
     if [[ "${line}" =~ ^([A-Za-z_][A-Za-z0-9_]*)=(.*)$ ]]; then
       key="${BASH_REMATCH[1]}"
-      value="${BASH_REMATCH[2]}"
+      value="$(strip_quotes "${BASH_REMATCH[2]}")"
       export "${key}=${value}"
     fi
   done < "${file}"
