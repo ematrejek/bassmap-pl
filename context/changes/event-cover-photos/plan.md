@@ -379,14 +379,14 @@ Unit + jedna integracja regresji `cover_path`; istniejące suite zielone.
 
 #### Automated
 
-- [x] 1.1 `npx supabase db reset` — migracja bez błędów
-- [x] 1.2 `npm run lint` przechodzi
-- [x] 1.3 `npm run build` przechodzi
+- [x] 1.1 `npx supabase db reset` — migracja bez błędów — e752a33
+- [x] 1.2 `npm run lint` przechodzi — e752a33
+- [x] 1.3 `npm run build` przechodzi — e752a33
 
 #### Manual
 
-- [ ] 1.4 Kolumna `cover_path` i bucket `event-covers` w Supabase
-- [ ] 1.5 RLS Storage: tylko admin upload/delete
+- [x] 1.4 Kolumna `cover_path` i bucket `event-covers` w Supabase — e752a33
+- [x] 1.5 RLS Storage: tylko admin upload/delete — e752a33
 
 ### Phase 2: Admin — upload, podgląd, usuwanie okładki
 
