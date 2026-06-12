@@ -34,7 +34,10 @@ if [[ -f .env.test ]]; then
   load_env_file .env.test
 fi
 
-SKIP_WARNING="Integration tests skipped"
+SKIP_WARNING="$(
+  node --experimental-strip-types --input-type=module -e \
+    "import { INTEGRATION_SKIP_WARNING_PREFIX } from './tests/helpers/supabase.ts'; process.stdout.write(INTEGRATION_SKIP_WARNING_PREFIX)"
+)"
 
 require_env() {
   local name="$1"

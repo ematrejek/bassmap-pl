@@ -152,7 +152,8 @@ filter sanitization, datetime helpers (shipped in
 - Snapshotting Zod error strings copied from implementation
 - `as unknown` casts when `parse*(input: unknown)` already accepts the payload
 
-**CI:** Unit suites always run; integration may skip without env (§6.2).
+**CI:** Unit suites always run in CI. Integration behavior (CI hard-fail vs local
+skip) — see §6.2.
 
 ### 6.2 Adding an integration test
 

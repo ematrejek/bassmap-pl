@@ -15,6 +15,9 @@
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
+/** Shared with `scripts/ci-supabase-test.sh` (imported via Node) — do not change without updating CI grep. */
+export const INTEGRATION_SKIP_WARNING_PREFIX = "Integration tests skipped";
+
 const INTEGRATION_ADMIN_EMAIL = "integration-fan-read-admin@example.com";
 const INTEGRATION_ADMIN_PASSWORD = "IntegrationFanReadAdmin!2026";
 const INTEGRATION_NON_ADMIN_EMAIL = "integration-auth-nonadmin@example.com";
@@ -54,7 +57,7 @@ export function logSkipIfNotConfigured(): void {
     skipWarningLogged = true;
     // eslint-disable-next-line no-console -- intentional skip notice for developers
     console.warn(
-      "Integration tests skipped: SUPABASE_URL must point to local Supabase (127.0.0.1 or localhost), not production.",
+      `${INTEGRATION_SKIP_WARNING_PREFIX}: SUPABASE_URL must point to local Supabase (127.0.0.1 or localhost), not production.`,
     );
     return;
   }
@@ -62,7 +65,7 @@ export function logSkipIfNotConfigured(): void {
   if (!isSupabaseConfigured()) {
     skipWarningLogged = true;
     // eslint-disable-next-line no-console -- intentional skip notice for developers
-    console.warn("Integration tests skipped: local Supabase not configured.");
+    console.warn(`${INTEGRATION_SKIP_WARNING_PREFIX}: local Supabase not configured.`);
   }
 }
 

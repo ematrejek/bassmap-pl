@@ -320,4 +320,4 @@ No database migration. CI uses existing `supabase/migrations/` applied by `supab
 #### Manual
 
 - [x] 4.3 Contributor docs explain local skip vs CI hard-fail — d9b0907
-- [ ] 4.4 test-plan §3 Phase 4 marked done when change archives
+- [x] 4.4 test-plan §3 Phase 4 marked done when change archives — impl-review 2026-06-12 (§3 `done` since d9b0907; archive pending)
