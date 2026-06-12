@@ -17,6 +17,8 @@ import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 const INTEGRATION_ADMIN_EMAIL = "integration-fan-read-admin@example.com";
 const INTEGRATION_ADMIN_PASSWORD = "IntegrationFanReadAdmin!2026";
+const INTEGRATION_NON_ADMIN_EMAIL = "integration-auth-nonadmin@example.com";
+const INTEGRATION_NON_ADMIN_PASSWORD = "IntegrationAuthNonAdmin!2026";
 
 let skipWarningLogged = false;
 
@@ -135,4 +137,22 @@ export async function createAdminClient(): Promise<SupabaseClient> {
   const serviceClient = createServiceClient();
   await ensureIntegrationAdminAllowlisted(serviceClient);
   return createAuthenticatedClient(INTEGRATION_ADMIN_EMAIL, INTEGRATION_ADMIN_PASSWORD);
+}
+
+async function ensureIntegrationNonAdminUser(serviceClient: SupabaseClient): Promise<void> {
+  const createResult = await serviceClient.auth.admin.createUser({
+    email: INTEGRATION_NON_ADMIN_EMAIL,
+    password: INTEGRATION_NON_ADMIN_PASSWORD,
+    email_confirm: true,
+  });
+
+  if (createResult.error && !createResult.error.message.toLowerCase().includes("already")) {
+    throw new Error(`Failed to create integration non-admin user: ${createResult.error.message}`);
+  }
+}
+
+export async function createNonAdminClient(): Promise<SupabaseClient> {
+  const serviceClient = createServiceClient();
+  await ensureIntegrationNonAdminUser(serviceClient);
+  return createAuthenticatedClient(INTEGRATION_NON_ADMIN_EMAIL, INTEGRATION_NON_ADMIN_PASSWORD);
 }
