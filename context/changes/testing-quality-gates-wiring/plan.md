@@ -297,7 +297,7 @@ No database migration. CI uses existing `supabase/migrations/` applied by `supab
 
 #### Manual
 
-- [ ] 2.3 Deliberate test failure on throwaway branch fails CI; revert restores green
+- [x] 2.3 Deliberate test failure on throwaway branch fails CI; revert restores green — PR #7 CI failed at Run tests; not merged
 
 ### Phase 3: Deploy workflow gate — `deploy.yml`
 
