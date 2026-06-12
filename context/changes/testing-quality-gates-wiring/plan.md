@@ -292,8 +292,8 @@ No database migration. CI uses existing `supabase/migrations/` applied by `supab
 
 #### Automated
 
-- [ ] 2.1 PR GitHub Actions job completes with `npm test` step green
-- [ ] 2.2 Action log shows integration suites executed (not skipped)
+- [x] 2.1 PR GitHub Actions job completes with `npm test` step green — 2214cef
+- [x] 2.2 Action log shows integration suites executed (not skipped) — 2214cef
 
 #### Manual
 
