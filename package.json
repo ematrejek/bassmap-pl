@@ -11,6 +11,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "test": "vitest run",
+    "test:ci": "bash scripts/ci-supabase-test.sh",
     "test:watch": "vitest",
     "deploy": "npm run build && wrangler deploy"
   },
