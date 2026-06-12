@@ -413,13 +413,13 @@ Document unit-test pattern for future rollout phases; record shipped paths.
 
 #### Automated
 
-- [ ] 3.1 Fan-schema unit tests pass (sub-phases 3a–3b)
-- [ ] 3.2 Event-format unit tests pass (sub-phases 3c–3d)
-- [ ] 3.3 `npm run lint` passes
+- [x] 3.1 Fan-schema unit tests pass (sub-phases 3a–3b) — 56dc6cf
+- [x] 3.2 Event-format unit tests pass (sub-phases 3c–3d) — 56dc6cf
+- [x] 3.3 `npm run lint` passes — 56dc6cf
 
 #### Manual
 
-- [ ] 3.4 None
+- [x] 3.4 None — 56dc6cf
 
 ### Phase 4: Risk #7 — Coordinates persist integration smoke
 
