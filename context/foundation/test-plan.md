@@ -71,7 +71,7 @@ orchestrator updates Status as artifacts appear on disk.
 | 1 | Critical-path fan read | Bootstrap Vitest; prove fan list is not falsely empty and respects published/upcoming filters | #1, #6 | bootstrap + integration | done | testing-critical-path-fan-read |
 | 2 | Authorization and data integrity | Non-admin cannot mutate events; admin access works; no mass data loss on guarded paths | #3, #4, #5 | integration | done | testing-authorization-data-integrity |
 | 3 | Location and discovery hot-spots | Correct coordinates/fallback; reject bad input at API boundary | #2, #7 | unit + integration | done | testing-location-discovery |
-| 4 | Quality-gates wiring | `npm test` required in CI alongside lint + build | cross-cutting | CI gate | not started | — |
+| 4 | Quality-gates wiring | `npm test` required in CI alongside lint + build | cross-cutting | CI gate | done | testing-quality-gates-wiring |
 
 ## 4. Stack
 
@@ -92,7 +92,7 @@ plus the MCP/tools actually exposed in the current session.
 - Docs: none (Context7 / framework docs MCP not available in session) — skipped; checked: 2026-06-11
 - Search: WebSearch — available; Vitest + Astro SSR patterns to verify during Phase 1 research; checked: 2026-06-11
 - Runtime/browser: none (Playwright MCP not available in session) — not used in initial phases; checked: 2026-06-11
-- Provider/platform: GitHub Actions (CI read from `.github/workflows/ci.yml`) — lint + build today; tests wired in Phase 4; checked: 2026-06-11
+- Provider/platform: GitHub Actions (`.github/workflows/ci.yml`, `deploy.yml`) — lint + `npm test` + build; checked: 2026-06-12
 
 ## 5. Quality Gates
 
@@ -103,7 +103,7 @@ phase lands; before that, the gate is `planned`.
 | Gate | Where | Required? | Catches |
 |------|-------|-----------|---------|
 | lint + typecheck | local + CI | required | syntactic / type drift |
-| unit + integration | local + CI | required after §3 Phase 1 | logic regressions on fan read and auth |
+| unit + integration | local + CI + deploy | required | logic regressions on fan read, auth, location, validation |
 | e2e on critical flows | CI on PR | planned | defer until integration gaps proven |
 | post-edit hook | local (agent loop) | not planned | — |
 | visual diff (deterministic) | CI on PR | not planned | — |
@@ -191,8 +191,10 @@ copy the factory for new domains.
 - Asserting empty list without proving fixture rows exist
 - Pointing test env at cloud/production Supabase
 
-**CI:** `npm test` runs locally today; skip + exit 0 when env missing.
-Rollout §3 Phase 4 (quality-gates wiring) will require tests in CI.
+**CI:** GitHub Actions (`ci.yml`, `deploy.yml`) starts local Supabase, writes
+`.env.test`, runs `scripts/ci-supabase-test.sh` — integration must execute;
+job fails on skip warning or test failure. **Local:** `npm test` still skips
+integration with a warning when `.env.test` / env is missing (unit + smoke only).
 
 ### 6.3 Adding an e2e test
 
@@ -250,9 +252,8 @@ Migration `20260611140000_fix_is_admin_use_uid.sql` must be applied for admin /
 - Unscoped delete in tests or asserting absolute seed row counts
 - Pointing env at cloud/production Supabase
 
-**CI:** `npm test` locally; `vitest.config.ts` sets `fileParallelism: false`
-so integration files sharing one local DB do not race. CI hard-fail is rollout
-§3 Phase 4.
+**CI:** Same gate as §6.2 — `fileParallelism: false` in `vitest.config.ts` keeps
+one local DB safe when multiple integration files run in CI.
 
 ### 6.5 Adding a test for a new content-build rule
 
@@ -290,6 +291,15 @@ Not applicable — SSR pages, not static content build.
   (admin `createEvent` persists lat/lng)
 - Cookbook: §6.1
 
+**§3 Phase 4 — Quality-gates wiring (`testing-quality-gates-wiring`):**
+
+- CI runner: `scripts/ci-supabase-test.sh` (`npm run test:ci`)
+- Workflows: `.github/workflows/ci.yml` (lint → Supabase → tests → build),
+  `.github/workflows/deploy.yml` (tests before production build)
+- Supabase in Actions: `supabase/setup-cli@v2`, exclude
+  `studio,imgproxy,edge-runtime,logflare,vector`
+- Local vs CI: integration skip allowed locally only; CI hard-fails
+
 ## 7. What We Deliberately Don't Test
 
 Exclusions agreed during the rollout (Phase 2 interview, Q5). Future
@@ -304,6 +314,7 @@ contributors should respect these unless the underlying assumption changes.
 - AI-native tool references last verified: 2026-06-12
 - Rollout §3 Phases 1–2 archived: 2026-06-12
 - Rollout §3 Phase 3 shipped: 2026-06-12
+- Rollout §3 Phase 4 shipped: 2026-06-12
 
 Refresh (`/10x-test-plan --refresh`) when:
 

@@ -190,7 +190,7 @@ Sekrety runtime Workera: `SUPABASE_URL`, `SUPABASE_KEY` (`npx wrangler secret pu
 
 ## CI
 
-GitHub Actions runs lint + build on every push and PR to **`main`**. Deploy workflow (`deploy.yml`) odpala się na push do `main`. Wymaga sekretów: `SUPABASE_URL`, `SUPABASE_KEY`, `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
+GitHub Actions runs **lint**, **`npm test`** (Vitest + local Supabase in Docker), and **build** on every push and PR to **`main`**. Deploy (`deploy.yml`) runs the same test gate before production build on push to `main`. Secrets: `SUPABASE_URL`, `SUPABASE_KEY` (build), `CLOUDFLARE_API_TOKEN`, `CLOUDFLARE_ACCOUNT_ID`.
 
 ## License
 

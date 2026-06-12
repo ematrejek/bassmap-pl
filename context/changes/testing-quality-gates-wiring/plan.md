@@ -303,21 +303,21 @@ No database migration. CI uses existing `supabase/migrations/` applied by `supab
 
 #### Automated
 
-- [ ] 3.1 Deploy workflow log shows test step before build on push to `main`
-- [ ] 3.2 Deploy succeeds when tests pass
+- [x] 3.1 Deploy workflow log shows test step before build on push to `main` — ec8c86d
+- [x] 3.2 Deploy succeeds when tests pass — ec8c86d
 
 #### Manual
 
-- [ ] 3.3 Failed test blocks deploy build step
+- [x] 3.3 Failed test blocks deploy build step — ec8c86d
 
 ### Phase 4: Documentation and test-plan sync
 
 #### Automated
 
-- [ ] 4.1 `npm run lint` passes
-- [ ] 4.2 `npm run build` passes
+- [x] 4.1 `npm run lint` passes
+- [x] 4.2 `npm run build` passes
 
 #### Manual
 
-- [ ] 4.3 Contributor docs explain local skip vs CI hard-fail
+- [x] 4.3 Contributor docs explain local skip vs CI hard-fail
 - [ ] 4.4 test-plan §3 Phase 4 marked done when change archives
