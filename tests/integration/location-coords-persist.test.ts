@@ -1,5 +1,5 @@
 import { afterAll, describe, expect, it } from "vitest";
-import { createEvent } from "@/lib/services/events";
+import { createEvent, getEventById } from "@/lib/services/events";
 import { buildMutationCreatePayload, deleteMutationFixtureIds } from "../helpers/mutation-fixtures";
 import {
   createAdminClient,
@@ -22,7 +22,7 @@ describe.skipIf(!runIntegration)("location coordinates persist", () => {
     await deleteMutationFixtureIds(serviceClient, cleanupIds);
   });
 
-  it("createEvent persists submitted latitude and longitude (4a)", async () => {
+  it("createEvent persists submitted latitude and longitude (L4a)", async () => {
     const adminClient = await createAdminClient();
     const payload = buildMutationCreatePayload("coords-persist");
 
@@ -37,5 +37,10 @@ describe.skipIf(!runIntegration)("location coordinates persist", () => {
 
     expect(result.data.latitude).toBe(payload.latitude);
     expect(result.data.longitude).toBe(payload.longitude);
+
+    const serviceClient = createServiceClient();
+    const persisted = await getEventById(serviceClient, result.data.id);
+    expect(persisted?.latitude).toBe(payload.latitude);
+    expect(persisted?.longitude).toBe(payload.longitude);
   });
 });

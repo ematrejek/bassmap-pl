@@ -52,6 +52,16 @@ describe("resolveMapCoordinates", () => {
 
     expect(result).toEqual({ ...DEFAULT_POLAND_CENTER });
   });
+
+  it("falls back to city center when only one coordinate is set (1f)", () => {
+    const result = resolveMapCoordinates({
+      latitude: 52.0,
+      longitude: null,
+      city: "Warszawa",
+    });
+
+    expect(result).toEqual(WARSAW_CENTER);
+  });
 });
 
 describe("getCityCenter", () => {

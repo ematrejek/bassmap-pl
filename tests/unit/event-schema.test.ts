@@ -36,6 +36,17 @@ describe("parseEventCreate", () => {
     expect(result.success).toBe(false);
   });
 
+  it("rejects longitude out of range in coordinates mode (2c-longitude)", () => {
+    const payload = {
+      ...buildMutationCreatePayload(),
+      longitude: 181,
+    };
+
+    const result = parseEventCreate(payload);
+
+    expect(result.success).toBe(false);
+  });
+
   it("rejects coordinates mode without longitude (2d)", () => {
     const { longitude: _longitude, ...withoutLongitude } = buildMutationCreatePayload();
 

@@ -10,7 +10,7 @@ describe("parseDatetimeLocalWarsaw", () => {
     const result = parseDatetimeLocalWarsaw("2026-12-01T20:00");
 
     expect(result).not.toBeNull();
-    expect(result).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/);
+    expect(result).toMatch(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}Z$/);
     expect(new Date(result ?? "").toISOString()).toBe(result);
   });
 });
