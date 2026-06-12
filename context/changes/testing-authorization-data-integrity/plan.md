@@ -337,19 +337,19 @@ Document mutation/auth integration pattern for future rollout phases.
 
 #### Automated
 
-- [x] 1.1 `npm test` — unit tests pass without Supabase
-- [x] 1.2 `npm run lint` passes
+- [x] 1.1 `npm test` — unit tests pass without Supabase — b4eccc5
+- [x] 1.2 `npm run lint` passes — b4eccc5
 
 #### Manual
 
-- [x] 1.3 None
+- [x] 1.3 None — b4eccc5
 
 ### Phase 2: Risk #4 — Non-admin cannot mutate events
 
 #### Automated
 
-- [ ] 2.1 Deny mutation tests pass with local Supabase + env (sub-phases 2a, 2b)
-- [ ] 2.2 Tests skipped cleanly without Supabase env
+- [x] 2.1 Deny mutation tests pass with local Supabase + env (sub-phases 2a, 2b)
+- [x] 2.2 Tests skipped cleanly without Supabase env
 
 #### Manual
 
