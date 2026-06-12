@@ -4,6 +4,7 @@ import type { FanEventFilters } from "@/lib/events/fan-schema";
 import { getStartOfTodayWarsawUtcIso, parseDatetimeLocalWarsaw } from "@/lib/events/format";
 import { mapEventRow, toEventInsertRow, toEventUpdateRow, type EventRow } from "@/lib/events/mapper";
 import type { ParsedEventCreate, ParsedEventUpdate } from "@/lib/events/schema";
+import { EVENT_COVERS_BUCKET } from "@/lib/storage/event-covers";
 import type { Event, EventInsert } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
@@ -19,7 +20,14 @@ function mapSupabaseError(message: string): string {
   if (message.includes("events_coordinates_both_or_neither")) {
     return "Podaj obie współrzędne lub żadnej";
   }
+  if (message.includes("events_cover_path_format")) {
+    return "Nieprawidłowa ścieżka okładki";
+  }
   return "Nie udało się zapisać wydarzenia";
+}
+
+export async function removeEventCoverFromStorage(supabase: SupabaseClient, coverPath: string): Promise<void> {
+  await supabase.storage.from(EVENT_COVERS_BUCKET).remove([coverPath]);
 }
 
 function toStoredStartsAt(startsAt: string): string | { error: string } {
@@ -197,6 +205,8 @@ function parsedCreateToInsert(
     startsAt: startsAtIso,
     city: parsed.city,
     venueName: parsed.venueName,
+    addressStreet: null,
+    addressNumber: null,
     subgenres: parsed.subgenres,
     lineup: parsed.lineup ?? null,
     ticketUrl: parsed.ticketUrl ?? null,
@@ -272,6 +282,13 @@ export async function updateEvent(
   if (parsed.isFree !== undefined) patch.isFree = parsed.isFree;
   if (parsed.price !== undefined) patch.price = parsed.price;
 
+  if (parsed.coverPath !== undefined) {
+    if (parsed.coverPath === null && existing.coverPath !== null) {
+      await removeEventCoverFromStorage(supabase, existing.coverPath);
+    }
+    patch.coverPath = parsed.coverPath;
+  }
+
   if (locationMode === "coordinates") {
     if (parsed.addressStreet !== undefined) patch.addressStreet = null;
     if (parsed.addressNumber !== undefined) patch.addressNumber = null;
@@ -334,6 +351,10 @@ export async function deleteEvent(
   const existing = await getEventById(supabase, id);
   if (!existing) {
     return { error: "Nie znaleziono wydarzenia" };
+  }
+
+  if (existing.coverPath !== null) {
+    await removeEventCoverFromStorage(supabase, existing.coverPath);
   }
 
   const { error } = await supabase.from("events").delete().eq("id", id);

@@ -103,6 +103,7 @@ export interface Event {
   isFree: boolean;
   price: string | null;
   status: EventStatus;
+  coverPath: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -122,6 +123,7 @@ export interface EventInsert {
   isFree?: boolean;
   price?: string | null;
   status?: EventStatus;
+  coverPath?: string | null;
 }
 
 export type EventUpdate = Partial<EventInsert>;

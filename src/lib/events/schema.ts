@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { isValidCoverPath } from "@/lib/storage/event-covers";
 import { SUBGENRES, type Subgenre } from "@/types";
 
 const subgenreSchema = z.enum(SUBGENRES as [Subgenre, ...Subgenre[]]);
@@ -29,6 +30,12 @@ const longitudeSchema = z
   .number({ required_error: "Długość geograficzna jest wymagana" })
   .min(-180, "Długość geograficzna musi być między -180 a 180")
   .max(180, "Długość geograficzna musi być między -180 a 180");
+
+const coverPathSchema = z
+  .string()
+  .refine(isValidCoverPath, { message: "Nieprawidłowa ścieżka okładki" })
+  .nullable()
+  .optional();
 
 const commonEventFields = {
   name: z.string().min(1, "Nazwa wydarzenia jest wymagana"),
@@ -88,6 +95,7 @@ const eventUpdatePartialSchema = z
     addressNumber: z.string().min(1, "Numer budynku jest wymagany").optional().nullable(),
     latitude: latitudeSchema.optional(),
     longitude: longitudeSchema.optional(),
+    coverPath: coverPathSchema,
   })
   .superRefine((data, ctx) => {
     if (data.locationMode === "coordinates") {
@@ -164,4 +172,4 @@ function formatZodError(error: z.ZodError): string {
 }
 
 // Exported for tests / reuse
-export { eventCreateAddressSchema, eventCreateCoordinatesSchema, eventUpdatePartialSchema };
+export { coverPathSchema, eventCreateAddressSchema, eventCreateCoordinatesSchema, eventUpdatePartialSchema };
