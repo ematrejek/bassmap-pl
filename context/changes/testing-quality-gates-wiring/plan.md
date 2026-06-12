@@ -314,10 +314,10 @@ No database migration. CI uses existing `supabase/migrations/` applied by `supab
 
 #### Automated
 
-- [x] 4.1 `npm run lint` passes
-- [x] 4.2 `npm run build` passes
+- [x] 4.1 `npm run lint` passes — d9b0907
+- [x] 4.2 `npm run build` passes — d9b0907
 
 #### Manual
 
-- [x] 4.3 Contributor docs explain local skip vs CI hard-fail
+- [x] 4.3 Contributor docs explain local skip vs CI hard-fail — d9b0907
 - [ ] 4.4 test-plan §3 Phase 4 marked done when change archives
