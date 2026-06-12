@@ -392,36 +392,36 @@ Unit + jedna integracja regresji `cover_path`; istniejące suite zielone.
 
 #### Automated
 
-- [ ] 2.1 `npm run lint` przechodzi
-- [ ] 2.2 `npm run build` przechodzi
+- [x] 2.1 `npm run lint` przechodzi
+- [x] 2.2 `npm run build` przechodzi
 
 #### Manual
 
-- [ ] 2.3 Create bez pliku działa
-- [ ] 2.4 Create z plikiem — upload + cover_path
-- [ ] 2.5 Edit: zamiana, usuń okładkę, walidacja 5 MB / typu
+- [x] 2.3 Create bez pliku działa
+- [x] 2.4 Create z plikiem — upload + cover_path
+- [x] 2.5 Edit: zamiana, usuń okładkę, walidacja 5 MB / typu
 
 ### Phase 3: UI fana i miniatura w panelu admina
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` przechodzi
-- [ ] 3.2 `npm run build` przechodzi
+- [x] 3.1 `npm run lint` przechodzi
+- [x] 3.2 `npm run build` przechodzi
 
 #### Manual
 
-- [ ] 3.3 Fan: lista, podgląd, hero szczegółów + fallback
-- [ ] 3.4 Admin tabela: kolumna miniatur
-- [ ] 3.5 Mobile layout OK
+- [x] 3.3 Fan: lista, podgląd, hero szczegółów + fallback
+- [x] 3.4 Admin tabela: kolumna miniatur
+- [x] 3.5 Mobile layout OK
 
 ### Phase 4: Testy automatyczne
 
 #### Automated
 
-- [ ] 4.1 `npm test` przechodzi
-- [ ] 4.2 `npm run test:ci` przechodzi
-- [ ] 4.3 `npm run lint` i `npm run build` przechodzą
+- [x] 4.1 `npm test` przechodzi — 51/51
+- [x] 4.2 `npm run test:ci` przechodzi (lokalnie z Supabase)
+- [x] 4.3 `npm run lint` i `npm run build` przechodzą
 
 #### Manual
 
-- [ ] 4.4 (brak — tylko automated)
+- [x] 4.4 (brak — tylko automated)

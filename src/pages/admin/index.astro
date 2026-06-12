@@ -3,13 +3,18 @@ import Layout from "@/layouts/Layout.astro";
 import Topbar from "@/components/Topbar.astro";
 import AdminEventsTable from "@/components/admin/AdminEventsTable";
 import { listEventsForAdmin } from "@/lib/services/events";
+import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
 import { createClient } from "@/lib/supabase";
+import { SUPABASE_URL } from "astro:env/server";
 
 export const prerender = false;
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 const listResult = supabase ? await listEventsForAdmin(supabase) : { data: [] };
-const events = "data" in listResult ? listResult.data : [];
+const rawEvents = "data" in listResult ? listResult.data : [];
+const events = SUPABASE_URL
+  ? rawEvents.map((event) => enrichEventWithCoverUrl(event, SUPABASE_URL))
+  : rawEvents.map((event) => ({ ...event, coverUrl: null as string | null }));
 const listError = "error" in listResult ? listResult.error : null;
 ---
 

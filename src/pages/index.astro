@@ -4,8 +4,10 @@ import RoadmapTeaser from "@/components/discovery/RoadmapTeaser.astro";
 import Topbar from "@/components/Topbar.astro";
 import { parseFanFilters } from "@/lib/events/fan-schema";
 import { listDistinctCities, listPublishedEvents } from "@/lib/services/events";
+import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
 import { createClient } from "@/lib/supabase";
 import Layout from "@/layouts/Layout.astro";
+import { SUPABASE_URL } from "astro:env/server";
 
 export const prerender = false;
 
@@ -15,7 +17,10 @@ const currentFilters = parseFanFilters(Astro.url.searchParams);
 const listResult = supabase ? await listPublishedEvents(supabase, currentFilters) : { data: [] };
 const citiesResult = supabase ? await listDistinctCities(supabase) : { data: [] };
 
-const events = "data" in listResult ? listResult.data : [];
+const rawEvents = "data" in listResult ? listResult.data : [];
+const events = SUPABASE_URL
+  ? rawEvents.map((event) => enrichEventWithCoverUrl(event, SUPABASE_URL))
+  : rawEvents.map((event) => ({ ...event, coverUrl: null as string | null }));
 const cities = "data" in citiesResult ? citiesResult.data : [];
 const listError =
   ["error" in listResult ? listResult.error : null, "error" in citiesResult ? citiesResult.error : null]

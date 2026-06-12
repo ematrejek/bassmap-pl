@@ -1,9 +1,11 @@
 ---
 import { z } from "zod";
+import { SUPABASE_URL } from "astro:env/server";
 import Layout from "@/layouts/Layout.astro";
 import Topbar from "@/components/Topbar.astro";
 import EventForm from "@/components/admin/EventForm";
 import { getEventById } from "@/lib/services/events";
+import { getEventCoverUrl } from "@/lib/storage/event-covers";
 import { createClient } from "@/lib/supabase";
 
 export const prerender = false;
@@ -27,6 +29,13 @@ if (idResult.success) {
   notFound = true;
   Astro.response.status = 404;
 }
+
+const coverUploadError =
+  Astro.url.searchParams.get("coverError") === "upload"
+    ? "Wydarzenie zapisane, ale okładka nie została wgrana. Spróbuj dodać ją ponownie."
+    : null;
+
+const initialCoverUrl = event && SUPABASE_URL ? getEventCoverUrl(event.coverPath, SUPABASE_URL) : null;
 ---
 
 <Layout title={notFound ? "Nie znaleziono" : `Edycja: ${event?.name ?? ""}`}>
@@ -62,7 +71,13 @@ if (idResult.success) {
               </div>
 
               <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl sm:p-8">
-                <EventForm mode="edit" initialEvent={event} client:load />
+                <EventForm
+                  mode="edit"
+                  initialEvent={event ?? undefined}
+                  initialCoverUrl={initialCoverUrl}
+                  serverError={coverUploadError}
+                  client:load
+                />
               </div>
             </>
           )

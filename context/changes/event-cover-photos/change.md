@@ -4,6 +4,7 @@ title: Event cover photos on cards and detail pages
 status: implementing
 created: 2026-06-12
 updated: 2026-06-12
+verified_manual: 2026-06-12
 research: context/changes/event-cover-photos/research.md
 plan: context/changes/event-cover-photos/plan.md
 archived_at: null

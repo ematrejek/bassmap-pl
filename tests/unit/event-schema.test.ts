@@ -49,8 +49,7 @@ describe("parseEventCreate", () => {
 
   it("rejects coordinates mode without longitude (2d)", () => {
     const { longitude: _longitude, ...withoutLongitude } = buildMutationCreatePayload();
-
-    const result = parseEventCreate(withoutLongitude);
+    const result = parseEventCreate({ ...withoutLongitude, locationMode: "coordinates" });
 
     expect(result.success).toBe(false);
   });
@@ -67,5 +66,26 @@ describe("parseEventUpdate", () => {
     const result = parseEventUpdate({ subgenres: ["bogus"] });
 
     expect(result.success).toBe(false);
+  });
+
+  it("accepts valid coverPath on partial update", () => {
+    const result = parseEventUpdate({
+      coverPath: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11/cover.jpg",
+      coverAspect: "portrait",
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects malformed coverPath on partial update", () => {
+    const result = parseEventUpdate({ coverPath: "../evil/cover.jpg" });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts coverPath null to clear cover", () => {
+    const result = parseEventUpdate({ coverPath: null, coverAspect: null });
+
+    expect(result.success).toBe(true);
   });
 });

@@ -1,3 +1,4 @@
+import EventCoverImage from "@/components/discovery/EventCoverImage";
 import { ServerError } from "@/components/auth/ServerError";
 import DeleteEventButton from "@/components/admin/DeleteEventButton";
 import { Badge } from "@/components/ui/badge";
@@ -5,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatEventDate } from "@/lib/events/format";
 import { cn } from "@/lib/utils";
-import type { Event, EventStatus } from "@/types";
+import type { EventStatus, EventWithCoverUrl } from "@/types";
 
 const STATUS_LABELS: Record<EventStatus, string> = {
   published: "Opublikowane",
@@ -28,7 +29,7 @@ function statusBadgeClass(status: EventStatus): string {
 }
 
 interface Props {
-  events: Event[];
+  events: EventWithCoverUrl[];
   listError?: string | null;
 }
 
@@ -61,6 +62,7 @@ export default function AdminEventsTable({ events, listError }: Props) {
           <Table>
             <TableHeader>
               <TableRow className="border-white/10 hover:bg-transparent">
+                <TableHead className="w-14 text-blue-100/80">Okładka</TableHead>
                 <TableHead className="text-blue-100/80">Nazwa</TableHead>
                 <TableHead className="text-blue-100/80">Data</TableHead>
                 <TableHead className="text-blue-100/80">Miasto</TableHead>
@@ -71,6 +73,15 @@ export default function AdminEventsTable({ events, listError }: Props) {
             <TableBody>
               {events.map((event) => (
                 <TableRow key={event.id} className="border-white/10 hover:bg-white/5">
+                  <TableCell>
+                    <EventCoverImage
+                      coverUrl={event.coverUrl}
+                      alt={`Okładka: ${event.name}`}
+                      variant="thumb"
+                      coverAspect={event.coverAspect}
+                      className="size-10"
+                    />
+                  </TableCell>
                   <TableCell className="max-w-[200px] truncate font-medium text-white sm:max-w-xs">
                     {event.name}
                   </TableCell>

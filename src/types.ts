@@ -87,6 +87,9 @@ export const SUBGENRE_LABELS: Record<Subgenre, string> = {
 
 export type EventStatus = "draft" | "pending" | "published" | "rejected";
 
+/** Portrait = event poster; landscape = wide social / FB cover. */
+export type CoverAspect = "portrait" | "landscape";
+
 export interface Event {
   id: string;
   name: string;
@@ -104,9 +107,13 @@ export interface Event {
   price: string | null;
   status: EventStatus;
   coverPath: string | null;
+  coverAspect: CoverAspect | null;
   createdAt: string;
   updatedAt: string;
 }
+
+/** Event z gotowym publicznym URL okładki (dodawany na SSR przed przekazaniem do UI). */
+export type EventWithCoverUrl = Event & { coverUrl: string | null };
 
 export interface EventInsert {
   name: string;
@@ -124,6 +131,7 @@ export interface EventInsert {
   price?: string | null;
   status?: EventStatus;
   coverPath?: string | null;
+  coverAspect?: CoverAspect | null;
 }
 
 export type EventUpdate = Partial<EventInsert>;

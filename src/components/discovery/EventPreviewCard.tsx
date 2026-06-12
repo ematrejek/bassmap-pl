@@ -1,15 +1,15 @@
+import EventCoverImage from "@/components/discovery/EventCoverImage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
-import { cn } from "@/lib/utils";
-import type { Event } from "@/types";
+import type { EventWithCoverUrl } from "@/types";
 import { SUBGENRE_LABELS } from "@/types";
 import { X } from "lucide-react";
 import { createPortal } from "react-dom";
 import { useSyncExternalStore } from "react";
 
 interface Props {
-  event: Event | null;
+  event: EventWithCoverUrl | null;
   onClose: () => void;
 }
 
@@ -30,31 +30,28 @@ export default function EventPreviewCard({ event, onClose }: Props) {
 
   return createPortal(
     <div
-      className="fixed inset-x-4 bottom-4 z-[1100] mx-auto max-w-md rounded-2xl border border-white/20 bg-slate-900/95 p-4 shadow-2xl backdrop-blur-xl sm:inset-x-auto sm:right-6 sm:bottom-6"
+      className="fixed inset-x-4 bottom-4 z-[1100] mx-auto max-w-md overflow-hidden rounded-2xl border border-white/20 bg-slate-900/95 shadow-2xl backdrop-blur-xl sm:inset-x-auto sm:right-6 sm:bottom-6"
       role="dialog"
       aria-label={`Podgląd: ${event.name}`}
     >
-      <div className="flex items-start justify-between gap-2">
-        <div
-          className={cn(
-            "flex h-16 w-16 shrink-0 items-center justify-center rounded-xl",
-            "bg-gradient-to-br from-purple-600/80 to-blue-600/80 text-lg font-bold text-white",
-          )}
-          aria-hidden
-        >
-          DnB
-        </div>
+      <div className="relative">
+        <EventCoverImage
+          coverUrl={event.coverUrl}
+          alt={`Okładka: ${event.name}`}
+          variant="preview"
+          coverAspect={event.coverAspect}
+        />
         <button
           type="button"
           onClick={onClose}
-          className="rounded-md p-1 text-blue-100/70 transition-colors hover:bg-white/10 hover:text-white"
+          className="absolute top-2 right-2 rounded-full bg-black/50 p-1.5 text-white/90 backdrop-blur-sm transition-colors hover:bg-black/70 hover:text-white"
           aria-label="Zamknij podgląd"
         >
           <X className="size-5" />
         </button>
       </div>
 
-      <div className="mt-3 space-y-2">
+      <div className="space-y-2 p-4">
         <h3 className="text-lg font-semibold text-white">{event.name}</h3>
         <p className="text-sm text-blue-100/70">{formatEventDate(event.startsAt)}</p>
         <p className="text-sm text-blue-100/60">{formatEventVenueLine(event)}</p>

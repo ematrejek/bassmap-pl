@@ -1,4 +1,4 @@
-import type { Event } from "@/types";
+import type { CoverAspect, Event } from "@/types";
 
 export const EVENT_COVERS_BUCKET = "event-covers";
 
@@ -29,17 +29,32 @@ export function getEventCoverUrl(coverPath: string | null, supabaseUrl: string):
   return `${base}/storage/v1/object/public/${EVENT_COVERS_BUCKET}/${coverPath}`;
 }
 
-export function buildCoverStoragePath(eventId: string, mimeType: string): string {
-  const extension = MIME_TO_EXTENSION[mimeType as AllowedCoverMimeType];
-  if (!extension) {
-    throw new Error(`Nieobsługiwany typ pliku: ${mimeType}`);
+const EXTENSION_TO_MIME: Record<string, AllowedCoverMimeType> = {
+  jpg: "image/jpeg",
+  jpeg: "image/jpeg",
+  png: "image/png",
+  webp: "image/webp",
+};
+
+export function resolveCoverMimeType(file: Pick<File, "name" | "type">): AllowedCoverMimeType | null {
+  if (ALLOWED_COVER_MIME_TYPES.includes(file.type as AllowedCoverMimeType)) {
+    return file.type as AllowedCoverMimeType;
   }
 
+  const extension = file.name.split(".").pop()?.toLowerCase() ?? "";
+  return EXTENSION_TO_MIME[extension] ?? null;
+}
+
+export function buildCoverStoragePath(eventId: string, mimeType: AllowedCoverMimeType): string {
+  const extension = MIME_TO_EXTENSION[mimeType];
   return `${eventId}/cover.${extension}`;
 }
 
-export function validateCoverFile(file: File): { ok: true } | { ok: false; error: string } {
-  if (!ALLOWED_COVER_MIME_TYPES.includes(file.type as AllowedCoverMimeType)) {
+export function validateCoverFile(
+  file: File,
+): { ok: true; mimeType: AllowedCoverMimeType } | { ok: false; error: string } {
+  const mimeType = resolveCoverMimeType(file);
+  if (!mimeType) {
     return { ok: false, error: "Dozwolone formaty: JPEG, PNG lub WebP" };
   }
 
@@ -47,7 +62,30 @@ export function validateCoverFile(file: File): { ok: true } | { ok: false; error
     return { ok: false, error: "Plik jest za duży (maks. 5 MB)" };
   }
 
-  return { ok: true };
+  return { ok: true, mimeType };
+}
+
+export function getCoverAspectClassName(aspect: CoverAspect | null): string {
+  return aspect === "landscape" ? "aspect-video" : "aspect-[3/4]";
+}
+
+export function mapStorageUploadError(message: string): string {
+  if (message.includes("Bucket not found") || message.includes("bucket does not exist")) {
+    return "Magazyn okładek nie jest skonfigurowany na serwerze. Skontaktuj się z administratorem.";
+  }
+  if (message.includes("row-level security") || message.includes("RLS")) {
+    return "Brak uprawnień do wgrania okładki. Zaloguj się ponownie jako admin.";
+  }
+  if (message.includes("Payload too large") || message.includes("maximum allowed size")) {
+    return "Plik jest za duży (maks. 5 MB)";
+  }
+  if (message.includes("mime type") || message.includes("Invalid file type")) {
+    return "Dozwolone formaty: JPEG, PNG lub WebP";
+  }
+  if (message.includes("The resource already exists")) {
+    return "Nie udało się nadpisać okładki. Spróbuj ponownie.";
+  }
+  return "Nie udało się wgrać okładki. Spróbuj ponownie.";
 }
 
 export function enrichEventWithCoverUrl<T extends Event>(

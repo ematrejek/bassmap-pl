@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { isValidCoverPath } from "@/lib/storage/event-covers";
-import { SUBGENRES, type Subgenre } from "@/types";
+import { SUBGENRES, type CoverAspect, type Subgenre } from "@/types";
 
 const subgenreSchema = z.enum(SUBGENRES as [Subgenre, ...Subgenre[]]);
 
@@ -34,6 +34,11 @@ const longitudeSchema = z
 const coverPathSchema = z
   .string()
   .refine(isValidCoverPath, { message: "Nieprawidłowa ścieżka okładki" })
+  .nullable()
+  .optional();
+
+const coverAspectSchema = z
+  .enum(["portrait", "landscape"] satisfies [CoverAspect, CoverAspect])
   .nullable()
   .optional();
 
@@ -96,6 +101,7 @@ const eventUpdatePartialSchema = z
     latitude: latitudeSchema.optional(),
     longitude: longitudeSchema.optional(),
     coverPath: coverPathSchema,
+    coverAspect: coverAspectSchema,
   })
   .superRefine((data, ctx) => {
     if (data.locationMode === "coordinates") {
@@ -172,4 +178,10 @@ function formatZodError(error: z.ZodError): string {
 }
 
 // Exported for tests / reuse
-export { coverPathSchema, eventCreateAddressSchema, eventCreateCoordinatesSchema, eventUpdatePartialSchema };
+export {
+  coverAspectSchema,
+  coverPathSchema,
+  eventCreateAddressSchema,
+  eventCreateCoordinatesSchema,
+  eventUpdatePartialSchema,
+};

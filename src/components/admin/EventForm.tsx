@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { Calendar, Link2, Music, Ticket } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { Calendar, ImageIcon, Link2, Music, Ticket } from "lucide-react";
 import { ServerError } from "@/components/auth/ServerError";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -8,8 +8,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toDatetimeLocalValue } from "@/lib/events/format";
 import { parseEventCreate, parseEventUpdate } from "@/lib/events/schema";
+import { getCoverAspectClassName, validateCoverFile } from "@/lib/storage/event-covers";
 import { cn } from "@/lib/utils";
-import { SUBGENRES, SUBGENRE_LABELS, type Event, type Subgenre } from "@/types";
+import { SUBGENRES, SUBGENRE_LABELS, type CoverAspect, type Event, type Subgenre } from "@/types";
 
 const fieldClass =
   "border-white/20 bg-white/10 text-white placeholder:text-white/40 focus-visible:border-purple-400 focus-visible:ring-purple-400/30 dark:bg-white/10";
@@ -36,13 +37,63 @@ function textToLineup(value: string): string[] | null {
   return lines.length > 0 ? lines : null;
 }
 
+async function patchCoverMeta(
+  eventId: string,
+  payload: { coverPath: string | null; coverAspect: CoverAspect | null },
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const response = await fetch(`/api/admin/events/${eventId}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(payload),
+  });
+
+  const data = (await response.json()) as { error?: string };
+
+  if (!response.ok) {
+    return { ok: false, error: data.error ?? "Nie udało się zapisać okładki" };
+  }
+
+  return { ok: true };
+}
+
+async function uploadCoverFile(
+  eventId: string,
+  file: File,
+  coverAspect: CoverAspect,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const formData = new FormData();
+  formData.append("file", file);
+  formData.append("coverAspect", coverAspect);
+
+  const response = await fetch(`/api/admin/events/${eventId}/cover`, {
+    method: "POST",
+    credentials: "include",
+    body: formData,
+  });
+
+  const data = (await response.json()) as { error?: string };
+
+  if (!response.ok) {
+    return { ok: false, error: data.error ?? "Nie udało się wgrać okładki" };
+  }
+
+  return { ok: true };
+}
+
 interface Props {
   mode: "create" | "edit";
   initialEvent?: Event;
   serverError?: string | null;
+  initialCoverUrl?: string | null;
 }
 
-export default function EventForm({ mode, initialEvent, serverError: initialServerError }: Props) {
+export default function EventForm({
+  mode,
+  initialEvent,
+  serverError: initialServerError,
+  initialCoverUrl = null,
+}: Props) {
   const initialMode = inferLocationMode(initialEvent);
 
   const [name, setName] = useState(initialEvent?.name ?? "");
@@ -63,10 +114,25 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
   const [ticketUrl, setTicketUrl] = useState(initialEvent?.ticketUrl ?? "");
   const [isFree, setIsFree] = useState(initialEvent?.isFree ?? false);
   const [price, setPrice] = useState(initialEvent?.price ?? "");
+  const [coverFile, setCoverFile] = useState<File | null>(null);
+  const [coverAspect, setCoverAspect] = useState<CoverAspect>(initialEvent?.coverAspect ?? "portrait");
+  const [removeCover, setRemoveCover] = useState(false);
+  const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(initialServerError ?? null);
   const [submitting, setSubmitting] = useState(false);
+  const localPreviewUrlRef = useRef<string | null>(null);
 
   const locationMode = coordinatesMode ? "coordinates" : "address";
+  const coverPreviewUrl = removeCover ? null : (localPreviewUrl ?? initialCoverUrl);
+
+  useEffect(() => {
+    localPreviewUrlRef.current = localPreviewUrl;
+    return () => {
+      if (localPreviewUrlRef.current) {
+        URL.revokeObjectURL(localPreviewUrlRef.current);
+      }
+    };
+  }, [localPreviewUrl]);
 
   function toggleSubgenre(value: Subgenre, checked: boolean) {
     setSubgenres((current) => {
@@ -75,6 +141,30 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
       }
       return current.filter((item) => item !== value);
     });
+  }
+
+  function revokeLocalPreview() {
+    if (localPreviewUrl) {
+      URL.revokeObjectURL(localPreviewUrl);
+      setLocalPreviewUrl(null);
+    }
+  }
+
+  function handleCoverFileChange(file: File | null) {
+    revokeLocalPreview();
+    setCoverFile(file);
+    setRemoveCover(false);
+    setServerError(null);
+    if (file) {
+      setLocalPreviewUrl(URL.createObjectURL(file));
+    }
+  }
+
+  function handleRemoveCover() {
+    revokeLocalPreview();
+    setCoverFile(null);
+    setRemoveCover(true);
+    setServerError(null);
   }
 
   function buildBody(): Record<string, unknown> {
@@ -106,6 +196,9 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
     };
   }
 
+  const showRemoveCoverButton =
+    mode === "edit" && !removeCover && (coverFile !== null || (initialEvent?.coverPath ?? null) !== null);
+
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setServerError(null);
@@ -118,12 +211,82 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
       return;
     }
 
+    if (coverFile) {
+      const fileValidation = validateCoverFile(coverFile);
+      if (!fileValidation.ok) {
+        setServerError(fileValidation.error);
+        return;
+      }
+    }
+
     setSubmitting(true);
 
     try {
-      const url = mode === "create" ? "/api/admin/events" : `/api/admin/events/${initialEvent?.id ?? ""}`;
-      const response = await fetch(url, {
-        method: mode === "create" ? "POST" : "PUT",
+      let eventId = mode === "edit" ? initialEvent?.id : undefined;
+
+      if (mode === "create") {
+        const createResponse = await fetch("/api/admin/events", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(body),
+        });
+
+        const createData = (await createResponse.json()) as { error?: string; event?: Event };
+
+        if (!createResponse.ok) {
+          setServerError(createData.error ?? "Nie udało się zapisać wydarzenia");
+          return;
+        }
+
+        eventId = createData.event?.id;
+        if (!eventId) {
+          setServerError("Nie udało się odczytać identyfikatora wydarzenia");
+          return;
+        }
+
+        if (coverFile) {
+          const uploadResult = await uploadCoverFile(eventId, coverFile, coverAspect);
+          if (!uploadResult.ok) {
+            window.location.href = `/admin/events/${eventId}/edit?coverError=upload`;
+            return;
+          }
+        }
+
+        window.location.href = "/admin";
+        return;
+      }
+
+      if (!eventId) {
+        setServerError("Nie udało się odczytać identyfikatora wydarzenia");
+        return;
+      }
+
+      if (coverFile) {
+        const uploadResult = await uploadCoverFile(eventId, coverFile, coverAspect);
+        if (!uploadResult.ok) {
+          setServerError(uploadResult.error);
+          return;
+        }
+      } else if (removeCover) {
+        const removeResult = await patchCoverMeta(eventId, { coverPath: null, coverAspect: null });
+        if (!removeResult.ok) {
+          setServerError(removeResult.error);
+          return;
+        }
+      } else if (initialEvent?.coverPath && coverAspect !== (initialEvent.coverAspect ?? "portrait")) {
+        const aspectResult = await patchCoverMeta(eventId, {
+          coverPath: initialEvent.coverPath,
+          coverAspect,
+        });
+        if (!aspectResult.ok) {
+          setServerError(aspectResult.error);
+          return;
+        }
+      }
+
+      const response = await fetch(`/api/admin/events/${eventId}`, {
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(body),
@@ -349,6 +512,87 @@ export default function EventForm({ mode, initialEvent, serverError: initialServ
           rows={4}
           className={fieldClass}
         />
+      </div>
+
+      <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">
+        <div className="flex items-center gap-2 text-blue-100/80">
+          <ImageIcon className="size-4" />
+          <Label htmlFor="coverFile" className="text-blue-100/80">
+            Okładka wydarzenia
+          </Label>
+        </div>
+        <Input
+          id="coverFile"
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className={cn(
+            fieldClass,
+            "cursor-pointer file:mr-3 file:rounded-md file:border-0 file:bg-purple-600/80 file:px-3 file:py-1 file:text-sm file:text-white",
+          )}
+          onChange={(e) => {
+            const file = e.target.files?.[0] ?? null;
+            handleCoverFileChange(file);
+          }}
+        />
+        <p className="text-xs text-blue-100/50">Opcjonalnie. JPEG, PNG lub WebP, max 5 MB.</p>
+
+        {(coverFile !== null || (initialEvent?.coverPath && !removeCover)) && (
+          <fieldset className="space-y-2">
+            <legend className="text-sm text-blue-100/80">Format okładki</legend>
+            <div className="flex flex-wrap gap-4">
+              <label htmlFor="coverAspectPortrait" className="flex cursor-pointer items-center gap-2">
+                <input
+                  id="coverAspectPortrait"
+                  type="radio"
+                  name="coverAspect"
+                  value="portrait"
+                  checked={coverAspect === "portrait"}
+                  onChange={() => {
+                    setCoverAspect("portrait");
+                  }}
+                  className="accent-purple-500"
+                />
+                <span className="text-sm text-white/90">Pionowy (plakat)</span>
+              </label>
+              <label htmlFor="coverAspectLandscape" className="flex cursor-pointer items-center gap-2">
+                <input
+                  id="coverAspectLandscape"
+                  type="radio"
+                  name="coverAspect"
+                  value="landscape"
+                  checked={coverAspect === "landscape"}
+                  onChange={() => {
+                    setCoverAspect("landscape");
+                  }}
+                  className="accent-purple-500"
+                />
+                <span className="text-sm text-white/90">Poziomy (tło z FB)</span>
+              </label>
+            </div>
+          </fieldset>
+        )}
+
+        {coverPreviewUrl && (
+          <div className="mt-2 overflow-hidden rounded-xl border border-white/10">
+            <img
+              src={coverPreviewUrl}
+              alt="Podgląd okładki"
+              className={cn("w-full object-cover", getCoverAspectClassName(coverAspect))}
+            />
+          </div>
+        )}
+
+        {showRemoveCoverButton && (
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="border-white/20 bg-transparent text-red-200 hover:bg-red-500/10 hover:text-red-100"
+            onClick={handleRemoveCover}
+          >
+            Usuń okładkę
+          </Button>
+        )}
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2">

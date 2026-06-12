@@ -23,6 +23,9 @@ function mapSupabaseError(message: string): string {
   if (message.includes("events_cover_path_format")) {
     return "Nieprawidłowa ścieżka okładki";
   }
+  if (message.includes("events_cover_aspect")) {
+    return "Nieprawidłowy format okładki";
+  }
   return "Nie udało się zapisać wydarzenia";
 }
 
@@ -283,10 +286,21 @@ export async function updateEvent(
   if (parsed.price !== undefined) patch.price = parsed.price;
 
   if (parsed.coverPath !== undefined) {
-    if (parsed.coverPath === null && existing.coverPath !== null) {
+    const clearingCover = parsed.coverPath === null && existing.coverPath !== null;
+    const replacingCover =
+      parsed.coverPath !== null && existing.coverPath !== null && parsed.coverPath !== existing.coverPath;
+
+    if (clearingCover || replacingCover) {
       await removeEventCoverFromStorage(supabase, existing.coverPath);
     }
     patch.coverPath = parsed.coverPath;
+    if (parsed.coverPath === null) {
+      patch.coverAspect = null;
+    }
+  }
+
+  if (parsed.coverAspect !== undefined) {
+    patch.coverAspect = parsed.coverAspect;
   }
 
   if (locationMode === "coordinates") {

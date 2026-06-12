@@ -4,7 +4,7 @@ import EventList from "@/components/discovery/EventList";
 import EventPreviewCard from "@/components/discovery/EventPreviewCard";
 import type { FanEventFilters } from "@/lib/events/fan-schema";
 import { cn } from "@/lib/utils";
-import type { Event } from "@/types";
+import type { EventWithCoverUrl } from "@/types";
 import { lazy, Suspense, useState, useSyncExternalStore } from "react";
 
 /** Leaflet wymaga `window` — ładujemy mapę dopiero po montażu w przeglądarce. */
@@ -32,7 +32,7 @@ function MapPlaceholder({ className }: { className?: string }) {
 }
 
 interface Props {
-  events: Event[];
+  events: EventWithCoverUrl[];
   cities: string[];
   currentFilters: FanEventFilters;
   listError?: string | null;

@@ -5,9 +5,10 @@ import { missingConfigs } from "@/lib/config-status";
 
 interface Props {
   title?: string;
+  ogImage?: string;
 }
 
-const { title = "BassMap PL" } = Astro.props;
+const { title = "BassMap PL", ogImage } = Astro.props;
 ---
 
 <!doctype html>
@@ -17,6 +18,7 @@ const { title = "BassMap PL" } = Astro.props;
     <meta name="viewport" content="width=device-width" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <title>{title}</title>
+    {ogImage && <meta property="og:image" content={ogImage} />}
   </head>
   <body>
     {

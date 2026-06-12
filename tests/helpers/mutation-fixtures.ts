@@ -1,6 +1,8 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import type { ParsedEventCreate } from "@/lib/events/schema";
 
+type CoordinatesEventCreate = Extract<ParsedEventCreate, { locationMode: "coordinates" }>;
+
 const MUTATION_PREFIX = "integration-auth-mutation";
 
 function futureStartsAtLocal(daysFromNow: number): string {
@@ -18,7 +20,7 @@ function futureStartsAtIso(daysFromNow: number): string {
   return date.toISOString();
 }
 
-export function buildMutationCreatePayload(label = "create"): ParsedEventCreate {
+export function buildMutationCreatePayload(label = "create"): CoordinatesEventCreate {
   return {
     locationMode: "coordinates",
     latitude: 52.2297,

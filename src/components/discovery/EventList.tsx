@@ -1,11 +1,12 @@
+import EventCoverImage from "@/components/discovery/EventCoverImage";
 import { Badge } from "@/components/ui/badge";
 import { formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
 import { cn } from "@/lib/utils";
-import type { Event } from "@/types";
+import type { EventWithCoverUrl } from "@/types";
 import { SUBGENRE_LABELS } from "@/types";
 
 interface Props {
-  events: Event[];
+  events: EventWithCoverUrl[];
   selectedEventId: string | null;
   onSelectEvent: (id: string) => void;
   hasActiveFilters: boolean;
@@ -37,13 +38,23 @@ export default function EventList({ events, selectedEventId, onSelectEvent, hasA
               selectedEventId === event.id && "border-purple-400/60 bg-purple-500/10 ring-1 ring-purple-400/30",
             )}
           >
-            <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
-              <div className="min-w-0 flex-1 space-y-1">
-                <h3 className="truncate font-semibold text-white">{event.name}</h3>
-                <p className="text-sm text-blue-100/70">{formatEventDate(event.startsAt)}</p>
-                <p className="text-sm text-blue-100/60">{formatEventVenueLine(event)}</p>
+            <div className="flex gap-3">
+              <EventCoverImage
+                coverUrl={event.coverUrl}
+                alt={`Okładka: ${event.name}`}
+                variant="thumb"
+                coverAspect={event.coverAspect}
+              />
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
+                  <div className="min-w-0 flex-1 space-y-1">
+                    <h3 className="truncate font-semibold text-white">{event.name}</h3>
+                    <p className="text-sm text-blue-100/70">{formatEventDate(event.startsAt)}</p>
+                    <p className="text-sm text-blue-100/60">{formatEventVenueLine(event)}</p>
+                  </div>
+                  <p className="shrink-0 text-sm font-medium text-purple-200">{formatEventPrice(event)}</p>
+                </div>
               </div>
-              <p className="shrink-0 text-sm font-medium text-purple-200">{formatEventPrice(event)}</p>
             </div>
             <div className="mt-2 flex flex-wrap gap-1">
               {event.subgenres.slice(0, 4).map((subgenre) => (

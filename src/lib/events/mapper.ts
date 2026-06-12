@@ -1,4 +1,4 @@
-import type { Event, EventInsert, EventStatus, Subgenre } from "@/types";
+import type { CoverAspect, Event, EventInsert, EventStatus, Subgenre } from "@/types";
 
 export interface EventRow {
   id: string;
@@ -17,6 +17,7 @@ export interface EventRow {
   price: string | null;
   status: EventStatus;
   cover_path: string | null;
+  cover_aspect: CoverAspect | null;
   created_at: string;
   updated_at: string;
 }
@@ -39,6 +40,7 @@ export function mapEventRow(row: EventRow): Event {
     price: row.price,
     status: row.status,
     coverPath: row.cover_path,
+    coverAspect: row.cover_aspect,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -61,6 +63,7 @@ export function toEventInsertRow(input: EventInsert): Record<string, unknown> {
     price: input.price ?? null,
     status: input.status ?? "published",
     cover_path: input.coverPath ?? null,
+    cover_aspect: input.coverAspect ?? null,
   };
 }
 
@@ -82,6 +85,7 @@ export function toEventUpdateRow(input: Partial<EventInsert>): Record<string, un
   if (input.price !== undefined) row.price = input.price;
   if (input.status !== undefined) row.status = input.status;
   if (input.coverPath !== undefined) row.cover_path = input.coverPath;
+  if (input.coverAspect !== undefined) row.cover_aspect = input.coverAspect;
 
   return row;
 }
