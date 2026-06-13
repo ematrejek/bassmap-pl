@@ -59,6 +59,51 @@ describe("parseEventCreate", () => {
 
     expect(result.success).toBe(true);
   });
+
+  it("accepts null description (desc-1)", () => {
+    const result = parseEventCreate({
+      ...buildMutationCreatePayload(),
+      description: null,
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.description).toBeNull();
+    }
+  });
+
+  it("accepts multiline description and trims edges (desc-2)", () => {
+    const result = parseEventCreate({
+      ...buildMutationCreatePayload(),
+      description: "  Line one\nLine two  ",
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.description).toBe("Line one\nLine two");
+    }
+  });
+
+  it("rejects description longer than 5000 characters (desc-3)", () => {
+    const result = parseEventCreate({
+      ...buildMutationCreatePayload(),
+      description: "x".repeat(5001),
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("normalizes empty description string to null (desc-4)", () => {
+    const result = parseEventCreate({
+      ...buildMutationCreatePayload(),
+      description: "   ",
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.description).toBeNull();
+    }
+  });
 });
 
 describe("parseEventUpdate", () => {
@@ -87,5 +132,29 @@ describe("parseEventUpdate", () => {
     const result = parseEventUpdate({ coverPath: null, coverAspect: null });
 
     expect(result.success).toBe(true);
+  });
+
+  it("accepts description on partial update (desc-5)", () => {
+    const result = parseEventUpdate({ description: "Updated copy" });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.description).toBe("Updated copy");
+    }
+  });
+
+  it("clears description with empty string on partial update (desc-6)", () => {
+    const result = parseEventUpdate({ description: "" });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.description).toBeNull();
+    }
+  });
+
+  it("rejects description longer than 5000 characters on partial update (desc-7)", () => {
+    const result = parseEventUpdate({ description: "x".repeat(5001) });
+
+    expect(result.success).toBe(false);
   });
 });

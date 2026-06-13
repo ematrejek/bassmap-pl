@@ -225,6 +225,7 @@ function parsedCreateToInsert(
     addressNumber: null,
     subgenres: parsed.subgenres,
     lineup: parsed.lineup ?? null,
+    description: parsed.description ?? null,
     ticketUrl: parsed.ticketUrl ?? null,
     isFree: parsed.isFree,
     price: parsed.price ?? null,
@@ -294,6 +295,7 @@ export async function updateEvent(
   if (parsed.venueName !== undefined) patch.venueName = parsed.venueName;
   if (parsed.subgenres !== undefined) patch.subgenres = parsed.subgenres;
   if (parsed.lineup !== undefined) patch.lineup = parsed.lineup;
+  if (parsed.description !== undefined) patch.description = parsed.description;
   if (parsed.ticketUrl !== undefined) patch.ticketUrl = parsed.ticketUrl;
   if (parsed.isFree !== undefined) patch.isFree = parsed.isFree;
   if (parsed.price !== undefined) patch.price = parsed.price;

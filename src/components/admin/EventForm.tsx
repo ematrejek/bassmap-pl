@@ -111,6 +111,7 @@ export default function EventForm({
   );
   const [subgenres, setSubgenres] = useState<Subgenre[]>(initialEvent?.subgenres ?? []);
   const [lineup, setLineup] = useState(lineupToText(initialEvent?.lineup));
+  const [description, setDescription] = useState(initialEvent?.description ?? "");
   const [ticketUrl, setTicketUrl] = useState(initialEvent?.ticketUrl ?? "");
   const [isFree, setIsFree] = useState(initialEvent?.isFree ?? false);
   const [price, setPrice] = useState(initialEvent?.price ?? "");
@@ -175,6 +176,7 @@ export default function EventForm({
       venueName: venueName.trim(),
       subgenres,
       lineup: textToLineup(lineup),
+      description: description.trim() || null,
       ticketUrl: ticketUrl.trim() || null,
       isFree,
       price: isFree ? null : price.trim() || null,
@@ -512,6 +514,24 @@ export default function EventForm({
           rows={4}
           className={fieldClass}
         />
+      </div>
+
+      <div className="space-y-2">
+        <Label htmlFor="description" className="text-blue-100/80">
+          Opis wydarzenia
+        </Label>
+        <Textarea
+          id="description"
+          value={description}
+          onChange={(e) => {
+            setDescription(e.target.value);
+          }}
+          placeholder="Np. dress code, info o imprezie, ważne szczegóły dla fanów…"
+          rows={5}
+          maxLength={5000}
+          className={fieldClass}
+        />
+        <p className="text-xs text-blue-100/50">Opcjonalnie. Widoczne na stronie szczegółów wydarzenia.</p>
       </div>
 
       <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">

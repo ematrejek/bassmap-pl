@@ -12,6 +12,7 @@ export interface EventRow {
   longitude: number | null;
   subgenres: Subgenre[];
   lineup: string[] | null;
+  description: string | null;
   ticket_url: string | null;
   is_free: boolean;
   price: string | null;
@@ -35,6 +36,7 @@ export function mapEventRow(row: EventRow): Event {
     longitude: row.longitude,
     subgenres: row.subgenres,
     lineup: row.lineup,
+    description: row.description,
     ticketUrl: row.ticket_url,
     isFree: row.is_free,
     price: row.price,
@@ -58,6 +60,7 @@ export function toEventInsertRow(input: EventInsert): Record<string, unknown> {
     longitude: input.longitude ?? null,
     subgenres: input.subgenres,
     lineup: input.lineup ?? null,
+    description: input.description ?? null,
     ticket_url: input.ticketUrl ?? null,
     is_free: input.isFree ?? false,
     price: input.price ?? null,
@@ -80,6 +83,7 @@ export function toEventUpdateRow(input: Partial<EventInsert>): Record<string, un
   if (input.longitude !== undefined) row.longitude = input.longitude;
   if (input.subgenres !== undefined) row.subgenres = input.subgenres;
   if (input.lineup !== undefined) row.lineup = input.lineup;
+  if (input.description !== undefined) row.description = input.description;
   if (input.ticketUrl !== undefined) row.ticket_url = input.ticketUrl;
   if (input.isFree !== undefined) row.is_free = input.isFree;
   if (input.price !== undefined) row.price = input.price;

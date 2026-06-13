@@ -20,6 +20,7 @@ if (!event) {
 }
 
 const coverUrl = event && SUPABASE_URL ? getEventCoverUrl(event.coverPath, SUPABASE_URL) : null;
+const eventDescription = event?.description?.trim() ?? "";
 ---
 
 <Layout title={event ? `${event.name} — BassMap PL` : "Nie znaleziono — BassMap PL"} ogImage={coverUrl ?? undefined}>
@@ -71,6 +72,13 @@ const coverUrl = event && SUPABASE_URL ? getEventCoverUrl(event.coverPath, SUPAB
                 )}
                 <p class="text-lg font-medium text-purple-200">{formatEventPrice(event)}</p>
               </header>
+
+              {eventDescription ? (
+                <section class="space-y-2">
+                  <h2 class="text-sm font-semibold tracking-wide text-blue-100/80 uppercase">Opis</h2>
+                  <p class="whitespace-pre-wrap text-blue-100/80">{eventDescription}</p>
+                </section>
+              ) : null}
 
               <section class="space-y-2">
                 <h2 class="text-sm font-semibold tracking-wide text-blue-100/80 uppercase">Podgatunki</h2>

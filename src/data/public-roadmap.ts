@@ -19,18 +19,22 @@ export interface PublicRoadmapItem {
 export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
   {
     id: "date-range-filter",
-    label: "Date range filtering",
+    label: "Date filtering (calendar & quick picks)",
   },
   {
-    id: "event-description",
-    label: "Event description",
+    id: "free-events-filter",
+    label: "Show free events only",
   },
   {
-    id: "new-layout",
-    label: "New layout",
+    id: "mobile-subgenre-dropdown",
+    label: "Better subgenre picker on mobile",
   },
   {
-    id: "fan-accounts-fan-zone",
-    label: "Fan accounts and fan zone",
+    id: "structured-price-currency",
+    label: "Clear ticket prices with currency",
+  },
+  {
+    id: "marketing-homepage",
+    label: "New homepage & navigation",
   },
 ];

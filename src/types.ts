@@ -102,6 +102,7 @@ export interface Event {
   longitude: number | null;
   subgenres: Subgenre[];
   lineup: string[] | null;
+  description: string | null;
   ticketUrl: string | null;
   isFree: boolean;
   price: string | null;
@@ -126,6 +127,7 @@ export interface EventInsert {
   latitude?: number | null;
   longitude?: number | null;
   lineup?: string[] | null;
+  description?: string | null;
   ticketUrl?: string | null;
   isFree?: boolean;
   price?: string | null;

@@ -42,6 +42,23 @@ const coverAspectSchema = z
   .nullable()
   .optional();
 
+const descriptionSchema = z.preprocess(
+  (value) => {
+    if (value === undefined) {
+      return undefined;
+    }
+    if (value === null || value === "") {
+      return null;
+    }
+    if (typeof value === "string") {
+      const trimmed = value.trim();
+      return trimmed.length > 0 ? trimmed : null;
+    }
+    return value;
+  },
+  z.union([z.string().max(5000, "Opis może mieć maksymalnie 5000 znaków"), z.null()]).optional(),
+);
+
 const commonEventFields = {
   name: z.string().min(1, "Nazwa wydarzenia jest wymagana"),
   startsAt: startsAtSchema,
@@ -49,6 +66,7 @@ const commonEventFields = {
   venueName: z.string().min(1, "Podaj miejsce lub opis lokalizacji (np. „pod mostem Łazienkowskim”)"),
   subgenres: z.array(subgenreSchema).min(1, "Wybierz co najmniej jeden podgatunek"),
   lineup: z.array(z.string()).optional().nullable(),
+  description: descriptionSchema,
   ticketUrl: ticketUrlSchema,
   isFree: z.boolean().optional().default(false),
   price: z.string().optional().nullable(),
@@ -92,6 +110,7 @@ const eventUpdatePartialSchema = z
     venueName: z.string().min(1, "Podaj miejsce lub opis lokalizacji (np. „pod mostem Łazienkowskim”)").optional(),
     subgenres: z.array(subgenreSchema).min(1, "Wybierz co najmniej jeden podgatunek").optional(),
     lineup: z.array(z.string()).optional().nullable(),
+    description: descriptionSchema,
     ticketUrl: ticketUrlSchema,
     isFree: z.boolean().optional(),
     price: z.string().optional().nullable(),
