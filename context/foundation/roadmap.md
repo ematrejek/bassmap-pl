@@ -152,11 +152,22 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Biblioteka map S-02:** Leaflet + OpenStreetMap (zero kosztu MVP).
 - **UX odkrywania:** `/` = lista + mapa (split desktop, zakładki mobile); podgląd po kliknięciu → `/events/[id]`; filtry w URL; multi podgatunek OR; brak zdjęć — placeholder do osobnego slice'a.
 
+## Post-MVP backlog (suggested order)
+
+> Ustalone 2026-06-11 — MVP (F-01…F-03, S-01, S-02) jest **done**. Kolejne slice'y dopiszemy przy `/10x-plan`; na razie priorytet roboczy poniżej. Fan-facing kopia: `src/data/public-roadmap.ts`. **Na teraz robimy coś innego** — wracamy tu po zakończeniu bieżącej pracy.
+
+| Priorytet | ID (prop.) | Change ID (prop.)     | Outcome                                                         | PRD / notes                                      |
+| --------- | ---------- | --------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
+| 1         | S-03       | event-cover-photos    | fan widzi zdjęcia okładek na kartach i stronie szczegółów       | placeholder w S-02; brak pola w schemacie — nowy slice |
+| 2         | S-04       | date-range-filter     | fan filtruje po zakresie dat (weekendy, własne daty)            | FR-008 nice-to-have                              |
+| 3         | F-04       | www-subdomain         | ten sam serwis pod `www.bassmap.pl`                             | DNS / Cloudflare; mały nakład                    |
+
+**Równolegle (nie slice):** zasilenie bazy prawdziwymi wydarzeniami przez panel admina + feedback od fanów — sygnał rynkowy po deployu na https://bassmap.pl.
+
 ## Parked
 
 - **Konta fanów / personalizacja** — Why parked: PRD §Non-Goals; przeglądanie w pełni anonimowe w MVP.
 - **Portal organizatora (self-service)** — Why parked: PRD §Non-Goals; admin jest jedynym źródłem danych w v1.
-- **Filtr zakresu dat (FR-008)** — Why parked: nice-to-have w PRD; domyślne sortowanie po dacie wystarczy na MVP.
 - **Podgląd audio artystów** — Why parked: PRD §Non-Goals v2.
 - **Forum / carpooling** — Why parked: PRD §Non-Goals v3.
 - **Monetyzacja / linki afiliacyjne** — Why parked: PRD §Non-Goals post-launch.
