@@ -1,5 +1,6 @@
 ---
 import EventCoverImage from "@/components/discovery/EventCoverImage";
+import SiteFooter from "@/components/SiteFooter.astro";
 import Topbar from "@/components/Topbar.astro";
 import { formatEventAddress, formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
 import { getPublishedEventById } from "@/lib/services/events";
@@ -25,10 +26,10 @@ const eventDescription = event?.description?.trim() ?? "";
 
 <Layout title={event ? `${event.name} — BassMap PL` : "Nie znaleziono — BassMap PL"} ogImage={coverUrl ?? undefined}>
   <div class="bg-cosmic relative min-h-screen w-full overflow-hidden">
-    <div class="relative z-10 p-4 sm:p-8">
+    <div class="relative z-10 flex min-h-screen flex-col p-4 sm:p-8">
       <Topbar />
 
-      <div class="mx-auto max-w-2xl px-2 py-8 sm:px-4">
+      <div class="mx-auto w-full max-w-2xl flex-1 px-2 py-8 sm:px-4">
         {
           !event ? (
             <div class="rounded-2xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-xl">
@@ -118,6 +119,8 @@ const eventDescription = event?.description?.trim() ?? "";
           )
         }
       </div>
+
+      <SiteFooter />
     </div>
   </div>
 </Layout>

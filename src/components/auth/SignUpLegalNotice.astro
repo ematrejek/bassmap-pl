@@ -1,0 +1,17 @@
+---
+import { PRIVACY_POLICY_PATH, TERMS_PATH } from "@/lib/legal/paths";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<p class:list={["text-center text-xs leading-relaxed text-blue-100/60", className]}>
+  Rejestrując się, akceptujesz
+  <a href={PRIVACY_POLICY_PATH} class="text-purple-300 hover:underline"> Politykę prywatności </a>
+  i
+  <a href={TERMS_PATH} class="text-purple-300 hover:underline"> Regulamin </a>
+  strony.
+</p>

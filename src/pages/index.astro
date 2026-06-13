@@ -1,6 +1,7 @@
 ---
 import DiscoveryShell from "@/components/discovery/DiscoveryShell";
 import RoadmapTeaser from "@/components/discovery/RoadmapTeaser.astro";
+import SiteFooter from "@/components/SiteFooter.astro";
 import Topbar from "@/components/Topbar.astro";
 import { parseFanFilters } from "@/lib/events/fan-schema";
 import { listDistinctCities, listPublishedEvents } from "@/lib/services/events";
@@ -31,10 +32,10 @@ const listError =
 
 <Layout title="BassMap PL — Find the place, drop the bass!">
   <div class="bg-cosmic relative min-h-screen w-full overflow-hidden">
-    <div class="relative z-10 p-4 sm:p-8">
+    <div class="relative z-10 flex min-h-screen flex-col p-4 sm:p-8">
       <Topbar />
 
-      <div class="mx-auto max-w-6xl space-y-8 px-2 py-8 sm:px-4">
+      <div class="mx-auto w-full max-w-6xl flex-1 space-y-8 px-2 py-8 sm:px-4">
         <DiscoveryShell
           events={events}
           cities={cities}
@@ -44,6 +45,8 @@ const listError =
         />
         <RoadmapTeaser />
       </div>
+
+      <SiteFooter />
     </div>
   </div>
 </Layout>

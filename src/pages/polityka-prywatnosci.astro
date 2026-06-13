@@ -1,0 +1,133 @@
+---
+import LegalDocumentShell from "@/components/legal/LegalDocumentShell.astro";
+
+export const prerender = false;
+---
+
+<LegalDocumentShell title="Polityka prywatności — BassMap PL" pageTitle="Polityka prywatności">
+  <h2>1. Administrator danych osobowych</h2>
+  <p>Administratorem danych osobowych jest:</p>
+  <p>
+    <strong>Emilia Matrejek</strong><br />
+    e-mail: <a href="mailto:matrejekemilia@gmail.com">matrejekemilia@gmail.com</a><br />
+    Serwis: bassmap.pl
+  </p>
+  <p>
+    Nie jestem przedsiębiorcą ani firmą — prowadzę serwis jako osoba fizyczna. W sprawach dotyczących danych
+    osobowych możesz skontaktować się ze mną pod powyższym adresem e-mail.
+  </p>
+
+  <h2>2. Jakie dane zbieramy i w jakim celu</h2>
+
+  <h3>2.1 Dane konta</h3>
+  <p>Podczas rejestracji zbieramy:</p>
+  <ul>
+    <li>
+      adres e-mail — niezbędny do założenia konta i wysyłki wiadomości systemowych (np. potwierdzenie rejestracji,
+      reset hasła),
+    </li>
+    <li>login,</li>
+    <li>imię i nazwisko, miasto — opcjonalnie, jeśli zostaną podane podczas rejestracji.</li>
+  </ul>
+  <p>Podstawa prawna: art. 6 ust. 1 pkt b RODO (wykonanie umowy / świadczenie usługi).</p>
+
+  <h3>2.2 Dane techniczne</h3>
+  <p>
+    Serwis automatycznie może rejestrować dane techniczne, takie jak adres IP czy informacje o przeglądarce, w celach
+    bezpieczeństwa i diagnostycznych. Dane te nie są łączone z profilem użytkownika.
+  </p>
+  <p>
+    Podstawa prawna: art. 6 ust. 1 pkt f RODO (prawnie uzasadniony interes administratora — bezpieczeństwo serwisu).
+  </p>
+
+  <h3>2.3 Zautomatyzowane podejmowanie decyzji</h3>
+  <p>
+    Twoje dane osobowe nie będą wykorzystywane do zautomatyzowanego podejmowania decyzji, które mogłyby wywołać wobec
+    Ciebie skutki prawne lub w podobny sposób istotnie na Ciebie wpłynąć, w tym nie będą poddawane profilowaniu
+    marketingowemu.
+  </p>
+
+  <h2>3. Podmioty przetwarzające dane</h2>
+  <p>
+    W celu świadczenia usługi korzystam z zewnętrznych dostawców technologicznych (tzw. podmiotów przetwarzających),
+    którym powierzam dane w zakresie niezbędnym do działania serwisu:
+  </p>
+  <ul>
+    <li>
+      <strong>Supabase Inc.</strong> — dostawca bazy danych PostgreSQL oraz systemu uwierzytelniania. Dane
+      przechowywane są na serwerach w UE lub z odpowiednimi zabezpieczeniami transferu (standardowe klauzule umowne).
+      Polityka prywatności:
+      <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">supabase.com/privacy</a>
+    </li>
+    <li>
+      <strong>Cloudflare Inc.</strong> — sieć dostarczania treści (CDN), ochrona przed atakami DDoS, obsługa ruchu.
+      Polityka prywatności:
+      <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer"
+        >cloudflare.com/privacypolicy</a
+      >
+    </li>
+    <li>
+      <strong>Resend Inc.</strong> — dostawca usługi wysyłki e-mail transakcyjnych (potwierdzenia konta, reset hasła).
+      Polityka prywatności:
+      <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer"
+        >resend.com/legal/privacy-policy</a
+      >
+    </li>
+  </ul>
+  <p>
+    Z uwagi na to, że ww. dostawcy techniczni posiadają siedziby poza Europejskim Obszarem Gospodarczym (EOG), Twoje
+    dane mogą być przekazywane do państw trzecich (np. USA). Transfer ten odbywa się w oparciu o decyzje Komisji
+    Europejskiej stwierdzające odpowiedni stopień ochrony (np. Data Privacy Framework) lub na podstawie Standardowych
+    Klauzul Umownych zatwierdzonych przez Komisję Europejską. Masz prawo żądać od Administratora przedstawienia kopii
+    tych zabezpieczeń, wysyłając zapytanie na adres e-mail podany w punkcie 1.
+  </p>
+
+  <h2>4. Jak długo przechowujemy dane</h2>
+  <p>
+    Dane konta użytkownika przechowywane są przez okres posiadania konta w Serwisie. Po usunięciu konta przez
+    użytkownika lub Administratora, dane osobowe są usuwane lub anonimizowane. Wyjątek stanowi sytuacja, w której
+    ograniczone dane (np. adres IP, logi systemowe lub historia zgłoszeń) muszą zostać zachowane w celu obrony lub
+    dochodzenia ewentualnych roszczeń cywilnoprawnych albo realizacji obowiązków prawnych nakładanych przez organy
+    ścigania. Podstawą prawną takiego przetwarzania jest prawnie uzasadniony interes Administratora (art. 6 ust. 1 lit.
+    f RODO), a dane te będą przechowywane wyłącznie przez okres przedawnienia tych roszczeń.
+  </p>
+
+  <h2>5. Prawa użytkownika</h2>
+  <p>Przysługują Ci następujące prawa w związku z przetwarzaniem Twoich danych:</p>
+  <ul>
+    <li>prawo dostępu do danych — możesz zażądać informacji o tym, jakie dane przechowujemy,</li>
+    <li>prawo do sprostowania — możesz poprawić nieprawidłowe dane,</li>
+    <li>
+      prawo do usunięcia danych („prawo do bycia zapomnianym”) — możesz zażądać usunięcia swojego konta i danych,
+    </li>
+    <li>prawo do ograniczenia przetwarzania,</li>
+    <li>prawo do przenoszenia danych,</li>
+    <li>prawo do wniesienia sprzeciwu wobec przetwarzania,</li>
+    <li>
+      prawo do wniesienia skargi do organu nadzorczego — Prezesa Urzędu Ochrony Danych Osobowych (<a
+        href="https://uodo.gov.pl"
+        target="_blank"
+        rel="noopener noreferrer">uodo.gov.pl</a
+      >).
+    </li>
+  </ul>
+  <p>
+    Aby skorzystać z tych praw, skontaktuj się ze mną pod adresem:
+    <a href="mailto:matrejekemilia@gmail.com">matrejekemilia@gmail.com</a>. Administrator realizuje żądania użytkowników
+    związane z ich prawami bez zbędnej zwłoki, nie później niż w terminie jednego miesiąca od otrzymania zgłoszenia. W
+    przypadkach skomplikowanych termin ten może ulec wydłużeniu o kolejne dwa miesiące, o czym użytkownik zostanie
+    uprzednio poinformowany.
+  </p>
+
+  <h2>6. Pliki cookies</h2>
+  <p>
+    Serwis może używać plików cookies niezbędnych do działania uwierzytelniania (sesja użytkownika). Nie używamy cookies
+    marketingowych ani śledzących.
+  </p>
+
+  <h2>7. Zmiany polityki prywatności</h2>
+  <p>
+    Zastrzegam sobie prawo do aktualizacji niniejszej polityki. O istotnych zmianach poinformuję użytkowników za
+    pośrednictwem serwisu lub e-mailem. Data ostatniej aktualizacji jest zawsze podana na górze dokumentu.
+  </p>
+</LegalDocumentShell>

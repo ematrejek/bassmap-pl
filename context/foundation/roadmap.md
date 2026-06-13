@@ -41,12 +41,12 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-04 | event-description         | fan czyta opis wydarzenia; admin edytuje pole opis                                   | S-02          | FR-004, notes 2026-06-13          | done     |
 | S-05 | date-range-filter         | fan filtruje po dacie (kalendarz + skróty dziś/tydzień/miesiąc)                      | S-02          | FR-008, notes 2026-06-13          | done     |
 | S-06 | free-events-filter        | fan włącza „Pokaż tylko darmowe” i widzi tylko darmowe wydarzenia                    | S-02          | FR-004, Business Logic            | done     |
+| S-11 | legal-pages               | fan otwiera Politykę prywatności i Regulamin; rejestrujący widzi tekst akceptacji z linkami | S-02          | NFR Privacy, notes 2026-06-13     | done     |
 | S-07 | mobile-subgenre-dropdown  | fan na telefonie wybiera podgatunki z rozwijanej listy wielokrotnego wyboru          | S-02          | FR-003, NFR Device                | ready    |
 | S-08 | structured-price-currency | admin wpisuje cenę jako liczbę (od X / X–Y) z walutą PLN/EUR/CZK; fan widzi poprawnie | S-01          | FR-004, FR-006, notes 2026-06-13  | ready    |
 | F-04 | app-shell-navigation      | (foundation) własny layout z nawigacją zakładkową zamiast domyślnego Astro           | S-04–S-08     | Access Control, notes 2026-06-13  | proposed |
 | S-09 | marketing-homepage        | fan widzi płynnie przewijaną stronę główną z logo, sloganem, sekcjami i CTA         | F-04          | notes 2026-06-13                  | proposed |
 | S-10 | guest-nav-and-archive     | gość korzysta z menu (lista, logowanie, rejestracja, zgłoszenie problemu, archiwum)  | F-04, S-09    | notes 2026-06-13                  | proposed |
-| S-11 | legal-pages               | fan otwiera Politykę prywatności i Regulamin z dyskretnego linku na stronie głównej  | S-09          | NFR Privacy, notes 2026-06-13     | proposed |
 | S-12 | fan-account-zone          | zalogowany fan ma zakładki profil, moje eventy, dodaj event, placeholdery, wyloguj   | F-04, S-10    | Access Control, notes 2026-06-13  | proposed |
 | S-13 | duplicate-event-detection | system wykrywa podobne wydarzenie (nazwa/adres/data) i pokazuje właściwy komunikat   | S-12          | notes 2026-06-13                  | proposed |
 | S-14 | change-suggestions        | fan/admin zgłasza sugestię zmian; admin ocenia w panelu „Sugestie zmian”             | S-12, S-13    | notes 2026-06-13                  | proposed |
@@ -60,8 +60,8 @@ Nawigacja — grupy elementów współdzielących łańcuch zależności. Kanoni
 | Stream | Theme                    | Chain                                                                 | Note                                                                 |
 | ------ | ------------------------ | --------------------------------------------------------------------- | -------------------------------------------------------------------- |
 | A      | MVP (zamknięte)          | `F-01` → `S-01` → `S-02` → `S-03`                                   | Done — odkrywanie i okładki na produkcji.                            |
-| B      | Partia I — odkrywanie    | `S-04` / `S-05` / `S-06` / `S-07` / `S-08` (równolegle po `S-02`)   | Must-have przed Partią II; `S-05` to gwiazda przewodnia fazy.        |
-| C      | Partia II — layout       | `F-04` → `S-09` → `S-10` → `S-11`                                   | Własny shell, homepage, nawigacja gościa, dokumenty prawne.          |
+| B      | Partia I — odkrywanie    | `S-04` / `S-05` / `S-06` / `S-11` / `S-07` / `S-08` (równolegle po `S-02`) | Must-have przed Partią II; `S-11` podniesione z Partii II (RODO + gotowe dokumenty). |
+| C      | Partia II — layout       | `F-04` → `S-09` → `S-10`                                            | Własny shell, homepage, nawigacja gościa.                            |
 | D      | Partia II — konta i UGC  | `S-12` → `S-13` → `S-14` / `S-15` / `S-16`                          | Dołącza do Stream C przy `F-04`; komentarze i usuwanie konta równolegle z `S-14`. |
 
 ## Baseline
@@ -173,7 +173,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Partia I — must-have (po MVP)
 
-> Ustalone 2026-06-13. `S-04` **done** (2026-06-13). `S-05` **done** (2026-06-13). `S-06` **done** (2026-06-13). Pozostałe slice'y Partii I: `S-07` / `S-08` **ready**. Rekomendowana kolejność: `S-07` / `S-08`.
+> Ustalone 2026-06-13. `S-04` **done** (2026-06-13). `S-05` **done** (2026-06-13). `S-06` **done** (2026-06-13). `S-11` **done** (2026-06-13). Pozostałe slice'y Partii I: `S-07` / `S-08` **ready**. Rekomendowana kolejność: `S-07` / `S-08`.
 
 ### S-04: Pole opisu wydarzenia
 
@@ -223,6 +223,22 @@ Foundations below assume these are present and do NOT re-scaffold them.
 **FR (propozycja do PRD):**
 
 - **FR-010:** Fan filtruje listę do wyłącznie darmowych wydarzeń. Priority: must-have (Partia I).
+
+### S-11: Polityka prywatności i regulamin
+
+- **Outcome:** fan otwiera Politykę prywatności i Regulamin z linków w stopce (strona główna, szczegóły wydarzenia, logowanie/rejestracja); strony statyczne i czytelne; przy rejestracji tekst: „Rejestrując się, akceptujesz Politykę prywatności i Regulamin strony” z podlinkowanymi dokumentami.
+- **Change ID:** legal-pages
+- **PRD refs:** NFR Privacy, notes 2026-06-13
+- **Prerequisites:** S-02
+- **Parallel with:** S-07, S-08
+- **Blockers:** —
+- **Unknowns:** —
+- **Risk:** Rejestracja działa bez dokumentów prawnych — luka RODO; treść gotowa w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026). Research: `context/changes/legal-pages/research.md`. Podniesione z Partii II — nie wymaga F-04 ani marketing homepage.
+- **Status:** done — implemented 2026-06-13 → `context/changes/legal-pages/`
+
+**FR (propozycja do PRD):**
+
+- **FR-016:** Strona udostępnia Politykę prywatności i Regulamin; przy rejestracji tekst akceptacji z linkami do obu dokumentów. Priority: must-have (Partia I — podniesione z Partii II).
 
 ### S-07: Subgatunki na mobile — dropdown wielokrotnego wyboru
 
@@ -286,7 +302,6 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Change ID:** guest-nav-and-archive
 - **PRD refs:** notes 2026-06-13
 - **Prerequisites:** F-04, S-09
-- **Parallel with:** S-11
 - **Blockers:** —
 - **Unknowns:**
   - Dostarczenie formularza kontaktowego (e-mail vs ticket w bazie) — Owner: user. Block: no.
@@ -297,23 +312,6 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **FR-014:** Gość korzysta z menu nawigacji (lista, auth, zgłoszenie problemu, archiwum). Priority: must-have (Partia II).
 - **FR-015:** Fan przegląda archiwum minionych wydarzeń (lista, bez mapy). Priority: must-have (Partia II).
-
-### S-11: Polityka prywatności i regulamin
-
-- **Outcome:** fan otwiera Politykę prywatności i Regulamin z dyskretnego linku na stronie głównej; strony są statyczne i czytelne.
-- **Change ID:** legal-pages
-- **PRD refs:** NFR Privacy, notes 2026-06-13
-- **Prerequisites:** S-09
-- **Parallel with:** S-10
-- **Blockers:** —
-- **Unknowns:**
-  - Treść prawna dokumentów (wymaga review?) — Owner: user. Block: no (placeholder OK na start).
-- **Risk:** Przed kontami fanów i komentarzami dokumenty stają się konieczne — sensownie przed S-12 lub równolegle.
-- **Status:** proposed
-
-**FR (propozycja do PRD):**
-
-- **FR-016:** Strona udostępnia Politykę prywatności i Regulamin. Priority: must-have (Partia II).
 
 ### S-12: Strefa zalogowanego użytkownika (nie-admin)
 
@@ -416,12 +414,12 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-04       | event-description         | #10    | Pole opisu wydarzenia                              | —                     | Done — archived 2026-06-13                           |
 | S-05       | date-range-filter         | #11    | Filtr dat: kalendarz + presety                     | —                     | Done — archived 2026-06-13; PR #12                  |
 | S-06       | free-events-filter        | —      | Przełącznik „Pokaż tylko darmowe”                  | —                     | Done — archived 2026-06-13; PR #13                  |
+| S-11       | legal-pages               | —      | Polityka prywatności i Regulamin                   | —                     | Done — implemented 2026-06-13                        |
 | S-07       | mobile-subgenre-dropdown  | —      | Mobile: dropdown multichoice podgatunków           | yes                   | Partia I                                             |
 | S-08       | structured-price-currency | —      | Cena liczbowa + waluta PLN/EUR/CZK                 | yes                   | Partia I                                             |
 | F-04       | app-shell-navigation      | —      | Własny layout i nawigacja zakładkowa               | no                    | Czeka na Partię I; unknown: routing `/` vs `/events` |
 | S-09       | marketing-homepage        | —      | Strona główna marketingowa (scroll)                | no                    | Partia II                                            |
 | S-10       | guest-nav-and-archive     | —      | Menu gościa, formularz problemu, archiwum          | no                    | Partia II                                            |
-| S-11       | legal-pages               | —      | Polityka prywatności i Regulamin                   | no                    | Partia II                                            |
 | S-12       | fan-account-zone          | —      | Strefa zalogowanego fana + nawigacja               | no                    | Partia II; aktualizacja PRD Non-Goals                |
 | S-13       | duplicate-event-detection | —      | Wykrywanie duplikatów wydarzeń                     | no                    | Partia II                                            |
 | S-14       | change-suggestions        | —      | Sugestie zmian wydarzeń                            | no                    | Partia II                                            |
@@ -433,7 +431,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 1. **Routing po Partii II:** czy `/` = strona marketingowa, a lista+mapa = `/events` (lub inna ścieżka)? — Owner: user. Block: F-04, S-09, S-10.
 2. **Aktualizacja PRD:** Partia I podnosi FR-008 do must-have; Partia II dodaje konta fanów, UGC, komentarze (obecnie Non-Goals) — kiedy zsynchronizować `prd.md`? — Owner: user. Block: no (roadmap jest actionable bez tego, ale PRD będzie rozjechany).
 3. **Próg fuzzy match duplikatów** — Owner: team. Block: S-13 planning only.
-4. **Treść Polityki prywatności / Regulaminu** — Owner: user. Block: no (placeholder OK).
+4. **Treść Polityki prywatności / Regulaminu** — Owner: user. Block: no — **resolved:** gotowe dokumenty w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026); research w `context/changes/legal-pages/research.md`.
 5. **Komentarze po usunięciu konta** — usunąć vs anonimizować — Owner: user. Block: S-16 planning only.
 
 ## Resolved (history)

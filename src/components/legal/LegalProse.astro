@@ -1,0 +1,47 @@
+<div class="legal-prose space-y-6 text-sm leading-relaxed text-blue-100/85">
+  <slot />
+</div>
+
+<style>
+  .legal-prose :global(h2) {
+    margin-top: 2rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: rgb(233 213 255);
+  }
+
+  .legal-prose :global(h2:first-child) {
+    margin-top: 0;
+  }
+
+  .legal-prose :global(h3) {
+    margin-top: 1rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: rgb(219 234 254 / 0.95);
+  }
+
+  .legal-prose :global(p) {
+    margin-top: 0.75rem;
+  }
+
+  .legal-prose :global(ul) {
+    margin-top: 0.75rem;
+    list-style-type: disc;
+    padding-left: 1.25rem;
+  }
+
+  .legal-prose :global(li + li) {
+    margin-top: 0.35rem;
+  }
+
+  .legal-prose :global(a) {
+    color: rgb(216 180 254);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .legal-prose :global(a:hover) {
+    color: rgb(233 213 255);
+  }
+</style>

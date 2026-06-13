@@ -1,0 +1,19 @@
+---
+import { PRIVACY_POLICY_PATH, TERMS_PATH } from "@/lib/legal/paths";
+
+interface Props {
+  class?: string;
+}
+
+const { class: className } = Astro.props;
+---
+
+<footer class:list={["py-4", className]} aria-label="Dokumenty prawne">
+  <nav class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-blue-100/50">
+    <a href={PRIVACY_POLICY_PATH} class="transition-colors hover:text-purple-200 hover:underline">
+      Polityka prywatności
+    </a>
+    <span aria-hidden="true">·</span>
+    <a href={TERMS_PATH} class="transition-colors hover:text-purple-200 hover:underline"> Regulamin </a>
+  </nav>
+</footer>
