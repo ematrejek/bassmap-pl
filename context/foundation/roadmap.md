@@ -39,7 +39,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | F-03 | production-deploy         | (foundation) aplikacja działa pod publicznym adresem z poprawnymi sekretami          | S-01          | NFR Operating cost                | done     |
 | S-03 | event-cover-photos        | fan widzi zdjęcia okładek na kartach i stronie szczegółów wydarzenia                 | S-02          | post-MVP                          | done     |
 | S-04 | event-description         | fan czyta opis wydarzenia; admin edytuje pole opis                                   | S-02          | FR-004, notes 2026-06-13          | done     |
-| S-05 | date-range-filter         | fan filtruje po dacie (kalendarz + skróty dziś/tydzień/miesiąc)                      | S-02          | FR-008, notes 2026-06-13          | ready    |
+| S-05 | date-range-filter         | fan filtruje po dacie (kalendarz + skróty dziś/tydzień/miesiąc)                      | S-02          | FR-008, notes 2026-06-13          | done     |
 | S-06 | free-events-filter        | fan włącza „Pokaż tylko darmowe” i widzi tylko darmowe wydarzenia                    | S-02          | FR-004, Business Logic            | ready    |
 | S-07 | mobile-subgenre-dropdown  | fan na telefonie wybiera podgatunki z rozwijanej listy wielokrotnego wyboru          | S-02          | FR-003, NFR Device                | ready    |
 | S-08 | structured-price-currency | admin wpisuje cenę jako liczbę (od X / X–Y) z walutą PLN/EUR/CZK; fan widzi poprawnie | S-01          | FR-004, FR-006, notes 2026-06-13  | ready    |
@@ -173,7 +173,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Partia I — must-have (po MVP)
 
-> Ustalone 2026-06-13. `S-04` **done** (2026-06-13). `S-05` **implemented** (PR open, archive pending). Pozostałe slice'y Partii I: `S-06` / `S-07` / `S-08` **ready**. Rekomendowana kolejność po `S-05`: `S-06` / `S-07` / `S-08`.
+> Ustalone 2026-06-13. `S-04` **done** (2026-06-13). `S-05` **done** (2026-06-13). Pozostałe slice'y Partii I: `S-06` / `S-07` / `S-08` **ready**. Rekomendowana kolejność: `S-06` / `S-07` / `S-08`.
 
 ### S-04: Pole opisu wydarzenia
 
@@ -202,7 +202,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Strefa czasu zakresu: Europe/Warsaw (jak RLS `is_upcoming`) — Owner: team. Block: no.
 - **Risk:** FR-008 elevated to must-have (Partia I) — PRD updated 2026-06-13.
-- **Status:** ready — implemented 2026-06-13; PR open; archive pending
+- **Status:** done — archived 2026-06-13 → `context/archive/2026-06-13-date-range-filter/`
 
 **FR (elevacja PRD):**
 
@@ -414,7 +414,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | F-03       | production-deploy         | #5     | Deploy produkcyjny na Cloudflare                   | —                     | Done — https://bassmap.pl                            |
 | S-03       | event-cover-photos        | —      | Okładki wydarzeń                                   | —                     | Done                                                 |
 | S-04       | event-description         | #10    | Pole opisu wydarzenia                              | —                     | Done — archived 2026-06-13                           |
-| S-05       | date-range-filter         | #11    | Filtr dat: kalendarz + presety                     | yes                   | Implemented 2026-06-13 — PR open; archive pending  |
+| S-05       | date-range-filter         | #11    | Filtr dat: kalendarz + presety                     | —                     | Done — archived 2026-06-13; PR #12                  |
 | S-06       | free-events-filter        | —      | Przełącznik „Pokaż tylko darmowe”                  | yes                   | Partia I                                             |
 | S-07       | mobile-subgenre-dropdown  | —      | Mobile: dropdown multichoice podgatunków           | yes                   | Partia I                                             |
 | S-08       | structured-price-currency | —      | Cena liczbowa + waluta PLN/EUR/CZK                 | yes                   | Partia I                                             |

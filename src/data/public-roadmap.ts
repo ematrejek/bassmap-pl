@@ -18,10 +18,6 @@ export interface PublicRoadmapItem {
 
 export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
   {
-    id: "date-range-filter",
-    label: "Date filtering (calendar & quick picks)",
-  },
-  {
     id: "free-events-filter",
     label: "Show free events only",
   },

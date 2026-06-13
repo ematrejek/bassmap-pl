@@ -1,6 +1,6 @@
 # Filtr dat — Plan Brief
 
-> Full plan: `context/changes/date-range-filter/plan.md`
+> Full plan: `context/archive/2026-06-13-date-range-filter/plan.md`
 
 ## What & Why
 
