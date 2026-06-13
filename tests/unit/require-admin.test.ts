@@ -9,7 +9,7 @@ function mockLocals(overrides: Partial<App.Locals>): App.Locals {
     user: null,
     isAdmin: false,
     ...overrides,
-  };
+  } as App.Locals;
 }
 
 describe("requireAuth", () => {

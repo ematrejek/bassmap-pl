@@ -12,8 +12,9 @@ export const prerender = false;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 const listResult = supabase ? await listEventsForAdmin(supabase) : { data: [] };
 const rawEvents = "data" in listResult ? listResult.data : [];
-const events = SUPABASE_URL
-  ? rawEvents.map((event) => enrichEventWithCoverUrl(event, SUPABASE_URL))
+const supabaseUrl = SUPABASE_URL ?? "";
+const events = supabaseUrl
+  ? rawEvents.map((event) => enrichEventWithCoverUrl(event, supabaseUrl))
   : rawEvents.map((event) => ({ ...event, coverUrl: null as string | null }));
 const listError = "error" in listResult ? listResult.error : null;
 ---

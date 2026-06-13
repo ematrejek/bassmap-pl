@@ -107,6 +107,7 @@ describe.skipIf(!runIntegration)("fan read cover_path (anon)", () => {
     if (!fixtures) {
       throw new Error("Fixtures not seeded");
     }
+    const seeded = fixtures;
 
     const anonClient = createAnonClient();
     const result = await listPublishedEvents(anonClient);
@@ -116,9 +117,9 @@ describe.skipIf(!runIntegration)("fan read cover_path (anon)", () => {
       throw new Error("Expected published events data");
     }
 
-    const withCover = result.data.find((event) => event.id === fixtures.withCoverId);
+    const withCover = result.data.find((event) => event.id === seeded.withCoverId);
     expect(withCover).toBeDefined();
-    expect(withCover?.coverPath).toBe(`${fixtures.withCoverId}/cover.jpg`);
+    expect(withCover?.coverPath).toBe(`${seeded.withCoverId}/cover.jpg`);
     expect(withCover?.coverAspect).toBe("landscape");
   });
 
@@ -126,6 +127,7 @@ describe.skipIf(!runIntegration)("fan read cover_path (anon)", () => {
     if (!fixtures) {
       throw new Error("Fixtures not seeded");
     }
+    const seeded = fixtures;
 
     const anonClient = createAnonClient();
     const result = await listPublishedEvents(anonClient);
@@ -135,7 +137,7 @@ describe.skipIf(!runIntegration)("fan read cover_path (anon)", () => {
       throw new Error("Expected published events data");
     }
 
-    const withoutCover = result.data.find((event) => event.id === fixtures.withoutCoverId);
+    const withoutCover = result.data.find((event) => event.id === seeded.withoutCoverId);
     expect(withoutCover).toBeDefined();
     expect(withoutCover?.coverPath).toBeNull();
     expect(withoutCover?.coverAspect).toBeNull();
