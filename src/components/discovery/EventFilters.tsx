@@ -68,6 +68,24 @@ export default function EventFilters({ cities, currentFilters }: Props) {
         <p className="text-xs text-blue-100/50">Zaznacz kilka — pokażemy wydarzenia pasujące do dowolnego z nich.</p>
       </fieldset>
 
+      <div className="space-y-2">
+        <label
+          htmlFor="free"
+          className="flex w-fit cursor-pointer items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-blue-100/90 hover:bg-white/10"
+        >
+          <input
+            id="free"
+            type="checkbox"
+            name="free"
+            value="1"
+            defaultChecked={currentFilters.freeOnly}
+            className="size-4 rounded border-white/30 accent-purple-500"
+          />
+          <span>Pokaż tylko darmowe</span>
+        </label>
+        <p className="text-xs text-blue-100/50">Zostaw odznaczone, żeby zobaczyć też płatne wydarzenia.</p>
+      </div>
+
       <div className="flex flex-wrap gap-2">
         <Button type="submit" className="border-white/20 bg-purple-600/80 text-white hover:bg-purple-500/90">
           Filtruj

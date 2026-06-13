@@ -169,6 +169,10 @@ export async function listPublishedEvents(
     query = query.or(orConditions);
   }
 
+  if (filters?.freeOnly) {
+    query = query.eq("is_free", true);
+  }
+
   const response = await query;
 
   if (response.error) {

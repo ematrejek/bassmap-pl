@@ -6,6 +6,7 @@ export interface FanEventFilters {
   subgenres: Subgenre[];
   dateFrom: string | null;
   dateTo: string | null;
+  freeOnly: boolean;
 }
 
 const SUBGENRE_SET = new Set<string>(SUBGENRES);
@@ -48,8 +49,9 @@ export function parseFanFilters(searchParams: URLSearchParams): FanEventFilters 
   }
 
   const { dateFrom, dateTo } = parseDateFilters(searchParams);
+  const freeOnly = searchParams.get("free") === "1";
 
-  return { city, subgenres, dateFrom, dateTo };
+  return { city, subgenres, dateFrom, dateTo, freeOnly };
 }
 
 export function buildFanFilterSearchParams(filters: FanEventFilters): URLSearchParams {
@@ -66,6 +68,10 @@ export function buildFanFilterSearchParams(filters: FanEventFilters): URLSearchP
   if (filters.dateFrom) {
     params.set("from", filters.dateFrom);
     params.set("to", filters.dateTo ?? filters.dateFrom);
+  }
+
+  if (filters.freeOnly) {
+    params.set("free", "1");
   }
 
   return params;

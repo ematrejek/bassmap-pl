@@ -69,4 +69,30 @@ describe.skipIf(!runIntegration)("listPublishedEvents fan read (anon)", () => {
     expect(returnedIds).not.toContain(fixtures.draftUpcomingId);
     expect(returnedIds).not.toContain(fixtures.publishedPastId);
   });
+
+  it("returns only free events when freeOnly filter is active", async () => {
+    if (!fixtures) {
+      throw new Error("Fixtures not seeded");
+    }
+
+    const anonClient = createAnonClient();
+    const result = await listPublishedEvents(anonClient, {
+      city: null,
+      subgenres: [],
+      dateFrom: null,
+      dateTo: null,
+      freeOnly: true,
+    });
+
+    expect(result).toHaveProperty("data");
+    if (!("data" in result)) {
+      throw new Error("Expected published events data");
+    }
+
+    const returnedIds = result.data.map((event) => event.id);
+
+    expect(returnedIds).toContain(fixtures.publishedUpcomingIds[0]);
+    expect(returnedIds).not.toContain(fixtures.publishedUpcomingIds[1]);
+    expect(result.data.every((event) => event.isFree)).toBe(true);
+  });
 });
