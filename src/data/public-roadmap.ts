@@ -19,10 +19,18 @@ export interface PublicRoadmapItem {
 export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
   {
     id: "date-range-filter",
-    label: "Filter events by date range (weekends, custom dates)",
+    label: "Date range filtering",
   },
   {
-    id: "www-subdomain",
-    label: "www.bassmap.pl — same site, shorter URL",
+    id: "event-description",
+    label: "Event description",
+  },
+  {
+    id: "new-layout",
+    label: "New layout",
+  },
+  {
+    id: "fan-accounts-fan-zone",
+    label: "Fan accounts and fan zone",
   },
 ];
