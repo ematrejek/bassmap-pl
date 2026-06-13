@@ -8,6 +8,7 @@ import {
   EVENT_COVERS_BUCKET,
   mapStorageUploadError,
   validateCoverFile,
+  verifyCoverMagicBytes,
 } from "@/lib/storage/event-covers";
 import { createClient } from "@/lib/supabase";
 import { createServiceRoleClient } from "@/lib/supabase-service";
@@ -84,6 +85,10 @@ export const POST: APIRoute = async (context) => {
   const storagePath = buildCoverStoragePath(idResult.id, fileValidation.mimeType);
   const bytes = new Uint8Array(await fileEntry.arrayBuffer());
 
+  if (!verifyCoverMagicBytes(bytes, fileValidation.mimeType)) {
+    return jsonResponse({ error: "Dozwolone formaty: JPEG, PNG lub WebP" }, 400);
+  }
+
   const uploadResult = await storageClient.storage.from(EVENT_COVERS_BUCKET).upload(storagePath, bytes, {
     upsert: true,
     contentType: fileValidation.mimeType,
@@ -99,6 +104,7 @@ export const POST: APIRoute = async (context) => {
   });
 
   if ("error" in updateResult) {
+    await storageClient.storage.from(EVENT_COVERS_BUCKET).remove([storagePath]);
     return jsonResponse({ error: updateResult.error }, 400);
   }
 

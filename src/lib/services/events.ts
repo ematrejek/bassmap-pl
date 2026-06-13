@@ -29,8 +29,21 @@ function mapSupabaseError(message: string): string {
   return "Nie udało się zapisać wydarzenia";
 }
 
-export async function removeEventCoverFromStorage(supabase: SupabaseClient, coverPath: string): Promise<void> {
-  await supabase.storage.from(EVENT_COVERS_BUCKET).remove([coverPath]);
+export async function removeEventCoverFromStorage(
+  supabase: SupabaseClient,
+  coverPath: string,
+): Promise<{ error: string } | null> {
+  const { error } = await supabase.storage.from(EVENT_COVERS_BUCKET).remove([coverPath]);
+  if (!error) {
+    return null;
+  }
+
+  const message = error.message.toLowerCase();
+  if (message.includes("not found") || message.includes("object not found")) {
+    return null;
+  }
+
+  return { error: error.message };
 }
 
 function toStoredStartsAt(startsAt: string): string | { error: string } {
@@ -285,13 +298,15 @@ export async function updateEvent(
   if (parsed.isFree !== undefined) patch.isFree = parsed.isFree;
   if (parsed.price !== undefined) patch.price = parsed.price;
 
+  let coverPathToRemoveAfterUpdate: string | null = null;
+
   if (parsed.coverPath !== undefined) {
     const clearingCover = parsed.coverPath === null && existing.coverPath !== null;
     const replacingCover =
       parsed.coverPath !== null && existing.coverPath !== null && parsed.coverPath !== existing.coverPath;
 
     if (clearingCover || replacingCover) {
-      await removeEventCoverFromStorage(supabase, existing.coverPath);
+      coverPathToRemoveAfterUpdate = existing.coverPath;
     }
     patch.coverPath = parsed.coverPath;
     if (parsed.coverPath === null) {
@@ -353,6 +368,10 @@ export async function updateEvent(
 
   if (response.error) {
     return { error: mapSupabaseError(response.error.message) };
+  }
+
+  if (coverPathToRemoveAfterUpdate !== null) {
+    await removeEventCoverFromStorage(supabase, coverPathToRemoveAfterUpdate);
   }
 
   return { data: mapEventRow(response.data as EventRow) };

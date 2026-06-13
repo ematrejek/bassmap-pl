@@ -60,7 +60,18 @@ Cztery fazy sekwencyjne:
 - **Kolejność create:** `POST /api/admin/events` → odczyt `event.id` z JSON → `storage.upload(\`${id}/cover.${ext}\`, { upsert: true })` → `PUT` z `{ coverPath }`. Błąd uploadu po udanym create: pokaż komunikat PL („Wydarzenie zapisane, ale okładka nie została wgrana”) i przekieruj do edycji — event istnieje bez `cover_path`.
 - **Ścieżka pliku:** `{event_uuid}/cover.{jpg|jpeg|png|webp}` — jeden obiekt na event; rozszerzenie z MIME uploadu.
 - **Stałe:** `MAX_COVER_BYTES = 5 * 1024 * 1024`; bucket `file_size_limit = 5242880` w migracji.
-- **Konfig Supabase w adminie:** przekaż `supabaseUrl` + `supabaseAnonKey` z `astro:env/server` w `new.astro` / `edit.astro` do `EventForm` (tylko trasy admin — fan nie dostaje klucza w HTML poza publicznym URL obrazów).
+- **Konfig Supabase w adminie:** ~~przekaż `supabaseUrl` + `supabaseAnonKey` z `astro:env/server` w `new.astro` / `edit.astro` do `EventForm`~~ **(zmienione — patrz Addendum poniżej).** Fan nie dostaje klucza w HTML poza publicznym URL obrazów.
+
+## Addendum (2026-06-13, impl-review F1)
+
+**Upload przez Worker API zamiast przeglądarki.** Pierwotny plan zakładał `createBrowserClient` + upload bezpośrednio do Storage z sesji admina. W implementacji upload szedł przez RLS/session i zawodził (Windows, `sb_publishable_` key). **Rozwiązanie:**
+
+- `POST /api/admin/events/[id]/cover` — multipart (`file` + `coverAspect`), `requireAdmin`, upload przez `createServiceRoleClient()` (`SUPABASE_SERVICE_ROLE_KEY` w `.dev.vars` / Cloudflare secrets).
+- `EventForm` wysyła `fetch` do tego endpointu — **bez** `supabaseUrl`/`supabaseAnonKey` w props.
+- `src/lib/supabase-browser.ts` — **nie utworzony** (zastąpiony przez `src/lib/supabase-service.ts` + `cover.ts`).
+- DB update (`coverPath`, `coverAspect`) nadal przez sesję admina (`createClient` + RLS na `events`).
+
+**Dodatkowy feature (poza planem):** `cover_aspect` (`portrait` | `landscape`) — kolumna DB, radio w formularzu, proporcje w `EventCoverImage` / podglądzie karty.
 
 ---
 
@@ -242,7 +253,7 @@ Wspólny komponent okładki, enrichment URL na SSR, hero + opcjonalny `og:image`
 
 **File**: `src/components/discovery/EventPreviewCard.tsx`
 
-**Intent**: Zamienić blok „DnB” na `EventCoverImage` (`variant="preview"`).
+**Intent**: Zamienić blok „DnB” na `EventCoverImage` (`variant="preview"`) — **full-width** okładka na górze karty (portrait 3:4 lub landscape 16:9 wg `coverAspect`), nie miniatura 64×64.
 
 #### 4. DiscoveryShell / index
 

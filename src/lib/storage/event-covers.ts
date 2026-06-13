@@ -65,6 +65,30 @@ export function validateCoverFile(
   return { ok: true, mimeType };
 }
 
+export function verifyCoverMagicBytes(bytes: Uint8Array, mimeType: AllowedCoverMimeType): boolean {
+  if (bytes.length < 12) {
+    return false;
+  }
+
+  switch (mimeType) {
+    case "image/jpeg":
+      return bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff;
+    case "image/png":
+      return bytes[0] === 0x89 && bytes[1] === 0x50 && bytes[2] === 0x4e && bytes[3] === 0x47;
+    case "image/webp":
+      return (
+        bytes[0] === 0x52 &&
+        bytes[1] === 0x49 &&
+        bytes[2] === 0x46 &&
+        bytes[3] === 0x46 &&
+        bytes[8] === 0x57 &&
+        bytes[9] === 0x45 &&
+        bytes[10] === 0x42 &&
+        bytes[11] === 0x50
+      );
+  }
+}
+
 export function getCoverAspectClassName(aspect: CoverAspect | null): string {
   return aspect === "landscape" ? "aspect-video" : "aspect-[3/4]";
 }
