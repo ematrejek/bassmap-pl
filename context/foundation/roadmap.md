@@ -233,8 +233,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Parallel with:** S-07, S-08
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** Rejestracja działa bez dokumentów prawnych — luka RODO; treść gotowa w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026). Research: `context/changes/legal-pages/research.md`. Podniesione z Partii II — nie wymaga F-04 ani marketing homepage.
-- **Status:** done — implemented 2026-06-13 → `context/changes/legal-pages/`
+- **Risk:** Rejestracja działa bez dokumentów prawnych — luka RODO; treść gotowa w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026). Research: `context/archive/2026-06-13-legal-pages/research.md`. Podniesione z Partii II — nie wymaga F-04 ani marketing homepage.
+- **Status:** done — archived 2026-06-13 → `context/archive/2026-06-13-legal-pages/`
 
 **FR (propozycja do PRD):**
 
@@ -414,7 +414,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-04       | event-description         | #10    | Pole opisu wydarzenia                              | —                     | Done — archived 2026-06-13                           |
 | S-05       | date-range-filter         | #11    | Filtr dat: kalendarz + presety                     | —                     | Done — archived 2026-06-13; PR #12                  |
 | S-06       | free-events-filter        | —      | Przełącznik „Pokaż tylko darmowe”                  | —                     | Done — archived 2026-06-13; PR #13                  |
-| S-11       | legal-pages               | —      | Polityka prywatności i Regulamin                   | —                     | Done — implemented 2026-06-13                        |
+| S-11       | legal-pages               | —      | Polityka prywatności i Regulamin                   | —                     | Done — archived 2026-06-13                            |
 | S-07       | mobile-subgenre-dropdown  | —      | Mobile: dropdown multichoice podgatunków           | yes                   | Partia I                                             |
 | S-08       | structured-price-currency | —      | Cena liczbowa + waluta PLN/EUR/CZK                 | yes                   | Partia I                                             |
 | F-04       | app-shell-navigation      | —      | Własny layout i nawigacja zakładkowa               | no                    | Czeka na Partię I; unknown: routing `/` vs `/events` |
@@ -431,7 +431,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 1. **Routing po Partii II:** czy `/` = strona marketingowa, a lista+mapa = `/events` (lub inna ścieżka)? — Owner: user. Block: F-04, S-09, S-10.
 2. **Aktualizacja PRD:** Partia I podnosi FR-008 do must-have; Partia II dodaje konta fanów, UGC, komentarze (obecnie Non-Goals) — kiedy zsynchronizować `prd.md`? — Owner: user. Block: no (roadmap jest actionable bez tego, ale PRD będzie rozjechany).
 3. **Próg fuzzy match duplikatów** — Owner: team. Block: S-13 planning only.
-4. **Treść Polityki prywatności / Regulaminu** — Owner: user. Block: no — **resolved:** gotowe dokumenty w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026); research w `context/changes/legal-pages/research.md`.
+4. **Treść Polityki prywatności / Regulaminu** — Owner: user. Block: no — **resolved:** gotowe dokumenty w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026); archived `context/archive/2026-06-13-legal-pages/`.
 5. **Komentarze po usunięciu konta** — usunąć vs anonimizować — Owner: user. Block: S-16 planning only.
 
 ## Resolved (history)
@@ -467,3 +467,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **F-03: (foundation) aplikacja dostępna pod publicznym adresem Cloudflare.** — Archived 2026-06-11 → `context/archive/2026-06-11-production-deploy/`. Lesson: propagacja DNS .pl może opóźniać dostęp z lokalnego Wi‑Fi.
 - **S-03: fan widzi zdjęcia okładek na kartach i stronie szczegółów.** — Archived 2026-06-13 → `context/archive/2026-06-12-event-cover-photos/`. Lesson: upload okładek przez Worker API + klucz serwisowy.
 - **S-04: fan czyta opis wydarzenia; admin edytuje pole opis.** — Archived 2026-06-13 → `context/archive/2026-06-13-event-description/`. Lesson: —
+- **S-11: fan otwiera Politykę prywatności i Regulamin; rejestrujący widzi tekst akceptacji z linkami.** — Archived 2026-06-13 → `context/archive/2026-06-13-legal-pages/`. Lesson: integracje SMTP (Resend) mogą być poza repo — weryfikuj przed review polityki prywatności.
