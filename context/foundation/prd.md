@@ -76,6 +76,10 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
   > Socrates: Counter-argument considered: "default sort by date already handles most cases." Resolution: originally demoted to nice-to-have for MVP; elevated to must-have (Partia I, 2026-06-13) — date filtering is the lead discovery slice after S-02.
 
+- FR-010: Fan can filter the event list to free-entry events only (`is_free`); filter persists in URL and combines with city, subgenre, and date filters. Priority: must-have (Partia I)
+
+  > Socrates: Counter-argument considered: "fans can scan prices in the list." Resolution: kept — explicit free-only toggle reduces noise for fans seeking no-cover nights; relies on admin `is_free` flag, not price text heuristics.
+
 ### Admin management
 
 - FR-006: Admin can add an event directly. Priority: must-have

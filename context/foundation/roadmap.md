@@ -40,7 +40,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-03 | event-cover-photos        | fan widzi zdjęcia okładek na kartach i stronie szczegółów wydarzenia                 | S-02          | post-MVP                          | done     |
 | S-04 | event-description         | fan czyta opis wydarzenia; admin edytuje pole opis                                   | S-02          | FR-004, notes 2026-06-13          | done     |
 | S-05 | date-range-filter         | fan filtruje po dacie (kalendarz + skróty dziś/tydzień/miesiąc)                      | S-02          | FR-008, notes 2026-06-13          | done     |
-| S-06 | free-events-filter        | fan włącza „Pokaż tylko darmowe” i widzi tylko darmowe wydarzenia                    | S-02          | FR-004, Business Logic            | ready    |
+| S-06 | free-events-filter        | fan włącza „Pokaż tylko darmowe” i widzi tylko darmowe wydarzenia                    | S-02          | FR-004, Business Logic            | in progress |
 | S-07 | mobile-subgenre-dropdown  | fan na telefonie wybiera podgatunki z rozwijanej listy wielokrotnego wyboru          | S-02          | FR-003, NFR Device                | ready    |
 | S-08 | structured-price-currency | admin wpisuje cenę jako liczbę (od X / X–Y) z walutą PLN/EUR/CZK; fan widzi poprawnie | S-01          | FR-004, FR-006, notes 2026-06-13  | ready    |
 | F-04 | app-shell-navigation      | (foundation) własny layout z nawigacją zakładkową zamiast domyślnego Astro           | S-04–S-08     | Access Control, notes 2026-06-13  | proposed |
@@ -218,7 +218,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Działa na istniejącym polu `is_free` — nie wymaga S-08, ale spójność z nowym modelem ceny (S-08) poprawi jakość danych.
-- **Status:** ready
+- **Status:** in progress — implementacja 2026-06-13 (`context/changes/free-events-filter/`)
 
 **FR (propozycja do PRD):**
 

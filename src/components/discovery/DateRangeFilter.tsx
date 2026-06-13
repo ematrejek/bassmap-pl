@@ -51,11 +51,14 @@ function readLiveFiltersFromForm(form: HTMLFormElement | null, fallback: FanEven
     }
   }
 
+  const freeOnly = formData.get("free") === "1";
+
   return {
     city,
     subgenres,
     dateFrom: fallback.dateFrom,
     dateTo: fallback.dateTo,
+    freeOnly,
   };
 }
 

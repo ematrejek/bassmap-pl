@@ -27,7 +27,7 @@ interface FixtureInsertRow {
   status: "draft" | "published";
 }
 
-function buildRow(label: string, startsAt: string, status: "draft" | "published"): FixtureInsertRow {
+function buildRow(label: string, startsAt: string, status: "draft" | "published", isFree = true): FixtureInsertRow {
   return {
     name: `${FIXTURE_PREFIX} ${label}`,
     starts_at: startsAt,
@@ -36,7 +36,7 @@ function buildRow(label: string, startsAt: string, status: "draft" | "published"
     address_street: "Testowa",
     address_number: "1",
     subgenres: ["neurofunk"],
-    is_free: true,
+    is_free: isFree,
     status,
   };
 }
@@ -44,8 +44,8 @@ function buildRow(label: string, startsAt: string, status: "draft" | "published"
 export async function insertFanReadFixtures(client: SupabaseClient): Promise<FanReadFixtures> {
   const now = new Date();
   const rows = [
-    buildRow("published-upcoming-1", addDays(now, 30), "published"),
-    buildRow("published-upcoming-2", addDays(now, 60), "published"),
+    buildRow("published-upcoming-1", addDays(now, 30), "published", true),
+    buildRow("published-upcoming-2", addDays(now, 60), "published", false),
     buildRow("draft-upcoming", addDays(now, 45), "draft"),
     buildRow("published-past", addDays(now, -7), "published"),
   ];
