@@ -46,7 +46,8 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
   const isClient = useIsClient();
 
   const selectedEvent = selectedEventId ? (events.find((e) => e.id === selectedEventId) ?? null) : null;
-  const hasActiveFilters = currentFilters.city !== null || currentFilters.subgenres.length > 0;
+  const hasActiveFilters =
+    currentFilters.city !== null || currentFilters.subgenres.length > 0 || currentFilters.dateFrom !== null;
 
   const handleSelectEvent = (id: string) => {
     setSelectedEventId(id);
@@ -63,7 +64,7 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
           Find the place, drop the bass!
         </h1>
         <p className="mt-1 text-sm text-blue-100/60">
-          Filtruj po mieście i podgatunku — znajdź imprezę na liście lub mapie.
+          Filtruj po dacie, mieście i podgatunku — znajdź imprezę na liście lub mapie.
         </p>
       </div>
 

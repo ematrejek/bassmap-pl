@@ -1,3 +1,4 @@
+import DateRangeFilter from "@/components/discovery/DateRangeFilter";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import type { FanEventFilters } from "@/lib/events/fan-schema";
@@ -18,6 +19,11 @@ export default function EventFilters({ cities, currentFilters }: Props) {
       action="/"
       className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl"
     >
+      <div className="space-y-2">
+        <Label className="text-blue-100/80">Data</Label>
+        <DateRangeFilter currentFilters={currentFilters} />
+      </div>
+
       <div className="space-y-2">
         <Label htmlFor="city" className="text-blue-100/80">
           Miasto
