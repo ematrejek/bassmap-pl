@@ -63,10 +63,11 @@
     "typescript": "^5.9.3",
     "typescript-eslint": "^8.59.2",
     "vitest": "^3.2.6",
-    "wrangler": "^4.90.0"
+    "wrangler": "^4.100.0"
   },
   "overrides": {
-    "vite": "^7.3.2"
+    "vite": "^7.3.2",
+    "devalue": "^5.8.1"
   },
   "lint-staged": {
     "*.{ts,tsx,astro}": [

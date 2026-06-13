@@ -15,7 +15,10 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Security audit
+        run: npm audit --audit-level=high
       - run: npx astro sync
+      - run: npx astro check
       - uses: supabase/setup-cli@v2
         with:
           version: 2.98.2

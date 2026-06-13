@@ -19,6 +19,8 @@ export interface GeocodeInput {
 
 export type GeocodeResult = { latitude: number; longitude: number } | { error: string };
 
+type NominatimFetchResult = NominatimResult[] | { error: string };
+
 interface NominatimResult {
   lat?: string;
   lon?: string;
@@ -90,10 +92,7 @@ function pickBestResult(results: NominatimResult[], venueName?: string): Nominat
   return results[0] ?? null;
 }
 
-async function fetchNominatim(
-  params: URLSearchParams,
-  signal: AbortSignal,
-): Promise<NominatimResult[] | GeocodeResult> {
+async function fetchNominatim(params: URLSearchParams, signal: AbortSignal): Promise<NominatimFetchResult> {
   const response = await fetch(`${NOMINATIM_URL}?${params.toString()}`, {
     method: "GET",
     headers: {
@@ -115,7 +114,7 @@ async function fetchNominatim(
   return Array.isArray(results) ? results : [];
 }
 
-async function searchVenueRows(input: GeocodeInput, signal: AbortSignal): Promise<NominatimResult[] | GeocodeResult> {
+async function searchVenueRows(input: GeocodeInput, signal: AbortSignal): Promise<NominatimFetchResult> {
   if (!input.venueName) {
     return [];
   }
@@ -130,10 +129,7 @@ async function searchVenueRows(input: GeocodeInput, signal: AbortSignal): Promis
   return fetchNominatim(params, signal);
 }
 
-async function searchStructuredRows(
-  input: GeocodeInput,
-  signal: AbortSignal,
-): Promise<NominatimResult[] | GeocodeResult> {
+async function searchStructuredRows(input: GeocodeInput, signal: AbortSignal): Promise<NominatimFetchResult> {
   const params = new URLSearchParams({
     street: `${input.addressNumber} ${input.addressStreet}`,
     city: input.city,
