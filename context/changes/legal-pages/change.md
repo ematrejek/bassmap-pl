@@ -1,8 +1,7 @@
 ---
 id: legal-pages
 roadmap: S-11
-status: done
-created: 2026-06-13
+status: impl_reviewed
 updated: 2026-06-13
 ---
 
