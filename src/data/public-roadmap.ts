@@ -18,10 +18,6 @@ export interface PublicRoadmapItem {
 
 export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
   {
-    id: "free-events-filter",
-    label: "Show free events only",
-  },
-  {
     id: "mobile-subgenre-dropdown",
     label: "Better subgenre picker on mobile",
   },

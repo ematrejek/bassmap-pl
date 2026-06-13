@@ -2,10 +2,12 @@
 change_id: free-events-filter
 title: Filtr „Pokaż tylko darmowe”
 roadmap_ref: S-06
-status: in_progress
+status: archived
 created: 2026-06-13
 updated: 2026-06-13
-plan: context/changes/free-events-filter/plan.md
+verified_manual: 2026-06-13
+plan: context/archive/2026-06-13-free-events-filter/plan.md
+archived_at: 2026-06-13T19:30:00Z
 ---
 
 # Change: free-events-filter
@@ -15,7 +17,7 @@ Roadmap **S-06** — fan włącza przełącznik „Pokaż tylko darmowe” i wid
 ## Notes
 
 - Brak migracji DB — filtr na istniejącej kolumnie `is_free` (`events.is_free boolean NOT NULL DEFAULT false`).
-- Proponowany parametr URL: `free=1` (checkbox GET).
-- FR-010 (roadmap) — dodać do PRD przy `/10x-implement` lub archive.
-- GitHub issue dla S-06 jeszcze nie istnieje — utworzyć i przenieść na **In Progress** przy starcie `/10x-implement`.
-- Wpis w `src/data/public-roadmap.ts` już jest — usunąć dopiero przy `/10x-archive`.
+- Parametr URL: `free=1` (checkbox GET).
+- PRD **FR-010** dodane w `context/foundation/prd.md`.
+- GitHub issue S-06 nie było osobnego ticketu — PR #13 zmergowany 2026-06-13; deploy na https://bassmap.pl.
+- Wpis usunięty z `src/data/public-roadmap.ts` przy archive.
