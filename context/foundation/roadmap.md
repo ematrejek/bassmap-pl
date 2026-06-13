@@ -3,7 +3,7 @@ project: BassMap PL
 version: 1
 status: draft
 created: 2026-06-10
-updated: 2026-06-11
+updated: 2026-06-13
 subgenre_catalog_version: 1
 prd_version: 1
 main_goal: market-feedback
@@ -35,6 +35,7 @@ BassMap PL to pierwsza scentralizowana wyszukiwarka wydarzeń drum'n'bass w Pols
 | S-01 | admin-event-management | admin dodaje, edytuje i usuwa wydarzenia DnB                                 | F-01, F-02    | FR-006, FR-007       | done     |
 | S-02 | fan-event-discovery    | fan filtruje po mieście/podgatunku, widzi listę, mapę i szczegóły wydarzenia | F-01, S-01    | US-01, FR-001–FR-005 | done     |
 | F-03 | production-deploy      | (foundation) aplikacja działa pod publicznym adresem z poprawnymi sekretami  | S-01          | NFR Operating cost   | done     |
+| S-03 | event-cover-photos     | fan widzi zdjęcia okładek na kartach i stronie szczegółów wydarzenia         | S-02          | post-MVP             | done     |
 
 ## Streams
 
@@ -125,6 +126,15 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** Mapa Leaflet + hydratacja w Astro/Cloudflare to największa luka umiejętnościowa — plan: `context/changes/fan-event-discovery/plan.md`. Eventy bez współrzędnych: fallback centrum miasta na mapie (rzadkie po S-01).
 - **Status:** done
 
+## Post-MVP slices
+
+### S-03: Okładki wydarzeń
+
+- **Outcome:** fan widzi zdjęcia okładek na kartach listy, w podglądzie i na stronie szczegółów; admin opcjonalnie wgrywa plakat (pion/poziom).
+- **Change ID:** event-cover-photos
+- **Prerequisites:** S-02
+- **Status:** done
+
 ## Backlog Handoff
 
 **External backlog (public):** [GitHub Project — Bassmap PL Roadmap](https://github.com/users/ematrejek/projects/2) · [Issues `label:roadmap`](https://github.com/ematrejek/bassmap-pl/issues?q=label%3Aroadmap) · [Indeks #6](https://github.com/ematrejek/bassmap-pl/issues/6)
@@ -138,6 +148,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-01       | admin-event-management | #3     | Panel admina: CRUD wydarzeń DnB            | —                     | Archived → `context/archive/2026-06-10-admin-event-management/` |
 | S-02       | fan-event-discovery    | #4     | Odkrywanie: lista, filtry, mapa, szczegóły | —                     | Archived → `context/archive/2026-06-11-fan-event-discovery/` |
 | F-03       | production-deploy      | #5     | Deploy produkcyjny na Cloudflare           | —                     | Done — https://bassmap.pl                  |
+| S-03       | event-cover-photos     | —      | Okładki wydarzeń na kartach i szczegółach  | —                     | Archived → `context/archive/2026-06-12-event-cover-photos/` |
 
 ## Resolved (2026-06-11) — F-03 domena
 
@@ -154,13 +165,12 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Post-MVP backlog (suggested order)
 
-> Ustalone 2026-06-11 — MVP (F-01…F-03, S-01, S-02) jest **done**. Kolejne slice'y dopiszemy przy `/10x-plan`; na razie priorytet roboczy poniżej. Fan-facing kopia: `src/data/public-roadmap.ts`. **Na teraz robimy coś innego** — wracamy tu po zakończeniu bieżącej pracy.
+> Ustalone 2026-06-11 — MVP (F-01…F-03, S-01, S-02) jest **done**. S-03 (okładki) **done** 2026-06-13. Kolejne slice'y poniżej. Fan-facing kopia: `src/data/public-roadmap.ts`.
 
 | Priorytet | ID (prop.) | Change ID (prop.)     | Outcome                                                         | PRD / notes                                      |
 | --------- | ---------- | --------------------- | --------------------------------------------------------------- | ------------------------------------------------ |
-| 1         | S-03       | event-cover-photos    | fan widzi zdjęcia okładek na kartach i stronie szczegółów       | placeholder w S-02; brak pola w schemacie — nowy slice |
-| 2         | S-04       | date-range-filter     | fan filtruje po zakresie dat (weekendy, własne daty)            | FR-008 nice-to-have                              |
-| 3         | F-04       | www-subdomain         | ten sam serwis pod `www.bassmap.pl`                             | DNS / Cloudflare; mały nakład                    |
+| 1         | S-04       | date-range-filter     | fan filtruje po zakresie dat (weekendy, własne daty)            | FR-008 nice-to-have                              |
+| 2         | F-04       | www-subdomain         | ten sam serwis pod `www.bassmap.pl`                             | DNS / Cloudflare; mały nakład                    |
 
 **Równolegle (nie slice):** zasilenie bazy prawdziwymi wydarzeniami przez panel admina + feedback od fanów — sygnał rynkowy po deployu na https://bassmap.pl.
 
@@ -180,3 +190,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-01: admin dodaje, edytuje i usuwa wydarzenia DnB z wymaganymi polami (nazwa, data, miasto, venue) i opcjonalnymi (lineup, link biletowy, cena, tagi podgatunków); adres geokodowany automatycznie (Nominatim) lub ręczne współrzędne w trybie „lokalizacja tajna”.** — Archived 2026-06-11 → `context/archive/2026-06-10-admin-event-management/`. Lesson: —.
 - **S-02: fan filtruje nadchodzące wydarzenia po mieście i podgatunku, widzi listę posortowaną po dacie, pinezki na interaktywnej mapie Polski i pełne szczegóły po kliknięciu.** — Archived 2026-06-11 → `context/archive/2026-06-11-fan-event-discovery/`. Lesson: jawne filtry fan read niezależnie od RLS (`context/foundation/lessons.md`).
 - **F-03: (foundation) aplikacja dostępna pod publicznym adresem Cloudflare z poprawnie ustawionymi sekretami Supabase.** — Archived 2026-06-11 → `context/archive/2026-06-11-production-deploy/`. Lesson: propagacja DNS u rejestratora .pl może opóźniać dostęp z lokalnego Wi‑Fi — LTE / publiczny DNS szybciej potwierdzają poprawną konfigurację.
+- **S-03: fan widzi zdjęcia okładek na kartach listy, w podglądzie i na stronie szczegółów; admin opcjonalnie wgrywa plakat (pion/poziom).** — Archived 2026-06-13 → `context/archive/2026-06-12-event-cover-photos/`. Lesson: upload okładek przez Worker API + klucz serwisowy (browser upload + RLS zawodził na Windows).

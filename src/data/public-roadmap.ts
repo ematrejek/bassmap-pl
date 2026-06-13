@@ -18,10 +18,6 @@ export interface PublicRoadmapItem {
 
 export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
   {
-    id: "event-cover-photos",
-    label: "Cover photos on event cards and detail pages",
-  },
-  {
     id: "date-range-filter",
     label: "Filter events by date range (weekends, custom dates)",
   },
