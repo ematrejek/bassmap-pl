@@ -1,14 +1,38 @@
+import { isValidCalendarDate } from "@/lib/events/date-range";
 import { SUBGENRES, type Subgenre } from "@/types";
 
 export interface FanEventFilters {
   city: string | null;
   subgenres: Subgenre[];
+  dateFrom: string | null;
+  dateTo: string | null;
 }
 
 const SUBGENRE_SET = new Set<string>(SUBGENRES);
 
 function isSubgenre(value: string): value is Subgenre {
   return SUBGENRE_SET.has(value);
+}
+
+function parseDateFilters(searchParams: URLSearchParams): Pick<FanEventFilters, "dateFrom" | "dateTo"> {
+  const fromRaw = searchParams.get("from")?.trim() ?? "";
+  const toRaw = searchParams.get("to")?.trim() ?? "";
+
+  const parsedFrom: string | null = isValidCalendarDate(fromRaw) ? fromRaw : null;
+  const parsedTo: string | null = isValidCalendarDate(toRaw) ? toRaw : null;
+
+  if (!parsedFrom) {
+    return { dateFrom: null, dateTo: null };
+  }
+
+  let dateFrom = parsedFrom;
+  let dateTo = parsedTo ?? parsedFrom;
+
+  if (dateFrom > dateTo) {
+    [dateFrom, dateTo] = [dateTo, dateFrom];
+  }
+
+  return { dateFrom, dateTo };
 }
 
 export function parseFanFilters(searchParams: URLSearchParams): FanEventFilters {
@@ -23,7 +47,9 @@ export function parseFanFilters(searchParams: URLSearchParams): FanEventFilters 
     }
   }
 
-  return { city, subgenres };
+  const { dateFrom, dateTo } = parseDateFilters(searchParams);
+
+  return { city, subgenres, dateFrom, dateTo };
 }
 
 export function buildFanFilterSearchParams(filters: FanEventFilters): URLSearchParams {
@@ -35,6 +61,11 @@ export function buildFanFilterSearchParams(filters: FanEventFilters): URLSearchP
 
   for (const subgenre of filters.subgenres) {
     params.append("subgenre", subgenre);
+  }
+
+  if (filters.dateFrom) {
+    params.set("from", filters.dateFrom);
+    params.set("to", filters.dateTo ?? filters.dateFrom);
   }
 
   return params;

@@ -173,7 +173,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Partia I — must-have (po MVP)
 
-> Ustalone 2026-06-13. `S-04` **done** (2026-06-13). Pozostałe slice'y Partii I są **ready**. Rekomendowana kolejność: `S-05` (gwiazda) → `S-06` / `S-07` / `S-08`.
+> Ustalone 2026-06-13. `S-04` **done** (2026-06-13). `S-05` **implemented** (PR open, archive pending). Pozostałe slice'y Partii I: `S-06` / `S-07` / `S-08` **ready**. Rekomendowana kolejność po `S-05`: `S-06` / `S-07` / `S-08`.
 
 ### S-04: Pole opisu wydarzenia
 
@@ -201,8 +201,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:**
   - Strefa czasu zakresu: Europe/Warsaw (jak RLS `is_upcoming`) — Owner: team. Block: no.
-- **Risk:** FR-008 było nice-to-have w PRD; użytkownik podnosi do must-have Partii I — warto zaktualizować PRD przy pierwszym `/10x-plan`.
-- **Status:** ready
+- **Risk:** FR-008 elevated to must-have (Partia I) — PRD updated 2026-06-13.
+- **Status:** ready — implemented 2026-06-13; PR open; archive pending
 
 **FR (elevacja PRD):**
 
@@ -414,7 +414,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | F-03       | production-deploy         | #5     | Deploy produkcyjny na Cloudflare                   | —                     | Done — https://bassmap.pl                            |
 | S-03       | event-cover-photos        | —      | Okładki wydarzeń                                   | —                     | Done                                                 |
 | S-04       | event-description         | #10    | Pole opisu wydarzenia                              | —                     | Done — archived 2026-06-13                           |
-| S-05       | date-range-filter         | —      | Filtr dat: kalendarz + presety                     | yes                   | Partia I — gwiazda przewodnia fazy                   |
+| S-05       | date-range-filter         | #11    | Filtr dat: kalendarz + presety                     | yes                   | Implemented 2026-06-13 — PR open; archive pending  |
 | S-06       | free-events-filter        | —      | Przełącznik „Pokaż tylko darmowe”                  | yes                   | Partia I                                             |
 | S-07       | mobile-subgenre-dropdown  | —      | Mobile: dropdown multichoice podgatunków           | yes                   | Partia I                                             |
 | S-08       | structured-price-currency | —      | Cena liczbowa + waluta PLN/EUR/CZK                 | yes                   | Partia I                                             |

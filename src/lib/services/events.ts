@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { geocodeAddress } from "@/lib/geocoding/nominatim";
 import type { FanEventFilters } from "@/lib/events/fan-schema";
+import { resolvePublishedDateBounds } from "@/lib/events/date-range";
 import { getStartOfTodayWarsawUtcIso, parseDatetimeLocalWarsaw } from "@/lib/events/format";
 import { mapEventRow, toEventInsertRow, toEventUpdateRow, type EventRow } from "@/lib/events/mapper";
 import type { ParsedEventCreate, ParsedEventUpdate } from "@/lib/events/schema";
@@ -146,12 +147,18 @@ export async function listPublishedEvents(
   supabase: SupabaseClient,
   filters?: FanEventFilters,
 ): Promise<ServiceResult<Event[]>> {
+  const { gte, lt } = resolvePublishedDateBounds(filters ?? { dateFrom: null, dateTo: null });
+
   let query = supabase
     .from("events")
     .select("*")
     .eq("status", "published")
-    .gte("starts_at", getStartOfTodayWarsawUtcIso())
+    .gte("starts_at", gte)
     .order("starts_at", { ascending: true });
+
+  if (lt) {
+    query = query.lt("starts_at", lt);
+  }
 
   if (filters?.city) {
     query = query.eq("city", filters.city);

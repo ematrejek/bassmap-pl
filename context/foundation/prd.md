@@ -72,9 +72,9 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
   > Socrates: No counter-argument; it stands as written.
 
-- FR-008: Fan can filter events by date range. Priority: nice-to-have
+- FR-008: Fan can filter events by date range (single day or range) with calendar presets for today, this week, and this month; filters persist in URL; list and map show the same filtered set. Priority: must-have (Partia I)
 
-  > Socrates: Counter-argument considered: "default sort by date already handles most cases." Resolution: demoted to nice-to-have; default ascending date sort is sufficient for MVP.
+  > Socrates: Counter-argument considered: "default sort by date already handles most cases." Resolution: originally demoted to nice-to-have for MVP; elevated to must-have (Partia I, 2026-06-13) — date filtering is the lead discovery slice after S-02.
 
 ### Admin management
 
