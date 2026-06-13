@@ -2,7 +2,7 @@
 change_id: date-range-filter
 title: Filtr dat w odkrywaniu wydarzeń
 roadmap_ref: S-05
-status: impl_reviewed
+status: pr_open
 created: 2026-06-13
 updated: 2026-06-13
 plan: context/changes/date-range-filter/plan.md
