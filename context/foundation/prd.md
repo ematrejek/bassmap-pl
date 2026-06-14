@@ -80,6 +80,14 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
   > Socrates: Counter-argument considered: "fans can scan prices in the list." Resolution: kept — explicit free-only toggle reduces noise for fans seeking no-cover nights; relies on admin `is_free` flag, not price text heuristics.
 
+- FR-011: On mobile viewports, the subgenre filter uses a compact multi-select dropdown instead of a long scrolling checkbox list; desktop may keep the checkbox grid. Priority: must-have (Partia I)
+
+  > Socrates: Counter-argument considered: "one responsive checkbox list is enough." Resolution: kept — 26 subgenres on a narrow screen dominate the filter panel; collapsed multichoice preserves discovery filters above the fold.
+
+- FR-012: Event price is a numeric amount or range with currency PLN, EUR, or CZK (modes: exact, from X, X–Y); not a free-text string. Priority: must-have (Partia I)
+
+  > Socrates: Counter-argument considered: "free-text price is flexible for promoters." Resolution: kept — structured price improves list readability and data quality; optional price when paid remains allowed ("price TBD" for fans).
+
 ### Admin management
 
 - FR-006: Admin can add an event directly. Priority: must-have

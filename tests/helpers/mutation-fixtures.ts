@@ -33,7 +33,10 @@ export function buildMutationCreatePayload(label = "create"): CoordinatesEventCr
     isFree: true,
     lineup: null,
     ticketUrl: null,
-    price: null,
+    priceMode: null,
+    priceMin: null,
+    priceMax: null,
+    currency: null,
     addressStreet: null,
     addressNumber: null,
   };

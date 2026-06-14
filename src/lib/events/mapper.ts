@@ -1,4 +1,4 @@
-import type { CoverAspect, Event, EventInsert, EventStatus, Subgenre } from "@/types";
+import type { CoverAspect, Event, EventCurrency, EventInsert, EventPriceMode, EventStatus, Subgenre } from "@/types";
 
 export interface EventRow {
   id: string;
@@ -15,12 +15,22 @@ export interface EventRow {
   description: string | null;
   ticket_url: string | null;
   is_free: boolean;
-  price: string | null;
+  price_mode: EventPriceMode | null;
+  price_min: number | string | null;
+  price_max: number | string | null;
+  currency: EventCurrency | null;
   status: EventStatus;
   cover_path: string | null;
   cover_aspect: CoverAspect | null;
   created_at: string;
   updated_at: string;
+}
+
+function toNumberOrNull(value: number | string | null): number | null {
+  if (value === null) {
+    return null;
+  }
+  return typeof value === "number" ? value : Number(value);
 }
 
 export function mapEventRow(row: EventRow): Event {
@@ -39,7 +49,10 @@ export function mapEventRow(row: EventRow): Event {
     description: row.description,
     ticketUrl: row.ticket_url,
     isFree: row.is_free,
-    price: row.price,
+    priceMode: row.price_mode,
+    priceMin: toNumberOrNull(row.price_min),
+    priceMax: toNumberOrNull(row.price_max),
+    currency: row.currency,
     status: row.status,
     coverPath: row.cover_path,
     coverAspect: row.cover_aspect,
@@ -63,7 +76,10 @@ export function toEventInsertRow(input: EventInsert): Record<string, unknown> {
     description: input.description ?? null,
     ticket_url: input.ticketUrl ?? null,
     is_free: input.isFree ?? false,
-    price: input.price ?? null,
+    price_mode: input.priceMode ?? null,
+    price_min: input.priceMin ?? null,
+    price_max: input.priceMax ?? null,
+    currency: input.currency ?? null,
     status: input.status ?? "published",
     cover_path: input.coverPath ?? null,
     cover_aspect: input.coverAspect ?? null,
@@ -86,7 +102,10 @@ export function toEventUpdateRow(input: Partial<EventInsert>): Record<string, un
   if (input.description !== undefined) row.description = input.description;
   if (input.ticketUrl !== undefined) row.ticket_url = input.ticketUrl;
   if (input.isFree !== undefined) row.is_free = input.isFree;
-  if (input.price !== undefined) row.price = input.price;
+  if (input.priceMode !== undefined) row.price_mode = input.priceMode;
+  if (input.priceMin !== undefined) row.price_min = input.priceMin;
+  if (input.priceMax !== undefined) row.price_max = input.priceMax;
+  if (input.currency !== undefined) row.currency = input.currency;
   if (input.status !== undefined) row.status = input.status;
   if (input.coverPath !== undefined) row.cover_path = input.coverPath;
   if (input.coverAspect !== undefined) row.cover_aspect = input.coverAspect;

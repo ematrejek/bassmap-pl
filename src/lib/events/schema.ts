@@ -1,8 +1,111 @@
 import { z } from "zod";
 import { isValidCoverPath } from "@/lib/storage/event-covers";
-import { SUBGENRES, type CoverAspect, type Subgenre } from "@/types";
+import { SUBGENRES, type CoverAspect, type EventCurrency, type EventPriceMode, type Subgenre } from "@/types";
 
 const subgenreSchema = z.enum(SUBGENRES as [Subgenre, ...Subgenre[]]);
+const priceModeSchema = z.enum(["exact", "from", "range"] satisfies [EventPriceMode, EventPriceMode, EventPriceMode]);
+const currencySchema = z.enum(["PLN", "EUR", "CZK"] satisfies [EventCurrency, EventCurrency, EventCurrency]);
+
+const priceAmountSchema = z.preprocess((value) => {
+  if (value === undefined) {
+    return undefined;
+  }
+  if (value === null || value === "") {
+    return null;
+  }
+  if (typeof value === "string") {
+    const trimmed = value.trim();
+    if (trimmed.length === 0) {
+      return null;
+    }
+    return Number(trimmed);
+  }
+  return value;
+}, z.number().positive("Podaj kwotę większą od zera").nullable().optional());
+
+interface PriceValidatable {
+  isFree?: boolean;
+  priceMode?: EventPriceMode | null;
+  priceMin?: number | null;
+  priceMax?: number | null;
+  currency?: EventCurrency | null;
+}
+
+function hasDefinedPriceField(data: PriceValidatable): boolean {
+  return (
+    data.priceMode !== undefined ||
+    data.priceMin !== undefined ||
+    data.priceMax !== undefined ||
+    data.currency !== undefined
+  );
+}
+
+function hasAnyPriceValue(data: PriceValidatable): boolean {
+  return data.priceMode != null || data.priceMin != null || data.priceMax != null || data.currency != null;
+}
+
+function validateStructuredPrice(data: PriceValidatable, ctx: z.RefinementCtx): void {
+  const isFree = data.isFree ?? false;
+
+  if (isFree) {
+    if (hasAnyPriceValue(data)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Wydarzenie darmowe nie może mieć ustawionej ceny",
+      });
+    }
+    return;
+  }
+
+  if (!hasAnyPriceValue(data)) {
+    return;
+  }
+
+  if (data.priceMode == null || data.priceMin == null || data.currency == null) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Podaj komplet danych ceny: tryb, kwotę i walutę",
+    });
+    return;
+  }
+
+  if (data.priceMode === "range") {
+    if (data.priceMax == null) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "W przedziale podaj kwotę maksymalną",
+      });
+      return;
+    }
+    if (data.priceMax <= data.priceMin) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "W przedziale cena maksymalna musi być większa od minimalnej",
+      });
+    }
+    return;
+  }
+
+  if (data.priceMax != null) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      message: "Kwota maksymalna jest dozwolona tylko w trybie przedziału",
+    });
+  }
+}
+
+function validateStructuredPriceOnUpdate(data: PriceValidatable, ctx: z.RefinementCtx): void {
+  if (data.isFree === true) {
+    validateStructuredPrice(data, ctx);
+    return;
+  }
+
+  if (!hasDefinedPriceField(data)) {
+    return;
+  }
+
+  validateStructuredPrice(data, ctx);
+}
 
 const startsAtSchema = z
   .string()
@@ -69,7 +172,10 @@ const commonEventFields = {
   description: descriptionSchema,
   ticketUrl: ticketUrlSchema,
   isFree: z.boolean().optional().default(false),
-  price: z.string().optional().nullable(),
+  priceMode: priceModeSchema.optional().nullable(),
+  priceMin: priceAmountSchema,
+  priceMax: priceAmountSchema,
+  currency: currencySchema.optional().nullable(),
 };
 
 const eventCreateAddressSchema = z.object({
@@ -88,10 +194,9 @@ const eventCreateCoordinatesSchema = z.object({
   ...commonEventFields,
 });
 
-const eventCreateDiscriminatedSchema = z.discriminatedUnion("locationMode", [
-  eventCreateAddressSchema,
-  eventCreateCoordinatesSchema,
-]);
+const eventCreateDiscriminatedSchema = z
+  .discriminatedUnion("locationMode", [eventCreateAddressSchema, eventCreateCoordinatesSchema])
+  .superRefine(validateStructuredPrice);
 
 const eventCreateInputSchema = z.preprocess((value) => {
   if (typeof value === "object" && value !== null && !("locationMode" in value)) {
@@ -113,7 +218,10 @@ const eventUpdatePartialSchema = z
     description: descriptionSchema,
     ticketUrl: ticketUrlSchema,
     isFree: z.boolean().optional(),
-    price: z.string().optional().nullable(),
+    priceMode: priceModeSchema.optional().nullable(),
+    priceMin: priceAmountSchema,
+    priceMax: priceAmountSchema,
+    currency: currencySchema.optional().nullable(),
     locationMode: z.enum(["address", "coordinates"]).optional(),
     addressStreet: z.string().min(1, "Ulica jest wymagana").optional().nullable(),
     addressNumber: z.string().min(1, "Numer budynku jest wymagany").optional().nullable(),
@@ -165,6 +273,8 @@ const eventUpdatePartialSchema = z
         message: "Podaj obie współrzędne",
       });
     }
+
+    validateStructuredPriceOnUpdate(data, ctx);
   });
 
 export type ParsedEventUpdate = z.infer<typeof eventUpdatePartialSchema>;

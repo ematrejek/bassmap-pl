@@ -1,3 +1,4 @@
+import { formatStructuredPrice } from "@/lib/events/price";
 import type { Event } from "@/types";
 
 const EVENT_DATE_FORMATTER = new Intl.DateTimeFormat("pl-PL", {
@@ -112,14 +113,21 @@ export function parseDatetimeLocalWarsaw(value: string): string | null {
   return date.toISOString();
 }
 
-export function formatEventPrice(event: Pick<Event, "isFree" | "price">): string {
+export function formatEventPrice(
+  event: Pick<Event, "isFree" | "priceMode" | "priceMin" | "priceMax" | "currency">,
+): string {
   if (event.isFree) {
     return "Wstęp wolny";
   }
-  if (event.price && event.price.trim().length > 0) {
-    return event.price.trim();
-  }
-  return "Cena do ustalenia";
+
+  const formatted = formatStructuredPrice({
+    priceMode: event.priceMode,
+    priceMin: event.priceMin,
+    priceMax: event.priceMax,
+    currency: event.currency,
+  });
+
+  return formatted ?? "Cena do ustalenia";
 }
 
 export function formatEventVenueLine(event: Pick<Event, "venueName" | "city">): string {
