@@ -26,15 +26,7 @@ export const POST: APIRoute = async (context) => {
     return jsonResponse({ error: parsed.error }, 400);
   }
 
-  const emailBinding = getEmailBinding(context.locals);
-  if (!emailBinding) {
-    return jsonResponse(
-      {
-        error: "Wysyłka e-mail nie jest skonfigurowana w tym środowisku. Napisz bezpośrednio na kontakt@bassmap.pl.",
-      },
-      503,
-    );
-  }
+  const emailBinding = getEmailBinding();
 
   const { email, message, name } = parsed.data;
   const senderLabel = name ?? email;

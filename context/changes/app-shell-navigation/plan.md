@@ -21,7 +21,7 @@ Jeden pionowy slice łączący roadmapę **F-04** + minimalną **S-09** + minima
 
 ### Key Discoveries
 
-- Research rekomenduje **zostać przy Astro + React islands + Tailwind + shadcn**; dodać tokeny „Muted Neon DnB” i **Space Grotesk + Inter** (OFL).
+- Research rekomenduje **zostać przy Astro + React islands + Tailwind + shadcn**; dodać tokeny „Muted Neon DnB” i fonty display (**Orbitron** + **Inter** – decyzja wizualna 2026-06-14; wcześniejsza propozycja Space Grotesk).
 - Frame zaleca **jeden plan**, 5 faz – nie rozdzielać PR na F-04 / S-09 / S-10 na start.
 - Redirect `/?…` → `/events?…` najlepiej w **middleware** (302 przed renderem).
 - Archiwum: spójność z `is_upcoming()` – serwis **i** nowa polityka RLS `NOT is_upcoming(starts_at)`.
@@ -37,7 +37,7 @@ Jeden pionowy slice łączący roadmapę **F-04** + minimalną **S-09** + minima
 6. **`/archive`** – lista przeszłych `published` eventów, sort malejąco po `starts_at`, **bez mapy**.
 7. **`/report-issue`** – formularz (e-mail, treść) → API → mail na kontakt@bassmap.pl (Cloudflare Email Sending).
 8. Wszystkie hardcoded linki do discovery (`action="/"`, `href="/"` w kontekście listy) wskazują **`/events`**.
-9. Po logowaniu redirect na **`/events`** (nie `/`).
+9. Po logowaniu redirect na **`/`** (strona główna).
 10. CI: `npm run lint`, `npm run build`, `npm test` zielone.
 
 ### Weryfikacja ręczna
@@ -137,10 +137,10 @@ Dodać w `:root` / `@theme inline`:
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@500;700;800;900&display=swap" rel="stylesheet" />
 ```
 
-Klasy utility: `font-display` → Space Grotesk, body → Inter (w `@layer base`).
+Klasy utility: `font-heading` / `font-display` → Orbitron, body → Inter (w `@layer base`).
 
 Stopniowo zamieniać `purple-*` na `sky-*` / `emerald-*` **tylko w nowych komponentach shell/homepage** – nie masowy refactor formularzy admina w tym slice.
 
@@ -208,7 +208,7 @@ CREATE POLICY events_select_past_public
 | `DateRangeFilter.tsx` | `buildFilterHref` → `${DISCOVERY_PATH}?…` |
 | `events/[id].astro` | „Wróć” / breadcrumb → `DISCOVERY_PATH` |
 | `Topbar.astro` | usunąć po migracji |
-| `signin.ts`, `signout.ts` | redirect → `DISCOVERY_PATH` lub `HOME_PATH` (signout → `/`) |
+| `signin.ts`, `signout.ts` | redirect → `HOME_PATH` (`/`); signout → `/` |
 | `403.astro` | link → `HOME_PATH` |
 
 ---
@@ -271,7 +271,7 @@ Dostosować `sheet.tsx` do ciemnego tła (`border-white/10`, `bg-slate-950/90`).
 #### Manual
 
 - [ ] 1.4 Menu otwiera się na desktop i mobile; reduced motion OK
-- [ ] 1.5 Fonty Space Grotesk widoczne w nagłówku menu / hero (po fazie 3)
+- [x] 1.5 Fonty Orbitron + Inter widoczne w nagłówku menu / hero
 
 ---
 
@@ -311,7 +311,7 @@ Zaktualizować „Lista eventów” → `DISCOVERY_PATH`.
 
 #### 7. Auth redirecty
 
-**Files**: `src/pages/api/auth/signin.ts` → redirect `DISCOVERY_PATH`; `signout.ts` → `HOME_PATH`.
+**Files**: `src/pages/api/auth/signin.ts`, `signout.ts` → redirect `HOME_PATH` (`/`).
 
 ### Success Criteria
 
@@ -325,7 +325,7 @@ Zaktualizować „Lista eventów” → `DISCOVERY_PATH`.
 - [ ] 2.3 `/events` – pełny discovery jak stary `/`
 - [ ] 2.4 `/?city=…` → 302 → `/events?city=…`
 - [ ] 2.5 Filtry submit/presety/clear – URL pod `/events`
-- [ ] 2.6 Logowanie przekierowuje na `/events`
+- [ ] 2.6 Logowanie przekierowuje na `/` (strona główna)
 
 ---
 
@@ -551,7 +551,7 @@ Szczegółowy przegląd: `plan-review.md` (2026-06-14). Werdykt: **zatwierdzony 
 - [x] 4.2 `listArchivedEvents` + test integracyjny
 - [x] 4.3 `/archive` + `/report-issue` + API e-mail
 - [x] 4.4 Testy schema formularza
-- [ ] 4.5 `npm run lint` / `build` / `test` (wymaga `supabase db push` dla testu archiwum)
+- [x] 4.5 `npm run lint` / `build` zielone; `test` – archive wymaga `supabase db push` (impl-review 2026-06-14)
 
 #### Manual
 
@@ -561,11 +561,19 @@ Szczegółowy przegląd: `plan-review.md` (2026-06-14). Werdykt: **zatwierdzony 
 
 #### Automated
 
-- [ ] 5.1 AppShell na pozostałych stronach; usunięcie Topbar
-- [ ] 5.2 `public-roadmap.ts` zaktualizowany
-- [ ] 5.3 Pełna regresja CI
+- [x] 5.1 AppShell na pozostałych stronach; usunięcie Topbar (impl-review 2026-06-14)
+- [x] 5.2 `public-roadmap.ts` wyczyszczony (`marketing-homepage` usunięty)
+- [x] 5.3 `npm run lint` / `build` zielone; `test` – patrz impl-review F2/F10
 
 #### Manual
 
 - [ ] 5.4 Regresja admin + auth + legal
 - [ ] 5.5 Weryfikacja produkcyjna po deploy
+
+## Addendum (impl-review 2026-06-14)
+
+| Temat | Ustalenie |
+|-------|-----------|
+| Migracja archiwum | `20260615120000` na remote |
+| Smooth scroll (Lenis) | Włączony na `/` |
+| Font display | Orbitron + Inter |

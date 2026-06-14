@@ -2,7 +2,7 @@
 change_id: app-shell-navigation
 title: App shell i nawigacja zakładkowa
 roadmap_ref: F-04
-status: implementing
+status: impl-reviewed
 created: 2026-06-14
 updated: 2026-06-14
 research: context/changes/app-shell-navigation/research.md
@@ -29,6 +29,7 @@ Gość wchodzi na **`/`** – dynamiczną okładkę z logo typograficznym, sloga
 | `/archive` | Przeszłe eventy, lista bez mapy |
 | `/report-issue` | Formularz „Zgłoś problem” → e-mail |
 | `/auth/signin`, `/auth/signup` | Auth (bez zmian) |
+| Po logowaniu / wylogowaniu | Redirect na **`/`** |
 
 Szczegóły: `frame.md`.
 
@@ -59,4 +60,5 @@ _(brak)_
 - Plan: `plan.md` (2026-06-14) – 5 faz; review: `plan-review.md`.
 - **URL po angielsku:** `/archive`, `/report-issue` (etykiety menu po polsku).
 - Wygląd: dynamiczny DnB, stonowane neony, lepsze fonty – **bez logo/grafik na start**.
-- Następny krok: **`/10x-implement`**.
+- Impl review: `reviews/impl-review.md` – **APPROVED WITH NOTES**.
+- Następny krok: manual QA, potem **`/10x-archive`**.

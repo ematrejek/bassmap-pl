@@ -69,9 +69,11 @@ Właściciel produktu potwierdziła routing i pełny szkic strony głównej oraz
 
 ## Zachowanie menu i auth
 
-- **Lista eventów:** ten sam widok co dziś na `/` (DiscoveryShell, filtry, mapa).
-- **Zaloguj się / Zarejestruj się:** istniejące strony auth (nie modal w MVP – chyba że plan uzasadni Sheet).
-- Menu zależne od roli (fan/admin) – **poza zakresem tego frame** dla gościa; rozszerzenie w S-12.
+- **Lista eventów:** widok pod **`/events`** (DiscoveryShell, filtry, mapa).
+- **Zaloguj się / Zarejestruj się:** istniejące strony auth (nie modal w MVP).
+- **Po udanym logowaniu:** przekierowanie na **`/`** (strona główna).
+- **Po wylogowaniu:** przekierowanie na **`/`**.
+- Menu zależne od roli (fan/admin) – rozszerzenie w S-12.
 
 ## Kierunek wizualny (wymagania właścicielki)
 
@@ -80,7 +82,7 @@ Właściciel produktu potwierdziła routing i pełny szkic strony głównej oraz
 | Nastrój | Impreza DnB, dynamiczny, nowoczesny – **nie** statyczny panel admina |
 | Kolory | Ciemna baza; akcenty neon **stonowane**: biały, jasnoszary, jasnoniebieski, jasnozielony |
 | Logo/grafiki | Brak assetów – **typografia jako logo** (display font + slogan) |
-| Fonty | Lepsze niż domyślne systemowe – propozycja z research: **Space Grotesk** (nagłówki) + **Inter** (tekst), OFL |
+| Fonty | **Orbitron** (nagłówki / logo typograficzne) + **Inter** (tekst), OFL – zaakceptowane 2026-06-14 |
 | Ruch | Płynny scroll; lekkie wejścia sekcji; `prefers-reduced-motion` respektowane |
 | Czego unikać | Kopiowanie cudzych stron; ciężkie WebGL na całej stronie; jaskrawe „raver” neony |
 
@@ -115,6 +117,8 @@ Ten frame łączy elementy trzech slice’ów – sensownie **jeden plan impleme
 | Archiwum | **Data &lt; dziś** (Warsaw) + `published`; RLS: `NOT is_upcoming(starts_at)`; URL **`/archive`** |
 | Adresy URL | **Po angielsku** dla nowych tras (`/events`, `/archive`, `/report-issue`); legal bez zmian |
 | Redirect `/` + query | **Tak** → `/events?…` (302) |
+| Redirect po logowaniu | **`/`** (strona główna) |
+| Smooth scroll na `/` | **Tak** – Lenis na stronie głównej |
 
 ## Rekomendacja zakresu planu
 

@@ -69,7 +69,7 @@ const astroConfig = tseslint.config({
 });
 
 export default tseslint.config(
-  { ignores: ["bassmap-pl-ui/**"] },
+  { ignores: ["bassmap-pl-ui/**", "worker-configuration.d.ts"] },
   includeIgnoreFile(gitignorePath),
   baseConfig,
   reactConfig,

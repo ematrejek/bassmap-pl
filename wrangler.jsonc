@@ -15,6 +15,7 @@
   "send_email": [
     {
       "name": "EMAIL",
+      "remote": true,
     },
   ],
 }
