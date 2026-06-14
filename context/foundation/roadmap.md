@@ -43,7 +43,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-06 | free-events-filter        | fan włącza „Pokaż tylko darmowe” i widzi tylko darmowe wydarzenia                    | S-02          | FR-004, Business Logic            | done     |
 | S-11 | legal-pages               | fan otwiera Politykę prywatności i Regulamin; rejestrujący widzi tekst akceptacji z linkami | S-02          | NFR Privacy, notes 2026-06-13     | done     |
 | S-07 | mobile-subgenre-dropdown  | fan na telefonie wybiera podgatunki z rozwijanej listy wielokrotnego wyboru          | S-02          | FR-003, NFR Device                | done     |
-| S-08 | structured-price-currency | admin wpisuje cenę jako liczbę (od X / X–Y) z walutą PLN/EUR/CZK; fan widzi poprawnie | S-01          | FR-004, FR-006, notes 2026-06-13  | ready    |
+| S-08 | structured-price-currency | admin wpisuje cenę jako liczbę (od X / X–Y) z walutą PLN/EUR/CZK; fan widzi poprawnie | S-01          | FR-004, FR-006, notes 2026-06-13  | done     |
 | F-04 | app-shell-navigation      | (foundation) własny layout z nawigacją zakładkową zamiast domyślnego Astro           | S-04–S-08     | Access Control, notes 2026-06-13  | proposed |
 | S-09 | marketing-homepage        | fan widzi płynnie przewijaną stronę główną z logo, sloganem, sekcjami i CTA         | F-04          | notes 2026-06-13                  | proposed |
 | S-10 | guest-nav-and-archive     | gość korzysta z menu (lista, logowanie, rejestracja, zgłoszenie problemu, archiwum)  | F-04, S-09    | notes 2026-06-13                  | proposed |
@@ -173,7 +173,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Partia I — must-have (po MVP)
 
-> Ustalone 2026-06-13. `S-04` **done** (2026-06-13). `S-05` **done** (2026-06-13). `S-06` **done** (2026-06-13). `S-11` **done** (2026-06-13). `S-07` **done** (2026-06-13). Pozostały slice Partii I: `S-08` **ready**.
+> Ustalone 2026-06-13. **Partia I zamknięta** (2026-06-14): S-04…S-08, S-11 done. Następny krok: **F-04** (app shell).
 
 ### S-04: Pole opisu wydarzenia
 
@@ -267,7 +267,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Strategia migracji starych wartości `price text` (ręczna vs heurystyka) — Owner: team. Block: no.
 - **Risk:** Zmiana schematu bazy + formularz admina — warto zrobić przed masowym zasilaniem bazy przez admina.
-- **Status:** ready → **in progress** (issue [#15](https://github.com/ematrejek/bassmap-pl/issues/15), TDD 2026-06-14)
+- **Status:** done — archived 2026-06-14 → `context/archive/2026-06-14-structured-price-currency/`; PR #16
 
 **FR (propozycja do PRD):**
 
@@ -416,7 +416,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-06       | free-events-filter        | —      | Przełącznik „Pokaż tylko darmowe”                  | —                     | Done — archived 2026-06-13; PR #13                  |
 | S-11       | legal-pages               | —      | Polityka prywatności i Regulamin                   | —                     | Done — archived 2026-06-13                            |
 | S-07       | mobile-subgenre-dropdown  | #14    | Mobile: dropdown multichoice podgatunków           | —                     | Done — archived 2026-06-13; issue #14               |
-| S-08       | structured-price-currency | #15    | Cena liczbowa + waluta PLN/EUR/CZK                 | —                     | In Progress — issue #15; TDD 2026-06-14              |
+| S-08       | structured-price-currency | #15    | Cena liczbowa + waluta PLN/EUR/CZK                 | —                     | Done — archived 2026-06-14; PR #16                  |
 | F-04       | app-shell-navigation      | —      | Własny layout i nawigacja zakładkowa               | no                    | Czeka na Partię I; unknown: routing `/` vs `/events` |
 | S-09       | marketing-homepage        | —      | Strona główna marketingowa (scroll)                | no                    | Partia II                                            |
 | S-10       | guest-nav-and-archive     | —      | Menu gościa, formularz problemu, archiwum          | no                    | Partia II                                            |
@@ -468,4 +468,5 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-03: fan widzi zdjęcia okładek na kartach i stronie szczegółów.** — Archived 2026-06-13 → `context/archive/2026-06-12-event-cover-photos/`. Lesson: upload okładek przez Worker API + klucz serwisowy.
 - **S-04: fan czyta opis wydarzenia; admin edytuje pole opis.** — Archived 2026-06-13 → `context/archive/2026-06-13-event-description/`. Lesson: —
 - **S-11: fan otwiera Politykę prywatności i Regulamin; rejestrujący widzi tekst akceptacji z linkami.** — Archived 2026-06-13 → `context/archive/2026-06-13-legal-pages/`. Lesson: integracje SMTP (Resend) mogą być poza repo — weryfikuj przed review polityki prywatności.
+- **S-08: admin wpisuje cenę jako liczbę z walutą PLN/EUR/CZK; fan widzi sformatowaną cenę.** — Archived 2026-06-14 → `context/archive/2026-06-14-structured-price-currency/`. Lesson: domyślna waluta w formularzu admina musi być `null`, dopóki admin nie poda kompletnej ceny — inaczej blokuje „Cena do ustalenia”.
 - **S-07: fan na telefonie wybiera podgatunki z rozwijanej listy wielokrotnego wyboru.** — Archived 2026-06-13 → `context/archive/2026-06-13-mobile-subgenre-dropdown/`. Lesson: —

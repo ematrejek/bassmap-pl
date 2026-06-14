@@ -18,10 +18,6 @@ export interface PublicRoadmapItem {
 
 export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
   {
-    id: "structured-price-currency",
-    label: "Clear ticket prices with currency",
-  },
-  {
     id: "marketing-homepage",
     label: "New homepage & navigation",
   },

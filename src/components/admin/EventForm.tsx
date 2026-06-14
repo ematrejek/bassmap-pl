@@ -132,7 +132,7 @@ export default function EventForm({
   const [priceMax, setPriceMax] = useState(
     initialEvent?.priceMax !== null && initialEvent?.priceMax !== undefined ? String(initialEvent.priceMax) : "",
   );
-  const [currency, setCurrency] = useState<EventCurrency>(initialEvent?.currency ?? "PLN");
+  const [currency, setCurrency] = useState<EventCurrency | null>(initialEvent?.currency ?? null);
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverAspect, setCoverAspect] = useState<CoverAspect>(initialEvent?.coverAspect ?? "portrait");
   const [removeCover, setRemoveCover] = useState(false);
@@ -200,7 +200,7 @@ export default function EventForm({
       priceMode: isFree ? null : priceMode,
       priceMin: isFree || priceMin === "" ? null : Number(priceMin),
       priceMax: isFree || priceMode !== "range" || priceMax === "" ? null : Number(priceMax),
-      currency: isFree ? null : currency,
+      currency: isFree || priceMode == null || priceMin === "" ? null : currency,
       locationMode,
     };
 
@@ -740,12 +740,16 @@ export default function EventForm({
                     </Label>
                     <select
                       id="currency"
-                      value={currency}
+                      value={currency ?? ""}
                       onChange={(e) => {
-                        setCurrency(e.target.value as EventCurrency);
+                        const next = e.target.value;
+                        setCurrency(next === "" ? null : (next as EventCurrency));
                       }}
                       className={cn(fieldClass, "h-10 w-full rounded-md px-3 [color-scheme:dark]")}
                     >
+                      <option value="" style={selectOptionStyle}>
+                        Wybierz walutę
+                      </option>
                       <option value="PLN" style={selectOptionStyle}>
                         PLN (zł)
                       </option>

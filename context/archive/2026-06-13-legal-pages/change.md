@@ -19,4 +19,5 @@ Roadmap **S-11** — statyczne strony `/polityka-prywatnosci` i `/regulamin`, st
 - Treść prawna z `BassMap_PL_dokumenty_prawne.docx` (13.06.2026); Resend jako podmiot przetwarzający (SMTP przez Supabase).
 - Impl review: `reviews/impl-review.md` — APPROVED; F1 (Resend) dismissed; F2 (prerender) fixed.
 - Deploy na https://bassmap.pl — commity `cf7f5aa`, `2f10754`, `368391e`, `7cfa529`.
+- **Follow-up 2026-06-14 (PR #17):** wymagany checkbox akceptacji przy rejestracji, baner cookies (sessionStorage), migracja RLS `admin_allowlist` — rozszerzenie NFR Privacy ponad pierwotny browsewrap.
 - Brak osobnego GitHub issue (backlog table: —).
