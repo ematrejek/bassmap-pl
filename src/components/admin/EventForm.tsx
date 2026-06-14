@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { Calendar, ImageIcon, Link2, Music, Ticket } from "lucide-react";
+import { readApiError, readCreatedEventId } from "@/lib/api/json";
 import { ServerError } from "@/components/auth/ServerError";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -60,10 +61,10 @@ async function patchCoverMeta(
     body: JSON.stringify(payload),
   });
 
-  const data = (await response.json()) as { error?: string };
+  const data: unknown = await response.json();
 
   if (!response.ok) {
-    return { ok: false, error: data.error ?? "Nie udało się zapisać okładki" };
+    return { ok: false, error: readApiError(data) ?? "Nie udało się zapisać okładki" };
   }
 
   return { ok: true };
@@ -84,10 +85,10 @@ async function uploadCoverFile(
     body: formData,
   });
 
-  const data = (await response.json()) as { error?: string };
+  const data: unknown = await response.json();
 
   if (!response.ok) {
-    return { ok: false, error: data.error ?? "Nie udało się wgrać okładki" };
+    return { ok: false, error: readApiError(data) ?? "Nie udało się wgrać okładki" };
   }
 
   return { ok: true };
@@ -256,14 +257,14 @@ export default function EventForm({
           body: JSON.stringify(body),
         });
 
-        const createData = (await createResponse.json()) as { error?: string; event?: Event };
+        const createData: unknown = await createResponse.json();
 
         if (!createResponse.ok) {
-          setServerError(createData.error ?? "Nie udało się zapisać wydarzenia");
+          setServerError(readApiError(createData) ?? "Nie udało się zapisać wydarzenia");
           return;
         }
 
-        eventId = createData.event?.id;
+        eventId = readCreatedEventId(createData);
         if (!eventId) {
           setServerError("Nie udało się odczytać identyfikatora wydarzenia");
           return;
@@ -316,10 +317,10 @@ export default function EventForm({
         body: JSON.stringify(body),
       });
 
-      const data = (await response.json()) as { error?: string };
+      const data: unknown = await response.json();
 
       if (!response.ok) {
-        setServerError(data.error ?? "Nie udało się zapisać wydarzenia");
+        setServerError(readApiError(data) ?? "Nie udało się zapisać wydarzenia");
         return;
       }
 

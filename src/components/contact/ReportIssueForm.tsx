@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Mail, MessageSquare, Send, User } from "lucide-react";
 
 import { FormField } from "@/components/auth/FormField";
+import { readApiError } from "@/lib/api/json";
 import { ServerError } from "@/components/auth/ServerError";
 import { Button } from "@/components/ui/button";
 import { shellBtnPrimary, shellTextMuted } from "@/lib/shell-styles";
@@ -56,10 +57,10 @@ export default function ReportIssueForm() {
         }),
       });
 
-      const data = (await response.json()) as { error?: string; ok?: boolean };
+      const data: unknown = await response.json();
 
       if (!response.ok) {
-        setServerError(data.error ?? "Nie udało się wysłać zgłoszenia");
+        setServerError(readApiError(data) ?? "Nie udało się wysłać zgłoszenia");
         return;
       }
 

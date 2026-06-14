@@ -110,8 +110,11 @@ async function fetchNominatim(params: URLSearchParams, signal: AbortSignal): Pro
     return { error: "Geokodowanie tymczasowo niedostępne, spróbuj ponownie" };
   }
 
-  const results = (await response.json()) as NominatimResult[];
-  return Array.isArray(results) ? results : [];
+  const results: unknown = await response.json();
+  if (!Array.isArray(results)) {
+    return [];
+  }
+  return results.filter((item): item is NominatimResult => typeof item === "object" && item !== null);
 }
 
 async function searchVenueRows(input: GeocodeInput, signal: AbortSignal): Promise<NominatimFetchResult> {

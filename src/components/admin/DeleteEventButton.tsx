@@ -11,6 +11,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import { readApiError } from "@/lib/api/json";
 import { ServerError } from "@/components/auth/ServerError";
 
 interface Props {
@@ -38,8 +39,8 @@ export default function DeleteEventButton({ eventId, eventName }: Props) {
         return;
       }
 
-      const data = (await response.json()) as { error?: string };
-      setError(data.error ?? "Nie udało się usunąć wydarzenia");
+      const data: unknown = await response.json();
+      setError(readApiError(data) ?? "Nie udało się usunąć wydarzenia");
     } catch {
       setError("Nie udało się usunąć wydarzenia. Spróbuj ponownie.");
     } finally {
