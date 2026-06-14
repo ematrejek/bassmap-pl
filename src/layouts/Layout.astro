@@ -1,6 +1,7 @@
 ---
 import "../styles/global.css";
 import Banner from "@/components/Banner.astro";
+import CookieConsentBanner from "@/components/CookieConsentBanner.astro";
 import { missingConfigs } from "@/lib/config-status";
 
 interface Props {
@@ -38,6 +39,7 @@ const { title = "BassMap PL", ogImage } = Astro.props;
       ))
     }
     <slot />
+    <CookieConsentBanner />
   </body>
 </html>
 

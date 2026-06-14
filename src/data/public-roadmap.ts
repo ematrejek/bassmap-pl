@@ -18,10 +18,6 @@ export interface PublicRoadmapItem {
 
 export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
   {
-    id: "mobile-subgenre-dropdown",
-    label: "Better subgenre picker on mobile",
-  },
-  {
     id: "structured-price-currency",
     label: "Clear ticket prices with currency",
   },

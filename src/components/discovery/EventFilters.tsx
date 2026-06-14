@@ -1,9 +1,9 @@
 import DateRangeFilter from "@/components/discovery/DateRangeFilter";
+import SubgenreFilter from "@/components/discovery/SubgenreFilter";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import type { FanEventFilters } from "@/lib/events/fan-schema";
 import { cn } from "@/lib/utils";
-import { SUBGENRES, SUBGENRE_LABELS, type Subgenre } from "@/types";
 
 interface Props {
   cities: string[];
@@ -11,8 +11,6 @@ interface Props {
 }
 
 export default function EventFilters({ cities, currentFilters }: Props) {
-  const selectedSubgenres = new Set(currentFilters.subgenres);
-
   return (
     <form
       method="GET"
@@ -46,27 +44,7 @@ export default function EventFilters({ cities, currentFilters }: Props) {
         </select>
       </div>
 
-      <fieldset className="space-y-2">
-        <legend className="text-sm font-medium text-blue-100/80">Podgatunki</legend>
-        <div className="grid max-h-48 grid-cols-1 gap-2 overflow-y-auto sm:grid-cols-2">
-          {SUBGENRES.map((subgenre: Subgenre) => (
-            <label
-              key={subgenre}
-              className="flex cursor-pointer items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-blue-100/90 hover:bg-white/10"
-            >
-              <input
-                type="checkbox"
-                name="subgenre"
-                value={subgenre}
-                defaultChecked={selectedSubgenres.has(subgenre)}
-                className="size-4 rounded border-white/30 accent-purple-500"
-              />
-              <span>{SUBGENRE_LABELS[subgenre]}</span>
-            </label>
-          ))}
-        </div>
-        <p className="text-xs text-blue-100/50">Zaznacz kilka — pokażemy wydarzenia pasujące do dowolnego z nich.</p>
-      </fieldset>
+      <SubgenreFilter currentFilters={currentFilters} />
 
       <div className="space-y-2">
         <label
