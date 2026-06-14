@@ -1,0 +1,26 @@
+---
+import { CONTACT_EMAIL } from "@/lib/routes";
+---
+
+<section
+  class="home-panel border-border/70 relative flex min-h-[70dvh] flex-col items-center justify-center border-b px-4 py-20 sm:px-6 sm:py-28"
+  aria-label="Kontakt i współpraca"
+>
+  <div class="grid-backdrop absolute inset-0 opacity-25" aria-hidden="true"></div>
+  <div
+    class="home-reveal border-primary/30 bg-card/50 shadow-glow-violet relative mx-auto w-full max-w-2xl rounded-2xl border p-8 text-center backdrop-blur-md sm:p-12"
+  >
+    <h2 class="font-heading text-foreground text-3xl font-black tracking-tight text-balance uppercase sm:text-4xl">
+      Masz <span class="text-accent text-glow-cyan">pomysł?</span>
+    </h2>
+    <p class="text-muted-foreground mt-6 text-base leading-relaxed text-pretty italic sm:text-lg">
+      Masz jakieś sugestie? Chcesz zaangażować się w projekt? Napisz do nas!
+    </p>
+    <a
+      href={`mailto:${CONTACT_EMAIL}`}
+      class="border-primary/40 bg-primary/10 text-foreground shadow-glow-violet hover:border-primary/60 hover:bg-primary/20 focus-visible:ring-ring/50 mt-8 inline-flex h-12 items-center justify-center rounded-lg border px-8 text-base font-semibold tracking-wide transition-colors focus-visible:ring-2 focus-visible:outline-none sm:text-lg"
+    >
+      {CONTACT_EMAIL}
+    </a>
+  </div>
+</section>

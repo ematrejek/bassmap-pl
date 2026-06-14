@@ -3,6 +3,8 @@ import SubgenreFilter from "@/components/discovery/SubgenreFilter";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import type { FanEventFilters } from "@/lib/events/fan-schema";
+import { DISCOVERY_PATH } from "@/lib/routes";
+import { shellBtnOutline, shellBtnPrimary, shellPanel, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 
 interface Props {
@@ -12,18 +14,14 @@ interface Props {
 
 export default function EventFilters({ cities, currentFilters }: Props) {
   return (
-    <form
-      method="GET"
-      action="/"
-      className="space-y-4 rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl"
-    >
+    <form method="GET" action={DISCOVERY_PATH} className={cn("space-y-4 p-4", shellPanel)}>
       <div className="space-y-2">
-        <Label className="text-blue-100/80">Data</Label>
+        <Label className="text-foreground/90">Data</Label>
         <DateRangeFilter currentFilters={currentFilters} />
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="city" className="text-blue-100/80">
+        <Label htmlFor="city" className="text-foreground/90">
           Miasto
         </Label>
         <select
@@ -31,13 +29,13 @@ export default function EventFilters({ cities, currentFilters }: Props) {
           name="city"
           defaultValue={currentFilters.city ?? ""}
           className={cn(
-            "h-9 w-full rounded-md border border-white/20 bg-white/5 px-3 text-sm text-white",
-            "focus-visible:border-purple-400 focus-visible:ring-2 focus-visible:ring-purple-400/30 focus-visible:outline-none",
+            "border-border bg-card/60 text-foreground h-9 w-full rounded-md border px-3 text-sm",
+            "focus-visible:border-primary/70 focus-visible:ring-ring/30 focus-visible:shadow-glow-violet focus-visible:ring-2 focus-visible:outline-none",
           )}
         >
           <option value="">Wszystkie miasta</option>
           {cities.map((city) => (
-            <option key={city} value={city} className="bg-slate-900 text-white">
+            <option key={city} value={city} className="bg-card text-foreground">
               {city}
             </option>
           ))}
@@ -49,7 +47,7 @@ export default function EventFilters({ cities, currentFilters }: Props) {
       <div className="space-y-2">
         <label
           htmlFor="free"
-          className="flex w-fit cursor-pointer items-center gap-2 rounded-md border border-white/10 bg-white/5 px-2 py-1.5 text-sm text-blue-100/90 hover:bg-white/10"
+          className="border-border bg-card/50 text-foreground hover:bg-secondary flex w-fit cursor-pointer items-center gap-2 rounded-md border px-2 py-1.5 text-sm"
         >
           <input
             id="free"
@@ -57,24 +55,19 @@ export default function EventFilters({ cities, currentFilters }: Props) {
             name="free"
             value="1"
             defaultChecked={currentFilters.freeOnly}
-            className="size-4 rounded border-white/30 accent-purple-500"
+            className="border-border accent-primary size-4 rounded"
           />
           <span>Pokaż tylko darmowe</span>
         </label>
-        <p className="text-xs text-blue-100/50">Zostaw odznaczone, żeby zobaczyć też płatne wydarzenia.</p>
+        <p className={cn("text-xs", shellTextMuted)}>Zostaw odznaczone, żeby zobaczyć też płatne wydarzenia.</p>
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <Button type="submit" className="border-white/20 bg-purple-600/80 text-white hover:bg-purple-500/90">
+        <Button type="submit" className={shellBtnPrimary}>
           Filtruj
         </Button>
-        <Button
-          asChild
-          type="button"
-          variant="outline"
-          className="border-white/20 bg-white/5 text-purple-200 hover:bg-white/10 hover:text-white"
-        >
-          <a href="/">Wyczyść filtry</a>
+        <Button asChild type="button" variant="outline" className={shellBtnOutline}>
+          <a href={DISCOVERY_PATH}>Wyczyść filtry</a>
         </Button>
       </div>
     </form>

@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { toDatetimeLocalValue } from "@/lib/events/format";
 import { parseEventCreate, parseEventUpdate } from "@/lib/events/schema";
 import { getCoverAspectClassName, validateCoverFile } from "@/lib/storage/event-covers";
+import { shellBtnOutline, shellBtnPrimary } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import {
   SUBGENRES,
@@ -21,9 +22,9 @@ import {
 } from "@/types";
 
 const fieldClass =
-  "border-white/20 bg-white/10 text-white placeholder:text-white/40 focus-visible:border-purple-400 focus-visible:ring-purple-400/30 dark:bg-white/10";
+  "border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/70 focus-visible:ring-ring/30";
 
-/** Native `<option>` list uses OS light popup — dark text required for readability. */
+/** Native `<option>` list uses OS light popup – dark text required for readability. */
 const selectOptionStyle = { backgroundColor: "#ffffff", color: "#0f172a" };
 
 function inferLocationMode(event?: Event): "address" | "coordinates" {
@@ -334,7 +335,7 @@ export default function EventForm({
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="name" className="text-blue-100/80">
+          <Label htmlFor="name" className="text-foreground/90">
             Nazwa wydarzenia
           </Label>
           <Input
@@ -350,7 +351,7 @@ export default function EventForm({
         </div>
 
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="startsAt" className="text-blue-100/80">
+          <Label htmlFor="startsAt" className="text-foreground/90">
             Data i godzina rozpoczęcia
           </Label>
           <div className="relative">
@@ -369,7 +370,7 @@ export default function EventForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="city" className="text-blue-100/80">
+          <Label htmlFor="city" className="text-foreground/90">
             Miasto
           </Label>
           <Input
@@ -385,7 +386,7 @@ export default function EventForm({
         </div>
 
         <div className="space-y-2 sm:col-span-2">
-          <Label htmlFor="venueName" className="text-blue-100/80">
+          <Label htmlFor="venueName" className="text-foreground/90">
             Miejsce / opis lokalizacji
           </Label>
           <Input
@@ -398,13 +399,13 @@ export default function EventForm({
             className={fieldClass}
             required
           />
-          <p className="text-xs text-blue-100/50">
-            Nie musi to być nazwa klubu — wystarczy krótki opis, gdzie jest impreza (ważne dla fanów na liście i mapie).
+          <p className="text-muted-foreground text-xs">
+            Nie musi to być nazwa klubu – wystarczy krótki opis, gdzie jest impreza (ważne dla fanów na liście i mapie).
           </p>
         </div>
       </div>
 
-      <div className="rounded-xl border border-white/10 bg-white/5 p-4">
+      <div className="border-border bg-card/40 rounded-xl border p-4">
         <label htmlFor="coordinatesMode" className="flex cursor-pointer items-start gap-3">
           <Checkbox
             id="coordinatesMode"
@@ -415,7 +416,7 @@ export default function EventForm({
             className="mt-0.5 border-white/30 data-[state=checked]:bg-purple-600"
           />
           <div>
-            <span className="text-sm font-medium text-white">Brak adresu — podaję współrzędne</span>
+            <span className="text-sm font-medium text-white">Brak adresu – podaję współrzędne</span>
             <p className="mt-1 text-xs text-blue-100/50">
               Dla imprez „tajnych” bez ulicy. W trybie adresowym współrzędne uzupełni system.
             </p>
@@ -425,7 +426,7 @@ export default function EventForm({
         {!coordinatesMode ? (
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="addressStreet" className="text-blue-100/80">
+              <Label htmlFor="addressStreet" className="text-foreground/90">
                 Ulica
               </Label>
               <Input
@@ -440,7 +441,7 @@ export default function EventForm({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="addressNumber" className="text-blue-100/80">
+              <Label htmlFor="addressNumber" className="text-foreground/90">
                 Numer
               </Label>
               <Input
@@ -458,7 +459,7 @@ export default function EventForm({
         ) : (
           <div className="mt-4 grid gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="latitude" className="text-blue-100/80">
+              <Label htmlFor="latitude" className="text-foreground/90">
                 Szerokość geograficzna
               </Label>
               <Input
@@ -475,7 +476,7 @@ export default function EventForm({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="longitude" className="text-blue-100/80">
+              <Label htmlFor="longitude" className="text-foreground/90">
                 Długość geograficzna
               </Label>
               <Input
@@ -498,14 +499,14 @@ export default function EventForm({
       <div className="space-y-3">
         <div className="flex items-center gap-2 text-blue-100/80">
           <Music className="size-4" />
-          <Label className="text-blue-100/80">Podgatunki (min. 1)</Label>
+          <Label className="text-foreground/90">Podgatunki (min. 1)</Label>
         </div>
-        <div className="grid max-h-48 grid-cols-1 gap-2 overflow-y-auto rounded-xl border border-white/10 bg-white/5 p-3 sm:grid-cols-2">
+        <div className="border-border bg-card/40 max-h-48 overflow-y-auto rounded-xl border p-3 sm:grid sm:grid-cols-2 sm:gap-2">
           {SUBGENRES.map((subgenre) => (
             <label
               key={subgenre}
               htmlFor={`subgenre-${subgenre}`}
-              className="flex cursor-pointer items-center gap-2 rounded-md px-1 py-0.5 hover:bg-white/5"
+              className="hover:bg-secondary flex cursor-pointer items-center gap-2 rounded-md px-1 py-0.5"
             >
               <Checkbox
                 id={`subgenre-${subgenre}`}
@@ -513,16 +514,16 @@ export default function EventForm({
                 onCheckedChange={(checked) => {
                   toggleSubgenre(subgenre, checked === true);
                 }}
-                className="border-white/30 data-[state=checked]:bg-purple-600"
+                className="border-border data-[state=checked]:border-primary data-[state=checked]:bg-primary"
               />
-              <span className="text-sm text-white/90">{SUBGENRE_LABELS[subgenre]}</span>
+              <span className="text-foreground text-sm">{SUBGENRE_LABELS[subgenre]}</span>
             </label>
           ))}
         </div>
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="lineup" className="text-blue-100/80">
+        <Label htmlFor="lineup" className="text-foreground/90">
           Line-up (jeden artysta na linię)
         </Label>
         <Textarea
@@ -538,7 +539,7 @@ export default function EventForm({
       </div>
 
       <div className="space-y-2">
-        <Label htmlFor="description" className="text-blue-100/80">
+        <Label htmlFor="description" className="text-foreground/90">
           Opis wydarzenia
         </Label>
         <Textarea
@@ -552,13 +553,13 @@ export default function EventForm({
           maxLength={5000}
           className={fieldClass}
         />
-        <p className="text-xs text-blue-100/50">Opcjonalnie. Widoczne na stronie szczegółów wydarzenia.</p>
+        <p className="text-muted-foreground text-xs">Opcjonalnie. Widoczne na stronie szczegółów wydarzenia.</p>
       </div>
 
       <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">
         <div className="flex items-center gap-2 text-blue-100/80">
           <ImageIcon className="size-4" />
-          <Label htmlFor="coverFile" className="text-blue-100/80">
+          <Label htmlFor="coverFile" className="text-foreground/90">
             Okładka wydarzenia
           </Label>
         </div>
@@ -568,14 +569,14 @@ export default function EventForm({
           accept="image/jpeg,image/png,image/webp"
           className={cn(
             fieldClass,
-            "cursor-pointer file:mr-3 file:rounded-md file:border-0 file:bg-purple-600/80 file:px-3 file:py-1 file:text-sm file:text-white",
+            "file:bg-primary file:text-primary-foreground cursor-pointer file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1 file:text-sm",
           )}
           onChange={(e) => {
             const file = e.target.files?.[0] ?? null;
             handleCoverFileChange(file);
           }}
         />
-        <p className="text-xs text-blue-100/50">Opcjonalnie. JPEG, PNG lub WebP, max 5 MB.</p>
+        <p className="text-muted-foreground text-xs">Opcjonalnie. JPEG, PNG lub WebP, max 5 MB.</p>
 
         {(coverFile !== null || (initialEvent?.coverPath && !removeCover)) && (
           <fieldset className="space-y-2">
@@ -591,7 +592,7 @@ export default function EventForm({
                   onChange={() => {
                     setCoverAspect("portrait");
                   }}
-                  className="accent-purple-500"
+                  className="accent-primary"
                 />
                 <span className="text-sm text-white/90">Pionowy (plakat)</span>
               </label>
@@ -605,7 +606,7 @@ export default function EventForm({
                   onChange={() => {
                     setCoverAspect("landscape");
                   }}
-                  className="accent-purple-500"
+                  className="accent-primary"
                 />
                 <span className="text-sm text-white/90">Poziomy (tło z FB)</span>
               </label>
@@ -638,7 +639,7 @@ export default function EventForm({
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
-          <Label htmlFor="ticketUrl" className="text-blue-100/80">
+          <Label htmlFor="ticketUrl" className="text-foreground/90">
             Link do biletów
           </Label>
           <div className="relative">
@@ -657,7 +658,7 @@ export default function EventForm({
         </div>
 
         <div className="space-y-2">
-          <Label className="text-blue-100/80">Cena</Label>
+          <Label className="text-foreground/90">Cena</Label>
           {!isFree ? (
             <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">
               <fieldset className="space-y-2">
@@ -683,9 +684,9 @@ export default function EventForm({
                             setPriceMax("");
                           }
                         }}
-                        className="accent-purple-500"
+                        className="accent-primary"
                       />
-                      <span className="text-sm text-white/90">{label}</span>
+                      <span className="text-foreground text-sm">{label}</span>
                     </label>
                   ))}
                 </div>
@@ -694,7 +695,7 @@ export default function EventForm({
               {priceMode !== null && (
                 <div className="grid gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="priceMin" className="text-blue-100/80">
+                    <Label htmlFor="priceMin" className="text-foreground/90">
                       {priceMode === "range" ? "Kwota minimalna" : "Kwota"}
                     </Label>
                     <div className="relative">
@@ -716,7 +717,7 @@ export default function EventForm({
 
                   {priceMode === "range" && (
                     <div className="space-y-2">
-                      <Label htmlFor="priceMax" className="text-blue-100/80">
+                      <Label htmlFor="priceMax" className="text-foreground/90">
                         Kwota maksymalna
                       </Label>
                       <Input
@@ -735,7 +736,7 @@ export default function EventForm({
                   )}
 
                   <div className="space-y-2 sm:col-span-2">
-                    <Label htmlFor="currency" className="text-blue-100/80">
+                    <Label htmlFor="currency" className="text-foreground/90">
                       Waluta
                     </Label>
                     <select
@@ -765,7 +766,9 @@ export default function EventForm({
               )}
             </div>
           ) : (
-            <p className="text-xs text-blue-100/50">Pola ceny są ukryte — wydarzenie oznaczone jako wstęp wolny.</p>
+            <p className="text-muted-foreground text-xs">
+              Pola ceny są ukryte – wydarzenie oznaczone jako wstęp wolny.
+            </p>
           )}
         </div>
       </div>
@@ -783,7 +786,7 @@ export default function EventForm({
               setPriceMax("");
             }
           }}
-          className="border-white/30 data-[state=checked]:bg-purple-600"
+          className="border-border data-[state=checked]:border-primary data-[state=checked]:bg-primary"
         />
         <span className="text-sm font-medium text-white">Wstęp wolny</span>
       </label>
@@ -794,18 +797,14 @@ export default function EventForm({
         <Button
           type="button"
           variant="outline"
-          className="border-white/20 bg-transparent text-white hover:bg-white/10"
+          className={shellBtnOutline}
           onClick={() => {
             window.location.href = "/admin";
           }}
         >
           Anuluj
         </Button>
-        <Button
-          type="submit"
-          disabled={submitting}
-          className="border-white/20 bg-purple-600/80 text-white hover:bg-purple-500/90"
-        >
+        <Button type="submit" disabled={submitting} className={shellBtnPrimary}>
           {submitting ? "Zapisywanie…" : mode === "create" ? "Dodaj wydarzenie" : "Zapisz zmiany"}
         </Button>
       </div>

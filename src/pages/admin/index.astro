@@ -1,9 +1,11 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import Topbar from "@/components/Topbar.astro";
+import AppShell from "@/components/shell/AppShell.astro";
 import AdminEventsTable from "@/components/admin/AdminEventsTable";
 import { listEventsForAdmin } from "@/lib/services/events";
 import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
+import { ADMIN_PATH } from "@/lib/routes";
+import { shellBtnPrimary, shellHeading, shellTextMuted } from "@/lib/shell-styles";
 import { createClient } from "@/lib/supabase";
 import { SUPABASE_URL } from "astro:env/server";
 
@@ -20,13 +22,36 @@ const listError = "error" in listResult ? listResult.error : null;
 ---
 
 <Layout title="Panel admina">
-  <div class="bg-cosmic relative min-h-screen w-full overflow-hidden">
-    <div class="relative z-10 p-4 sm:p-8">
-      <Topbar />
+  <AppShell showFooter={false}>
+    <div class="mx-auto max-w-5xl px-2 py-8 sm:px-4">
+      {
+        listError ? (
+          <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+            {listError}
+          </p>
+        ) : null
+      }
 
-      <div class="mx-auto max-w-5xl px-2 py-8 sm:px-4">
-        <AdminEventsTable events={events} listError={listError} client:load />
+      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <h1 class:list={shellHeading}>Wydarzenia</h1>
+          <p class:list={["mt-1 text-sm", shellTextMuted]}>
+            {
+              events.length === 0
+                ? "Brak wydarzeń w bazie."
+                : `Łącznie ${String(events.length)} wydarzeń (sortowanie: od najbliższej daty).`
+            }
+          </p>
+        </div>
+        <a
+          href={`${ADMIN_PATH}/events/new`}
+          class:list={[shellBtnPrimary, "inline-flex h-10 items-center rounded-md px-4 text-sm"]}
+        >
+          Dodaj wydarzenie
+        </a>
       </div>
+
+      <AdminEventsTable events={events} listError={null} />
     </div>
-  </div>
+  </AppShell>
 </Layout>

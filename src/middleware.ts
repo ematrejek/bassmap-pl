@@ -1,5 +1,7 @@
 import { defineMiddleware } from "astro:middleware";
 import { resolveIsAdmin } from "@/lib/auth/admin";
+import { LEGACY_LEGAL_REDIRECTS } from "@/lib/legal/paths";
+import { DISCOVERY_PATH, HOME_PATH } from "@/lib/routes";
 import { createClient } from "@/lib/supabase";
 
 const PROTECTED_ROUTES = ["/dashboard"];
@@ -23,6 +25,15 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   const { pathname } = context.url;
+
+  const legacyLegalTarget = LEGACY_LEGAL_REDIRECTS[pathname];
+  if (legacyLegalTarget) {
+    return context.redirect(legacyLegalTarget, 301);
+  }
+
+  if (pathname === HOME_PATH && context.url.search.length > 1) {
+    return context.redirect(`${DISCOVERY_PATH}${context.url.search}`, 302);
+  }
 
   if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route))) {
     if (!context.locals.user) {

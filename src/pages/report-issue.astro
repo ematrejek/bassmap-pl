@@ -1,0 +1,24 @@
+---
+import ReportIssueForm from "@/components/contact/ReportIssueForm";
+import AppShell from "@/components/shell/AppShell.astro";
+import Layout from "@/layouts/Layout.astro";
+import { shellHeading, shellTextMuted } from "@/lib/shell-styles";
+
+export const prerender = false;
+---
+
+<Layout title="Zgłoś problem – BassMap PL">
+  <AppShell>
+    <div class="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center px-2 py-8 sm:px-4">
+      <div class="surface-panel p-6 sm:p-8">
+        <h1 class:list={[shellHeading, "text-2xl"]}>Zgłoś problem</h1>
+        <p class:list={["mt-2 text-sm", shellTextMuted]}>
+          Coś nie działa albo masz sugestię? Napisz do nas – odpowiemy na Twój e-mail.
+        </p>
+        <div class="mt-6">
+          <ReportIssueForm client:load />
+        </div>
+      </div>
+    </div>
+  </AppShell>
+</Layout>

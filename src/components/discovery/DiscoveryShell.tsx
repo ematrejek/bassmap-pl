@@ -3,11 +3,12 @@ import EventFilters from "@/components/discovery/EventFilters";
 import EventList from "@/components/discovery/EventList";
 import EventPreviewCard from "@/components/discovery/EventPreviewCard";
 import type { FanEventFilters } from "@/lib/events/fan-schema";
+import { shellHeading, shellPanelFlat, shellTabActive, shellTabInactive, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import type { EventWithCoverUrl } from "@/types";
 import { lazy, Suspense, useState, useSyncExternalStore } from "react";
 
-/** Leaflet wymaga `window` — ładujemy mapę dopiero po montażu w przeglądarce. */
+/** Leaflet wymaga `window` – ładujemy mapę dopiero po montażu w przeglądarce. */
 const EventsMap = lazy(() => import("@/components/discovery/EventsMap"));
 
 function useIsClient(): boolean {
@@ -20,13 +21,8 @@ function useIsClient(): boolean {
 
 function MapPlaceholder({ className }: { className?: string }) {
   return (
-    <div
-      className={cn(
-        "flex min-h-[320px] items-center justify-center rounded-2xl border border-white/10 bg-white/5",
-        className,
-      )}
-    >
-      <p className="text-sm text-blue-100/60">Ładowanie mapy…</p>
+    <div className={cn("flex min-h-[320px] items-center justify-center", shellPanelFlat, className)}>
+      <p className={cn("text-sm", shellTextMuted)}>Ładowanie mapy…</p>
     </div>
   );
 }
@@ -63,11 +59,11 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-          Find the place, drop the bass!
+        <h1 className={shellHeading}>
+          MAP THE <span className="text-primary text-glow-violet">BASS</span>!
         </h1>
-        <p className="mt-1 text-sm text-blue-100/60">
-          Filtruj po dacie, mieście, podgatunku i cenie — znajdź imprezę na liście lub mapie.
+        <p className={cn("mt-1 text-sm", shellTextMuted)}>
+          Filtruj po dacie, mieście, podgatunku i cenie – znajdź imprezę na liście lub mapie.
         </p>
       </div>
 
@@ -80,10 +76,8 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
             setMobileTab("list");
           }}
           className={cn(
-            "flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors",
-            mobileTab === "list"
-              ? "border-purple-400/60 bg-purple-500/20 text-white"
-              : "border-white/10 bg-white/5 text-blue-100/70",
+            "flex-1 rounded-lg border px-4 py-2 text-sm font-medium tracking-wider uppercase transition-colors",
+            mobileTab === "list" ? shellTabActive : shellTabInactive,
           )}
         >
           Lista
@@ -94,10 +88,8 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
             setMobileTab("map");
           }}
           className={cn(
-            "flex-1 rounded-lg border px-4 py-2 text-sm font-medium transition-colors",
-            mobileTab === "map"
-              ? "border-purple-400/60 bg-purple-500/20 text-white"
-              : "border-white/10 bg-white/5 text-blue-100/70",
+            "flex-1 rounded-lg border px-4 py-2 text-sm font-medium tracking-wider uppercase transition-colors",
+            mobileTab === "map" ? shellTabActive : shellTabInactive,
           )}
         >
           Mapa
@@ -131,7 +123,7 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
         </div>
       </div>
 
-      <EventPreviewCard event={selectedEvent} onClose={handleClosePreview} />
+      {selectedEvent && <EventPreviewCard event={selectedEvent} onClose={handleClosePreview} />}
     </div>
   );
 }

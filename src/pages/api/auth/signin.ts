@@ -1,5 +1,6 @@
 import type { APIRoute } from "astro";
 import { createClient } from "@/lib/supabase";
+import { HOME_PATH } from "@/lib/routes";
 
 export const POST: APIRoute = async (context) => {
   const form = await context.request.formData();
@@ -16,5 +17,5 @@ export const POST: APIRoute = async (context) => {
     return context.redirect(`/auth/signin?error=${encodeURIComponent(error.message)}`);
   }
 
-  return context.redirect("/");
+  return context.redirect(HOME_PATH);
 };

@@ -60,7 +60,7 @@ describe.skipIf(!runIntegration)("fan read public paths (admin session)", () => 
     expect(adminIds).toEqual(anonIds);
   });
 
-  it("getPublishedEventById hides past and shows upcoming for admin (3b)", async () => {
+  it("getPublishedEventById returns upcoming and archived published events for admin (3b)", async () => {
     if (!fixtures) {
       throw new Error("Fixtures not seeded");
     }
@@ -71,7 +71,7 @@ describe.skipIf(!runIntegration)("fan read public paths (admin session)", () => 
     const pastEvent = await getPublishedEventById(adminClient, fixtures.publishedPastId);
     const upcomingEvent = await getPublishedEventById(adminClient, publishedUpcomingId);
 
-    expect(pastEvent).toBeNull();
+    expect(pastEvent?.id).toBe(fixtures.publishedPastId);
     expect(upcomingEvent?.id).toBe(publishedUpcomingId);
   });
 

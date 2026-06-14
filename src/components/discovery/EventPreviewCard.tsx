@@ -2,6 +2,8 @@ import EventCoverImage from "@/components/discovery/EventCoverImage";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
+import { shellBtnPrimary, shellLink, shellPanel, shellTextMuted } from "@/lib/shell-styles";
+import { cn } from "@/lib/utils";
 import type { EventWithCoverUrl } from "@/types";
 import { SUBGENRE_LABELS } from "@/types";
 import { X } from "lucide-react";
@@ -30,7 +32,10 @@ export default function EventPreviewCard({ event, onClose }: Props) {
 
   return createPortal(
     <div
-      className="fixed inset-x-4 bottom-4 z-[1100] mx-auto max-w-md overflow-hidden rounded-2xl border border-white/20 bg-slate-900/95 shadow-2xl backdrop-blur-xl sm:inset-x-auto sm:right-6 sm:bottom-6"
+      className={cn(
+        "fixed inset-x-4 bottom-4 z-[1100] mx-auto max-w-md overflow-hidden shadow-2xl sm:inset-x-auto sm:right-6 sm:bottom-6",
+        shellPanel,
+      )}
       role="dialog"
       aria-label={`Podgląd: ${event.name}`}
     >
@@ -52,14 +57,14 @@ export default function EventPreviewCard({ event, onClose }: Props) {
       </div>
 
       <div className="space-y-2 p-4">
-        <h3 className="text-lg font-semibold text-white">{event.name}</h3>
-        <p className="text-sm text-blue-100/70">{formatEventDate(event.startsAt)}</p>
-        <p className="text-sm text-blue-100/60">{formatEventVenueLine(event)}</p>
-        <p className="text-sm font-medium text-purple-200">{formatEventPrice(event)}</p>
+        <h3 className="text-foreground text-lg font-semibold">{event.name}</h3>
+        <p className={cn("text-sm", shellTextMuted)}>{formatEventDate(event.startsAt)}</p>
+        <p className={cn("text-sm", shellTextMuted)}>{formatEventVenueLine(event)}</p>
+        <p className="text-accent text-sm font-medium">{formatEventPrice(event)}</p>
 
         <div className="flex flex-wrap gap-1">
           {event.subgenres.map((subgenre) => (
-            <Badge key={subgenre} variant="outline" className="border-purple-400/30 bg-purple-500/10 text-purple-100">
+            <Badge key={subgenre} variant="outline" className="border-primary/30 bg-primary/10 text-foreground">
               {SUBGENRE_LABELS[subgenre]}
             </Badge>
           ))}
@@ -70,13 +75,13 @@ export default function EventPreviewCard({ event, onClose }: Props) {
             href={event.ticketUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-block text-sm text-purple-300 underline-offset-2 hover:text-purple-100 hover:underline"
+            className={cn("inline-block text-sm underline-offset-2 hover:underline", shellLink)}
           >
             Kup bilet
           </a>
         )}
 
-        <Button asChild className="mt-2 w-full border-white/20 bg-purple-600/80 text-white hover:bg-purple-500/90">
+        <Button asChild className={cn("mt-2 w-full", shellBtnPrimary)}>
           <a href={`/events/${event.id}`}>Przejdź do wydarzenia</a>
         </Button>
       </div>

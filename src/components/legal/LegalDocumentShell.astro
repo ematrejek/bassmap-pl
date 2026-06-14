@@ -1,8 +1,7 @@
 ---
-import SiteFooter from "@/components/SiteFooter.astro";
-import Topbar from "@/components/Topbar.astro";
-import LegalProse from "@/components/legal/LegalProse.astro";
+import AppShell from "@/components/shell/AppShell.astro";
 import Layout from "@/layouts/Layout.astro";
+import LegalProse from "@/components/legal/LegalProse.astro";
 import { LEGAL_UPDATED_AT } from "@/lib/legal/paths";
 
 interface Props {
@@ -14,27 +13,21 @@ const { title, pageTitle } = Astro.props;
 ---
 
 <Layout title={title}>
-  <div class="bg-cosmic relative min-h-screen w-full overflow-hidden">
-    <div class="relative z-10 flex min-h-screen flex-col p-4 sm:p-8">
-      <Topbar />
+  <AppShell>
+    <div class="mx-auto w-full max-w-2xl flex-1 px-2 py-8 sm:px-4">
+      <article class="surface-panel text-foreground p-6 sm:p-8">
+        <header class="border-border/70 mb-8 space-y-2 border-b pb-6">
+          <h1 class="font-heading text-foreground text-3xl font-black tracking-tight uppercase">
+            {pageTitle}
+          </h1>
+          <p class="text-muted-foreground text-sm">BassMap PL · bassmap.pl</p>
+          <p class="text-muted-foreground text-sm">Data ostatniej aktualizacji: {LEGAL_UPDATED_AT}</p>
+        </header>
 
-      <div class="mx-auto w-full max-w-2xl flex-1 px-2 py-8 sm:px-4">
-        <article class="rounded-2xl border border-white/10 bg-white/5 p-6 text-white backdrop-blur-xl sm:p-8">
-          <header class="mb-8 space-y-2 border-b border-white/10 pb-6">
-            <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-              {pageTitle}
-            </h1>
-            <p class="text-sm text-blue-100/60">BassMap PL · bassmap.pl</p>
-            <p class="text-sm text-blue-100/60">Data ostatniej aktualizacji: {LEGAL_UPDATED_AT}</p>
-          </header>
-
-          <LegalProse>
-            <slot />
-          </LegalProse>
-        </article>
-      </div>
-
-      <SiteFooter />
+        <LegalProse>
+          <slot />
+        </LegalProse>
+      </article>
     </div>
-  </div>
+  </AppShell>
 </Layout>

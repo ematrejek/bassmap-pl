@@ -1,0 +1,21 @@
+---
+import AppBrand from "@/components/shell/AppBrand.astro";
+import { PRIVACY_POLICY_PATH, TERMS_PATH } from "@/lib/legal/paths";
+---
+
+<footer class="home-panel-legal relative" aria-label="Stopka strony">
+  <div class="grid-backdrop absolute inset-0 opacity-40" aria-hidden="true"></div>
+  <div class="relative mx-auto max-w-7xl px-4 py-12 sm:px-6 sm:py-16">
+    <div class="border-border/70 flex flex-col items-center justify-between gap-8 border-t pt-8 sm:flex-row">
+      <AppBrand />
+
+      <nav
+        class="text-muted-foreground flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-xs tracking-wider uppercase"
+        aria-label="Dokumenty prawne"
+      >
+        <a href={PRIVACY_POLICY_PATH} class="hover:text-accent transition-colors"> Polityka prywatności </a>
+        <a href={TERMS_PATH} class="hover:text-accent transition-colors"> Regulamin </a>
+      </nav>
+    </div>
+  </div>
+</footer>

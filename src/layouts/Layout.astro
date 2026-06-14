@@ -1,5 +1,6 @@
 ---
 import "../styles/global.css";
+import "../styles/equalizer.css";
 import Banner from "@/components/Banner.astro";
 import CookieConsentBanner from "@/components/CookieConsentBanner.astro";
 import { missingConfigs } from "@/lib/config-status";
@@ -13,15 +14,24 @@ const { title = "BassMap PL", ogImage } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="pl">
+<html lang="pl" class="dark">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#08080c" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@500;700;800;900&display=swap"
+      rel="stylesheet"
+    />
     <title>{title}</title>
     {ogImage && <meta property="og:image" content={ogImage} />}
   </head>
-  <body>
+  <body class="antialiased">
     {
       missingConfigs.map((cfg) => (
         <Banner variant="error">

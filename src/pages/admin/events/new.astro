@@ -1,32 +1,24 @@
 ---
 import Layout from "@/layouts/Layout.astro";
-import Topbar from "@/components/Topbar.astro";
+import AppShell from "@/components/shell/AppShell.astro";
 import EventForm from "@/components/admin/EventForm";
+import { ADMIN_PATH } from "@/lib/routes";
+import { shellHeading, shellLink } from "@/lib/shell-styles";
 
 export const prerender = false;
 ---
 
 <Layout title="Nowe wydarzenie">
-  <div class="bg-cosmic relative min-h-screen w-full overflow-hidden">
-    <div class="relative z-10 p-4 sm:p-8">
-      <Topbar />
+  <AppShell showFooter={false}>
+    <div class="mx-auto max-w-2xl px-2 py-8 sm:px-4">
+      <div class="mb-6">
+        <a href={ADMIN_PATH} class:list={[shellLink, "text-sm hover:underline"]}> ← Wróć do listy </a>
+        <h1 class:list={[shellHeading, "mt-2"]}>Dodaj wydarzenie</h1>
+      </div>
 
-      <div class="mx-auto max-w-2xl px-2 py-8 sm:px-4">
-        <div class="mb-6">
-          <a href="/admin" class="text-sm text-purple-300 transition-colors hover:text-purple-100 hover:underline">
-            ← Wróć do listy
-          </a>
-          <h1
-            class="mt-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent"
-          >
-            Dodaj wydarzenie
-          </h1>
-        </div>
-
-        <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl sm:p-8">
-          <EventForm mode="create" client:load />
-        </div>
+      <div class="surface-panel p-6 sm:p-8">
+        <EventForm mode="create" client:load />
       </div>
     </div>
-  </div>
+  </AppShell>
 </Layout>

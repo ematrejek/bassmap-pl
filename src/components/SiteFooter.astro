@@ -8,12 +8,12 @@ interface Props {
 const { class: className } = Astro.props;
 ---
 
-<footer class:list={["py-4", className]} aria-label="Dokumenty prawne">
-  <nav class="flex flex-wrap items-center justify-center gap-x-2 gap-y-1 text-xs text-blue-100/50">
-    <a href={PRIVACY_POLICY_PATH} class="transition-colors hover:text-purple-200 hover:underline">
-      Polityka prywatności
-    </a>
-    <span aria-hidden="true">·</span>
-    <a href={TERMS_PATH} class="transition-colors hover:text-purple-200 hover:underline"> Regulamin </a>
+<footer class:list={["border-border/70 border-t py-4", className]} aria-label="Dokumenty prawne">
+  <nav
+    class="text-muted-foreground flex flex-wrap items-center justify-center gap-x-4 gap-y-1 text-xs tracking-wider uppercase"
+  >
+    <a href={PRIVACY_POLICY_PATH} class="hover:text-accent transition-colors hover:underline"> Polityka prywatności </a>
+    <span aria-hidden="true" class="text-border">·</span>
+    <a href={TERMS_PATH} class="hover:text-accent transition-colors hover:underline"> Regulamin </a>
   </nav>
 </footer>

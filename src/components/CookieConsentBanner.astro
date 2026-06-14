@@ -1,5 +1,6 @@
 ---
 import { PRIVACY_POLICY_PATH } from "@/lib/legal/paths";
+import { shellBtnOutline, shellLink } from "@/lib/shell-styles";
 
 const STORAGE_KEY = "bassmap-cookie-notice-dismissed";
 ---
@@ -9,20 +10,23 @@ const STORAGE_KEY = "bassmap-cookie-notice-dismissed";
   role="region"
   aria-label="Informacja o plikach cookies"
   hidden
-  class="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-slate-950/95 px-4 py-3 text-white shadow-lg backdrop-blur-md"
+  class="border-border bg-card/95 text-foreground fixed inset-x-0 bottom-0 z-50 border-t px-4 py-3 shadow-lg backdrop-blur-md"
 >
   <div class="mx-auto flex max-w-4xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-    <p class="text-sm leading-relaxed text-blue-100/80">
+    <p class="text-muted-foreground text-sm leading-relaxed">
       Nasz serwis używa wyłącznie niezbędnych plików cookies do obsługi Twojej sesji (logowania). Szczegóły znajdziesz w
       naszej
-      <a href={PRIVACY_POLICY_PATH} class="text-purple-300 underline-offset-2 hover:underline">
+      <a href={PRIVACY_POLICY_PATH} class:list={[shellLink, "underline-offset-2 hover:underline"]}>
         Polityce Prywatności
       </a>.
     </p>
     <button
       id="cookie-consent-dismiss"
       type="button"
-      class="inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:outline-none"
+      class:list={[
+        shellBtnOutline,
+        "focus-visible:ring-ring/50 inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium focus-visible:ring-2 focus-visible:outline-none",
+      ]}
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"

@@ -1,0 +1,59 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import AppShell from "@/components/shell/AppShell.astro";
+import { getEventById } from "@/lib/services/events";
+import { ADMIN_PATH } from "@/lib/routes";
+import { shellBtnOutline, shellBtnPrimary, shellHeading, shellLink, shellTextMuted } from "@/lib/shell-styles";
+import { createClient } from "@/lib/supabase";
+
+export const prerender = false;
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const eventId = Astro.params.id ?? "";
+const event = supabase ? await getEventById(supabase, eventId) : null;
+---
+
+<Layout title={event ? `Usuń: ${event.name}` : "Usuń wydarzenie"}>
+  <AppShell showFooter={false}>
+    <div class="mx-auto max-w-lg px-2 py-8 sm:px-4">
+      {
+        !event ? (
+          <div class="surface-panel p-8 text-center">
+            <h1 class="font-heading text-foreground mb-2 text-2xl font-black uppercase">Nie znaleziono wydarzenia</h1>
+            <p class:list={shellTextMuted}>Sprawdź link lub wróć do listy.</p>
+            <a href={ADMIN_PATH} class:list={[shellLink, "mt-6 inline-block hover:underline"]}>
+              ← Wróć do listy
+            </a>
+          </div>
+        ) : (
+          <div class="surface-panel space-y-6 p-6 sm:p-8">
+            <div>
+              <a href={ADMIN_PATH} class:list={[shellLink, "text-sm hover:underline"]}>
+                ← Wróć do listy
+              </a>
+              <h1 class:list={[shellHeading, "mt-2 text-2xl"]}>Usunąć wydarzenie?</h1>
+              <p class:list={["mt-2", shellTextMuted]}>
+                Czy na pewno usunąć „{event.name}”? Tej operacji nie można cofnąć.
+              </p>
+            </div>
+
+            <form method="POST" action={`/api/admin/events/${event.id}`} class="flex flex-wrap gap-3">
+              <button
+                type="submit"
+                class:list={[shellBtnPrimary, "inline-flex h-10 items-center rounded-md px-4 text-sm"]}
+              >
+                Tak, usuń
+              </button>
+              <a
+                href={ADMIN_PATH}
+                class:list={[shellBtnOutline, "inline-flex h-10 items-center rounded-md border px-4 text-sm"]}
+              >
+                Anuluj
+              </a>
+            </form>
+          </div>
+        )
+      }
+    </div>
+  </AppShell>
+</Layout>

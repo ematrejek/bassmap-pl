@@ -1,4 +1,4 @@
-/** Closed catalog — 1:1 with `public.subgenre` enum in Postgres. */
+/** Closed catalog – 1:1 with `public.subgenre` enum in Postgres. */
 export type Subgenre =
   | "jungle"
   | "hardcore_oldschool"

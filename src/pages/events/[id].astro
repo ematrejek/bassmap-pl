@@ -1,12 +1,13 @@
 ---
 import EventCoverImage from "@/components/discovery/EventCoverImage";
-import SiteFooter from "@/components/SiteFooter.astro";
-import Topbar from "@/components/Topbar.astro";
+import AppShell from "@/components/shell/AppShell.astro";
 import { formatEventAddress, formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
+import { DISCOVERY_PATH } from "@/lib/routes";
 import { getPublishedEventById } from "@/lib/services/events";
 import { getEventCoverUrl } from "@/lib/storage/event-covers";
 import { createClient } from "@/lib/supabase";
 import Layout from "@/layouts/Layout.astro";
+import { shellBtnPrimary, shellLink } from "@/lib/shell-styles";
 import { SUBGENRE_LABELS } from "@/types";
 import { SUPABASE_URL } from "astro:env/server";
 
@@ -24,103 +25,97 @@ const coverUrl = event && SUPABASE_URL ? getEventCoverUrl(event.coverPath, SUPAB
 const eventDescription = event?.description?.trim() ?? "";
 ---
 
-<Layout title={event ? `${event.name} — BassMap PL` : "Nie znaleziono — BassMap PL"} ogImage={coverUrl ?? undefined}>
-  <div class="bg-cosmic relative min-h-screen w-full overflow-hidden">
-    <div class="relative z-10 flex min-h-screen flex-col p-4 sm:p-8">
-      <Topbar />
-
-      <div class="mx-auto w-full max-w-2xl flex-1 px-2 py-8 sm:px-4">
-        {
-          !event ? (
-            <div class="rounded-2xl border border-white/10 bg-white/5 p-8 text-center backdrop-blur-xl">
-              <h1 class="text-2xl font-bold text-white">Nie znaleziono wydarzenia</h1>
-              <p class="mt-2 text-blue-100/70">
-                To wydarzenie nie istnieje, zakończyło się lub nie jest już publicznie dostępne.
-              </p>
-              <a
-                href="/"
-                class="mt-6 inline-flex h-9 items-center justify-center rounded-md border border-white/20 bg-purple-600/80 px-4 text-sm font-medium text-white hover:bg-purple-500/90"
-              >
+<Layout title={event ? `${event.name} – BassMap PL` : "Nie znaleziono – BassMap PL"} ogImage={coverUrl ?? undefined}>
+  <AppShell>
+    <div class="mx-auto w-full max-w-2xl flex-1 px-2 py-8 sm:px-4">
+      {
+        !event ? (
+          <div class="surface-panel p-8 text-center">
+            <h1 class="font-heading text-foreground text-2xl font-black uppercase">Nie znaleziono wydarzenia</h1>
+            <p class="text-muted-foreground mt-2">
+              To wydarzenie nie istnieje, zakończyło się lub nie jest już publicznie dostępne.
+            </p>
+            <a
+              href={DISCOVERY_PATH}
+              class:list={[shellBtnPrimary, "mt-6 inline-flex h-9 items-center justify-center rounded-md px-4 text-sm"]}
+            >
+              ← Wróć do listy
+            </a>
+          </div>
+        ) : (
+          <article class="surface-panel text-foreground space-y-6 p-6 sm:p-8">
+            <div>
+              <a href={DISCOVERY_PATH} class:list={[shellLink, "text-sm hover:underline"]}>
                 ← Wróć do listy
               </a>
             </div>
-          ) : (
-            <article class="space-y-6 rounded-2xl border border-white/10 bg-white/5 p-6 text-white backdrop-blur-xl sm:p-8">
-              <div>
-                <a href="/" class="text-sm text-purple-300 transition-colors hover:text-purple-100 hover:underline">
-                  ← Wróć do listy
-                </a>
-              </div>
 
-              <EventCoverImage
-                client:load
-                coverUrl={coverUrl}
-                alt={`Okładka: ${event.name}`}
-                variant="hero"
-                coverAspect={event.coverAspect}
-              />
+            <EventCoverImage
+              client:load
+              coverUrl={coverUrl}
+              alt={`Okładka: ${event.name}`}
+              variant="hero"
+              coverAspect={event.coverAspect}
+            />
 
-              <header class="space-y-3">
-                <h1 class="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-                  {event.name}
-                </h1>
-                <p class="text-lg text-blue-100/80">{formatEventDate(event.startsAt)}</p>
-                <p class="text-blue-100/70">{formatEventVenueLine(event)}</p>
-                {formatEventAddress(event) ? (
-                  <p class="text-sm text-blue-100/60">{formatEventAddress(event)}</p>
-                ) : (
-                  <p class="text-sm text-blue-100/60 italic">Dokładny adres zostanie podany na miejscu wydarzenia.</p>
-                )}
-                <p class="text-lg font-medium text-purple-200">{formatEventPrice(event)}</p>
-              </header>
-
-              {eventDescription ? (
-                <section class="space-y-2">
-                  <h2 class="text-sm font-semibold tracking-wide text-blue-100/80 uppercase">Opis</h2>
-                  <p class="whitespace-pre-wrap text-blue-100/80">{eventDescription}</p>
-                </section>
-              ) : null}
-
-              <section class="space-y-2">
-                <h2 class="text-sm font-semibold tracking-wide text-blue-100/80 uppercase">Podgatunki</h2>
-                <div class="flex flex-wrap gap-2">
-                  {event.subgenres.map((subgenre) => (
-                    <span class="inline-flex items-center rounded-full border border-purple-400/30 bg-purple-500/10 px-2 py-0.5 text-xs font-medium text-purple-100">
-                      {SUBGENRE_LABELS[subgenre]}
-                    </span>
-                  ))}
-                </div>
-              </section>
-
-              <section class="space-y-2">
-                <h2 class="text-sm font-semibold tracking-wide text-blue-100/80 uppercase">Lineup</h2>
-                {event.lineup && event.lineup.length > 0 ? (
-                  <ul class="list-inside list-disc space-y-1 text-blue-100/80">
-                    {event.lineup.map((artist) => (
-                      <li>{artist}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p class="text-blue-100/60">Brak potwierdzonego lineupu.</p>
-                )}
-              </section>
-
-              {event.ticketUrl && (
-                <a
-                  href={event.ticketUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="inline-flex h-9 items-center justify-center rounded-md border border-white/20 bg-purple-600/80 px-4 text-sm font-medium text-white hover:bg-purple-500/90"
-                >
-                  Kup bilet
-                </a>
+            <header class="space-y-3">
+              <h1 class="font-heading text-foreground text-3xl font-black tracking-tight uppercase">{event.name}</h1>
+              <p class="text-muted-foreground text-lg">{formatEventDate(event.startsAt)}</p>
+              <p class="text-muted-foreground">{formatEventVenueLine(event)}</p>
+              {formatEventAddress(event) ? (
+                <p class="text-muted-foreground text-sm">{formatEventAddress(event)}</p>
+              ) : (
+                <p class="text-muted-foreground text-sm italic">
+                  Dokładny adres zostanie podany na miejscu wydarzenia.
+                </p>
               )}
-            </article>
-          )
-        }
-      </div>
+              <p class="text-accent text-lg font-medium">{formatEventPrice(event)}</p>
+            </header>
 
-      <SiteFooter />
+            {eventDescription ? (
+              <section class="space-y-2">
+                <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Opis</h2>
+                <p class="text-muted-foreground whitespace-pre-wrap">{eventDescription}</p>
+              </section>
+            ) : null}
+
+            <section class="space-y-2">
+              <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Podgatunki</h2>
+              <div class="flex flex-wrap gap-2">
+                {event.subgenres.map((subgenre) => (
+                  <span class="border-primary/30 bg-primary/10 text-foreground inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium">
+                    {SUBGENRE_LABELS[subgenre]}
+                  </span>
+                ))}
+              </div>
+            </section>
+
+            <section class="space-y-2">
+              <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Lineup</h2>
+              {event.lineup && event.lineup.length > 0 ? (
+                <ul class="text-muted-foreground list-inside list-disc space-y-1">
+                  {event.lineup.map((artist) => (
+                    <li>{artist}</li>
+                  ))}
+                </ul>
+              ) : (
+                <p class="text-muted-foreground">Brak potwierdzonego lineupu.</p>
+              )}
+            </section>
+
+            {event.ticketUrl && (
+              <a
+                href={event.ticketUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class:list={[shellBtnPrimary, "inline-flex h-9 items-center justify-center rounded-md px-4 text-sm"]}
+              >
+                Kup bilet
+              </a>
+            )}
+          </article>
+        )
+      }
     </div>
-  </div>
+  </AppShell>
 </Layout>

@@ -55,7 +55,7 @@ export const PUT: APIRoute = async (context) => {
   return jsonResponse({ event: result.data }, 200);
 };
 
-export const DELETE: APIRoute = async (context) => {
+async function removeEventById(context: Parameters<APIRoute>[0]): Promise<Response | null> {
   const adminError = requireAdmin(context.locals);
   if (adminError) {
     return adminError;
@@ -77,5 +77,23 @@ export const DELETE: APIRoute = async (context) => {
     return jsonResponse({ error: result.error }, status);
   }
 
+  return null;
+}
+
+export const DELETE: APIRoute = async (context) => {
+  const errorResponse = await removeEventById(context);
+  if (errorResponse) {
+    return errorResponse;
+  }
+
   return new Response(null, { status: 204 });
+};
+
+export const POST: APIRoute = async (context) => {
+  const errorResponse = await removeEventById(context);
+  if (errorResponse) {
+    return errorResponse;
+  }
+
+  return context.redirect("/admin");
 };

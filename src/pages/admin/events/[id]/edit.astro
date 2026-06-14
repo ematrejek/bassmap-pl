@@ -2,10 +2,12 @@
 import { z } from "zod";
 import { SUPABASE_URL } from "astro:env/server";
 import Layout from "@/layouts/Layout.astro";
-import Topbar from "@/components/Topbar.astro";
+import AppShell from "@/components/shell/AppShell.astro";
 import EventForm from "@/components/admin/EventForm";
 import { getEventById } from "@/lib/services/events";
 import { getEventCoverUrl } from "@/lib/storage/event-covers";
+import { ADMIN_PATH } from "@/lib/routes";
+import { shellHeading, shellLink } from "@/lib/shell-styles";
 import { createClient } from "@/lib/supabase";
 
 export const prerender = false;
@@ -39,50 +41,39 @@ const initialCoverUrl = event && SUPABASE_URL ? getEventCoverUrl(event.coverPath
 ---
 
 <Layout title={notFound ? "Nie znaleziono" : `Edycja: ${event?.name ?? ""}`}>
-  <div class="bg-cosmic relative min-h-screen w-full overflow-hidden">
-    <div class="relative z-10 p-4 sm:p-8">
-      <Topbar />
-
-      <div class="mx-auto max-w-2xl px-2 py-8 sm:px-4">
-        {
-          notFound ? (
-            <div class="rounded-2xl border border-white/10 bg-white/10 p-8 text-center text-white backdrop-blur-xl">
-              <h1 class="mb-2 text-2xl font-bold">Nie znaleziono wydarzenia</h1>
-              <p class="text-blue-100/70">Sprawdź link lub wróć do listy.</p>
-              <a
-                href="/admin"
-                class="mt-6 inline-block text-purple-300 transition-colors hover:text-purple-100 hover:underline"
-              >
-                ← Wróć do listy
+  <AppShell showFooter={false}>
+    <div class="mx-auto max-w-2xl px-2 py-8 sm:px-4">
+      {
+        notFound ? (
+          <div class="surface-panel p-8 text-center">
+            <h1 class="font-heading text-foreground mb-2 text-2xl font-black uppercase">Nie znaleziono wydarzenia</h1>
+            <p class="text-muted-foreground">Sprawdź link lub wróć do listy.</p>
+            <a href={ADMIN_PATH} class:list={[shellLink, "mt-6 inline-block hover:underline"]}>
+              ← Wróć do listy
+            </a>
+          </div>
+        ) : (
+          <>
+            <div class="mb-6">
+              <a href={ADMIN_PATH} class:list={[shellLink, "text-sm hover:underline"]}>
+                {" "}
+                ← Wróć do listy{" "}
               </a>
+              <h1 class:list={[shellHeading, "mt-2"]}>Edytuj wydarzenie</h1>
             </div>
-          ) : (
-            <>
-              <div class="mb-6">
-                <a
-                  href="/admin"
-                  class="text-sm text-purple-300 transition-colors hover:text-purple-100 hover:underline"
-                >
-                  ← Wróć do listy
-                </a>
-                <h1 class="mt-2 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-                  Edytuj wydarzenie
-                </h1>
-              </div>
 
-              <div class="rounded-2xl border border-white/10 bg-white/10 p-6 text-white backdrop-blur-xl sm:p-8">
-                <EventForm
-                  mode="edit"
-                  initialEvent={event ?? undefined}
-                  initialCoverUrl={initialCoverUrl}
-                  serverError={coverUploadError}
-                  client:load
-                />
-              </div>
-            </>
-          )
-        }
-      </div>
+            <div class="surface-panel p-6 sm:p-8">
+              <EventForm
+                mode="edit"
+                initialEvent={event ?? undefined}
+                initialCoverUrl={initialCoverUrl}
+                serverError={coverUploadError}
+                client:load
+              />
+            </div>
+          </>
+        )
+      }
     </div>
-  </div>
+  </AppShell>
 </Layout>

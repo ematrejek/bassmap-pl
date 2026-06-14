@@ -1,26 +1,24 @@
 ---
 import SignUpForm from "@/components/auth/SignUpForm";
-import SiteFooter from "@/components/SiteFooter.astro";
+import AppShell from "@/components/shell/AppShell.astro";
 import Layout from "@/layouts/Layout.astro";
+import { shellLink } from "@/lib/shell-styles";
 
 export const prerender = false;
-
-const error = Astro.url.searchParams.get("error");
 ---
 
 <Layout title="Sign up">
-  <div class="bg-cosmic flex min-h-screen flex-col items-center justify-center p-4">
-    <div class="w-full max-w-sm rounded-2xl border border-white/10 bg-white/10 p-8 text-white backdrop-blur-xl">
-      <h1
-        class="mb-6 bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-center text-2xl font-bold text-transparent"
-      >
-        Sign up
-      </h1>
-      <SignUpForm serverError={error} client:load />
-      <p class="mt-4 text-center text-sm text-blue-100/60">
-        Already have an account? <a href="/auth/signin" class="text-purple-300 hover:underline">Sign in</a>
-      </p>
+  <AppShell showFooter={true}>
+    <div class="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-8">
+      <div class="surface-panel p-8">
+        <h1 class="font-heading text-foreground mb-6 text-center text-2xl font-black tracking-tight uppercase">
+          Zarejestruj się
+        </h1>
+        <SignUpForm client:load />
+        <p class="text-muted-foreground mt-4 text-center text-sm">
+          Masz już konto? <a href="/auth/signin" class:list={shellLink}>Zaloguj się</a>
+        </p>
+      </div>
     </div>
-    <SiteFooter class="mt-6 w-full max-w-sm" />
-  </div>
+  </AppShell>
 </Layout>

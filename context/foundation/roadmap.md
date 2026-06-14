@@ -3,7 +3,7 @@ project: BassMap PL
 version: 2
 status: active
 created: 2026-06-10
-updated: 2026-06-13
+updated: 2026-06-14
 subgenre_catalog_version: 1
 prd_version: 1
 main_goal: market-feedback
@@ -44,7 +44,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-11 | legal-pages               | fan otwiera Politykę prywatności i Regulamin; rejestrujący widzi tekst akceptacji z linkami | S-02          | NFR Privacy, notes 2026-06-13     | done     |
 | S-07 | mobile-subgenre-dropdown  | fan na telefonie wybiera podgatunki z rozwijanej listy wielokrotnego wyboru          | S-02          | FR-003, NFR Device                | done     |
 | S-08 | structured-price-currency | admin wpisuje cenę jako liczbę (od X / X–Y) z walutą PLN/EUR/CZK; fan widzi poprawnie | S-01          | FR-004, FR-006, notes 2026-06-13  | done     |
-| F-04 | app-shell-navigation      | (foundation) własny layout z nawigacją zakładkową zamiast domyślnego Astro           | S-04–S-08     | Access Control, notes 2026-06-13  | proposed |
+| F-04 | app-shell-navigation      | (foundation) własny layout z nawigacją zakładkową zamiast domyślnego Astro           | S-04–S-08     | Access Control, notes 2026-06-13  | in progress |
 | S-09 | marketing-homepage        | fan widzi płynnie przewijaną stronę główną z logo, sloganem, sekcjami i CTA         | F-04          | notes 2026-06-13                  | proposed |
 | S-10 | guest-nav-and-archive     | gość korzysta z menu (lista, logowanie, rejestracja, zgłoszenie problemu, archiwum)  | F-04, S-09    | notes 2026-06-13                  | proposed |
 | S-12 | fan-account-zone          | zalogowany fan ma zakładki profil, moje eventy, dodaj event, placeholdery, wyloguj   | F-04, S-10    | Access Control, notes 2026-06-13  | proposed |
@@ -127,9 +127,9 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Parallel with:** —
 - **Blockers:** —
 - **Unknowns:**
-  - Czy `/` zostaje stroną marketingową, a lista+mapa przechodzi na `/events` (lub inna ścieżka)? — Owner: user. Block: yes (blokuje S-09, S-10).
+  - Czy `/` zostaje stroną marketingową, a lista+mapa przechodzi na `/events` (lub inna ścieżka)? — Owner: user. **Resolved 2026-06-14:** `/` = okładka, `/events` = odkrywanie (`frame.md`).
 - **Risk:** Duży refactor layoutu — sensownie dopiero po domknięciu Partii I, żeby nie przebudowywać filtrów dwa razy.
-- **Status:** proposed
+- **Status:** in progress — change folder `context/changes/app-shell-navigation/` (2026-06-14)
 
 ## Slices
 
@@ -288,7 +288,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Parallel with:** —
 - **Blockers:** —
 - **Unknowns:**
-  - Treść copy sekcji „Kim jesteśmy” (tekst od właściciela produktu) — Owner: user. Block: no.
+  - ~~Treść copy sekcji „Kim jesteśmy”~~ — **resolved 2026-06-14** → `frame.md`
 - **Risk:** Duży element wizualny — treść może być placeholderem do iteracji po launchu layoutu.
 - **Status:** proposed
 
@@ -304,8 +304,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** F-04, S-09
 - **Blockers:** —
 - **Unknowns:**
-  - Dostarczenie formularza kontaktowego (e-mail vs ticket w bazie) — Owner: user. Block: no.
-- **Risk:** Archiwum wymaga publicznego odczytu przeszłych eventów (obecnie ukryte przez RLS) — osobna polityka lub widok tylko listy.
+  - ~~Dostarczenie formularza kontaktowego (e-mail vs ticket w bazie)~~ — **resolved 2026-06-14:** wysyłka e-mail na kontakt@bassmap.pl
+- **Risk:** Archiwum — **resolved:** osobna polityka RLS `published AND NOT is_upcoming(starts_at)`; lista bez mapy.
 - **Status:** proposed
 
 **FR (propozycja do PRD):**
@@ -410,31 +410,54 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-01       | admin-event-management    | #3     | Panel admina: CRUD wydarzeń DnB                    | —                     | Done                                                 |
 | S-02       | fan-event-discovery       | #4     | Odkrywanie: lista, filtry, mapa, szczegóły         | —                     | Done                                                 |
 | F-03       | production-deploy         | #5     | Deploy produkcyjny na Cloudflare                   | —                     | Done — https://bassmap.pl                            |
-| S-03       | event-cover-photos        | —      | Okładki wydarzeń                                   | —                     | Done                                                 |
+| S-03       | event-cover-photos        | #18    | Okładki wydarzeń                                   | —                     | Done                                                 |
 | S-04       | event-description         | #10    | Pole opisu wydarzenia                              | —                     | Done — archived 2026-06-13                           |
 | S-05       | date-range-filter         | #11    | Filtr dat: kalendarz + presety                     | —                     | Done — archived 2026-06-13; PR #12                  |
-| S-06       | free-events-filter        | —      | Przełącznik „Pokaż tylko darmowe”                  | —                     | Done — archived 2026-06-13; PR #13                  |
-| S-11       | legal-pages               | —      | Polityka prywatności i Regulamin                   | —                     | Done — archived 2026-06-13                            |
+| S-06       | free-events-filter        | #19    | Przełącznik „Pokaż tylko darmowe”                  | —                     | Done — archived 2026-06-13; PR #13                  |
+| S-11       | legal-pages               | #20    | Polityka prywatności i Regulamin                   | —                     | Done — archived 2026-06-13                            |
 | S-07       | mobile-subgenre-dropdown  | #14    | Mobile: dropdown multichoice podgatunków           | —                     | Done — archived 2026-06-13; issue #14               |
 | S-08       | structured-price-currency | #15    | Cena liczbowa + waluta PLN/EUR/CZK                 | —                     | Done — archived 2026-06-14; PR #16                  |
-| F-04       | app-shell-navigation      | —      | Własny layout i nawigacja zakładkowa               | no                    | Czeka na Partię I; unknown: routing `/` vs `/events` |
-| S-09       | marketing-homepage        | —      | Strona główna marketingowa (scroll)                | no                    | Partia II                                            |
-| S-10       | guest-nav-and-archive     | —      | Menu gościa, formularz problemu, archiwum          | no                    | Partia II                                            |
-| S-12       | fan-account-zone          | —      | Strefa zalogowanego fana + nawigacja               | no                    | Partia II; aktualizacja PRD Non-Goals                |
-| S-13       | duplicate-event-detection | —      | Wykrywanie duplikatów wydarzeń                     | no                    | Partia II                                            |
-| S-14       | change-suggestions        | —      | Sugestie zmian wydarzeń                            | no                    | Partia II                                            |
-| S-15       | event-comments            | —      | Komentarze pod wydarzeniami                        | no                    | Partia II                                            |
-| S-16       | account-deletion          | —      | Usuwanie konta użytkownika                         | no                    | Partia II                                            |
+| F-04       | app-shell-navigation      | #21    | Własny layout i nawigacja zakładkowa               | **yes**               | In progress — `/` okładka, `/events` lista; frame 2026-06-14 |
+| S-09       | marketing-homepage        | #22    | Strona główna marketingowa (scroll)                | no                    | Partia II                                            |
+| S-10       | guest-nav-and-archive     | #23    | Menu gościa, formularz problemu, archiwum          | no                    | Partia II                                            |
+| S-12       | fan-account-zone          | #24    | Strefa zalogowanego fana + nawigacja               | no                    | Partia II; aktualizacja PRD Non-Goals                |
+| S-13       | duplicate-event-detection | #25    | Wykrywanie duplikatów wydarzeń                     | no                    | Partia II                                            |
+| S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                            | no                    | Partia II                                            |
+| S-15       | event-comments            | #27    | Komentarze pod wydarzeniami                        | no                    | Partia II                                            |
+| S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                         | no                    | Partia II                                            |
 
 ## Open Roadmap Questions
 
-1. **Routing po Partii II:** czy `/` = strona marketingowa, a lista+mapa = `/events` (lub inna ścieżka)? — Owner: user. Block: F-04, S-09, S-10.
+1. **Routing po Partii II:** **`/` = strona marketingowa (okładka), `/events` = lista+mapa** — Owner: user. **Resolved 2026-06-14** → `context/changes/app-shell-navigation/frame.md`.
 2. **Aktualizacja PRD:** Partia I podnosi FR-008 do must-have; Partia II dodaje konta fanów, UGC, komentarze (obecnie Non-Goals) — kiedy zsynchronizować `prd.md`? — Owner: user. Block: no (roadmap jest actionable bez tego, ale PRD będzie rozjechany).
 3. **Próg fuzzy match duplikatów** — Owner: team. Block: S-13 planning only.
 4. **Treść Polityki prywatności / Regulaminu** — Owner: user. Block: no — **resolved:** gotowe dokumenty w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026); archived `context/archive/2026-06-13-legal-pages/`.
 5. **Komentarze po usunięciu konta** — usunąć vs anonimizować — Owner: user. Block: S-16 planning only.
 
 ## Resolved (history)
+
+### 2026-06-14 — angielskie URL (F-04 / plan-review)
+
+- **`/archive`** — archiwum minionych eventów (etykieta menu PL: „Archiwum wydarzeń”).
+- **`/report-issue`** — formularz zgłoszenia (etykieta menu PL: „Zgłoś problem”).
+- **`/privacy-policy`**, **`/terms`** – strony prawne (redirect 301 ze starych `/polityka-prywatnosci`, `/regulamin`).
+
+### 2026-06-14 — archiwum i redirect (F-04 / S-10)
+
+- **Archiwum:** publiczny odczyt `published` + data rozpoczęcia **przed dzisiejszym dniem** (Europe/Warsaw); w SQL: `NOT is_upcoming(starts_at)`.
+- **Redirect:** `/` z parametrami filtrów → `/events?…` (302).
+
+### 2026-06-14 — copy strony głównej i formularz (F-04 / S-09 / S-10)
+
+- **Slogan:** Find the place, drop the bass! (bez zmian).
+- **Kim jesteśmy:** tekst od właścicielki — `context/changes/app-shell-navigation/frame.md`.
+- **Zgłoś problem:** wysyłka mailem na kontakt@bassmap.pl (nie ticket w DB).
+
+### 2026-06-14 — routing strony głównej (F-04)
+
+- **`/`** = okładka marketingowa (scroll, hero, CTA, o nas, kontakt, menu kafelkowe).
+- **`/events`** = odkrywanie (lista + mapa — obecny widok z `index.astro`).
+- Frame: `context/changes/app-shell-navigation/frame.md`.
 
 ### 2026-06-11 — F-03 domena
 

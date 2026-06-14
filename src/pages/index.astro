@@ -1,52 +1,23 @@
 ---
-import DiscoveryShell from "@/components/discovery/DiscoveryShell";
-import RoadmapTeaser from "@/components/discovery/RoadmapTeaser.astro";
-import SiteFooter from "@/components/SiteFooter.astro";
-import Topbar from "@/components/Topbar.astro";
-import { parseFanFilters } from "@/lib/events/fan-schema";
-import { listDistinctCities, listPublishedEvents } from "@/lib/services/events";
-import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
-import { createClient } from "@/lib/supabase";
+import HomeAbout from "@/components/home/HomeAbout.astro";
+import HomeContact from "@/components/home/HomeContact.astro";
+import { HomeFluidScroll } from "@/components/home/HomeFluidScroll";
+import HomeHero from "@/components/home/HomeHero.astro";
+import HomeLegalLinks from "@/components/home/HomeLegalLinks.astro";
+import AppShell from "@/components/shell/AppShell.astro";
 import Layout from "@/layouts/Layout.astro";
-import { SUPABASE_URL } from "astro:env/server";
 
 export const prerender = false;
-
-const supabase = createClient(Astro.request.headers, Astro.cookies);
-const currentFilters = parseFanFilters(Astro.url.searchParams);
-
-const listResult = supabase ? await listPublishedEvents(supabase, currentFilters) : { data: [] };
-const citiesResult = supabase ? await listDistinctCities(supabase) : { data: [] };
-
-const rawEvents = "data" in listResult ? listResult.data : [];
-const supabaseUrl = SUPABASE_URL ?? "";
-const events = supabaseUrl
-  ? rawEvents.map((event) => enrichEventWithCoverUrl(event, supabaseUrl))
-  : rawEvents.map((event) => ({ ...event, coverUrl: null as string | null }));
-const cities = "data" in citiesResult ? citiesResult.data : [];
-const listError =
-  ["error" in listResult ? listResult.error : null, "error" in citiesResult ? citiesResult.error : null]
-    .filter(Boolean)
-    .join(" ") || null;
 ---
 
-<Layout title="BassMap PL — Find the place, drop the bass!">
-  <div class="bg-cosmic relative min-h-screen w-full overflow-hidden">
-    <div class="relative z-10 flex min-h-screen flex-col p-4 sm:p-8">
-      <Topbar />
-
-      <div class="mx-auto w-full max-w-6xl flex-1 space-y-8 px-2 py-8 sm:px-4">
-        <DiscoveryShell
-          events={events}
-          cities={cities}
-          currentFilters={currentFilters}
-          listError={listError}
-          client:load
-        />
-        <RoadmapTeaser />
-      </div>
-
-      <SiteFooter />
-    </div>
-  </div>
+<Layout title="BassMap PL – Find the place, drop the bass!">
+  <AppShell showFooter={false} immersive>
+    <HomeFluidScroll client:only="react" />
+    <main class="home-scroll-main">
+      <HomeHero />
+      <HomeAbout />
+      <HomeContact />
+      <HomeLegalLinks />
+    </main>
+  </AppShell>
 </Layout>

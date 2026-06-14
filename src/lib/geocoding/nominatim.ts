@@ -1,7 +1,7 @@
 const NOMINATIM_URL = "https://nominatim.openstreetmap.org/search";
 const USER_AGENT = "BassMapPL/1.0 (admin panel; contact: matrejekemilia@gmail.com)";
 const REQUEST_TIMEOUT_MS = 10_000;
-/** Polityka Nominatim: max ~1 żądanie/s — odstęp między kolejnymi callami w jednym geokodowaniu. */
+/** Polityka Nominatim: max ~1 żądanie/s – odstęp między kolejnymi callami w jednym geokodowaniu. */
 const NOMINATIM_MIN_INTERVAL_MS = 1_100;
 
 function sleep(ms: number): Promise<void> {
@@ -144,7 +144,7 @@ async function searchStructuredRows(input: GeocodeInput, signal: AbortSignal): P
 
 /**
  * Rozstrzyga konflikt typu „Kaskada przy Jana Pawła II” vs „Kaskada na Wybrzeżu”:
- * gdy admin podał ulicę, wynik musi pasować do ulicy — inna dzielnica o tej samej nazwie jest odrzucana.
+ * gdy admin podał ulicę, wynik musi pasować do ulicy – inna dzielnica o tej samej nazwie jest odrzucana.
  */
 function resolveFromCandidates(
   input: GeocodeInput,

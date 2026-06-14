@@ -202,14 +202,31 @@ export async function listDistinctCities(supabase: SupabaseClient): Promise<Serv
   return { data: unique };
 }
 
-export async function getPublishedEventById(supabase: SupabaseClient, id: string): Promise<Event | null> {
+const ARCHIVE_LIST_LIMIT = 200;
+
+export async function listArchivedEvents(
+  supabase: SupabaseClient,
+  limit = ARCHIVE_LIST_LIMIT,
+): Promise<ServiceResult<Event[]>> {
+  const todayStart = getStartOfTodayWarsawUtcIso();
   const response = await supabase
     .from("events")
     .select("*")
-    .eq("id", id)
     .eq("status", "published")
-    .gte("starts_at", getStartOfTodayWarsawUtcIso())
-    .maybeSingle();
+    .lt("starts_at", todayStart)
+    .order("starts_at", { ascending: false })
+    .limit(limit);
+
+  if (response.error) {
+    return { error: "Nie udało się załadować archiwum wydarzeń" };
+  }
+
+  return { data: (response.data as EventRow[]).map(mapEventRow) };
+}
+
+/** Upcoming or archived published event visible to fans (RLS + status filter). */
+export async function getPublishedEventById(supabase: SupabaseClient, id: string): Promise<Event | null> {
+  const response = await supabase.from("events").select("*").eq("id", id).eq("status", "published").maybeSingle();
 
   if (response.error) {
     return null;

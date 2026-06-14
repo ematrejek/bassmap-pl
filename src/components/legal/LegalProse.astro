@@ -1,13 +1,16 @@
-<div class="legal-prose space-y-6 text-sm leading-relaxed text-blue-100/85">
+<div class="legal-prose text-muted-foreground space-y-6 text-sm leading-relaxed">
   <slot />
 </div>
 
 <style>
   .legal-prose :global(h2) {
     margin-top: 2rem;
+    font-family: var(--font-family-heading);
     font-size: 1.125rem;
-    font-weight: 600;
-    color: rgb(233 213 255);
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    color: var(--foreground);
   }
 
   .legal-prose :global(h2:first-child) {
@@ -18,7 +21,7 @@
     margin-top: 1rem;
     font-size: 1rem;
     font-weight: 600;
-    color: rgb(219 234 254 / 0.95);
+    color: var(--accent);
   }
 
   .legal-prose :global(p) {
@@ -36,12 +39,12 @@
   }
 
   .legal-prose :global(a) {
-    color: rgb(216 180 254);
+    color: var(--primary);
     text-decoration: underline;
     text-underline-offset: 2px;
   }
 
   .legal-prose :global(a:hover) {
-    color: rgb(233 213 255);
+    color: var(--accent);
   }
 </style>

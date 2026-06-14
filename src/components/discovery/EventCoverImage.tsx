@@ -34,7 +34,7 @@ export default function EventCoverImage({ coverUrl, alt, className, variant = "t
         className={cn(
           baseClass,
           aspectClass,
-          "flex items-center justify-center bg-gradient-to-br from-purple-600/80 to-blue-600/80 font-bold text-white",
+          "from-primary/80 to-accent/80 text-primary-foreground flex items-center justify-center bg-gradient-to-br font-bold",
           FALLBACK_TEXT[variant],
         )}
         aria-hidden={variant !== "hero"}

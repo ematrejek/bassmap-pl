@@ -1,0 +1,38 @@
+---
+import { HOME_PATH } from "@/lib/routes";
+
+const EQ_DELAYS = ["0ms", "150ms", "300ms"];
+---
+
+<a
+  href={HOME_PATH}
+  class="focus-visible:ring-ring/50 inline-flex items-center gap-2 rounded-md transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:outline-none"
+>
+  <span
+    class="border-primary/60 bg-primary/10 text-primary shadow-glow-violet relative flex h-9 w-9 items-center justify-center rounded-md border"
+  >
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      width="20"
+      height="20"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      class="h-5 w-5"
+      aria-hidden="true"
+    >
+      <path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"
+      ></path>
+      <circle cx="12" cy="10" r="3"></circle>
+    </svg>
+    <span class="eq-rack text-accent absolute -right-1 -bottom-1 h-3" aria-hidden="true">
+      {EQ_DELAYS.map((delay) => <span class="eq-bar" style={`animation-delay: ${delay}`} />)}
+    </span>
+  </span>
+  <span class="font-heading text-foreground text-lg font-black tracking-widest">
+    BASS<span class="text-primary text-glow-violet">MAP</span><span class="text-accent ml-1 text-xs font-bold">PL</span>
+  </span>
+</a>

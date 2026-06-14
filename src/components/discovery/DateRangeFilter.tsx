@@ -7,7 +7,9 @@ import {
   getWarsawDatePresetRange,
   localDateToCalendarDate,
 } from "@/lib/events/date-range";
-import { buildFanFilterSearchParams, type FanEventFilters } from "@/lib/events/fan-schema";
+import { buildDiscoverySearchUrl } from "@/lib/routes";
+import type { FanEventFilters } from "@/lib/events/fan-schema";
+import { shellBtnOutline, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import { SUBGENRES, type Subgenre } from "@/types";
 import { CalendarIcon } from "lucide-react";
@@ -96,12 +98,10 @@ function toSelectedRange(dateFrom: string | null, dateTo: string | null): DateRa
 }
 
 function buildFilterHref(baseFilters: FanEventFilters, next: Partial<FanEventFilters>): string {
-  const params = buildFanFilterSearchParams({
+  return buildDiscoverySearchUrl({
     ...baseFilters,
     ...next,
   });
-  const query = params.toString();
-  return query.length > 0 ? `/?${query}` : "/";
 }
 
 export default function DateRangeFilter({ currentFilters }: Props) {
@@ -147,7 +147,7 @@ export default function DateRangeFilter({ currentFilters }: Props) {
             type="button"
             size="sm"
             variant="outline"
-            className="border-white/20 bg-white/5 text-purple-100 hover:bg-white/10 hover:text-white"
+            className={shellBtnOutline}
             onClick={() => {
               handlePresetClick(preset);
             }}
@@ -164,17 +164,18 @@ export default function DateRangeFilter({ currentFilters }: Props) {
               type="button"
               variant="outline"
               className={cn(
-                "min-w-[12rem] justify-start border-white/20 bg-white/5 text-left font-normal text-white hover:bg-white/10",
-                !fromValue && "text-blue-100/60",
+                "min-w-[12rem] justify-start text-left font-normal",
+                shellBtnOutline,
+                !fromValue && shellTextMuted,
               )}
             >
-              <CalendarIcon className="mr-2 size-4 text-purple-200" />
+              <CalendarIcon className="text-accent mr-2 size-4" />
               {formatSelectedRangeLabel(fromValue || null, toValue || null)}
             </Button>
           </PopoverTrigger>
           <PopoverContent
             align="start"
-            className="w-auto border-white/10 bg-slate-950/95 p-0 text-white backdrop-blur-xl"
+            className="border-border bg-card/95 text-foreground w-auto p-0 backdrop-blur-xl"
           >
             <Calendar
               mode="range"
@@ -187,13 +188,7 @@ export default function DateRangeFilter({ currentFilters }: Props) {
         </Popover>
 
         {fromValue ? (
-          <Button
-            type="button"
-            size="sm"
-            variant="outline"
-            className="border-white/20 bg-white/5 text-blue-100/80 hover:bg-white/10 hover:text-white"
-            onClick={handleClearDate}
-          >
+          <Button type="button" size="sm" variant="outline" className={shellBtnOutline} onClick={handleClearDate}>
             Wyczyść datę
           </Button>
         ) : null}

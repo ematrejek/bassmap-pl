@@ -71,7 +71,7 @@ export default function SignUpForm({ serverError }: Props) {
 
   const passwordHint =
     !errors.password && password.length > 0 && password.length < MIN_PASSWORD_LENGTH ? (
-      <p className="mt-1 text-xs text-blue-100/50">
+      <p className="text-muted-foreground mt-1 text-xs">
         {MIN_PASSWORD_LENGTH - password.length} more character
         {MIN_PASSWORD_LENGTH - password.length !== 1 ? "s" : ""} needed
       </p>
@@ -150,17 +150,22 @@ export default function SignUpForm({ serverError }: Props) {
             }}
             aria-invalid={Boolean(errors.acceptTerms)}
             className={cn(
-              "mt-0.5 border-white/30 bg-white/10 data-[state=checked]:border-purple-400 data-[state=checked]:bg-purple-500",
+              "border-border bg-card/60 data-[state=checked]:border-primary data-[state=checked]:bg-primary mt-0.5",
               errors.acceptTerms && "border-red-400/60",
             )}
           />
           <input type="hidden" name="acceptTerms" value={acceptTerms ? "on" : ""} />
-          <label htmlFor="acceptTerms" className="text-xs leading-relaxed text-blue-100/70">
+          <label htmlFor="acceptTerms" className="text-muted-foreground text-xs leading-relaxed">
             <span className="text-red-400" aria-hidden="true">
               *{" "}
             </span>
             Akceptuję{" "}
-            <a href={TERMS_PATH} target="_blank" rel="noopener noreferrer" className="text-purple-300 hover:underline">
+            <a
+              href={TERMS_PATH}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:text-accent hover:underline"
+            >
               Regulamin
             </a>{" "}
             i{" "}
@@ -168,7 +173,7 @@ export default function SignUpForm({ serverError }: Props) {
               href={PRIVACY_POLICY_PATH}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-purple-300 hover:underline"
+              className="text-primary hover:text-accent hover:underline"
             >
               Politykę Prywatności
             </a>

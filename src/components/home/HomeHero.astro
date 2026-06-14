@@ -1,0 +1,35 @@
+---
+import { DISCOVERY_PATH } from "@/lib/routes";
+---
+
+<section
+  class="home-panel border-border/70 relative flex min-h-[100dvh] flex-col items-center justify-center overflow-hidden border-b"
+  aria-labelledby="home-hero-title"
+>
+  <div class="pointer-events-none absolute inset-0" aria-hidden="true">
+    <img src="/rave-crowd.png" alt="" class="h-full w-full object-cover opacity-40" />
+    <div class="from-background via-background/85 to-background/40 absolute inset-0 bg-gradient-to-t"></div>
+    <div class="grid-backdrop absolute inset-0 opacity-60"></div>
+  </div>
+
+  <div class="relative z-10 mx-auto max-w-4xl px-4 py-24 text-center sm:px-6 sm:py-28">
+    <h1
+      id="home-hero-title"
+      class="font-heading text-foreground text-5xl font-black tracking-tight uppercase sm:text-6xl md:text-7xl lg:text-8xl"
+    >
+      BASS<span class="text-primary text-glow-violet">MAP</span><span class="text-accent text-glow-cyan ml-2">PL</span>
+    </h1>
+    <p
+      class="font-heading text-foreground mt-6 text-2xl leading-[0.95] font-black tracking-tight text-balance uppercase sm:text-3xl md:text-4xl lg:text-5xl"
+    >
+      Find the place, <span class="text-primary text-glow-violet">drop</span> the{" "}
+      <span class="text-accent text-glow-cyan">bass!</span>
+    </p>
+    <a
+      href={DISCOVERY_PATH}
+      class="bg-primary text-primary-foreground shadow-glow-violet hover:bg-primary/90 focus-visible:ring-ring/50 mt-10 inline-flex h-12 items-center justify-center rounded-lg px-8 text-sm font-semibold tracking-wider uppercase transition-colors focus-visible:ring-2 focus-visible:outline-none sm:h-14 sm:px-10 sm:text-base"
+    >
+      Znajdź swój event!
+    </a>
+  </div>
+</section>

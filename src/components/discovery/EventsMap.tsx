@@ -1,4 +1,6 @@
+import { Equalizer } from "@/components/shell/Equalizer";
 import { resolveMapCoordinates } from "@/lib/geocoding/city-centers";
+import { shellPanelFlat } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import type { Event } from "@/types";
 import L from "leaflet";
@@ -6,25 +8,31 @@ import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo } from "react";
 import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
 
-const DEFAULT_ICON = L.icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+const MAP_TILES_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
+const MAP_ATTRIBUTION =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
 
-const SELECTED_ICON = L.icon({
-  iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-violet.png",
-  iconRetinaUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-violet.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowSize: [41, 41],
-});
+const NEON_PRIMARY = "oklch(0.62 0.25 300)";
+const NEON_ACCENT = "oklch(0.85 0.2 175)";
+
+function createNeonMarkerIcon(color: string, active: boolean): L.DivIcon {
+  const size = active ? 14 : 10;
+  return L.divIcon({
+    className: "discovery-map-marker",
+    html: `<span style="
+      display:block;
+      width:${String(size)}px;
+      height:${String(size)}px;
+      border-radius:9999px;
+      background:${color};
+      box-shadow:0 0 12px ${color}, 0 0 4px ${color};
+      border:2px solid oklch(0.13 0.015 280);
+      transform:translate(-50%,-50%);
+    "></span>`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+  });
+}
 
 interface MapControllerProps {
   selectedEventId: string | null;
@@ -66,27 +74,32 @@ export default function EventsMap({ events, selectedEventId, onSelectEvent, clas
   return (
     <div
       data-discovery-map
-      className={cn(
-        "relative isolate z-0 h-full min-h-[320px] overflow-hidden rounded-2xl border border-white/10",
-        className,
-      )}
+      className={cn("relative isolate z-0 h-full min-h-[320px] overflow-hidden", shellPanelFlat, className)}
     >
-      <MapContainer center={[52.0, 19.0]} zoom={6} className="h-full min-h-[320px] w-full" scrollWheelZoom>
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        />
+      <div className="grid-backdrop pointer-events-none absolute inset-0 z-[401] opacity-35" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-0 z-[402] bg-[radial-gradient(circle_at_50%_50%,transparent_30%,oklch(0.13_0.015_280/0.75)_100%)]"
+        aria-hidden="true"
+      />
+      <span className="border-border bg-background/70 text-accent pointer-events-none absolute top-4 left-4 z-[403] flex items-center gap-2 rounded-full border px-3 py-1 font-mono text-[0.65rem] tracking-widest uppercase backdrop-blur-md">
+        <Equalizer bars={3} className="h-2.5" />
+        Polska · mapa
+      </span>
+
+      <MapContainer center={[52.0, 19.0]} zoom={6} className="relative z-0 h-full min-h-[320px] w-full" scrollWheelZoom>
+        <TileLayer attribution={MAP_ATTRIBUTION} url={MAP_TILES_URL} />
         <MapController selectedEventId={selectedEventId} eventCoordinates={eventCoordinates} />
         {events.map((event) => {
           const coords = eventCoordinates.get(event.id);
           if (!coords) {
             return null;
           }
+          const isSelected = selectedEventId === event.id;
           return (
             <Marker
               key={event.id}
               position={[coords.latitude, coords.longitude]}
-              icon={selectedEventId === event.id ? SELECTED_ICON : DEFAULT_ICON}
+              icon={createNeonMarkerIcon(isSelected ? NEON_ACCENT : NEON_PRIMARY, isSelected)}
               eventHandlers={{
                 click: () => {
                   onSelectEvent(event.id);

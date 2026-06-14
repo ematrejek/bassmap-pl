@@ -12,4 +12,9 @@
   "observability": {
     "enabled": true,
   },
+  "send_email": [
+    {
+      "name": "EMAIL",
+    },
+  ],
 }

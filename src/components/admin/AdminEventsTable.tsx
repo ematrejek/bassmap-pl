@@ -1,10 +1,10 @@
 import EventCoverImage from "@/components/discovery/EventCoverImage";
-import { ServerError } from "@/components/auth/ServerError";
-import DeleteEventButton from "@/components/admin/DeleteEventButton";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatEventDate } from "@/lib/events/format";
+import { ADMIN_PATH } from "@/lib/routes";
+import { shellBtnOutline, shellPanel, shellPanelFlat, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import type { EventStatus, EventWithCoverUrl } from "@/types";
 
@@ -18,13 +18,13 @@ const STATUS_LABELS: Record<EventStatus, string> = {
 function statusBadgeClass(status: EventStatus): string {
   switch (status) {
     case "published":
-      return "border-emerald-500/30 bg-emerald-500/20 text-emerald-100";
+      return "border-neon-green/40 bg-neon-green/15 text-foreground";
     case "draft":
-      return "border-slate-400/30 bg-slate-400/20 text-slate-100";
+      return "border-border bg-secondary text-muted-foreground";
     case "pending":
-      return "border-amber-500/30 bg-amber-500/20 text-amber-100";
+      return "border-neon-orange/40 bg-neon-orange/15 text-foreground";
     case "rejected":
-      return "border-red-500/30 bg-red-500/20 text-red-100";
+      return "border-destructive/40 bg-destructive/15 text-foreground";
   }
 }
 
@@ -33,84 +33,69 @@ interface Props {
   listError?: string | null;
 }
 
-export default function AdminEventsTable({ events, listError }: Props) {
-  return (
-    <div className="space-y-6">
-      <ServerError message={listError} />
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-        <div>
-          <h1 className="bg-gradient-to-r from-blue-200 to-purple-200 bg-clip-text text-3xl font-bold text-transparent">
-            Wydarzenia
-          </h1>
-          <p className="mt-1 text-sm text-blue-100/60">
-            {events.length === 0
-              ? "Brak wydarzeń w bazie."
-              : `Łącznie ${String(events.length)} wydarzeń (sortowanie: od najbliższej daty).`}
-          </p>
-        </div>
-        <Button asChild className="border-white/20 bg-purple-600/80 text-white shadow-lg hover:bg-purple-500/90">
-          <a href="/admin/events/new">Dodaj wydarzenie</a>
-        </Button>
+export default function AdminEventsTable({ events }: Props) {
+  if (events.length === 0) {
+    return (
+      <div className={cn("p-8 text-center", shellPanelFlat, shellTextMuted)}>
+        Nie ma jeszcze żadnych wydarzeń. Kliknij „Dodaj wydarzenie”, aby utworzyć pierwsze.
       </div>
+    );
+  }
 
-      {events.length === 0 ? (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-8 text-center text-blue-100/70 backdrop-blur-xl">
-          Nie ma jeszcze żadnych wydarzeń. Kliknij „Dodaj wydarzenie”, aby utworzyć pierwsze.
-        </div>
-      ) : (
-        <div className="rounded-2xl border border-white/10 bg-white/5 p-4 text-white backdrop-blur-xl sm:p-6">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-white/10 hover:bg-transparent">
-                <TableHead className="w-14 text-blue-100/80">Okładka</TableHead>
-                <TableHead className="text-blue-100/80">Nazwa</TableHead>
-                <TableHead className="text-blue-100/80">Data</TableHead>
-                <TableHead className="text-blue-100/80">Miasto</TableHead>
-                <TableHead className="text-blue-100/80">Status</TableHead>
-                <TableHead className="text-right text-blue-100/80">Akcje</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {events.map((event) => (
-                <TableRow key={event.id} className="border-white/10 hover:bg-white/5">
-                  <TableCell>
-                    <EventCoverImage
-                      coverUrl={event.coverUrl}
-                      alt={`Okładka: ${event.name}`}
-                      variant="thumb"
-                      coverAspect={event.coverAspect}
-                      className="size-10"
-                    />
-                  </TableCell>
-                  <TableCell className="max-w-[200px] truncate font-medium text-white sm:max-w-xs">
-                    {event.name}
-                  </TableCell>
-                  <TableCell className="text-blue-100/80">{formatEventDate(event.startsAt)}</TableCell>
-                  <TableCell className="text-blue-100/80">{event.city}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline" className={cn("border", statusBadgeClass(event.status))}>
-                      {STATUS_LABELS[event.status]}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="text-right">
-                    <div className="flex justify-end gap-2">
-                      <Button
-                        asChild
-                        variant="outline"
-                        size="sm"
-                        className="border-white/20 bg-white/5 text-purple-200 hover:bg-white/10 hover:text-white"
-                      >
-                        <a href={`/admin/events/${event.id}/edit`}>Edytuj</a>
-                      </Button>
-                      <DeleteEventButton eventId={event.id} eventName={event.name} />
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-      )}
+  return (
+    <div className={cn("p-4 sm:p-6", shellPanel)}>
+      <Table>
+        <TableHeader>
+          <TableRow className="border-border/70 hover:bg-transparent">
+            <TableHead className="text-muted-foreground w-14">Okładka</TableHead>
+            <TableHead className="text-muted-foreground">Nazwa</TableHead>
+            <TableHead className="text-muted-foreground">Data</TableHead>
+            <TableHead className="text-muted-foreground">Miasto</TableHead>
+            <TableHead className="text-muted-foreground">Status</TableHead>
+            <TableHead className="text-muted-foreground text-right">Akcje</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {events.map((event) => (
+            <TableRow key={event.id} className="border-border/70 hover:bg-secondary/40">
+              <TableCell>
+                <EventCoverImage
+                  coverUrl={event.coverUrl}
+                  alt={`Okładka: ${event.name}`}
+                  variant="thumb"
+                  coverAspect={event.coverAspect}
+                  className="size-10"
+                />
+              </TableCell>
+              <TableCell className="text-foreground max-w-[200px] truncate font-medium sm:max-w-xs">
+                {event.name}
+              </TableCell>
+              <TableCell className={shellTextMuted}>{formatEventDate(event.startsAt)}</TableCell>
+              <TableCell className={shellTextMuted}>{event.city}</TableCell>
+              <TableCell>
+                <Badge variant="outline" className={cn("border", statusBadgeClass(event.status))}>
+                  {STATUS_LABELS[event.status]}
+                </Badge>
+              </TableCell>
+              <TableCell className="text-right">
+                <div className="flex justify-end gap-2">
+                  <Button asChild variant="outline" size="sm" className={shellBtnOutline}>
+                    <a href={`${ADMIN_PATH}/events/${event.id}/edit`}>Edytuj</a>
+                  </Button>
+                  <Button
+                    asChild
+                    variant="outline"
+                    size="sm"
+                    className="border-red-400/30 bg-red-500/10 text-red-200 hover:bg-red-500/20 hover:text-red-100"
+                  >
+                    <a href={`${ADMIN_PATH}/events/${event.id}/delete`}>Usuń</a>
+                  </Button>
+                </div>
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
     </div>
   );
 }

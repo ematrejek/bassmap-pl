@@ -1,0 +1,41 @@
+---
+import ArchiveEventList from "@/components/archive/ArchiveEventList";
+import AppShell from "@/components/shell/AppShell.astro";
+import { listArchivedEvents } from "@/lib/services/events";
+import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
+import { createClient } from "@/lib/supabase";
+import Layout from "@/layouts/Layout.astro";
+import { shellHeading } from "@/lib/shell-styles";
+import { SUPABASE_URL } from "astro:env/server";
+
+export const prerender = false;
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const listResult = supabase ? await listArchivedEvents(supabase) : { data: [] };
+const rawEvents = "data" in listResult ? listResult.data : [];
+const supabaseUrl = SUPABASE_URL ?? "";
+const events = supabaseUrl
+  ? rawEvents.map((event) => enrichEventWithCoverUrl(event, supabaseUrl))
+  : rawEvents.map((event) => ({ ...event, coverUrl: null as string | null }));
+const listError = "error" in listResult ? listResult.error : null;
+---
+
+<Layout title="Archiwum wydarzeń – BassMap PL">
+  <AppShell>
+    <div class="mx-auto w-full max-w-3xl flex-1 space-y-6 px-2 py-8 sm:px-4">
+      <div>
+        <h1 class:list={shellHeading}>Archiwum wydarzeń</h1>
+      </div>
+
+      {
+        listError ? (
+          <p class="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+            {listError}
+          </p>
+        ) : null
+      }
+
+      <ArchiveEventList events={events} />
+    </div>
+  </AppShell>
+</Layout>

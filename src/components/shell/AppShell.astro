@@ -1,0 +1,47 @@
+---
+import AppBrand from "@/components/shell/AppBrand.astro";
+import AppMenu from "@/components/shell/AppMenu";
+import SiteFooter from "@/components/SiteFooter.astro";
+
+interface Props {
+  showFooter?: boolean;
+  /** Full-bleed homepage: no shell padding, content edge-to-edge. */
+  immersive?: boolean;
+}
+
+const { showFooter = true, immersive = false } = Astro.props;
+const { user, isAdmin } = Astro.locals;
+const userEmail = user?.email ?? null;
+---
+
+<div class="bg-background relative min-h-screen w-full overflow-x-hidden">
+  <div class:list={["relative z-10 flex min-h-screen flex-col", !immersive && "px-4 sm:px-6"]}>
+    <header
+      class="border-border/70 bg-background/70 pointer-events-none fixed top-0 right-0 left-0 z-50 flex items-center justify-between border-b px-4 py-3 backdrop-blur-md sm:px-6"
+      aria-label="Nawigacja globalna"
+    >
+      <div class="pointer-events-auto">
+        <AppBrand />
+      </div>
+      <div class="pointer-events-auto">
+        <AppMenu userEmail={userEmail} isAdmin={isAdmin} client:only="react">
+          <button
+            slot="fallback"
+            type="button"
+            disabled
+            aria-label="Ładowanie menu nawigacji"
+            class="font-heading border-border bg-card/60 text-foreground shadow-glow-violet inline-flex h-10 items-center gap-2 rounded-md border px-3 text-sm uppercase opacity-80 backdrop-blur-md"
+          >
+            Menu
+          </button>
+        </AppMenu>
+      </div>
+    </header>
+
+    <main class="flex-1 pt-14 sm:pt-16">
+      <slot />
+
+      {showFooter && <SiteFooter />}
+    </main>
+  </div>
+</div>
