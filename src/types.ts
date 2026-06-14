@@ -90,6 +90,9 @@ export type EventStatus = "draft" | "pending" | "published" | "rejected";
 /** Portrait = event poster; landscape = wide social / FB cover. */
 export type CoverAspect = "portrait" | "landscape";
 
+export type EventPriceMode = "exact" | "from" | "range";
+export type EventCurrency = "PLN" | "EUR" | "CZK";
+
 export interface Event {
   id: string;
   name: string;
@@ -105,7 +108,10 @@ export interface Event {
   description: string | null;
   ticketUrl: string | null;
   isFree: boolean;
-  price: string | null;
+  priceMode: EventPriceMode | null;
+  priceMin: number | null;
+  priceMax: number | null;
+  currency: EventCurrency | null;
   status: EventStatus;
   coverPath: string | null;
   coverAspect: CoverAspect | null;
@@ -130,7 +136,10 @@ export interface EventInsert {
   description?: string | null;
   ticketUrl?: string | null;
   isFree?: boolean;
-  price?: string | null;
+  priceMode?: EventPriceMode | null;
+  priceMin?: number | null;
+  priceMax?: number | null;
+  currency?: EventCurrency | null;
   status?: EventStatus;
   coverPath?: string | null;
   coverAspect?: CoverAspect | null;

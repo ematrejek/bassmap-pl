@@ -104,6 +104,58 @@ describe("parseEventCreate", () => {
       expect(result.data.description).toBeNull();
     }
   });
+
+  it("accepts from-mode structured price (price-schema-1)", () => {
+    const result = parseEventCreate({
+      ...buildMutationCreatePayload(),
+      isFree: false,
+      priceMode: "from",
+      priceMin: 50,
+      priceMax: null,
+      currency: "PLN",
+    });
+
+    expect(result.success).toBe(true);
+  });
+
+  it("rejects isFree with price fields (price-schema-2)", () => {
+    const result = parseEventCreate({
+      ...buildMutationCreatePayload(),
+      isFree: true,
+      priceMode: "from",
+      priceMin: 50,
+      priceMax: null,
+      currency: "PLN",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects range where max is not greater than min (price-schema-3)", () => {
+    const result = parseEventCreate({
+      ...buildMutationCreatePayload(),
+      isFree: false,
+      priceMode: "range",
+      priceMin: 60,
+      priceMax: 40,
+      currency: "PLN",
+    });
+
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts paid event without price (price-schema-4)", () => {
+    const result = parseEventCreate({
+      ...buildMutationCreatePayload(),
+      isFree: false,
+      priceMode: null,
+      priceMin: null,
+      priceMax: null,
+      currency: null,
+    });
+
+    expect(result.success).toBe(true);
+  });
 });
 
 describe("parseEventUpdate", () => {

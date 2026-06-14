@@ -10,10 +10,21 @@ import { toDatetimeLocalValue } from "@/lib/events/format";
 import { parseEventCreate, parseEventUpdate } from "@/lib/events/schema";
 import { getCoverAspectClassName, validateCoverFile } from "@/lib/storage/event-covers";
 import { cn } from "@/lib/utils";
-import { SUBGENRES, SUBGENRE_LABELS, type CoverAspect, type Event, type Subgenre } from "@/types";
+import {
+  SUBGENRES,
+  SUBGENRE_LABELS,
+  type CoverAspect,
+  type Event,
+  type EventCurrency,
+  type EventPriceMode,
+  type Subgenre,
+} from "@/types";
 
 const fieldClass =
   "border-white/20 bg-white/10 text-white placeholder:text-white/40 focus-visible:border-purple-400 focus-visible:ring-purple-400/30 dark:bg-white/10";
+
+/** Native `<option>` list uses OS light popup — dark text required for readability. */
+const selectOptionStyle = { backgroundColor: "#ffffff", color: "#0f172a" };
 
 function inferLocationMode(event?: Event): "address" | "coordinates" {
   if (!event) {
@@ -114,7 +125,14 @@ export default function EventForm({
   const [description, setDescription] = useState(initialEvent?.description ?? "");
   const [ticketUrl, setTicketUrl] = useState(initialEvent?.ticketUrl ?? "");
   const [isFree, setIsFree] = useState(initialEvent?.isFree ?? false);
-  const [price, setPrice] = useState(initialEvent?.price ?? "");
+  const [priceMode, setPriceMode] = useState<EventPriceMode | null>(initialEvent?.priceMode ?? null);
+  const [priceMin, setPriceMin] = useState(
+    initialEvent?.priceMin !== null && initialEvent?.priceMin !== undefined ? String(initialEvent.priceMin) : "",
+  );
+  const [priceMax, setPriceMax] = useState(
+    initialEvent?.priceMax !== null && initialEvent?.priceMax !== undefined ? String(initialEvent.priceMax) : "",
+  );
+  const [currency, setCurrency] = useState<EventCurrency>(initialEvent?.currency ?? "PLN");
   const [coverFile, setCoverFile] = useState<File | null>(null);
   const [coverAspect, setCoverAspect] = useState<CoverAspect>(initialEvent?.coverAspect ?? "portrait");
   const [removeCover, setRemoveCover] = useState(false);
@@ -179,7 +197,10 @@ export default function EventForm({
       description: description.trim() || null,
       ticketUrl: ticketUrl.trim() || null,
       isFree,
-      price: isFree ? null : price.trim() || null,
+      priceMode: isFree ? null : priceMode,
+      priceMin: isFree || priceMin === "" ? null : Number(priceMin),
+      priceMax: isFree || priceMode !== "range" || priceMax === "" ? null : Number(priceMax),
+      currency: isFree ? null : currency,
       locationMode,
     };
 
@@ -636,22 +657,112 @@ export default function EventForm({
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="price" className="text-blue-100/80">
-            Cena
-          </Label>
-          <div className="relative">
-            <Ticket className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-white/40" />
-            <Input
-              id="price"
-              value={price}
-              onChange={(e) => {
-                setPrice(e.target.value);
-              }}
-              placeholder="od 50 zł"
-              disabled={isFree}
-              className={cn(fieldClass, "pl-10")}
-            />
-          </div>
+          <Label className="text-blue-100/80">Cena</Label>
+          {!isFree ? (
+            <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">
+              <fieldset className="space-y-2">
+                <legend className="text-sm text-blue-100/80">Tryb ceny</legend>
+                <div className="flex flex-wrap gap-4">
+                  {(
+                    [
+                      ["exact", "Dokładna"],
+                      ["from", "Od"],
+                      ["range", "Przedział"],
+                    ] as const
+                  ).map(([mode, label]) => (
+                    <label key={mode} htmlFor={`priceMode-${mode}`} className="flex cursor-pointer items-center gap-2">
+                      <input
+                        id={`priceMode-${mode}`}
+                        type="radio"
+                        name="priceMode"
+                        value={mode}
+                        checked={priceMode === mode}
+                        onChange={() => {
+                          setPriceMode(mode);
+                          if (mode !== "range") {
+                            setPriceMax("");
+                          }
+                        }}
+                        className="accent-purple-500"
+                      />
+                      <span className="text-sm text-white/90">{label}</span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+
+              {priceMode !== null && (
+                <div className="grid gap-4 sm:grid-cols-2">
+                  <div className="space-y-2">
+                    <Label htmlFor="priceMin" className="text-blue-100/80">
+                      {priceMode === "range" ? "Kwota minimalna" : "Kwota"}
+                    </Label>
+                    <div className="relative">
+                      <Ticket className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-white/40" />
+                      <Input
+                        id="priceMin"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={priceMin}
+                        onChange={(e) => {
+                          setPriceMin(e.target.value);
+                        }}
+                        placeholder="50"
+                        className={cn(fieldClass, "pl-10")}
+                      />
+                    </div>
+                  </div>
+
+                  {priceMode === "range" && (
+                    <div className="space-y-2">
+                      <Label htmlFor="priceMax" className="text-blue-100/80">
+                        Kwota maksymalna
+                      </Label>
+                      <Input
+                        id="priceMax"
+                        type="number"
+                        min="0"
+                        step="0.01"
+                        value={priceMax}
+                        onChange={(e) => {
+                          setPriceMax(e.target.value);
+                        }}
+                        placeholder="60"
+                        className={fieldClass}
+                      />
+                    </div>
+                  )}
+
+                  <div className="space-y-2 sm:col-span-2">
+                    <Label htmlFor="currency" className="text-blue-100/80">
+                      Waluta
+                    </Label>
+                    <select
+                      id="currency"
+                      value={currency}
+                      onChange={(e) => {
+                        setCurrency(e.target.value as EventCurrency);
+                      }}
+                      className={cn(fieldClass, "h-10 w-full rounded-md px-3 [color-scheme:dark]")}
+                    >
+                      <option value="PLN" style={selectOptionStyle}>
+                        PLN (zł)
+                      </option>
+                      <option value="EUR" style={selectOptionStyle}>
+                        EUR (€)
+                      </option>
+                      <option value="CZK" style={selectOptionStyle}>
+                        CZK (Kč)
+                      </option>
+                    </select>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <p className="text-xs text-blue-100/50">Pola ceny są ukryte — wydarzenie oznaczone jako wstęp wolny.</p>
+          )}
         </div>
       </div>
 
@@ -660,7 +771,13 @@ export default function EventForm({
           id="isFree"
           checked={isFree}
           onCheckedChange={(checked) => {
-            setIsFree(checked === true);
+            const next = checked === true;
+            setIsFree(next);
+            if (next) {
+              setPriceMode(null);
+              setPriceMin("");
+              setPriceMax("");
+            }
           }}
           className="border-white/30 data-[state=checked]:bg-purple-600"
         />

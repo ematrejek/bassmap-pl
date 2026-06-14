@@ -20,7 +20,10 @@ INSERT INTO public.events (
   lineup,
   ticket_url,
   is_free,
-  price,
+  price_mode,
+  price_min,
+  price_max,
+  currency,
   status
 )
 VALUES
@@ -37,7 +40,10 @@ VALUES
     ARRAY['Noisia', 'Phace', 'Mefjus'],
     'https://example.com/tickets/neuro-night-warsaw',
     false,
-    'od 89 zł',
+    'from',
+    89,
+    NULL,
+    'PLN',
     'published'
   ),
   (
@@ -54,6 +60,9 @@ VALUES
     NULL,
     true,
     NULL,
+    NULL,
+    NULL,
+    NULL,
     'published'
   ),
   (
@@ -69,7 +78,10 @@ VALUES
     NULL,
     'https://example.com/tickets/jump-up-wroclaw',
     false,
-    'od 45 zł',
+    'from',
+    45,
+    NULL,
+    'PLN',
     'published'
   ),
   (
@@ -84,8 +96,11 @@ VALUES
     ARRAY['halftime', 'autonomic']::public.subgenre[],
     ARRAY['Om Unit', 'Machinedrum'],
     NULL,
-    false,
-    'wstęp wolny, rezerwacja miejsc',
+    true,
+    NULL,
+    NULL,
+    NULL,
+    NULL,
     'published'
   ),
   (
@@ -101,6 +116,9 @@ VALUES
     ARRAY['Aphrodite', 'Shy FX'],
     'https://example.com/tickets/jungle-poznan',
     false,
-    'od 60 zł',
+    'from',
+    60,
+    NULL,
+    'PLN',
     'published'
   );

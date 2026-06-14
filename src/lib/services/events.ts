@@ -4,6 +4,7 @@ import type { FanEventFilters } from "@/lib/events/fan-schema";
 import { resolvePublishedDateBounds } from "@/lib/events/date-range";
 import { getStartOfTodayWarsawUtcIso, parseDatetimeLocalWarsaw } from "@/lib/events/format";
 import { mapEventRow, toEventInsertRow, toEventUpdateRow, type EventRow } from "@/lib/events/mapper";
+import { clearStructuredPriceFields } from "@/lib/events/price";
 import type { ParsedEventCreate, ParsedEventUpdate } from "@/lib/events/schema";
 import { EVENT_COVERS_BUCKET } from "@/lib/storage/event-covers";
 import type { Event, EventInsert } from "@/types";
@@ -222,6 +223,26 @@ export async function getPublishedEventById(supabase: SupabaseClient, id: string
   return mapEventRow(row);
 }
 
+function applyParsedPriceFields(
+  target: Partial<EventInsert>,
+  parsed: Pick<ParsedEventCreate | ParsedEventUpdate, "isFree" | "priceMode" | "priceMin" | "priceMax" | "currency">,
+): void {
+  if (parsed.isFree === true) {
+    Object.assign(target, clearStructuredPriceFields());
+    target.isFree = true;
+    return;
+  }
+
+  if (parsed.isFree !== undefined) {
+    target.isFree = parsed.isFree;
+  }
+
+  if (parsed.priceMode !== undefined) target.priceMode = parsed.priceMode;
+  if (parsed.priceMin !== undefined) target.priceMin = parsed.priceMin;
+  if (parsed.priceMax !== undefined) target.priceMax = parsed.priceMax;
+  if (parsed.currency !== undefined) target.currency = parsed.currency;
+}
+
 function parsedCreateToInsert(
   parsed: ParsedEventCreate,
   coords: { latitude: number; longitude: number },
@@ -238,12 +259,12 @@ function parsedCreateToInsert(
     lineup: parsed.lineup ?? null,
     description: parsed.description ?? null,
     ticketUrl: parsed.ticketUrl ?? null,
-    isFree: parsed.isFree,
-    price: parsed.price ?? null,
     status: "published",
     latitude: coords.latitude,
     longitude: coords.longitude,
   };
+
+  applyParsedPriceFields(base, parsed);
 
   if (parsed.locationMode === "address") {
     return {
@@ -308,8 +329,7 @@ export async function updateEvent(
   if (parsed.lineup !== undefined) patch.lineup = parsed.lineup;
   if (parsed.description !== undefined) patch.description = parsed.description;
   if (parsed.ticketUrl !== undefined) patch.ticketUrl = parsed.ticketUrl;
-  if (parsed.isFree !== undefined) patch.isFree = parsed.isFree;
-  if (parsed.price !== undefined) patch.price = parsed.price;
+  applyParsedPriceFields(patch, parsed);
 
   let coverPathToRemoveAfterUpdate: string | null = null;
 
