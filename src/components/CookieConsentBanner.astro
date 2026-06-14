@@ -1,0 +1,78 @@
+---
+import { PRIVACY_POLICY_PATH } from "@/lib/legal/paths";
+
+const STORAGE_KEY = "bassmap-cookie-notice-dismissed";
+---
+
+<div
+  id="cookie-consent-banner"
+  role="region"
+  aria-label="Informacja o plikach cookies"
+  hidden
+  class="fixed inset-x-0 bottom-0 z-50 border-t border-white/10 bg-slate-950/95 px-4 py-3 text-white shadow-lg backdrop-blur-md"
+>
+  <div class="mx-auto flex max-w-4xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <p class="text-sm leading-relaxed text-blue-100/80">
+      Nasz serwis używa wyłącznie niezbędnych plików cookies do obsługi Twojej sesji (logowania). Szczegóły znajdziesz w
+      naszej
+      <a href={PRIVACY_POLICY_PATH} class="text-purple-300 underline-offset-2 hover:underline">
+        Polityce Prywatności
+      </a>.
+    </p>
+    <button
+      id="cookie-consent-dismiss"
+      type="button"
+      class="inline-flex shrink-0 cursor-pointer items-center justify-center gap-1.5 rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-white/15 focus-visible:ring-2 focus-visible:ring-purple-400 focus-visible:outline-none"
+    >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        viewBox="0 0 24 24"
+        fill="none"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+        aria-hidden="true"
+      >
+        <path d="M18 6 6 18"></path>
+        <path d="m6 6 12 12"></path>
+      </svg>
+      Rozumiem
+    </button>
+  </div>
+</div>
+
+<script is:inline define:vars={{ STORAGE_KEY }}>
+  (function initCookieConsentBanner() {
+    const banner = document.getElementById("cookie-consent-banner");
+    const dismissButton = document.getElementById("cookie-consent-dismiss");
+    if (!banner || !dismissButton) {
+      return;
+    }
+
+    let dismissed = false;
+    try {
+      dismissed = sessionStorage.getItem(STORAGE_KEY) === "1";
+    } catch {
+      dismissed = false;
+    }
+
+    if (dismissed) {
+      banner.remove();
+      return;
+    }
+
+    banner.removeAttribute("hidden");
+
+    dismissButton.addEventListener("click", function () {
+      try {
+        sessionStorage.setItem(STORAGE_KEY, "1");
+      } catch {
+        // Ignore storage failures; banner still closes for this page view.
+      }
+      banner.remove();
+    });
+  })();
+</script>
