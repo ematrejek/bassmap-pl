@@ -12,6 +12,16 @@
 
 **Applies to:** `src/lib/services/*` – ścieżki odczytu dla widoku publicznego (fan discovery, landing pages).
 
+## Archiwum – jawny filtr daty + RLS
+
+**Context:** `listArchivedEvents` w `src/lib/services/events.ts`; migracja `20260615120000_events_select_archive.sql`
+
+**Problem:** Samo RLS na przeszłe eventy nie wystarczy przy szerszych politykach admina; serwis musi jawnie filtrować `published` i `starts_at < dziś` (Warsaw), spójnie z `NOT is_upcoming()`.
+
+**Rule:** Archiwum filtruje w serwisie tak jak discovery filtruje nadchodzące; nowa polityka RLS uzupełnia anon read, nie zastępuje filtra w kodzie.
+
+**Applies to:** `listArchivedEvents`, `/archive`, test `tests/integration/archive-list.test.ts`.
+
 ## Typografia – en dash zamiast em dash
 
 **Context:** Copy UI, tytuły stron, komentarze w `src/`, dokumenty aktywnej zmiany.

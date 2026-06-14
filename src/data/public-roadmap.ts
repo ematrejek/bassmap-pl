@@ -16,4 +16,9 @@ export interface PublicRoadmapItem {
   label: string;
 }
 
-export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [];
+export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
+  {
+    id: "fan-account-zone",
+    label: "Fan accounts — profile, my events, and add events",
+  },
+];
