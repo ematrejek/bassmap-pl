@@ -1,7 +1,7 @@
 <!-- IMPL-REVIEW-REPORT -->
 # Implementation Review: Strefa zalogowanego fana (fan-account-zone)
 
-- **Plan**: `context/changes/fan-account-zone/plan.md`
+- **Plan**: `context/archive/2026-06-15-fan-account-zone/plan.md`
 - **Scope**: Fazy 1–5 (S-12)
 - **Date**: 2026-06-15
 - **Commits**: `98a3847` (implementacja), `4da82a1` (fix testów), merge PR [#29](https://github.com/ematrejek/bassmap-pl/pull/29)

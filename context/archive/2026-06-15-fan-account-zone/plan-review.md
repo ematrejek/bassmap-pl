@@ -2,7 +2,7 @@
 change_id: fan-account-zone
 reviewed_at: 2026-06-14
 reviewer: Cursor Agent
-plan: context/changes/fan-account-zone/plan.md
+plan: context/archive/2026-06-15-fan-account-zone/plan.md
 verdict: approved-with-amendments
 ---
 

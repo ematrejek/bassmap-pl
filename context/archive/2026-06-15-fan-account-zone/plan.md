@@ -479,7 +479,7 @@ Szczegółowy przegląd: `plan-review.md` (2026-06-14). Werdykt: **zatwierdzony 
 
 ## References
 
-- Plan review: `context/changes/fan-account-zone/plan-review.md`
+- Plan review: `context/archive/2026-06-15-fan-account-zone/plan-review.md`
 - Roadmap S-12: `context/foundation/roadmap.md`
 - App shell menu wzorzec: `context/archive/2026-06-14-app-shell-navigation/plan.md`
 - RLS baseline: `supabase/migrations/20260610100000_create_events.sql`
@@ -548,3 +548,10 @@ Szczegółowy przegląd: `plan-review.md` (2026-06-14). Werdykt: **zatwierdzony 
 #### Manual
 
 - [ ] 5.3 Scenariusz rejestracja → publish → discovery
+
+## Archive addendum (2026-06-15)
+
+- **Status:** archived → `context/archive/2026-06-15-fan-account-zone/`
+- **Merge:** PR #29 (`5106171`); impl-review **APPROVED** (`reviews/impl-review.md`)
+- **Legal follow-up:** audyt prawny w tej samej sesji (`ad53a46`–`76d8d7d`) — checkbox praw autorskich przy zgłoszeniu; pełny **S-17** (dropdown źródła + zapis audytu) pozostaje osobnym slice.
+- **Manual QA pending:** migracja remote (`db push`), E2E fan submit w przeglądarce, pełny flow publish → discovery — nie blokuje archive (CI + deploy zielone).

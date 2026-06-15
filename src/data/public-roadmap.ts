@@ -18,7 +18,7 @@ export interface PublicRoadmapItem {
 
 export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
   {
-    id: "fan-account-zone",
-    label: "Fan accounts — profile, my events, and add events",
+    id: "event-content-copyright",
+    label: "Clearer cover-image rights when you add an event",
   },
 ];

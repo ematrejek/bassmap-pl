@@ -118,6 +118,8 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
 - FR-022: User can permanently delete their account (with confirmation). Personal account data is removed; existing public comments remain visible with author shown as "Deleted user" (anonymized — no link to the deleted identity). Priority: must-have (Partia II)
 
+- FR-025: When submitting an event with a cover image, fan selects cover source (Facebook / Instagram / Organizer website / Own) and must accept the matching copyright declaration checkbox; API rejects submit without a valid declaration when a cover is present. Priority: must-have (Partia II — compliance, immediately after S-12)
+
 ### Admin management
 
 - FR-006: Admin can add an event directly. Priority: must-have
@@ -180,6 +182,8 @@ Supporting rules:
 - An event requires: name, date, city, venue. Description, lineup, ticket link, and price are optional.
 - Events are visible publicly only after admin verification (admin-added events are immediately `published`; fan-submitted events start as `pending` until admin publishes or rejects).
 - On account deletion, the user's personal data is removed from auth; published comments they authored remain visible with author label "Deleted user" (Polish UI: „Usunięty użytkownik”) — content preserved, identity unlinked.
+- Fan-submitted cover images require a declared source (Facebook, Instagram, organizer site, or own work) and an explicit copyright declaration at submit time; declarations are stored for audit.
+- Event descriptions may include excerpts from public sources only where permitted by quotation rules (Polish Copyright Act art. 29) — justified scope, informational purpose, source attribution where known; full copying of promotional text is not permitted as a default rule.
 
 ## Access Control
 
