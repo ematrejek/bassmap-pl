@@ -7,9 +7,17 @@ import { mapEventRow, toEventInsertRow, toEventUpdateRow, type EventRow } from "
 import { clearStructuredPriceFields } from "@/lib/events/price";
 import type { ParsedEventCreate, ParsedEventUpdate } from "@/lib/events/schema";
 import { EVENT_COVERS_BUCKET } from "@/lib/storage/event-covers";
-import type { Event, EventInsert, EventStatus } from "@/types";
+import type { Event, EventInsert, EventStatus, CoverDeclarationKind, CoverSource } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
+
+/** Pola audytu okładki / zgody na opis – poza walidacją formularza Zod. */
+export type EventServiceUpdate = ParsedEventUpdate & {
+  descriptionRightsAcceptedAt?: string | null;
+  coverSource?: CoverSource | null;
+  coverDeclarationKind?: CoverDeclarationKind | null;
+  coverCopyrightDeclaredAt?: string | null;
+};
 
 function isStartsAtError(value: string | { error: string }): value is { error: string } {
   return typeof value !== "string";
@@ -303,7 +311,7 @@ function parsedCreateToInsert(
 export async function createEvent(
   supabase: SupabaseClient,
   parsed: ParsedEventCreate,
-  options?: { status?: EventStatus; createdBy?: string },
+  options?: { status?: EventStatus; createdBy?: string; descriptionRightsAcceptedAt?: string },
 ): Promise<ServiceResult<Event>> {
   const startsAt = toStoredStartsAt(parsed.startsAt);
   if (isStartsAtError(startsAt)) {
@@ -316,6 +324,9 @@ export async function createEvent(
   }
 
   const insert = toEventInsertRow(parsedCreateToInsert(parsed, coords, startsAt, options));
+  if (options?.descriptionRightsAcceptedAt !== undefined) {
+    insert.description_rights_accepted_at = options.descriptionRightsAcceptedAt;
+  }
   const response = await supabase.from("events").insert(insert).select("*").single();
 
   if (response.error) {
@@ -329,8 +340,13 @@ export async function createFanSubmittedEvent(
   supabase: SupabaseClient,
   userId: string,
   parsed: ParsedEventCreate,
+  options?: { descriptionRightsAcceptedAt?: string },
 ): Promise<ServiceResult<Event>> {
-  return createEvent(supabase, parsed, { status: "pending", createdBy: userId });
+  return createEvent(supabase, parsed, {
+    status: "pending",
+    createdBy: userId,
+    descriptionRightsAcceptedAt: options?.descriptionRightsAcceptedAt,
+  });
 }
 
 export async function listEventsByCreator(supabase: SupabaseClient, userId: string): Promise<ServiceResult<Event[]>> {
@@ -364,7 +380,7 @@ export async function setEventStatus(
 export async function updateEvent(
   supabase: SupabaseClient,
   id: string,
-  parsed: ParsedEventUpdate,
+  parsed: EventServiceUpdate,
 ): Promise<ServiceResult<Event>> {
   const existing = await getEventById(supabase, id);
   if (!existing) {
@@ -403,11 +419,27 @@ export async function updateEvent(
     patch.coverPath = parsed.coverPath;
     if (parsed.coverPath === null) {
       patch.coverAspect = null;
+      patch.coverSource = null;
+      patch.coverDeclarationKind = null;
+      patch.coverCopyrightDeclaredAt = null;
     }
   }
 
   if (parsed.coverAspect !== undefined) {
     patch.coverAspect = parsed.coverAspect;
+  }
+
+  if (parsed.coverSource !== undefined) {
+    patch.coverSource = parsed.coverSource;
+  }
+  if (parsed.coverDeclarationKind !== undefined) {
+    patch.coverDeclarationKind = parsed.coverDeclarationKind;
+  }
+  if (parsed.coverCopyrightDeclaredAt !== undefined) {
+    patch.coverCopyrightDeclaredAt = parsed.coverCopyrightDeclaredAt;
+  }
+  if (parsed.descriptionRightsAcceptedAt !== undefined) {
+    patch.descriptionRightsAcceptedAt = parsed.descriptionRightsAcceptedAt;
   }
 
   if (locationMode === "coordinates") {

@@ -561,20 +561,20 @@ Pomijalne – kilka nullable kolumn na istniejącym wierszu; brak dodatkowych za
 
 #### Automated
 
-- [x] 1.1 Migracja stosuje się lokalnie: `npx supabase db reset` lub `supabase migration up`
+- [x] 1.1 Migracja stosuje się lokalnie: `npx supabase db reset` lub `supabase migration up` — 79fcc84
 - [ ] 1.2 `npm run lint` przechodzi
-- [x] 1.3 `npm run build` przechodzi
+- [x] 1.3 `npm run build` przechodzi — 79fcc84
 
 #### Manual
 
-- [x] 1.4 Po migracji kolumny widoczne w Supabase Studio / `\d events`
+- [x] 1.4 Po migracji kolumny widoczne w Supabase Studio / `\d events` — 79fcc84
 
 ### Phase 2: API – create fan + upload cover (fan i admin)
 
 #### Automated
 
 - [ ] 2.1 `npm run lint` przechodzi
-- [ ] 2.2 `npm run build` przechodzi
+- [x] 2.2 `npm run build` przechodzi
 
 #### Manual
 

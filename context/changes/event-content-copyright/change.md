@@ -4,7 +4,7 @@ title: Prawa autorskie treści zgłoszenia (okładka + opis)
 roadmap_ref: S-17
 status: implementing
 created: 2026-06-15
-updated: 2026-06-15
+updated: 2026-06-16
 legal_copy_approved: 2026-06-15
 legal_copy_note: Właściciel zaakceptował projekt §5.6–5.9 i dopisków polityki w planie; zalecany przegląd prawnika przed produkcją.
 github-issue: "#30"

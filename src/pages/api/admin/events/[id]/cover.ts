@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { z } from "zod";
 import { jsonResponse } from "@/lib/api/json";
 import { requireAdmin } from "@/lib/auth/guards";
+import { parseCoverRightsFormData } from "@/lib/legal/cover-rights";
 import { getEventById, updateEvent } from "@/lib/services/events";
 import {
   buildCoverStoragePath,
@@ -81,7 +82,13 @@ export const POST: APIRoute = async (context) => {
     return jsonResponse({ error: "Nieprawidłowy format okładki" }, 400);
   }
 
+  const coverRights = parseCoverRightsFormData(formData);
+  if (!coverRights.ok) {
+    return jsonResponse({ error: coverRights.error }, 400);
+  }
+
   const coverAspect: CoverAspect = aspectResult.data;
+  const coverCopyrightDeclaredAt = new Date().toISOString();
   const storagePath = buildCoverStoragePath(idResult.id, fileValidation.mimeType);
   const bytes = new Uint8Array(await fileEntry.arrayBuffer());
 
@@ -101,6 +108,9 @@ export const POST: APIRoute = async (context) => {
   const updateResult = await updateEvent(supabase, idResult.id, {
     coverPath: storagePath,
     coverAspect,
+    coverSource: coverRights.coverSource,
+    coverDeclarationKind: coverRights.declarationKind,
+    coverCopyrightDeclaredAt,
   });
 
   if ("error" in updateResult) {

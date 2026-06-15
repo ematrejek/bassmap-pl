@@ -2,7 +2,7 @@ import type { APIRoute } from "astro";
 import { jsonResponse } from "@/lib/api/json";
 import { requireAuth } from "@/lib/auth/guards";
 import { parseEventCreate } from "@/lib/events/schema";
-import { stripFanSubmitConsent } from "@/lib/legal/fan-submit-consent";
+import { descriptionRightsAcceptedTimestamp, stripFanSubmitConsent } from "@/lib/legal/fan-submit-consent";
 import { createFanSubmittedEvent } from "@/lib/services/events";
 import { createClient } from "@/lib/supabase";
 
@@ -48,7 +48,9 @@ export const POST: APIRoute = async (context) => {
     return jsonResponse({ error: parsed.error }, 400);
   }
 
-  const result = await createFanSubmittedEvent(supabase, user.id, parsed.data);
+  const result = await createFanSubmittedEvent(supabase, user.id, parsed.data, {
+    descriptionRightsAcceptedAt: descriptionRightsAcceptedTimestamp(accepted) ?? undefined,
+  });
   if ("error" in result) {
     return jsonResponse({ error: result.error }, 400);
   }

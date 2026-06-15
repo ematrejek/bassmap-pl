@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { z } from "zod";
 import { jsonResponse } from "@/lib/api/json";
 import { requireAuth } from "@/lib/auth/guards";
+import { parseCoverRightsFormData } from "@/lib/legal/cover-rights";
 import { getEventById } from "@/lib/services/events";
 import {
   buildCoverStoragePath,
@@ -98,7 +99,13 @@ export const POST: APIRoute = async (context) => {
     return jsonResponse({ error: "Nieprawidłowy format okładki" }, 400);
   }
 
+  const coverRights = parseCoverRightsFormData(formData);
+  if (!coverRights.ok) {
+    return jsonResponse({ error: coverRights.error }, 400);
+  }
+
   const coverAspect: CoverAspect = aspectResult.data;
+  const coverCopyrightDeclaredAt = new Date().toISOString();
   const storagePath = buildCoverStoragePath(idResult.id, fileValidation.mimeType);
   const bytes = new Uint8Array(await fileEntry.arrayBuffer());
 
@@ -117,7 +124,13 @@ export const POST: APIRoute = async (context) => {
 
   const updateResult = await storageClient
     .from("events")
-    .update({ cover_path: storagePath, cover_aspect: coverAspect })
+    .update({
+      cover_path: storagePath,
+      cover_aspect: coverAspect,
+      cover_source: coverRights.coverSource,
+      cover_declaration_kind: coverRights.declarationKind,
+      cover_copyright_declared_at: coverCopyrightDeclaredAt,
+    })
     .eq("id", idResult.id)
     .eq("created_by", user.id)
     .eq("status", "pending")
