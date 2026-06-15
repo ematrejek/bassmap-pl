@@ -1,0 +1,42 @@
+---
+import AppShell from "@/components/shell/AppShell.astro";
+import MyEventsPage from "@/components/fan/MyEventsPage";
+import Layout from "@/layouts/Layout.astro";
+import type { Event } from "@/types";
+import { listEventsByCreator } from "@/lib/services/events";
+import { shellHeading, shellTextMuted } from "@/lib/shell-styles";
+import { createClient } from "@/lib/supabase";
+
+export const prerender = false;
+
+const { user } = Astro.locals;
+const submitted = Astro.url.searchParams.get("submitted") === "1";
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const listResult = supabase && user ? await listEventsByCreator(supabase, user.id) : { data: [] as Event[] };
+const submittedEvents: Event[] = "data" in listResult ? listResult.data : [];
+const listError = "error" in listResult ? listResult.error : null;
+---
+
+<Layout title="Moje eventy">
+  <AppShell showFooter={true}>
+    <div class="mx-auto max-w-6xl px-4 py-8">
+      {
+        listError ? (
+          <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+            {listError}
+          </p>
+        ) : null
+      }
+
+      <div class="mb-10">
+        <h1 class:list={shellHeading}>Moje eventy</h1>
+        <p class:list={["mt-1 text-sm", shellTextMuted]}>
+          Na które idziesz, które obserwujesz i które zgłaszasz do moderacji.
+        </p>
+      </div>
+
+      <MyEventsPage submittedEvents={submittedEvents} submitted={submitted} client:load />
+    </div>
+  </AppShell>
+</Layout>

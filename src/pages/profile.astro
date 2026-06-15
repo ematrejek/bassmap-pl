@@ -1,0 +1,16 @@
+---
+import AppShell from "@/components/shell/AppShell.astro";
+import ProfileSection from "@/components/fan/ProfileSection";
+import Layout from "@/layouts/Layout.astro";
+
+export const prerender = false;
+
+const { user } = Astro.locals;
+const email = user?.email ?? "";
+---
+
+<Layout title="Mój profil">
+  <AppShell showFooter={true}>
+    {email ? <ProfileSection email={email} client:load /> : null}
+  </AppShell>
+</Layout>

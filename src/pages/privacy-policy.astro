@@ -20,18 +20,32 @@ export const prerender = false;
   <h2>2. Jakie dane zbieramy i w jakim celu</h2>
 
   <h3>2.1 Dane konta</h3>
-  <p>Podczas rejestracji zbieramy:</p>
+  <p>Podczas rejestracji zbieramy wyłącznie:</p>
   <ul>
     <li>
       adres e-mail – niezbędny do założenia konta i wysyłki wiadomości systemowych (np. potwierdzenie rejestracji, reset
       hasła),
     </li>
-    <li>login,</li>
-    <li>imię i nazwisko, miasto – opcjonalnie, jeśli zostaną podane podczas rejestracji.</li>
+    <li>
+      hasło – przechowywane w formie zahashowanej przez dostawcę uwierzytelniania (Supabase); Administrator nie ma
+      dostępu do hasła w postaci jawnej.
+    </li>
   </ul>
   <p>Podstawa prawna: art. 6 ust. 1 pkt b RODO (wykonanie umowy / świadczenie usługi).</p>
 
-  <h3>2.2 Dane techniczne</h3>
+  <h3>2.2 Zgłoszenia wydarzeń</h3>
+  <p>
+    Zalogowany użytkownik może zgłosić wydarzenie do publikacji w Serwisie. Przy zgłoszeniu przetwarzamy dane podane w
+    formularzu (np. nazwa wydarzenia, data, miejsce, opis, link biletowy, cena) oraz identyfikator konta użytkownika
+    (adres e-mail powiązany z kontem), w celu moderacji i ewentualnej publikacji w Serwisie. Zgłoszenie nie jest
+    widoczne publicznie do momentu akceptacji przez Administratora.
+  </p>
+  <p>
+    Podstawa prawna: art. 6 ust. 1 pkt b RODO (świadczenie usługi) oraz art. 6 ust. 1 pkt f RODO (uzasadniony interes –
+    jakość i wiarygodność bazy wydarzeń).
+  </p>
+
+  <h3>2.3 Dane techniczne</h3>
   <p>
     Serwis automatycznie może rejestrować dane techniczne, takie jak adres IP czy informacje o przeglądarce, w celach
     bezpieczeństwa i diagnostycznych. Dane te nie są łączone z profilem użytkownika.
@@ -40,7 +54,7 @@ export const prerender = false;
     Podstawa prawna: art. 6 ust. 1 pkt f RODO (prawnie uzasadniony interes administratora – bezpieczeństwo serwisu).
   </p>
 
-  <h3>2.3 Zautomatyzowane podejmowanie decyzji</h3>
+  <h3>2.4 Zautomatyzowane podejmowanie decyzji</h3>
   <p>
     Twoje dane osobowe nie będą wykorzystywane do zautomatyzowanego podejmowania decyzji, które mogłyby wywołać wobec
     Ciebie skutki prawne lub w podobny sposób istotnie na Ciebie wpłynąć, w tym nie będą poddawane profilowaniu
@@ -83,7 +97,9 @@ export const prerender = false;
 
   <h2>4. Jak długo przechowujemy dane</h2>
   <p>
-    Dane konta użytkownika przechowywane są przez okres posiadania konta w Serwisie. Po usunięciu konta przez
+    Dane konta użytkownika przechowywane są przez okres posiadania konta w Serwisie. Zgłoszenia wydarzeń powiązane z
+    kontem przechowywane są do czasu moderacji i — w przypadku publikacji — tak długo, jak wydarzenie jest widoczne w
+    Serwisie (identyfikator zgłaszającego może być zachowany w bazie w celach moderacji). Po usunięciu konta przez
     użytkownika lub Administratora, dane osobowe są usuwane lub anonimizowane. Wyjątek stanowi sytuacja, w której
     ograniczone dane (np. adres IP, logi systemowe lub historia zgłoszeń) muszą zostać zachowane w celu obrony lub
     dochodzenia ewentualnych roszczeń cywilnoprawnych albo realizacji obowiązków prawnych nakładanych przez organy

@@ -22,6 +22,7 @@ export interface EventRow {
   status: EventStatus;
   cover_path: string | null;
   cover_aspect: CoverAspect | null;
+  created_by: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -56,6 +57,7 @@ export function mapEventRow(row: EventRow): Event {
     status: row.status,
     coverPath: row.cover_path,
     coverAspect: row.cover_aspect,
+    createdBy: row.created_by,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -83,6 +85,7 @@ export function toEventInsertRow(input: EventInsert): Record<string, unknown> {
     status: input.status ?? "published",
     cover_path: input.coverPath ?? null,
     cover_aspect: input.coverAspect ?? null,
+    ...(input.createdBy !== undefined ? { created_by: input.createdBy } : {}),
   };
 }
 

@@ -9,6 +9,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toDatetimeLocalValue } from "@/lib/events/format";
 import { parseEventCreate, parseEventUpdate } from "@/lib/events/schema";
+import { MY_EVENTS_PATH } from "@/lib/routes";
 import { getCoverAspectClassName, validateCoverFile } from "@/lib/storage/event-covers";
 import { shellBtnOutline, shellBtnPrimary } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
@@ -74,12 +75,13 @@ async function uploadCoverFile(
   eventId: string,
   file: File,
   coverAspect: CoverAspect,
+  uploadUrl: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("coverAspect", coverAspect);
 
-  const response = await fetch(`/api/admin/events/${eventId}/cover`, {
+  const response = await fetch(uploadUrl, {
     method: "POST",
     credentials: "include",
     body: formData,
@@ -94,8 +96,16 @@ async function uploadCoverFile(
   return { ok: true };
 }
 
+function coverUploadUrlFor(eventId: string, variant: "admin" | "fan"): string {
+  return variant === "fan" ? `/api/fan/events/${eventId}/cover` : `/api/admin/events/${eventId}/cover`;
+}
+
 interface Props {
   mode: "create" | "edit";
+  variant?: "admin" | "fan";
+  submitUrl?: string;
+  successRedirect?: string;
+  showCoverUpload?: boolean;
   initialEvent?: Event;
   serverError?: string | null;
   initialCoverUrl?: string | null;
@@ -103,10 +113,17 @@ interface Props {
 
 export default function EventForm({
   mode,
+  variant = "admin",
+  submitUrl,
+  successRedirect,
+  showCoverUpload: showCoverUploadProp,
   initialEvent,
   serverError: initialServerError,
   initialCoverUrl = null,
 }: Props) {
+  const showCoverUpload = showCoverUploadProp ?? variant !== "fan";
+  const createSubmitUrl = submitUrl ?? "/api/admin/events";
+  const createSuccessRedirect = successRedirect ?? "/admin";
   const initialMode = inferLocationMode(initialEvent);
 
   const [name, setName] = useState(initialEvent?.name ?? "");
@@ -236,7 +253,7 @@ export default function EventForm({
       return;
     }
 
-    if (coverFile) {
+    if (coverFile && showCoverUpload) {
       const fileValidation = validateCoverFile(coverFile);
       if (!fileValidation.ok) {
         setServerError(fileValidation.error);
@@ -250,7 +267,7 @@ export default function EventForm({
       let eventId = mode === "edit" ? initialEvent?.id : undefined;
 
       if (mode === "create") {
-        const createResponse = await fetch("/api/admin/events", {
+        const createResponse = await fetch(createSubmitUrl, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
@@ -270,15 +287,23 @@ export default function EventForm({
           return;
         }
 
-        if (coverFile) {
-          const uploadResult = await uploadCoverFile(eventId, coverFile, coverAspect);
+        if (showCoverUpload && coverFile) {
+          const uploadResult = await uploadCoverFile(
+            eventId,
+            coverFile,
+            coverAspect,
+            coverUploadUrlFor(eventId, variant),
+          );
           if (!uploadResult.ok) {
-            window.location.href = `/admin/events/${eventId}/edit?coverError=upload`;
+            window.location.href =
+              variant === "fan"
+                ? `${MY_EVENTS_PATH}?coverError=upload#dodaje`
+                : `/admin/events/${eventId}/edit?coverError=upload`;
             return;
           }
         }
 
-        window.location.href = "/admin";
+        window.location.href = createSuccessRedirect;
         return;
       }
 
@@ -288,7 +313,12 @@ export default function EventForm({
       }
 
       if (coverFile) {
-        const uploadResult = await uploadCoverFile(eventId, coverFile, coverAspect);
+        const uploadResult = await uploadCoverFile(
+          eventId,
+          coverFile,
+          coverAspect,
+          coverUploadUrlFor(eventId, variant),
+        );
         if (!uploadResult.ok) {
           setServerError(uploadResult.error);
           return;
@@ -556,87 +586,88 @@ export default function EventForm({
         />
         <p className="text-muted-foreground text-xs">Opcjonalnie. Widoczne na stronie szczegółów wydarzenia.</p>
       </div>
-
-      <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">
-        <div className="flex items-center gap-2 text-blue-100/80">
-          <ImageIcon className="size-4" />
-          <Label htmlFor="coverFile" className="text-foreground/90">
-            Okładka wydarzenia
-          </Label>
-        </div>
-        <Input
-          id="coverFile"
-          type="file"
-          accept="image/jpeg,image/png,image/webp"
-          className={cn(
-            fieldClass,
-            "file:bg-primary file:text-primary-foreground cursor-pointer file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1 file:text-sm",
-          )}
-          onChange={(e) => {
-            const file = e.target.files?.[0] ?? null;
-            handleCoverFileChange(file);
-          }}
-        />
-        <p className="text-muted-foreground text-xs">Opcjonalnie. JPEG, PNG lub WebP, max 5 MB.</p>
-
-        {(coverFile !== null || (initialEvent?.coverPath && !removeCover)) && (
-          <fieldset className="space-y-2">
-            <legend className="text-sm text-blue-100/80">Format okładki</legend>
-            <div className="flex flex-wrap gap-4">
-              <label htmlFor="coverAspectPortrait" className="flex cursor-pointer items-center gap-2">
-                <input
-                  id="coverAspectPortrait"
-                  type="radio"
-                  name="coverAspect"
-                  value="portrait"
-                  checked={coverAspect === "portrait"}
-                  onChange={() => {
-                    setCoverAspect("portrait");
-                  }}
-                  className="accent-primary"
-                />
-                <span className="text-sm text-white/90">Pionowy (plakat)</span>
-              </label>
-              <label htmlFor="coverAspectLandscape" className="flex cursor-pointer items-center gap-2">
-                <input
-                  id="coverAspectLandscape"
-                  type="radio"
-                  name="coverAspect"
-                  value="landscape"
-                  checked={coverAspect === "landscape"}
-                  onChange={() => {
-                    setCoverAspect("landscape");
-                  }}
-                  className="accent-primary"
-                />
-                <span className="text-sm text-white/90">Poziomy (tło z FB)</span>
-              </label>
-            </div>
-          </fieldset>
-        )}
-
-        {coverPreviewUrl && (
-          <div className="mt-2 overflow-hidden rounded-xl border border-white/10">
-            <img
-              src={coverPreviewUrl}
-              alt="Podgląd okładki"
-              className={cn("w-full object-cover", getCoverAspectClassName(coverAspect))}
-            />
+      {showCoverUpload ? (
+        <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">
+          <div className="flex items-center gap-2 text-blue-100/80">
+            <ImageIcon className="size-4" />
+            <Label htmlFor="coverFile" className="text-foreground/90">
+              Okładka wydarzenia
+            </Label>
           </div>
-        )}
+          <Input
+            id="coverFile"
+            type="file"
+            accept="image/jpeg,image/png,image/webp"
+            className={cn(
+              fieldClass,
+              "file:bg-primary file:text-primary-foreground cursor-pointer file:mr-3 file:rounded-md file:border-0 file:px-3 file:py-1 file:text-sm",
+            )}
+            onChange={(e) => {
+              const file = e.target.files?.[0] ?? null;
+              handleCoverFileChange(file);
+            }}
+          />
+          <p className="text-muted-foreground text-xs">Opcjonalnie. JPEG, PNG lub WebP, max 5 MB.</p>
 
-        {showRemoveCoverButton && (
-          <Button
-            type="button"
-            variant="outline"
-            size="sm"
-            className="border-white/20 bg-transparent text-red-200 hover:bg-red-500/10 hover:text-red-100"
-            onClick={handleRemoveCover}
-          >
-            Usuń okładkę
-          </Button>
-        )}
-      </div>
+          {(coverFile !== null || (initialEvent?.coverPath && !removeCover)) && (
+            <fieldset className="space-y-2">
+              <legend className="text-sm text-blue-100/80">Format okładki</legend>
+              <div className="flex flex-wrap gap-4">
+                <label htmlFor="coverAspectPortrait" className="flex cursor-pointer items-center gap-2">
+                  <input
+                    id="coverAspectPortrait"
+                    type="radio"
+                    name="coverAspect"
+                    value="portrait"
+                    checked={coverAspect === "portrait"}
+                    onChange={() => {
+                      setCoverAspect("portrait");
+                    }}
+                    className="accent-primary"
+                  />
+                  <span className="text-sm text-white/90">Pionowy (plakat)</span>
+                </label>
+                <label htmlFor="coverAspectLandscape" className="flex cursor-pointer items-center gap-2">
+                  <input
+                    id="coverAspectLandscape"
+                    type="radio"
+                    name="coverAspect"
+                    value="landscape"
+                    checked={coverAspect === "landscape"}
+                    onChange={() => {
+                      setCoverAspect("landscape");
+                    }}
+                    className="accent-primary"
+                  />
+                  <span className="text-sm text-white/90">Poziomy (tło z FB)</span>
+                </label>
+              </div>
+            </fieldset>
+          )}
+
+          {coverPreviewUrl && (
+            <div className="mt-2 overflow-hidden rounded-xl border border-white/10">
+              <img
+                src={coverPreviewUrl}
+                alt="Podgląd okładki"
+                className={cn("w-full object-cover", getCoverAspectClassName(coverAspect))}
+              />
+            </div>
+          )}
+
+          {showRemoveCoverButton && (
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="border-white/20 bg-transparent text-red-200 hover:bg-red-500/10 hover:text-red-100"
+              onClick={handleRemoveCover}
+            >
+              Usuń okładkę
+            </Button>
+          )}
+        </div>
+      ) : null}
 
       <div className="grid gap-4 sm:grid-cols-2">
         <div className="space-y-2">
@@ -800,13 +831,19 @@ export default function EventForm({
           variant="outline"
           className={shellBtnOutline}
           onClick={() => {
-            window.location.href = "/admin";
+            window.location.href = variant === "fan" ? MY_EVENTS_PATH : "/admin";
           }}
         >
           Anuluj
         </Button>
         <Button type="submit" disabled={submitting} className={shellBtnPrimary}>
-          {submitting ? "Zapisywanie…" : mode === "create" ? "Dodaj wydarzenie" : "Zapisz zmiany"}
+          {submitting
+            ? "Zapisywanie…"
+            : mode === "create"
+              ? variant === "fan"
+                ? "Wyślij do moderacji"
+                : "Dodaj wydarzenie"
+              : "Zapisz zmiany"}
         </Button>
       </div>
     </form>

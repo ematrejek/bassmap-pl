@@ -2,28 +2,59 @@
 import Layout from "@/layouts/Layout.astro";
 import AppShell from "@/components/shell/AppShell.astro";
 import AdminEventsTable from "@/components/admin/AdminEventsTable";
+import { resolveSubmitterProfiles } from "@/lib/auth/submitter-profile";
 import { listEventsForAdmin } from "@/lib/services/events";
 import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
 import { ADMIN_PATH } from "@/lib/routes";
 import { shellBtnPrimary, shellHeading, shellTextMuted } from "@/lib/shell-styles";
 import { createClient } from "@/lib/supabase";
+import type { AdminEventRow, Event } from "@/types";
 import { SUPABASE_URL } from "astro:env/server";
 
 export const prerender = false;
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 const listResult = supabase ? await listEventsForAdmin(supabase) : { data: [] };
-const rawEvents = "data" in listResult ? listResult.data : [];
+const rawEvents: Event[] = "data" in listResult ? listResult.data : [];
 const supabaseUrl = SUPABASE_URL ?? "";
-const events = supabaseUrl
-  ? rawEvents.map((event) => enrichEventWithCoverUrl(event, supabaseUrl))
-  : rawEvents.map((event) => ({ ...event, coverUrl: null as string | null }));
+
+function isFanSubmission(event: Event): boolean {
+  return event.status === "pending" && event.createdBy !== null;
+}
+
+const fanPending = rawEvents
+  .filter(isFanSubmission)
+  .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+const otherEvents = rawEvents.filter((event) => !isFanSubmission(event));
+
+const submitterIds = fanPending.map((event) => event.createdBy).filter((id): id is string => id !== null);
+const submitterProfiles = await resolveSubmitterProfiles(submitterIds);
+
+function toAdminRow(event: Event, withSubmitter: boolean): AdminEventRow {
+  const base = supabaseUrl
+    ? enrichEventWithCoverUrl(event, supabaseUrl)
+    : { ...event, coverUrl: null as string | null };
+
+  if (!withSubmitter || !event.createdBy) {
+    return base;
+  }
+
+  const profile = submitterProfiles.get(event.createdBy);
+  return {
+    ...base,
+    submitterEmail: profile?.email ?? null,
+    submitterLogin: profile?.login ?? null,
+  };
+}
+
+const moderationEvents = fanPending.map((event) => toAdminRow(event, true));
+const catalogEvents = otherEvents.map((event) => toAdminRow(event, false));
 const listError = "error" in listResult ? listResult.error : null;
 ---
 
 <Layout title="Panel admina">
   <AppShell showFooter={false}>
-    <div class="mx-auto max-w-5xl px-2 py-8 sm:px-4">
+    <div class="mx-auto max-w-6xl px-2 py-8 sm:px-4">
       {
         listError ? (
           <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
@@ -32,26 +63,54 @@ const listError = "error" in listResult ? listResult.error : null;
         ) : null
       }
 
-      <div class="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 class:list={shellHeading}>Wydarzenia</h1>
+          <h1 class:list={shellHeading}>Panel admina</h1>
           <p class:list={["mt-1 text-sm", shellTextMuted]}>
-            {
-              events.length === 0
-                ? "Brak wydarzeń w bazie."
-                : `Łącznie ${String(events.length)} wydarzeń (sortowanie: od najbliższej daty).`
-            }
+            Moderacja zgłoszeń fanów i zarządzanie katalogiem wydarzeń.
           </p>
         </div>
         <a
           href={`${ADMIN_PATH}/events/new`}
-          class:list={[shellBtnPrimary, "inline-flex h-10 items-center rounded-md px-4 text-sm"]}
+          class:list={[shellBtnPrimary, "inline-flex h-10 shrink-0 items-center rounded-md px-4 text-sm"]}
         >
           Dodaj wydarzenie
         </a>
       </div>
 
-      <AdminEventsTable events={events} listError={null} />
+      <section class="mb-12">
+        <div class="mb-4">
+          <h2 class="font-heading text-foreground text-xl font-bold tracking-tight uppercase">Do moderacji</h2>
+          <p class:list={["mt-1 text-sm", shellTextMuted]}>
+            Zgłoszenia od użytkowników oczekujące na publikację lub odrzucenie.
+          </p>
+        </div>
+        <AdminEventsTable
+          events={moderationEvents}
+          showSubmitter={true}
+          showModerationActions={true}
+          emptyMessage="Brak zgłoszeń do moderacji."
+          client:load
+        />
+      </section>
+
+      <section>
+        <div class="mb-4">
+          <h2 class="font-heading text-foreground text-xl font-bold tracking-tight uppercase">Wszystkie wydarzenia</h2>
+          <p class:list={["mt-1 text-sm", shellTextMuted]}>
+            {
+              catalogEvents.length === 0
+                ? "Brak pozostałych wydarzeń w bazie."
+                : `Łącznie ${String(catalogEvents.length)} wydarzeń (sortowanie: od najbliższej daty).`
+            }
+          </p>
+        </div>
+        <AdminEventsTable
+          events={catalogEvents}
+          emptyMessage="Nie ma jeszcze opublikowanych ani szkicowych wydarzeń. Kliknij „Dodaj wydarzenie”, aby utworzyć pierwsze."
+          client:load
+        />
+      </section>
     </div>
   </AppShell>
 </Layout>

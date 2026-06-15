@@ -1,0 +1,49 @@
+---
+import AppShell from "@/components/shell/AppShell.astro";
+import Layout from "@/layouts/Layout.astro";
+import { ADMIN_PATH, MY_EVENTS_PATH, PROFILE_PATH } from "@/lib/routes";
+import { shellHeading, shellLink, shellTextMuted } from "@/lib/shell-styles";
+
+export const prerender = false;
+
+const { isAdmin } = Astro.locals;
+---
+
+<Layout title="Forum">
+  <AppShell showFooter={true}>
+    <div class="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center px-4 py-8">
+      <div class="surface-panel p-8 text-center">
+        <h1 class:list={[shellHeading, "mb-3"]}>Forum</h1>
+        {
+          isAdmin ? (
+            <>
+              <p class:list={["text-sm", shellTextMuted]}>
+                Wkrótce – moderacja forum: wątki, komentarze i zgłoszenia od użytkowników.
+              </p>
+              <p class:list={["mt-3 text-xs", shellTextMuted]}>
+                Jako admin będziesz mógł tu przeglądać treści i reagować na naruszenia.
+              </p>
+              <div class="mt-6 flex flex-col gap-2 text-sm">
+                <a href={ADMIN_PATH} class:list={[shellLink, "hover:underline"]}>
+                  Panel admina
+                </a>
+              </div>
+            </>
+          ) : (
+            <>
+              <p class:list={["text-sm", shellTextMuted]}>Wkrótce – tutaj pojawi się forum społeczności BassMap PL.</p>
+              <div class="mt-6 flex flex-col gap-2 text-sm">
+                <a href={MY_EVENTS_PATH} class:list={[shellLink, "hover:underline"]}>
+                  Moje eventy
+                </a>
+                <a href={PROFILE_PATH} class:list={[shellLink, "hover:underline"]}>
+                  Mój profil
+                </a>
+              </div>
+            </>
+          )
+        }
+      </div>
+    </div>
+  </AppShell>
+</Layout>

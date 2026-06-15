@@ -1,10 +1,10 @@
 import { defineMiddleware } from "astro:middleware";
 import { resolveIsAdmin } from "@/lib/auth/admin";
 import { LEGACY_LEGAL_REDIRECTS } from "@/lib/legal/paths";
-import { DISCOVERY_PATH, HOME_PATH } from "@/lib/routes";
+import { DISCOVERY_PATH, FORUM_PATH, HOME_PATH, MY_EVENTS_PATH, PROFILE_PATH, TEAM_PATH } from "@/lib/routes";
 import { createClient } from "@/lib/supabase";
 
-const PROTECTED_ROUTES = ["/dashboard"];
+const PROTECTED_ROUTES = [PROFILE_PATH, MY_EVENTS_PATH, TEAM_PATH, FORUM_PATH];
 
 function isAdminRoute(pathname: string): boolean {
   return pathname === "/admin" || pathname.startsWith("/admin/");
@@ -33,6 +33,10 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   if (pathname === HOME_PATH && context.url.search.length > 1) {
     return context.redirect(`${DISCOVERY_PATH}${context.url.search}`, 302);
+  }
+
+  if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {
+    return context.redirect(PROFILE_PATH, 301);
   }
 
   if (PROTECTED_ROUTES.some((route) => pathname.startsWith(route))) {
