@@ -17,14 +17,14 @@ Vitest and integration harness exist from Phases 1–2. Map pins use `resolveMap
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-| -------- | ------ | ---------------- | ------ |
-| Map test layer | Unit on `city-centers.ts` | Same signal as map UI without Leaflet or screenshots | Research |
-| Admin validation layer | Unit on `parseEventCreate` / `parseEventUpdate` | API routes are thin wrappers — no HTTP harness | Research |
-| Datetime gap | Unit on `parseDatetimeLocalWarsaw` | Function is public; documents stricter contract than Zod | Plan |
-| Integration scope | One coords-persist smoke only | Proves service wiring; null-coords DB row duplicates unit | Plan |
-| File layout | Four unit files + one integration file | Clear ownership per domain | Plan |
-| Nominatim / E2E | Out of scope | Cost × signal — deferred per test-plan | Research |
+| Decision               | Choice                                          | Why (1 sentence)                                          | Source   |
+| ---------------------- | ----------------------------------------------- | --------------------------------------------------------- | -------- |
+| Map test layer         | Unit on `city-centers.ts`                       | Same signal as map UI without Leaflet or screenshots      | Research |
+| Admin validation layer | Unit on `parseEventCreate` / `parseEventUpdate` | API routes are thin wrappers — no HTTP harness            | Research |
+| Datetime gap           | Unit on `parseDatetimeLocalWarsaw`              | Function is public; documents stricter contract than Zod  | Plan     |
+| Integration scope      | One coords-persist smoke only                   | Proves service wiring; null-coords DB row duplicates unit | Plan     |
+| File layout            | Four unit files + one integration file          | Clear ownership per domain                                | Plan     |
+| Nominatim / E2E        | Out of scope                                    | Cost × signal — deferred per test-plan                    | Research |
 
 ## Scope
 
@@ -46,13 +46,13 @@ Phases 1–3 need no Supabase. Phase 4 reuses `mutation-fixtures` + `createAdmin
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| ----- | ---------------- | -------- |
+| Phase                | What it delivers                     | Key risk                                  |
+| -------------------- | ------------------------------------ | ----------------------------------------- |
 | 1. City-centers unit | Pin priority: coords → city → Poland | Wrong expectations on `CITY_CENTERS` keys |
-| 2. Event-schema unit | Reject bad subgenres/coords | TypeScript casts on invalid payloads |
-| 3. Fan + format unit | URL sanitization + datetime contract | Zod vs format.ts boundary confusion |
-| 4. Integration smoke | Admin create keeps lat/lng | Needs local Supabase |
-| 5. Docs | §6.1 cookbook + §6.6 file list | — |
+| 2. Event-schema unit | Reject bad subgenres/coords          | TypeScript casts on invalid payloads      |
+| 3. Fan + format unit | URL sanitization + datetime contract | Zod vs format.ts boundary confusion       |
+| 4. Integration smoke | Admin create keeps lat/lng           | Needs local Supabase                      |
+| 5. Docs              | §6.1 cookbook + §6.6 file list       | —                                         |
 
 **Prerequisites:** Vitest harness from Phases 1–2; `.env.test` + local Supabase for Phase 4 only.
 

@@ -20,9 +20,9 @@ Tests follow three non-negotiable principles for this project:
    is worried about X, and the failure would surface somewhere in the fan
    discovery or events data path" carry the same weight as PRD lines or
    hot-spot data.
-3. **Risks are scenarios, not code locations.** This plan documents *what
-   could fail* and *why we believe it's likely* — drawn from documents,
-   interview, and codebase *signal* (churn, structure, test base). It does
+3. **Risks are scenarios, not code locations.** This plan documents _what
+   could fail_ and _why we believe it's likely_ — drawn from documents,
+   interview, and codebase _signal_ (churn, structure, test base). It does
    NOT claim to know which line owns the failure. That knowledge is
    produced by `/10x-research` during each rollout phase. If the plan and
    research disagree about where the failure lives, research is the
@@ -34,31 +34,31 @@ Hot-spot scope used for likelihood weighting: `src/`, `supabase/`.
 
 The top failure scenarios this project must protect against, ordered by
 risk = impact × likelihood. Risks are failure scenarios in user / business
-terms, not test names. The Source column cites the *evidence that surfaced
-this risk* — never a specific file as "where the failure lives" (that is
+terms, not test names. The Source column cites the _evidence that surfaced
+this risk_ — never a specific file as "where the failure lives" (that is
 research's job, see §1 principle #3).
 
-| # | Risk (failure scenario) | Impact | Likelihood | Source (evidence — not anchor) |
-|---|-------------------------|--------|------------|--------------------------------|
-| 1 | Fan sees an **empty event list** although published upcoming events exist in the database | High | High | interview Q1; PRD guardrails; `lessons.md` (explicit fan-read filters); hot-spot dir `src/lib/services` (4 commits/30d) |
-| 2 | Fan sees **wrong map locations** (pin in the wrong place or incorrect city fallback) | High | Medium | interview Q1; PRD "wrong info is worse than no info"; hot-spot dir `src/lib/events` (8 commits/30d) |
-| 3 | **Events disappear** or the public list "resets" after a code change or deploy | High | Medium | interview Q1, Q3; hot-spot dir `supabase/migrations` (7 commits/30d) |
-| 4 | A **non-admin user** can create, edit, or delete events | High | Medium | interview Q1; PRD Access Control + FR-006/007; abuse lens (authorization) |
-| 5 | An **admin in the database** cannot access the admin panel (403 / unauthorized) | Medium | Medium | interview Q2 (already occurred); hot-spot dir `src/pages/api` (5 commits/30d) |
-| 6 | A logged-in admin on public pages sees **drafts or past events** instead of only public upcoming events | Medium | Medium | `lessons.md`; PRD guardrails |
-| 7 | Untrusted API input (invalid subgenres, dates) passes validation and corrupts list or map data | Medium | Low | PRD Business Logic (25 subgenres, upcoming rule); hot-spot dir `src/pages/api` |
+| #   | Risk (failure scenario)                                                                                 | Impact | Likelihood | Source (evidence — not anchor)                                                                                          |
+| --- | ------------------------------------------------------------------------------------------------------- | ------ | ---------- | ----------------------------------------------------------------------------------------------------------------------- |
+| 1   | Fan sees an **empty event list** although published upcoming events exist in the database               | High   | High       | interview Q1; PRD guardrails; `lessons.md` (explicit fan-read filters); hot-spot dir `src/lib/services` (4 commits/30d) |
+| 2   | Fan sees **wrong map locations** (pin in the wrong place or incorrect city fallback)                    | High   | Medium     | interview Q1; PRD "wrong info is worse than no info"; hot-spot dir `src/lib/events` (8 commits/30d)                     |
+| 3   | **Events disappear** or the public list "resets" after a code change or deploy                          | High   | Medium     | interview Q1, Q3; hot-spot dir `supabase/migrations` (7 commits/30d)                                                    |
+| 4   | A **non-admin user** can create, edit, or delete events                                                 | High   | Medium     | interview Q1; PRD Access Control + FR-006/007; abuse lens (authorization)                                               |
+| 5   | An **admin in the database** cannot access the admin panel (403 / unauthorized)                         | Medium | Medium     | interview Q2 (already occurred); hot-spot dir `src/pages/api` (5 commits/30d)                                           |
+| 6   | A logged-in admin on public pages sees **drafts or past events** instead of only public upcoming events | Medium | Medium     | `lessons.md`; PRD guardrails                                                                                            |
+| 7   | Untrusted API input (invalid subgenres, dates) passes validation and corrupts list or map data          | Medium | Low        | PRD Business Logic (25 subgenres, upcoming rule); hot-spot dir `src/pages/api`                                          |
 
 ### Risk Response Guidance
 
-| Risk | What would prove protection | Must challenge | Context `/10x-research` must ground | Likely cheapest layer | Anti-pattern to avoid |
-|------|-----------------------------|----------------|--------------------------------------|-----------------------|-----------------------|
-| #1 | Public list returns every published upcoming event when seed/fixture data says they exist; empty only when data truly absent | "RLS alone is enough for fan read" | Fan-read entry point, filter predicates (`published`, upcoming), session vs anon client shape | integration (service + DB fixture) | Asserting empty because the test copied production filter bugs |
-| #2 | Coordinates and city-centre fallback match business rules for events with/without lat/lng | "Geocode at save time means runtime never lies" | Mapper output, fallback table, events missing coordinates | unit on pure mapping/fallback logic | E2E map screenshot where unit on mapper suffices |
-| #3 | Mutations and migrations do not wipe or hide the full events table; list count stable after guarded operations | "DELETE in test cleanup equals production data loss" | Which operations are destructive, migration idempotency, seed contract | integration + seed smoke | Happy-path-only CRUD without delete/count assertions |
-| #4 | Anonymous and authenticated non-admin clients cannot INSERT/UPDATE/DELETE on events | "Middleware on `/admin` is enough" | RLS policies, API route guards, direct Supabase client paths | integration (RLS + API) | Only testing the admin UI route, not the data layer |
-| #5 | Allowlisted admin reaches admin routes; non-admin gets 403 | "Row in admin table implies `is_admin()` true" | Auth session, RPC/allowlist check, middleware guard chain | integration | Testing only the login form, not post-login authorization |
-| #6 | Public read paths filter `published` + upcoming even when session belongs to admin | "Logged-in user uses the same query as anon" | Service-layer filters vs RLS-only reliance | integration | Relying on RLS test while service omits explicit filters |
-| #7 | Server rejects out-of-catalog subgenres and invalid dates before persist | "Zod on client is enough" | Validation schema, API handler boundary | unit on validation | Snapshot of error message copied from implementation |
+| Risk | What would prove protection                                                                                                  | Must challenge                                       | Context `/10x-research` must ground                                                           | Likely cheapest layer               | Anti-pattern to avoid                                          |
+| ---- | ---------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- | --------------------------------------------------------------------------------------------- | ----------------------------------- | -------------------------------------------------------------- |
+| #1   | Public list returns every published upcoming event when seed/fixture data says they exist; empty only when data truly absent | "RLS alone is enough for fan read"                   | Fan-read entry point, filter predicates (`published`, upcoming), session vs anon client shape | integration (service + DB fixture)  | Asserting empty because the test copied production filter bugs |
+| #2   | Coordinates and city-centre fallback match business rules for events with/without lat/lng                                    | "Geocode at save time means runtime never lies"      | Mapper output, fallback table, events missing coordinates                                     | unit on pure mapping/fallback logic | E2E map screenshot where unit on mapper suffices               |
+| #3   | Mutations and migrations do not wipe or hide the full events table; list count stable after guarded operations               | "DELETE in test cleanup equals production data loss" | Which operations are destructive, migration idempotency, seed contract                        | integration + seed smoke            | Happy-path-only CRUD without delete/count assertions           |
+| #4   | Anonymous and authenticated non-admin clients cannot INSERT/UPDATE/DELETE on events                                          | "Middleware on `/admin` is enough"                   | RLS policies, API route guards, direct Supabase client paths                                  | integration (RLS + API)             | Only testing the admin UI route, not the data layer            |
+| #5   | Allowlisted admin reaches admin routes; non-admin gets 403                                                                   | "Row in admin table implies `is_admin()` true"       | Auth session, RPC/allowlist check, middleware guard chain                                     | integration                         | Testing only the login form, not post-login authorization      |
+| #6   | Public read paths filter `published` + upcoming even when session belongs to admin                                           | "Logged-in user uses the same query as anon"         | Service-layer filters vs RLS-only reliance                                                    | integration                         | Relying on RLS test while service omits explicit filters       |
+| #7   | Server rejects out-of-catalog subgenres and invalid dates before persist                                                     | "Zod on client is enough"                            | Validation schema, API handler boundary                                                       | unit on validation                  | Snapshot of error message copied from implementation           |
 
 ## 3. Phased Rollout
 
@@ -66,12 +66,12 @@ Each row is a discrete rollout phase that will open its own change folder
 via `/10x-new`. Status moves left-to-right through the values below; the
 orchestrator updates Status as artifacts appear on disk.
 
-| # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
-|---|------------|-----------------|---------------|------------|--------|---------------|
-| 1 | Critical-path fan read | Bootstrap Vitest; prove fan list is not falsely empty and respects published/upcoming filters | #1, #6 | bootstrap + integration | done | testing-critical-path-fan-read |
-| 2 | Authorization and data integrity | Non-admin cannot mutate events; admin access works; no mass data loss on guarded paths | #3, #4, #5 | integration | done | testing-authorization-data-integrity |
-| 3 | Location and discovery hot-spots | Correct coordinates/fallback; reject bad input at API boundary | #2, #7 | unit + integration | done | testing-location-discovery |
-| 4 | Quality-gates wiring | `npm test` required in CI alongside lint + build | cross-cutting | CI gate | done | testing-quality-gates-wiring |
+| #   | Phase name                       | Goal (one line)                                                                               | Risks covered | Test types              | Status | Change folder                        |
+| --- | -------------------------------- | --------------------------------------------------------------------------------------------- | ------------- | ----------------------- | ------ | ------------------------------------ |
+| 1   | Critical-path fan read           | Bootstrap Vitest; prove fan list is not falsely empty and respects published/upcoming filters | #1, #6        | bootstrap + integration | done   | testing-critical-path-fan-read       |
+| 2   | Authorization and data integrity | Non-admin cannot mutate events; admin access works; no mass data loss on guarded paths        | #3, #4, #5    | integration             | done   | testing-authorization-data-integrity |
+| 3   | Location and discovery hot-spots | Correct coordinates/fallback; reject bad input at API boundary                                | #2, #7        | unit + integration      | done   | testing-location-discovery           |
+| 4   | Quality-gates wiring             | `npm test` required in CI alongside lint + build                                              | cross-cutting | CI gate                 | done   | testing-quality-gates-wiring         |
 
 ## 4. Stack
 
@@ -80,15 +80,16 @@ The classic test base for this project. AI-native tools (if any) carry a
 Recommendations in this section must be grounded in local manifests/configs
 plus the MCP/tools actually exposed in the current session.
 
-| Layer | Tool | Version | Notes |
-|-------|------|---------|-------|
-| unit + integration | Vitest | 3.2.x | standalone `vitest.config.ts` (Node); see `tests/README.md` |
-| API mocking | MSW or Supabase test client | TBD | Mock at HTTP/DB edge only; do not mock internal modules |
-| e2e | Playwright | none yet | Defer until integration cannot catch the failure mode |
-| accessibility | axe-core | none yet | Not in initial rollout |
-| (optional) AI-native | none | n/a | Not justified under cost × signal for this rollout |
+| Layer                | Tool                        | Version  | Notes                                                       |
+| -------------------- | --------------------------- | -------- | ----------------------------------------------------------- |
+| unit + integration   | Vitest                      | 3.2.x    | standalone `vitest.config.ts` (Node); see `tests/README.md` |
+| API mocking          | MSW or Supabase test client | TBD      | Mock at HTTP/DB edge only; do not mock internal modules     |
+| e2e                  | Playwright                  | none yet | Defer until integration cannot catch the failure mode       |
+| accessibility        | axe-core                    | none yet | Not in initial rollout                                      |
+| (optional) AI-native | none                        | n/a      | Not justified under cost × signal for this rollout          |
 
 **Stack grounding tools (current session):**
+
 - Docs: none (Context7 / framework docs MCP not available in session) — skipped; checked: 2026-06-11
 - Search: WebSearch — available; Vitest + Astro SSR patterns to verify during Phase 1 research; checked: 2026-06-11
 - Runtime/browser: none (Playwright MCP not available in session) — not used in initial phases; checked: 2026-06-11
@@ -100,15 +101,15 @@ The full set of gates that must pass before a change reaches production.
 "Required for §3 Phase N" means the gate is enforced once that rollout
 phase lands; before that, the gate is `planned`.
 
-| Gate | Where | Required? | Catches |
-|------|-------|-----------|---------|
-| lint + typecheck | local + CI | required | syntactic / type drift |
-| unit + integration | local + CI + deploy | required | logic regressions on fan read, auth, location, validation |
-| e2e on critical flows | CI on PR | planned | defer until integration gaps proven |
-| post-edit hook | local (agent loop) | not planned | — |
-| visual diff (deterministic) | CI on PR | not planned | — |
-| multimodal visual review | CI on PR | not planned | — |
-| pre-prod smoke | between merge + prod | optional | environment-specific failures (manual today) |
+| Gate                        | Where                | Required?   | Catches                                                   |
+| --------------------------- | -------------------- | ----------- | --------------------------------------------------------- |
+| lint + typecheck            | local + CI           | required    | syntactic / type drift                                    |
+| unit + integration          | local + CI + deploy  | required    | logic regressions on fan read, auth, location, validation |
+| e2e on critical flows       | CI on PR             | planned     | defer until integration gaps proven                       |
+| post-edit hook              | local (agent loop)   | not planned | —                                                         |
+| visual diff (deterministic) | CI on PR             | not planned | —                                                         |
+| multimodal visual review    | CI on PR             | not planned | —                                                         |
+| pre-prod smoke              | between merge + prod | optional    | environment-specific failures (manual today)              |
 
 ## 6. Cookbook Patterns
 

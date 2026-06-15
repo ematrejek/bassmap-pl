@@ -50,21 +50,21 @@ flowchart LR
 
 ## Ocena planu — luki i poprawki
 
-| Obszar             | Stan przed planem                                                      | Poprawka w planie                                          | Status           |
-| ------------------ | ---------------------------------------------------------------------- | ---------------------------------------------------------- | ---------------- |
-| Platforma          | `tech-stack.md` mówi „cloudflare-pages”; kod używa Workers             | **Workers wygrywa** — Astro 6 + adapter v13 porzucił Pages | Zrobione         |
-| CI                 | Tylko `.github.scaffold/workflows/ci.yml` (nieaktywny), gałąź `master` | `.github/workflows/ci.yml`, gałąź `main`                   | Zrobione         |
-| CD                 | Brak workflow deploy                                                   | `.github/workflows/deploy.yml` na push do `main`           | Zrobione         |
-| Nazwa Workera      | `10x-astro-starter` w `wrangler.jsonc`                                 | `bassmap-pl`                                               | Zrobione         |
-| Supabase prod      | Brak projektu w chmurze                                                | Projekt EU (`dpqndrmvrkfahzyubrns.supabase.co`)            | Zrobione         |
-| Sekrety CF         | Tylko `.dev.vars` lokalnie                                             | `wrangler secret put` lub `--secrets-file`                 | Zrobione         |
-| Sekrety GitHub     | Brak                                                                   | 4 sekrety w `ematrejek/bassmap-pl`                         | Zrobione         |
-| workers.dev        | Brak subdomeny konta                                                   | Subdomena: `ematrejek.workers.dev`                         | Zrobione         |
-| URL produkcyjny    | workers.dev                                                          | `https://bassmap.pl` + workers.dev backup                  | Zrobione         |
-| Redirecty Supabase | workers.dev                                                          | Site URL + Redirect URLs → `https://bassmap.pl`              | Zrobione         |
-| Preview deploys    | Brak                                                                   | Faza 2 — patrz sekcja poniżej                              | Zaplanowane      |
-| Własna domena      | Brak                                                                   | `bassmap.pl` — Cloudflare Full setup                         | Zrobione         |
-| Migracje DB        | Tylko auth (scaffold)                                                  | 5 migracji prod (`supabase db push`)                         | Zrobione         |
+| Obszar             | Stan przed planem                                                      | Poprawka w planie                                          | Status      |
+| ------------------ | ---------------------------------------------------------------------- | ---------------------------------------------------------- | ----------- |
+| Platforma          | `tech-stack.md` mówi „cloudflare-pages”; kod używa Workers             | **Workers wygrywa** — Astro 6 + adapter v13 porzucił Pages | Zrobione    |
+| CI                 | Tylko `.github.scaffold/workflows/ci.yml` (nieaktywny), gałąź `master` | `.github/workflows/ci.yml`, gałąź `main`                   | Zrobione    |
+| CD                 | Brak workflow deploy                                                   | `.github/workflows/deploy.yml` na push do `main`           | Zrobione    |
+| Nazwa Workera      | `10x-astro-starter` w `wrangler.jsonc`                                 | `bassmap-pl`                                               | Zrobione    |
+| Supabase prod      | Brak projektu w chmurze                                                | Projekt EU (`dpqndrmvrkfahzyubrns.supabase.co`)            | Zrobione    |
+| Sekrety CF         | Tylko `.dev.vars` lokalnie                                             | `wrangler secret put` lub `--secrets-file`                 | Zrobione    |
+| Sekrety GitHub     | Brak                                                                   | 4 sekrety w `ematrejek/bassmap-pl`                         | Zrobione    |
+| workers.dev        | Brak subdomeny konta                                                   | Subdomena: `ematrejek.workers.dev`                         | Zrobione    |
+| URL produkcyjny    | workers.dev                                                            | `https://bassmap.pl` + workers.dev backup                  | Zrobione    |
+| Redirecty Supabase | workers.dev                                                            | Site URL + Redirect URLs → `https://bassmap.pl`            | Zrobione    |
+| Preview deploys    | Brak                                                                   | Faza 2 — patrz sekcja poniżej                              | Zaplanowane |
+| Własna domena      | Brak                                                                   | `bassmap.pl` — Cloudflare Full setup                       | Zrobione    |
+| Migracje DB        | Tylko auth (scaffold)                                                  | 5 migracji prod (`supabase db push`)                       | Zrobione    |
 
 ### Rozjazd tech-stack vs infrastructure
 

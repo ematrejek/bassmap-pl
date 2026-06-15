@@ -29,13 +29,13 @@ recommended_fixes: 3
 
 ## Production & CI (2026-06-14)
 
-| Check | Status |
-|-------|--------|
-| PR #16 (S-08 price) merged + deployed | ✓ |
-| PR #17 (privacy + S-07) merged + deployed | ✓ |
-| `npm run lint` | ✓ (verified 2026-06-14) |
-| GitHub Actions CI on `main` | ✓ |
-| GitHub Actions Deploy on `main` | ✓ |
+| Check                                     | Status                  |
+| ----------------------------------------- | ----------------------- |
+| PR #16 (S-08 price) merged + deployed     | ✓                       |
+| PR #17 (privacy + S-07) merged + deployed | ✓                       |
+| `npm run lint`                            | ✓ (verified 2026-06-14) |
+| GitHub Actions CI on `main`               | ✓                       |
+| GitHub Actions Deploy on `main`           | ✓                       |
 
 ## Dependency audit
 
@@ -52,23 +52,23 @@ Vitest + local Supabase integration tests. CI runs full suite via `scripts/ci-su
 
 ## Roadmap / backlog sync gaps (addressed this session)
 
-| Item | Was | Now |
-|------|-----|-----|
-| S-08 archive folder | `context/changes/` | `context/archive/2026-06-14-structured-price-currency/` |
-| Roadmap S-08 status | ready / in progress | **done** |
-| `public-roadmap.ts` | still listed S-08 | removed |
-| GitHub #15 | open | **close manually** + board Done |
-| Legal-pages privacy follow-up | undocumented | noted in archive |
-| Local CRLF noise (10 files) | modified, no diff | restored |
+| Item                          | Was                 | Now                                                     |
+| ----------------------------- | ------------------- | ------------------------------------------------------- |
+| S-08 archive folder           | `context/changes/`  | `context/archive/2026-06-14-structured-price-currency/` |
+| Roadmap S-08 status           | ready / in progress | **done**                                                |
+| `public-roadmap.ts`           | still listed S-08   | removed                                                 |
+| GitHub #15                    | open                | **close manually** + board Done                         |
+| Legal-pages privacy follow-up | undocumented        | noted in archive                                        |
+| Local CRLF noise (10 files)   | modified, no diff   | restored                                                |
 
 ## Impl review (Partia I)
 
 See `context/foundation/impl-review-partia-i-cleanup.md`.
 
-| Area | Verdict |
-|------|---------|
-| Privacy (PR #17) | APPROVED WITH NOTES |
-| S-07 mobile subgenre | APPROVED WITH NOTES |
+| Area                  | Verdict                               |
+| --------------------- | ------------------------------------- |
+| Privacy (PR #17)      | APPROVED WITH NOTES                   |
+| S-07 mobile subgenre  | APPROVED WITH NOTES                   |
 | S-08 structured price | APPROVED after EventForm currency fix |
 
 **Fixed in cleanup:** `EventForm` default currency `PLN` → `null` so admin can save „Cena do ustalenia” (paid event without price fields).

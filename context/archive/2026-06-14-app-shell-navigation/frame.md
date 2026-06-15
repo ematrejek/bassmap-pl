@@ -16,26 +16,26 @@ Właściciel produktu potwierdziła routing i pełny szkic strony głównej oraz
 
 ## Obserwacja vs rozwiązanie
 
-| Obserwacja | Rozwiązanie (zaakceptowane) |
-|------------|----------------------------|
+| Obserwacja                                          | Rozwiązanie (zaakceptowane)                                                              |
+| --------------------------------------------------- | ---------------------------------------------------------------------------------------- |
 | Strona wygląda zbyt statycznie, nie jak impreza DnB | Nowa `/` z płynnym scrollem, typografią display, stonowanymi neonami, lekkimi animacjami |
-| Brak spójnej nawigacji | Mały rozwijany kafelek menu (globalny app shell) |
-| Lista+mapa na `/` | Przeniesienie na `/events`; `/` tylko marketing |
+| Brak spójnej nawigacji                              | Mały rozwijany kafelek menu (globalny app shell)                                         |
+| Lista+mapa na `/`                                   | Przeniesienie na `/events`; `/` tylko marketing                                          |
 
 ## Mapa tras (docelowa)
 
-| Ścieżka | Cel | Uwagi |
-|---------|-----|--------|
-| `/` | Strona główna – scroll, hero, CTA, o nas, kontakt | **Nowa treść** |
-| `/events` | Lista + mapa + filtry (obecny `index.astro`) | Stare linki `/?city=…` → **redirect 302** na `/events?…` |
-| `/events/[id]` | Szczegóły wydarzenia | bez zmian ścieżki |
-| `/auth/signin` | Logowanie | istnieje |
-| `/auth/signup` | Rejestracja | istnieje |
-| `/archive` | Minione wydarzenia – **tylko lista, bez mapy** | `published` + **data &lt; dziś** (Europe/Warsaw, odwrotność `is_upcoming()`) |
-| `/report-issue` | Formularz „Zgłoś problem” | **Wysyłka e-mail** na kontakt@bassmap.pl (2026-06-14) |
-| `/polityka-prywatnosci` | Polityka | istnieje – **dyskretny link** na `/` |
-| `/regulamin` | Regulamin | istnieje – **dyskretny link** na `/` |
-| `/admin/*` | Panel admina | bez zmian |
+| Ścieżka                 | Cel                                               | Uwagi                                                                        |
+| ----------------------- | ------------------------------------------------- | ---------------------------------------------------------------------------- |
+| `/`                     | Strona główna – scroll, hero, CTA, o nas, kontakt | **Nowa treść**                                                               |
+| `/events`               | Lista + mapa + filtry (obecny `index.astro`)      | Stare linki `/?city=…` → **redirect 302** na `/events?…`                     |
+| `/events/[id]`          | Szczegóły wydarzenia                              | bez zmian ścieżki                                                            |
+| `/auth/signin`          | Logowanie                                         | istnieje                                                                     |
+| `/auth/signup`          | Rejestracja                                       | istnieje                                                                     |
+| `/archive`              | Minione wydarzenia – **tylko lista, bez mapy**    | `published` + **data &lt; dziś** (Europe/Warsaw, odwrotność `is_upcoming()`) |
+| `/report-issue`         | Formularz „Zgłoś problem”                         | **Wysyłka e-mail** na kontakt@bassmap.pl (2026-06-14)                        |
+| `/polityka-prywatnosci` | Polityka                                          | istnieje – **dyskretny link** na `/`                                         |
+| `/regulamin`            | Regulamin                                         | istnieje – **dyskretny link** na `/`                                         |
+| `/admin/*`              | Panel admina                                      | bez zmian                                                                    |
 
 ## Strona główna `/` – sekcje (kolejność scroll)
 
@@ -52,7 +52,7 @@ Właściciel produktu potwierdziła routing i pełny szkic strony głównej oraz
    > BassMap PL to projekt tworzony przez fanów dla fanów. Tworzymy ten projekt w 100% z pasji i for fun. Naszym celem jest zebranie całej polskiej sceny drum and bass w jednym miejscu, żeby żadna dobra impreza już nigdy Wam nie umknęła. BassMap PL robimy dla Was i dla siebie – po prostu z miłości do muzyki!
 
 4. **Sekcja kontakt / współpraca**
-   - Tekst: *Masz jakieś sugestie? Chcesz zaangażować się w projekt? Napisz do nas!*
+   - Tekst: _Masz jakieś sugestie? Chcesz zaangażować się w projekt? Napisz do nas!_
    - Link mailto: **kontakt@bassmap.pl**
 
 5. **Stopka prawna (mniej widoczna)**
@@ -77,24 +77,24 @@ Właściciel produktu potwierdziła routing i pełny szkic strony głównej oraz
 
 ## Kierunek wizualny (wymagania właścicielki)
 
-| Aspekt | Wymaganie |
-|--------|-----------|
-| Nastrój | Impreza DnB, dynamiczny, nowoczesny – **nie** statyczny panel admina |
-| Kolory | Ciemna baza; akcenty neon **stonowane**: biały, jasnoszary, jasnoniebieski, jasnozielony |
-| Logo/grafiki | Brak assetów – **typografia jako logo** (display font + slogan) |
-| Fonty | **Orbitron** (nagłówki / logo typograficzne) + **Inter** (tekst), OFL – zaakceptowane 2026-06-14 |
-| Ruch | Płynny scroll; lekkie wejścia sekcji; `prefers-reduced-motion` respektowane |
-| Czego unikać | Kopiowanie cudzych stron; ciężkie WebGL na całej stronie; jaskrawe „raver” neony |
+| Aspekt       | Wymaganie                                                                                        |
+| ------------ | ------------------------------------------------------------------------------------------------ |
+| Nastrój      | Impreza DnB, dynamiczny, nowoczesny – **nie** statyczny panel admina                             |
+| Kolory       | Ciemna baza; akcenty neon **stonowane**: biały, jasnoszary, jasnoniebieski, jasnozielony         |
+| Logo/grafiki | Brak assetów – **typografia jako logo** (display font + slogan)                                  |
+| Fonty        | **Orbitron** (nagłówki / logo typograficzne) + **Inter** (tekst), OFL – zaakceptowane 2026-06-14 |
+| Ruch         | Płynny scroll; lekkie wejścia sekcji; `prefers-reduced-motion` respektowane                      |
+| Czego unikać | Kopiowanie cudzych stron; ciężkie WebGL na całej stronie; jaskrawe „raver” neony                 |
 
 ## Powiązanie z roadmapą
 
 Ten frame łączy elementy trzech slice’ów – sensownie **jeden plan implementacji**, potem ewentualny podział PR:
 
-| Roadmap | Element w tym frame |
-|---------|---------------------|
+| Roadmap  | Element w tym frame                                                 |
+| -------- | ------------------------------------------------------------------- |
 | **F-04** | App shell, globalny kafelek menu, Layout, tokeny designu, `/events` |
-| **S-09** | Sekcje `/`, fluid scroll, CTA, o nas, kontakt |
-| **S-10** | Pozycje menu, archiwum, zgłoś problem |
+| **S-09** | Sekcje `/`, fluid scroll, CTA, o nas, kontakt                       |
+| **S-10** | Pozycje menu, archiwum, zgłoś problem                               |
 
 ## Archiwum – reguła biznesowa (resolved 2026-06-14)
 
@@ -109,16 +109,16 @@ Ten frame łączy elementy trzech slice’ów – sensownie **jeden plan impleme
 
 ## Rozstrzygnięte (2026-06-14)
 
-| Pytanie | Decyzja |
-|---------|---------|
-| Copy „Kim jesteśmy” | Tekst od właścicielki – patrz sekcja 3 powyżej |
-| Slogan | **Find the place, drop the bass!** (bez zmian) |
-| Formularz „Zgłoś problem” | **Wysyłka mailem** na **kontakt@bassmap.pl** (nie ticket w bazie); URL **`/report-issue`** |
-| Archiwum | **Data &lt; dziś** (Warsaw) + `published`; RLS: `NOT is_upcoming(starts_at)`; URL **`/archive`** |
-| Adresy URL | **Po angielsku** dla nowych tras (`/events`, `/archive`, `/report-issue`); legal bez zmian |
-| Redirect `/` + query | **Tak** → `/events?…` (302) |
-| Redirect po logowaniu | **`/`** (strona główna) |
-| Smooth scroll na `/` | **Tak** – Lenis na stronie głównej |
+| Pytanie                   | Decyzja                                                                                          |
+| ------------------------- | ------------------------------------------------------------------------------------------------ |
+| Copy „Kim jesteśmy”       | Tekst od właścicielki – patrz sekcja 3 powyżej                                                   |
+| Slogan                    | **Find the place, drop the bass!** (bez zmian)                                                   |
+| Formularz „Zgłoś problem” | **Wysyłka mailem** na **kontakt@bassmap.pl** (nie ticket w bazie); URL **`/report-issue`**       |
+| Archiwum                  | **Data &lt; dziś** (Warsaw) + `published`; RLS: `NOT is_upcoming(starts_at)`; URL **`/archive`** |
+| Adresy URL                | **Po angielsku** dla nowych tras (`/events`, `/archive`, `/report-issue`); legal bez zmian       |
+| Redirect `/` + query      | **Tak** → `/events?…` (302)                                                                      |
+| Redirect po logowaniu     | **`/`** (strona główna)                                                                          |
+| Smooth scroll na `/`      | **Tak** – Lenis na stronie głównej                                                               |
 
 ## Rekomendacja zakresu planu
 

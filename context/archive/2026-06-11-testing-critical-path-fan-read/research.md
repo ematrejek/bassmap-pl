@@ -12,9 +12,9 @@ Grounding for rollout Phase 1 of `context/foundation/test-plan.md`. Verifies Ris
 
 ## Executive summary
 
-| Risk | Verdict | Cheapest useful layer |
-|------|---------|------------------------|
-| #1 Empty list | **Real, multiple surfaces** — service filters exist today, but env-null fallback and date-boundary drift are separate failure modes | **Integration** — `listPublishedEvents` + local Supabase fixtures |
+| Risk                                      | Verdict                                                                                                                                                | Cheapest useful layer                                                    |
+| ----------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| #1 Empty list                             | **Real, multiple surfaces** — service filters exist today, but env-null fallback and date-boundary drift are separate failure modes                    | **Integration** — `listPublishedEvents` + local Supabase fixtures        |
 | #6 Admin sees drafts/past on public pages | **Mitigated in current code** — public paths use `*Published*` service functions with explicit filters; RLS admin policy alone would **not** be enough | **Integration** — same service calls with **admin-authenticated** client |
 
 **Test-base profile:** `none` — no `vitest.config.*`, no `*.test.*` / `*.spec.*` files, no `npm test` script.
@@ -82,13 +82,13 @@ export async function listPublishedEvents(
 
 ### Failure paths that can cause a falsely empty list
 
-| # | Surface | Mechanism | Test layer |
-|---|---------|-----------|------------|
-| A | `src/pages/index.astro` | `createClient` returns `null` when `SUPABASE_URL` / `SUPABASE_KEY` missing → `{ data: [] }` with no error surfaced to assertion | Integration (valid env) + optional follow-up smoke |
-| B | `listPublishedEvents` | Wrong/missing `.eq("status")` or `.gte("starts_at", …)` | Integration |
-| C | `getStartOfTodayWarsawUtcIso()` vs DB `is_upcoming()` | JS Warsaw midnight vs SQL `(starts_at AT TIME ZONE 'Europe/Warsaw')::date >= today` — drift at day boundary | Integration edge (defer if costly); document in plan |
-| D | Fan URL filters | `parseFanFilters` + `.eq("city")` / subgenre `.or()` over-narrows | Integration with filter args (secondary case) |
-| E | Supabase query error | Returns `{ error: "…" }` — UI shows error, not silent empty | Separate assertion on error path |
+| #   | Surface                                               | Mechanism                                                                                                                       | Test layer                                           |
+| --- | ----------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| A   | `src/pages/index.astro`                               | `createClient` returns `null` when `SUPABASE_URL` / `SUPABASE_KEY` missing → `{ data: [] }` with no error surfaced to assertion | Integration (valid env) + optional follow-up smoke   |
+| B   | `listPublishedEvents`                                 | Wrong/missing `.eq("status")` or `.gte("starts_at", …)`                                                                         | Integration                                          |
+| C   | `getStartOfTodayWarsawUtcIso()` vs DB `is_upcoming()` | JS Warsaw midnight vs SQL `(starts_at AT TIME ZONE 'Europe/Warsaw')::date >= today` — drift at day boundary                     | Integration edge (defer if costly); document in plan |
+| D   | Fan URL filters                                       | `parseFanFilters` + `.eq("city")` / subgenre `.or()` over-narrows                                                               | Integration with filter args (secondary case)        |
+| E   | Supabase query error                                  | Returns `{ error: "…" }` — UI shows error, not silent empty                                                                     | Separate assertion on error path                     |
 
 **Page entry (fan list):**
 
@@ -127,12 +127,12 @@ Integration test that:
 
 **Partially true, partially misleading.**
 
-| Path | Function | Explicit published/upcoming filters? |
-|------|----------|--------------------------------------|
-| Public homepage `/` | `listPublishedEvents`, `listDistinctCities` | Yes |
-| Public detail `/events/[id]` | `getPublishedEventById` | Yes |
-| Admin panel `/admin` | `listEventsForAdmin` | **No** — intentional |
-| Admin edit | `getEventById` | **No** — intentional |
+| Path                         | Function                                    | Explicit published/upcoming filters? |
+| ---------------------------- | ------------------------------------------- | ------------------------------------ |
+| Public homepage `/`          | `listPublishedEvents`, `listDistinctCities` | Yes                                  |
+| Public detail `/events/[id]` | `getPublishedEventById`                     | Yes                                  |
+| Admin panel `/admin`         | `listEventsForAdmin`                        | **No** — intentional                 |
+| Admin edit                   | `getEventById`                              | **No** — intentional                 |
 
 Public pages **do** use the same **service functions** for anon and logged-in users (including admin). The critical distinction is they use **`*Published*`** variants, not admin variants.
 
@@ -188,11 +188,11 @@ Supporting pure logic (Phase 3 candidate, not Phase 1):
 
 ## Stack grounding — Vitest bootstrap (Phase 1)
 
-| Item | Finding |
-|------|---------|
-| Astro | 6.3.1, `output: "server"`, Vite 7 (override in package.json) |
-| Vitest | Not installed |
-| Astro + Vitest | Official pattern uses `getViteConfig()` from `astro/config` ([Astro testing guide](https://docs.astro.build/en/guides/testing/)) |
+| Item             | Finding                                                                                                                                                                                                                                                                                                                                                                               |
+| ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Astro            | 6.3.1, `output: "server"`, Vite 7 (override in package.json)                                                                                                                                                                                                                                                                                                                          |
+| Vitest           | Not installed                                                                                                                                                                                                                                                                                                                                                                         |
+| Astro + Vitest   | Official pattern uses `getViteConfig()` from `astro/config` ([Astro testing guide](https://docs.astro.build/en/guides/testing/))                                                                                                                                                                                                                                                      |
 | Known regression | Astro 6 + Vitest 4 + `getViteConfig()` can crash with `ReferenceError: exports is not defined` (CJS `cookie` via `astro:server` plugin) — [astro#15847](https://github.com/withastro/astro/issues/15847). Mitigations: Vitest ≥4.1.0-beta.6, or filter `astro:server` / `astro:server-client` plugins, or **standalone Vitest config without `getViteConfig`** for service-only tests |
 
 **Recommendation for Phase 1:** Bootstrap Vitest with a **standalone** `vitest.config.ts` (Node environment, `@/*` path alias). Test `src/lib/services/events.ts` directly with `@supabase/supabase-js` clients — **no** `astro:env`, **no** Astro page rendering. Defers Astro Container API / `getViteConfig` until a later phase needs `.astro` tests.
@@ -215,12 +215,12 @@ Phase 4 will wire `npm test` into CI; Phase 1 can document “requires local Sup
 
 ## Response-guidance corrections vs test-plan
 
-| Test-plan cell | Research correction |
-|----------------|---------------------|
+| Test-plan cell                                                 | Research correction                                                                                                      |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------ |
 | #1 “Likely cheapest layer: integration (service + DB fixture)” | **Confirmed** — unit tests on `getStartOfTodayWarsawUtcIso` alone do not catch empty-list regressions from wiring or env |
-| #1 “Must challenge RLS alone” | **Confirmed** — especially for authenticated admin; anon-only RLS test is insufficient for whole fan-read contract |
-| #6 “Service-layer filters vs RLS-only reliance” | **Current code complies** with `lessons.md`; test is regression guard, not greenfield fix |
-| Hot-spot `src/lib/services` | **Accurate** — fan-read predicates live here; pages are thin |
+| #1 “Must challenge RLS alone”                                  | **Confirmed** — especially for authenticated admin; anon-only RLS test is insufficient for whole fan-read contract       |
+| #6 “Service-layer filters vs RLS-only reliance”                | **Current code complies** with `lessons.md`; test is regression guard, not greenfield fix                                |
+| Hot-spot `src/lib/services`                                    | **Accurate** — fan-read predicates live here; pages are thin                                                             |
 
 No speculative risks flagged for removal. Both risks describe real, testable failure modes.
 

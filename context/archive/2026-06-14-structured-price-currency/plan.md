@@ -66,22 +66,22 @@ Trzy fazy: (1) migracja + warstwa danych i walidacja + `formatEventPrice` + test
 
 ### Model domenowy
 
-| Pole (TS / API) | Kolumna DB | Typ | Semantyka |
-| --------------- | ---------- | --- | --------- |
-| `priceMode` | `price_mode` | `'exact' \| 'from' \| 'range' \| null` | Jak pokazać cenę |
-| `priceMin` | `price_min` | `number \| null` | Kwota lub dolna granica |
-| `priceMax` | `price_max` | `number \| null` | Górna granica (tylko `range`) |
-| `currency` | `currency` | `'PLN' \| 'EUR' \| 'CZK' \| null` | Waluta |
+| Pole (TS / API) | Kolumna DB   | Typ                                    | Semantyka                     |
+| --------------- | ------------ | -------------------------------------- | ----------------------------- |
+| `priceMode`     | `price_mode` | `'exact' \| 'from' \| 'range' \| null` | Jak pokazać cenę              |
+| `priceMin`      | `price_min`  | `number \| null`                       | Kwota lub dolna granica       |
+| `priceMax`      | `price_max`  | `number \| null`                       | Górna granica (tylko `range`) |
+| `currency`      | `currency`   | `'PLN' \| 'EUR' \| 'CZK' \| null`      | Waluta                        |
 
 **Reguły biznesowe (Zod + CHECK + serwis):**
 
-| `isFree` | `priceMode` | `priceMin` | `priceMax` | `currency` | Fan UI |
-| -------- | ----------- | ---------- | ---------- | ---------- | ------ |
-| `true` | `null` | `null` | `null` | `null` | „Wstęp wolny” |
-| `false` | `null` | `null` | `null` | `null` | „Cena do ustalenia” |
-| `false` | `exact` | wymagane > 0 | `null` | wymagane | np. `50 zł` |
-| `false` | `from` | wymagane > 0 | `null` | wymagane | np. `od 50 zł` |
-| `false` | `range` | wymagane > 0 | wymagane > `priceMin` | wymagane | np. `40–60 zł` |
+| `isFree` | `priceMode` | `priceMin`   | `priceMax`            | `currency` | Fan UI              |
+| -------- | ----------- | ------------ | --------------------- | ---------- | ------------------- |
+| `true`   | `null`      | `null`       | `null`                | `null`     | „Wstęp wolny”       |
+| `false`  | `null`      | `null`       | `null`                | `null`     | „Cena do ustalenia” |
+| `false`  | `exact`     | wymagane > 0 | `null`                | wymagane   | np. `50 zł`         |
+| `false`  | `from`      | wymagane > 0 | `null`                | wymagane   | np. `od 50 zł`      |
+| `false`  | `range`     | wymagane > 0 | wymagane > `priceMin` | wymagane   | np. `40–60 zł`      |
 
 Częściowe podanie ceny przy `isFree: false` (np. sam `priceMin` bez trybu) → błąd walidacji.
 
@@ -401,10 +401,10 @@ Spójny seed dev, dokumentacja FR-012, aktualizacja fixture’ów integracyjnych
 
 ### Unit Tests
 
-| Obszar | Plik | Przypadki |
-| ------ | ---- | --------- |
-| Zod | `event-schema.test.ts` | exact/from/range OK; range z max ≤ min FAIL; isFree + cena FAIL; płatne bez ceny OK |
-| Format | `event-price.test.ts` | PLN/EUR/CZK; exact/from/range; isFree; null → „Cena do ustalenia” |
+| Obszar | Plik                                                    | Przypadki                                                                           |
+| ------ | ------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Zod    | `event-schema.test.ts`                                  | exact/from/range OK; range z max ≤ min FAIL; isFree + cena FAIL; płatne bez ceny OK |
+| Format | `event-price.test.ts`                                   | PLN/EUR/CZK; exact/from/range; isFree; null → „Cena do ustalenia”                   |
 | Mapper | opcjonalnie krótki test round-trip jeśli wzorzec w repo |
 
 ### Integration Tests

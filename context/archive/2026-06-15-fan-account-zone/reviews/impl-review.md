@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Strefa zalogowanego fana (fan-account-zone)
 
 - **Plan**: `context/archive/2026-06-15-fan-account-zone/plan.md`
@@ -10,44 +11,44 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | PASS ✅ (F1–F2 zaakceptowane jako docelowe MVP) |
-| Scope Discipline | PASS ✅ |
-| Safety & Quality | PASS ✅ |
-| Architecture | PASS ✅ |
-| Pattern Consistency | PASS ✅ |
-| Success Criteria | WARNING ⚠️ (manual QA + migracja remote) |
+| Dimension           | Verdict                                         |
+| ------------------- | ----------------------------------------------- |
+| Plan Adherence      | PASS ✅ (F1–F2 zaakceptowane jako docelowe MVP) |
+| Scope Discipline    | PASS ✅                                         |
+| Safety & Quality    | PASS ✅                                         |
+| Architecture        | PASS ✅                                         |
+| Pattern Consistency | PASS ✅                                         |
+| Success Criteria    | WARNING ⚠️ (manual QA + migracja remote)        |
 
 ## Automated Verification
 
-| Command | Result |
-|---------|--------|
-| `npm run lint` | ⚠️ czerwony lokalnie (CRLF / Prettier na Windows) – CI PR #29 **success** |
-| `npm run build` | ✅ PASS (lokalnie) |
-| `npm test` | ⚠️ 5 timeoutów integracyjnych lokalnie (5000 ms); testy jednostkowe fana ✅; CI PR #29 **success** |
-| Deploy produkcyjny (merge #29) | ✅ success — run `27573245221` |
+| Command                        | Result                                                                                             |
+| ------------------------------ | -------------------------------------------------------------------------------------------------- |
+| `npm run lint`                 | ⚠️ czerwony lokalnie (CRLF / Prettier na Windows) – CI PR #29 **success**                          |
+| `npm run build`                | ✅ PASS (lokalnie)                                                                                 |
+| `npm test`                     | ⚠️ 5 timeoutów integracyjnych lokalnie (5000 ms); testy jednostkowe fana ✅; CI PR #29 **success** |
+| Deploy produkcyjny (merge #29) | ✅ success — run `27573245221`                                                                     |
 
 ## Success Criteria (plan)
 
-| Kryterium | Status |
-|-----------|--------|
-| Migracja `created_by` + RLS fan INSERT/SELECT | ✅ MATCH (`20260616120000_fan_event_submissions.sql`) |
-| Serwis: `createFanSubmittedEvent`, `listEventsByCreator`, `setEventStatus` | ✅ MATCH |
-| `POST /api/fan/events` + `requireAuth`, admin → 403 | ✅ MATCH |
-| `PATCH/POST /api/admin/events/[id]/status` (pending → published/rejected) | ✅ MATCH |
-| Stałe tras + middleware + redirect `/dashboard` → `/profile` 301 | ✅ MATCH |
-| Strony: `/profile`, `/my-events`, `/my-events/new`, `/team`, `/forum` | ✅ MATCH |
-| AppMenu: `fanLinks` tylko `!isAdmin`; admin bez sekcji fana | ✅ MATCH (admin ma dodatkowo Forum – patrz F5) |
-| Admin moderacja: Opublikuj / Odrzuć | ✅ MATCH (`EventModerationActions`) |
-| Współdzielone `status-labels.ts` | ✅ MATCH |
-| Reuse `EventForm` (`variant="fan"`) | ✅ MATCH |
-| `auth-mutation-deny.test.ts` bez zmian (deny published) | ✅ MATCH |
-| `fan-event-submit.test.ts` (allow pending) | ✅ MATCH (1 test flaky lokalnie) |
-| Fan upload okładki przy submit | ✅ ACCEPTED (F1 — rozszerzenie MVP) |
-| Profil fana (rozbudowany UI) | ✅ ACCEPTED (F2 — docelowy UX) |
-| Migracja na remote Supabase | ⏳ PENDING (plan 1.4) |
-| Weryfikacja manualna (browser, publish flow) | ⏳ PENDING (plan 2.4, 3.4, 4.4, 5.3) |
+| Kryterium                                                                  | Status                                                |
+| -------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Migracja `created_by` + RLS fan INSERT/SELECT                              | ✅ MATCH (`20260616120000_fan_event_submissions.sql`) |
+| Serwis: `createFanSubmittedEvent`, `listEventsByCreator`, `setEventStatus` | ✅ MATCH                                              |
+| `POST /api/fan/events` + `requireAuth`, admin → 403                        | ✅ MATCH                                              |
+| `PATCH/POST /api/admin/events/[id]/status` (pending → published/rejected)  | ✅ MATCH                                              |
+| Stałe tras + middleware + redirect `/dashboard` → `/profile` 301           | ✅ MATCH                                              |
+| Strony: `/profile`, `/my-events`, `/my-events/new`, `/team`, `/forum`      | ✅ MATCH                                              |
+| AppMenu: `fanLinks` tylko `!isAdmin`; admin bez sekcji fana                | ✅ MATCH (admin ma dodatkowo Forum – patrz F5)        |
+| Admin moderacja: Opublikuj / Odrzuć                                        | ✅ MATCH (`EventModerationActions`)                   |
+| Współdzielone `status-labels.ts`                                           | ✅ MATCH                                              |
+| Reuse `EventForm` (`variant="fan"`)                                        | ✅ MATCH                                              |
+| `auth-mutation-deny.test.ts` bez zmian (deny published)                    | ✅ MATCH                                              |
+| `fan-event-submit.test.ts` (allow pending)                                 | ✅ MATCH (1 test flaky lokalnie)                      |
+| Fan upload okładki przy submit                                             | ✅ ACCEPTED (F1 — rozszerzenie MVP)                   |
+| Profil fana (rozbudowany UI)                                               | ✅ ACCEPTED (F2 — docelowy UX)                        |
+| Migracja na remote Supabase                                                | ⏳ PENDING (plan 1.4)                                 |
+| Weryfikacja manualna (browser, publish flow)                               | ⏳ PENDING (plan 2.4, 3.4, 4.4, 5.3)                  |
 
 ## Findings
 
@@ -123,17 +124,17 @@
 
 ## Plan Adherence Summary
 
-| Element planu | Werdykt |
-|---------------|---------|
-| DB migracja + RLS fan pending/own SELECT | MATCH |
-| API fan + admin status | MATCH |
-| Routing, middleware, dashboard redirect | MATCH |
-| Strony fan + placeholdery team/forum | MATCH |
-| Menu fan vs admin | MATCH |
-| Admin moderacja publish/reject | MATCH |
-| Reuse EventForm / status-labels | MATCH |
-| Okładka fana przy submit | ACCEPTED (F1) |
-| Profil fana | ACCEPTED (F2) |
+| Element planu                            | Werdykt        |
+| ---------------------------------------- | -------------- |
+| DB migracja + RLS fan pending/own SELECT | MATCH          |
+| API fan + admin status                   | MATCH          |
+| Routing, middleware, dashboard redirect  | MATCH          |
+| Strony fan + placeholdery team/forum     | MATCH          |
+| Menu fan vs admin                        | MATCH          |
+| Admin moderacja publish/reject           | MATCH          |
+| Reuse EventForm / status-labels          | MATCH          |
+| Okładka fana przy submit                 | ACCEPTED (F1)  |
+| Profil fana                              | ACCEPTED (F2)  |
 | `public-roadmap.ts` bez zmian do archive | MATCH (celowo) |
 
 ## Następne kroki

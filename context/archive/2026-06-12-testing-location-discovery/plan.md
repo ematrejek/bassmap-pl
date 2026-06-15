@@ -49,13 +49,13 @@ After this plan completes:
 
 Sub-phases ordered by **cost × signal** (pure unit first → integration smoke → docs):
 
-| Order | Sub-phase | Cost | Signal | Risk |
-|-------|-----------|------|--------|------|
-| 1 | `resolveMapCoordinates` unit | Low | Highest for map | #2 |
-| 2 | Admin schema validation unit | Low | High | #7 |
-| 3 | Fan filters + datetime unit | Low | Medium | #7 |
-| 4 | Admin create coords persist (integration) | Low | Wiring smoke | #7 |
-| 5 | Cookbook §6.1 + test-plan §6.6 | Low | Durability | — |
+| Order | Sub-phase                                 | Cost | Signal          | Risk |
+| ----- | ----------------------------------------- | ---- | --------------- | ---- |
+| 1     | `resolveMapCoordinates` unit              | Low  | Highest for map | #2   |
+| 2     | Admin schema validation unit              | Low  | High            | #7   |
+| 3     | Fan filters + datetime unit               | Low  | Medium          | #7   |
+| 4     | Admin create coords persist (integration) | Low  | Wiring smoke    | #7   |
+| 5     | Cookbook §6.1 + test-plan §6.6            | Low  | Durability      | —    |
 
 Oracle conventions:
 
@@ -73,38 +73,38 @@ Lock pin placement logic without DB or map UI.
 
 ### Test sub-phase 1a — Stored coordinates win
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                                 |
+| --------------------- | --------------------------------------------------------------------- |
 | **Behavior asserted** | Non-null `latitude` / `longitude` returned as-is regardless of `city` |
-| **Regression caught** | City fallback overriding explicit coords |
+| **Regression caught** | City fallback overriding explicit coords                              |
 
 ### Test sub-phase 1b — City center fallback
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                          |
+| --------------------- | -------------------------------------------------------------- |
 | **Behavior asserted** | `null` coords + `Warszawa` → Warsaw center from `CITY_CENTERS` |
-| **Regression caught** | Missing fallback when coords absent |
+| **Regression caught** | Missing fallback when coords absent                            |
 
 ### Test sub-phase 1c — Diacritic / case normalization
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                |
+| --------------------- | ---------------------------------------------------- |
 | **Behavior asserted** | `Kraków` and `krakow` with null coords → same center |
-| **Regression caught** | Broken `normalizeCityKey` aliases |
+| **Regression caught** | Broken `normalizeCityKey` aliases                    |
 
 ### Test sub-phase 1d — Unknown city → Poland center
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                |
+| --------------------- | ---------------------------------------------------- |
 | **Behavior asserted** | Null coords + unknown city → `DEFAULT_POLAND_CENTER` |
-| **Regression caught** | `undefined` / throw instead of safe default |
+| **Regression caught** | `undefined` / throw instead of safe default          |
 
 ### Test sub-phase 1e — Whitespace trimming
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                              |
+| --------------------- | -------------------------------------------------- |
 | **Behavior asserted** | `"  Poznań  "` → Poznań center via `getCityCenter` |
-| **Regression caught** | Trim regression on city key |
+| **Regression caught** | Trim regression on city key                        |
 
 ### Changes Required
 
@@ -137,45 +137,45 @@ Prove Zod boundary rejects corrupt admin write payloads before service/DB.
 
 ### Test sub-phase 2a — Invalid subgenre
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                            |
+| --------------------- | ---------------------------------------------------------------- |
 | **Behavior asserted** | `parseEventCreate` with unknown subgenre slug → `success: false` |
-| **Regression caught** | Out-of-catalog genre persisted |
+| **Regression caught** | Out-of-catalog genre persisted                                   |
 
 ### Test sub-phase 2b — Empty subgenres array
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                              |
+| --------------------- | ---------------------------------- |
 | **Behavior asserted** | `subgenres: []` → `success: false` |
-| **Regression caught** | Events without genres |
+| **Regression caught** | Events without genres              |
 
 ### Test sub-phase 2c — Latitude out of range
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                 |
+| --------------------- | ----------------------------------------------------- |
 | **Behavior asserted** | `latitude: 91` in coordinates mode → `success: false` |
-| **Regression caught** | Invalid map data in DB |
+| **Regression caught** | Invalid map data in DB                                |
 
 ### Test sub-phase 2d — Coordinates mode incomplete
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                              |
+| --------------------- | ------------------------------------------------------------------ |
 | **Behavior asserted** | `locationMode: "coordinates"` without longitude → `success: false` |
-| **Regression caught** | Partial coordinate pairs |
+| **Regression caught** | Partial coordinate pairs                                           |
 
 ### Test sub-phase 2e — Valid coordinates create payload
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                                  |
+| --------------------- | ---------------------------------------------------------------------- |
 | **Behavior asserted** | Baseline payload from `buildMutationCreatePayload()` → `success: true` |
-| **Regression caught** | Accidental schema tightening breaking admin create |
+| **Regression caught** | Accidental schema tightening breaking admin create                     |
 
 ### Test sub-phase 2f — Update rejects invalid subgenre
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                           |
+| --------------------- | --------------------------------------------------------------- |
 | **Behavior asserted** | `parseEventUpdate({ subgenres: ["bogus"] })` → `success: false` |
-| **Regression caught** | Partial update bypass |
+| **Regression caught** | Partial update bypass                                           |
 
 ### Changes Required
 
@@ -208,31 +208,31 @@ Prove fan URL params cannot poison filters; document datetime-local contract.
 
 ### Test sub-phase 3a — Invalid subgenre stripped
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                                  |
+| --------------------- | ---------------------------------------------------------------------- |
 | **Behavior asserted** | `?subgenre=neurofunk&subgenre=bogus` → `subgenres: ["neurofunk"]` only |
-| **Regression caught** | Bad URL breaking list queries |
+| **Regression caught** | Bad URL breaking list queries                                          |
 
 ### Test sub-phase 3b — Empty filter defaults
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                       |
+| --------------------- | ------------------------------------------- |
 | **Behavior asserted** | No params → `{ city: null, subgenres: [] }` |
-| **Regression caught** | Accidental filter state from empty URL |
+| **Regression caught** | Accidental filter state from empty URL      |
 
 ### Test sub-phase 3c — ISO datetime with Z rejected
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                           |
+| --------------------- | --------------------------------------------------------------- |
 | **Behavior asserted** | `parseDatetimeLocalWarsaw("2026-06-15T20:00:00.000Z")` → `null` |
-| **Regression caught** | Zod/service datetime gap accepting wrong format |
+| **Regression caught** | Zod/service datetime gap accepting wrong format                 |
 
 ### Test sub-phase 3d — Canonical datetime-local accepted
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                                |
+| --------------------- | -------------------------------------------------------------------- |
 | **Behavior asserted** | `parseDatetimeLocalWarsaw("2026-12-01T20:00")` → non-null ISO string |
-| **Regression caught** | Regression breaking admin form datetime contract |
+| **Regression caught** | Regression breaking admin form datetime contract                     |
 
 ### Changes Required
 
@@ -273,10 +273,10 @@ Thin wiring check: admin `createEvent` stores submitted lat/lng (service path us
 
 ### Test sub-phase 4a — Create persists coordinates
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                                                                       |
+| --------------------- | ----------------------------------------------------------------------------------------------------------- |
 | **Behavior asserted** | `createEvent(adminClient, buildMutationCreatePayload())` → `data.latitude` / `data.longitude` match payload |
-| **Regression caught** | Mapper/service dropping coords on insert |
+| **Regression caught** | Mapper/service dropping coords on insert                                                                    |
 
 ### Changes Required
 

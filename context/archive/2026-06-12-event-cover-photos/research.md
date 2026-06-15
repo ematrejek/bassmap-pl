@@ -11,13 +11,13 @@ Grounding for `/10x-plan event-cover-photos`. Roadmap **S-03**: fan widzi zdjęc
 
 ## Executive summary
 
-| Area | Verdict | Recommendation |
-|------|---------|----------------|
-| **Storage** | Brak w repo — zero bucketów, zero R2, zero upload API | **Supabase Storage** — publiczny bucket `event-covers`, spójny ze stackiem i PRD zero-cost (1 GB free tier) |
-| **DB** | Tabela `events` bez kolumny na okładkę | Migracja: nullable `cover_path text` (ścieżka w buckecie, nie pełny URL) |
+| Area             | Verdict                                                                    | Recommendation                                                                                                                                                                                                         |
+| ---------------- | -------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Storage**      | Brak w repo — zero bucketów, zero R2, zero upload API                      | **Supabase Storage** — publiczny bucket `event-covers`, spójny ze stackiem i PRD zero-cost (1 GB free tier)                                                                                                            |
+| **DB**           | Tabela `events` bez kolumny na okładkę                                     | Migracja: nullable `cover_path text` (ścieżka w buckecie, nie pełny URL)                                                                                                                                               |
 | **Admin upload** | `EventForm` wysyła tylko JSON (`fetch` + `Content-Type: application/json`) | Upload z przeglądarki admina przez ten sam klient Supabase SSR (sesja cookie) **albo** osobna trasa `POST /api/admin/events/cover` z `FormData` — preferuj **klient bezpośrednio do Storage** (mniej kodu na Workerze) |
-| **Fan UI** | Placeholder tylko w `EventPreviewCard`; lista i szczegóły bez miniatury | Wspólny komponent `EventCover` z fallbackiem gradient „DnB”; miniatury w `EventList`, hero w `/events/[id]` |
-| **Testy** | Vitest + integracja Supabase już działają | Unit: walidacja MIME/rozmiaru + helper URL; integracja: polityki Storage + `cover_path` w serwisie |
+| **Fan UI**       | Placeholder tylko w `EventPreviewCard`; lista i szczegóły bez miniatury    | Wspólny komponent `EventCover` z fallbackiem gradient „DnB”; miniatury w `EventList`, hero w `/events/[id]`                                                                                                            |
+| **Testy**        | Vitest + integracja Supabase już działają                                  | Unit: walidacja MIME/rozmiaru + helper URL; integracja: polityki Storage + `cover_path` w serwisie                                                                                                                     |
 
 **Największe ryzyko:** kolejność create + upload (brak `event.id` przed pierwszym zapisem) oraz orphan files przy nieudanym PATCH. **Najtańsza ochrona:** upload po udanym `createEvent` (2 kroki w jednym submit handlerze) lub `cover_path` opcjonalny przy create.
 
@@ -26,11 +26,13 @@ Grounding for `/10x-plan event-cover-photos`. Roadmap **S-03**: fan widzi zdjęc
 ## Outcome (z roadmapy)
 
 Fan:
+
 - widzi miniaturę okładki na karcie w liście (`EventList`),
 - widzi okładkę w podglądzie po kliknięciu (`EventPreviewCard`),
 - widzi większą okładkę na stronie szczegółów (`/events/[id]`).
 
 Admin:
+
 - może dodać/zmienić/usunąć okładkę w formularzu create/edit,
 - istniejące wydarzenia bez okładki nadal działają (fallback jak dziś).
 
@@ -52,11 +54,11 @@ Admin API (`src/pages/api/admin/events/index.ts`, `[id].ts`) — JSON + Zod (`pa
 
 ### UI fana (placeholdery)
 
-| Plik | Stan |
-|------|------|
-| `EventList.tsx` | Tylko tekst — **brak** miniatury (roadmap mówi „karty”; trzeba dodać) |
-| `EventPreviewCard.tsx` | Kwadrat 64×64, gradient + napis „DnB” |
-| `events/[id].astro` | Brak sekcji hero — sam nagłówek tekstowy |
+| Plik                   | Stan                                                                  |
+| ---------------------- | --------------------------------------------------------------------- |
+| `EventList.tsx`        | Tylko tekst — **brak** miniatury (roadmap mówi „karty”; trzeba dodać) |
+| `EventPreviewCard.tsx` | Kwadrat 64×64, gradient + napis „DnB”                                 |
+| `events/[id].astro`    | Brak sekcji hero — sam nagłówek tekstowy                              |
 
 S-02 plan (`context/archive/2026-06-11-fan-event-discovery/plan.md`):
 
@@ -70,12 +72,12 @@ S-02 plan (`context/archive/2026-06-11-fan-event-discovery/plan.md`):
 
 ### Infrastruktura
 
-| Element | Stan |
-|---------|------|
-| `wrangler.jsonc` | Brak bindingu R2 |
-| `astro.config.mjs` `env.schema` | Tylko `SUPABASE_URL`, `SUPABASE_KEY` |
-| `supabase/config.toml` `[storage]` | `enabled = true`, `file_size_limit = "50MiB"`; **brak** skonfigurowanego bucketa (zakomentowany przykład `images`) |
-| `src/lib/supabase.ts` | Tylko serwerowy klient SSR (cookie) — **brak** osobnego klienta browser; formularz admina i tak robi `fetch` do API, nie do Supabase z JS |
+| Element                            | Stan                                                                                                                                      |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------- |
+| `wrangler.jsonc`                   | Brak bindingu R2                                                                                                                          |
+| `astro.config.mjs` `env.schema`    | Tylko `SUPABASE_URL`, `SUPABASE_KEY`                                                                                                      |
+| `supabase/config.toml` `[storage]` | `enabled = true`, `file_size_limit = "50MiB"`; **brak** skonfigurowanego bucketa (zakomentowany przykład `images`)                        |
+| `src/lib/supabase.ts`              | Tylko serwerowy klient SSR (cookie) — **brak** osobnego klienta browser; formularz admina i tak robi `fetch` do API, nie do Supabase z JS |
 
 ### Testy
 
@@ -88,12 +90,14 @@ Istnieją: `tests/unit/event-schema.test.ts`, integracje fan-read, mutation fixt
 ### A. Supabase Storage (recommended)
 
 **Za:**
+
 - Już używamy Supabase (auth + Postgres).
 - Free tier: **1 GB** storage, **5 GB** egress/mies. — wystarczy na setki okładek MVP (~200–500 KB/plakat).
 - Public bucket: fan czyta obraz bez JWT (CDN); upload/delete chronione RLS + `is_admin()` (jak przy `events`).
 - Migracja SQL może utworzyć bucket + polityki obok tabeli `events`.
 
 **Przeciw:**
+
 - Osobny system (nie Cloudflare R2); egress liczy się przy trafficie na obrazy.
 - Image transformation wymaga Pro — **poza scope**; serwujemy oryginał z `loading="lazy"` + CSS `object-cover`.
 
@@ -174,11 +178,11 @@ Wspólny komponent np. `EventCoverImage`:
 
 Miejsca użycia:
 
-| Plik | Zmiana |
-|------|--------|
-| `EventList.tsx` | Lewa miniatura (~48–64px) w wierszu karty |
-| `EventPreviewCard.tsx` | Zamiana bloku „DnB” na `EventCoverImage` |
-| `events/[id].astro` | Hero nad `<h1>` (aspect-ratio 16/9 lub 2/1) |
+| Plik                   | Zmiana                                      |
+| ---------------------- | ------------------------------------------- |
+| `EventList.tsx`        | Lewa miniatura (~48–64px) w wierszu karty   |
+| `EventPreviewCard.tsx` | Zamiana bloku „DnB” na `EventCoverImage`    |
+| `events/[id].astro`    | Hero nad `<h1>` (aspect-ratio 16/9 lub 2/1) |
 
 ### 6. Zod / API
 
@@ -234,19 +238,19 @@ Roadmap S-03 explicite: „na **kartach** i stronie szczegółów”. Lista musi
 
 ## Files likely touched
 
-| Warstwa | Pliki |
-|---------|--------|
-| DB | `supabase/migrations/YYYYMMDDHHmmss_event_cover_photos.sql` (kolumna + bucket + RLS storage) |
-| Types | `src/types.ts` |
-| Mapper | `src/lib/events/mapper.ts` |
-| Schema | `src/lib/events/schema.ts` |
-| Storage helper | `src/lib/storage/event-covers.ts` (nowy) |
-| Service | `src/lib/services/events.ts` (`deleteEvent` cleanup, create/update cover_path) |
-| Admin UI | `src/components/admin/EventForm.tsx` |
-| Fan UI | `src/components/discovery/EventCoverImage.tsx` (nowy), `EventList.tsx`, `EventPreviewCard.tsx`, `src/pages/events/[id].astro` |
-| Browser client | `src/lib/supabase-browser.ts` (nowy, jeśli upload z klienta) |
-| Testy | `tests/unit/event-cover*.test.ts`, opcjonalnie `tests/integration/event-cover-storage.test.ts` |
-| Fixtures | `tests/helpers/event-fixtures.ts`, `mutation-fixtures.ts` — opcjonalne `cover_path` |
+| Warstwa        | Pliki                                                                                                                         |
+| -------------- | ----------------------------------------------------------------------------------------------------------------------------- |
+| DB             | `supabase/migrations/YYYYMMDDHHmmss_event_cover_photos.sql` (kolumna + bucket + RLS storage)                                  |
+| Types          | `src/types.ts`                                                                                                                |
+| Mapper         | `src/lib/events/mapper.ts`                                                                                                    |
+| Schema         | `src/lib/events/schema.ts`                                                                                                    |
+| Storage helper | `src/lib/storage/event-covers.ts` (nowy)                                                                                      |
+| Service        | `src/lib/services/events.ts` (`deleteEvent` cleanup, create/update cover_path)                                                |
+| Admin UI       | `src/components/admin/EventForm.tsx`                                                                                          |
+| Fan UI         | `src/components/discovery/EventCoverImage.tsx` (nowy), `EventList.tsx`, `EventPreviewCard.tsx`, `src/pages/events/[id].astro` |
+| Browser client | `src/lib/supabase-browser.ts` (nowy, jeśli upload z klienta)                                                                  |
+| Testy          | `tests/unit/event-cover*.test.ts`, opcjonalnie `tests/integration/event-cover-storage.test.ts`                                |
+| Fixtures       | `tests/helpers/event-fixtures.ts`, `mutation-fixtures.ts` — opcjonalne `cover_path`                                           |
 
 **Bez zmian:** `EventsMap.tsx`, filtry fan, middleware, wrangler (przy Supabase Storage).
 
@@ -254,13 +258,13 @@ Roadmap S-03 explicite: „na **kartach** i stronie szczegółów”. Lista musi
 
 ## Test recommendations (for `/10x-plan`)
 
-| Warstwa | Co testować |
-|---------|-------------|
-| Unit | `getEventCoverUrl(null)` → null; poprawna ścieżka → URL; `coverPath` Zod odrzuca `../evil` |
-| Unit | Walidacja rozszerzenia/MIME (jeśli wydzielona funkcja) |
+| Warstwa     | Co testować                                                                                                            |
+| ----------- | ---------------------------------------------------------------------------------------------------------------------- |
+| Unit        | `getEventCoverUrl(null)` → null; poprawna ścieżka → URL; `coverPath` Zod odrzuca `../evil`                             |
+| Unit        | Walidacja rozszerzenia/MIME (jeśli wydzielona funkcja)                                                                 |
 | Integration | Service role: insert do `event-covers` jako admin JWT symulowany — lub test polityki: anon nie może upload, admin może |
-| Integration | `listPublishedEvents` zwraca `coverPath` z wiersza; fan bez okładki → null |
-| Regression | Istniejące testy `event-schema`, fan-read — zielone po dodaniu opcjonalnego pola |
+| Integration | `listPublishedEvents` zwraca `coverPath` z wiersza; fan bez okładki → null                                             |
+| Regression  | Istniejące testy `event-schema`, fan-read — zielone po dodaniu opcjonalnego pola                                       |
 
 Nie wymaga Playwright na ten slice — SSR `<img src>` wystarczy.
 

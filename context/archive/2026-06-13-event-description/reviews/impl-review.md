@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Pole opisu wydarzenia
 
 - **Plan**: context/changes/event-description/plan.md
@@ -9,25 +10,25 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | PASS |
-| Scope Discipline | PASS |
-| Safety & Quality | PASS |
-| Architecture | PASS |
-| Pattern Consistency | PASS |
-| Success Criteria | WARNING |
+| Dimension           | Verdict |
+| ------------------- | ------- |
+| Plan Adherence      | PASS    |
+| Scope Discipline    | PASS    |
+| Safety & Quality    | PASS    |
+| Architecture        | PASS    |
+| Pattern Consistency | PASS    |
+| Success Criteria    | WARNING |
 
 ## Automated Verification (re-run 2026-06-13)
 
-| Command | Result | Notes |
-|---------|--------|-------|
-| `npx supabase db push` (remote) | PASS | Migracja `20260613140000_event_description.sql` zastosowana |
-| `npm run lint` (repo-wide) | FAIL | 15 błędów CRLF w `src/env.d.ts`, `tests/smoke/vitest.test.ts` — poza diffem tej zmiany |
-| `eslint` (tylko pliki zmiany) | PASS | Wszystkie 7 plików źródłowych czyste |
-| `npm run build` | PASS | Build zakończony bez błędów |
-| `npm test` — `event-schema.test.ts` | PASS | 16/16 testów |
-| `npm test` (pełny) | PARTIAL | 2 timeouty w `auth-mutation-allow.test.ts` (flaky/env, niezwiązane z opisem) |
+| Command                             | Result  | Notes                                                                                  |
+| ----------------------------------- | ------- | -------------------------------------------------------------------------------------- |
+| `npx supabase db push` (remote)     | PASS    | Migracja `20260613140000_event_description.sql` zastosowana                            |
+| `npm run lint` (repo-wide)          | FAIL    | 15 błędów CRLF w `src/env.d.ts`, `tests/smoke/vitest.test.ts` — poza diffem tej zmiany |
+| `eslint` (tylko pliki zmiany)       | PASS    | Wszystkie 7 plików źródłowych czyste                                                   |
+| `npm run build`                     | PASS    | Build zakończony bez błędów                                                            |
+| `npm test` — `event-schema.test.ts` | PASS    | 16/16 testów                                                                           |
+| `npm test` (pełny)                  | PARTIAL | 2 timeouty w `auth-mutation-allow.test.ts` (flaky/env, niezwiązane z opisem)           |
 
 ## Findings
 

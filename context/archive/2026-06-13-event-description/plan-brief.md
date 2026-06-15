@@ -16,14 +16,14 @@ Admin zapisuje opis przy tworzeniu/edycji wydarzenia. Fan na `/events/[id]` widz
 
 ## Key Decisions Made
 
-| Decision              | Choice                                      | Why (1 sentence)                                      | Source |
-| --------------------- | ------------------------------------------- | ----------------------------------------------------- | ------ |
-| Typ pola w DB         | `text NULL`                                 | Elastyczna długość bez sztywnego limitu w Postgres    | Plan   |
-| Format treści         | Zwykły tekst (bez Markdown/HTML)            | Prosto, bezpiecznie (brak XSS), jak lineup            | Plan   |
-| Maks. długość         | 5000 znaków (walidacja Zod)                 | Wystarczy na opis imprezy; blokuje przypadkowe ściany tekstu | Plan   |
-| Pusty opis            | `null` w bazie; sekcja ukryta u fana        | Opcjonalne pole — nie pokazuj pustego bloku           | Plan   |
-| Gdzie pokazać u fana  | Tylko strona szczegółów `/events/[id]`      | Roadmap S-04; lista/karta bez opisu (czytelność)      | Roadmap |
-| Zmiana RLS            | Brak                                        | Opis jest częścią wiersza `events` — te same polityki | Plan   |
+| Decision             | Choice                                 | Why (1 sentence)                                             | Source  |
+| -------------------- | -------------------------------------- | ------------------------------------------------------------ | ------- |
+| Typ pola w DB        | `text NULL`                            | Elastyczna długość bez sztywnego limitu w Postgres           | Plan    |
+| Format treści        | Zwykły tekst (bez Markdown/HTML)       | Prosto, bezpiecznie (brak XSS), jak lineup                   | Plan    |
+| Maks. długość        | 5000 znaków (walidacja Zod)            | Wystarczy na opis imprezy; blokuje przypadkowe ściany tekstu | Plan    |
+| Pusty opis           | `null` w bazie; sekcja ukryta u fana   | Opcjonalne pole — nie pokazuj pustego bloku                  | Plan    |
+| Gdzie pokazać u fana | Tylko strona szczegółów `/events/[id]` | Roadmap S-04; lista/karta bez opisu (czytelność)             | Roadmap |
+| Zmiana RLS           | Brak                                   | Opis jest częścią wiersza `events` — te same polityki        | Plan    |
 
 ## Scope
 
@@ -37,10 +37,10 @@ Jedna kolumna `description` w `events` → przepływ identyczny jak `lineup`: `E
 
 ## Phases at a Glance
 
-| Phase     | What it delivers                          | Key risk                          |
-| --------- | ----------------------------------------- | --------------------------------- |
-| 1. Data   | Migracja + typy + schema + serwis + testy | Zapomnienie mappera przy update   |
-| 2. UI     | Formularz admina + strona szczegółów fana | Regresja formularza przy edycji   |
+| Phase   | What it delivers                          | Key risk                        |
+| ------- | ----------------------------------------- | ------------------------------- |
+| 1. Data | Migracja + typy + schema + serwis + testy | Zapomnienie mappera przy update |
+| 2. UI   | Formularz admina + strona szczegółów fana | Regresja formularza przy edycji |
 
 **Prerequisites:** MVP done (S-01, S-02); lokalny Supabase lub `db push` do remote.
 

@@ -180,13 +180,13 @@ Dla `variant="fan"`:
 
 ### Strony Astro
 
-| Plik | Opis |
-|------|------|
-| `src/pages/profile.astro` | Profil – email, CTA do my-events/new |
+| Plik                              | Opis                                                                 |
+| --------------------------------- | -------------------------------------------------------------------- |
+| `src/pages/profile.astro`         | Profil – email, CTA do my-events/new                                 |
 | `src/pages/my-events/index.astro` | Lista + `FanEventsTable.tsx` (reuse badge styles z AdminEventsTable) |
-| `src/pages/my-events/new.astro` | `FanEventForm` |
-| `src/pages/team.astro` | Placeholder „Moja ekipa – wkrótce” |
-| `src/pages/forum.astro` | Placeholder „Forum – wkrótce” |
+| `src/pages/my-events/new.astro`   | `FanEventForm`                                                       |
+| `src/pages/team.astro`            | Placeholder „Moja ekipa – wkrótce”                                   |
+| `src/pages/forum.astro`           | Placeholder „Forum – wkrótce”                                        |
 
 Wszystkie owinięte `AppShell`; chronione przez middleware.
 
@@ -458,14 +458,14 @@ Discovery, archive, admin CRUD, auth flow.
 
 ## Risks and Mitigations
 
-| Ryzyko | Mitygacja |
-|--------|-----------|
-| Fan widzi cudze pending przez RLS bug | Test integracyjny SELECT deny; jawny filtr `created_by` w serwisie |
-| Spam zgłoszeń | MVP bez Turnstile; walidacja Zod + sensowne limity długości; rate limit w S-13+ |
-| Admin nie widzi kto zgłosił | Kolumna `created_by`; opcjonalnie email w admin table (join auth – tylko service role lub RPC) |
-| PRD rozjechany z produktem | Notatka w archive; aktualizacja PRD osobno |
-| Duplikacja kodu EventForm | Wspólny hook / props `variant`; nie kopiować 800 linii |
-| Okładka bez fan upload | Admin dodaje przy edycji przed publish – OK dla MVP |
+| Ryzyko                                | Mitygacja                                                                                      |
+| ------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| Fan widzi cudze pending przez RLS bug | Test integracyjny SELECT deny; jawny filtr `created_by` w serwisie                             |
+| Spam zgłoszeń                         | MVP bez Turnstile; walidacja Zod + sensowne limity długości; rate limit w S-13+                |
+| Admin nie widzi kto zgłosił           | Kolumna `created_by`; opcjonalnie email w admin table (join auth – tylko service role lub RPC) |
+| PRD rozjechany z produktem            | Notatka w archive; aktualizacja PRD osobno                                                     |
+| Duplikacja kodu EventForm             | Wspólny hook / props `variant`; nie kopiować 800 linii                                         |
+| Okładka bez fan upload                | Admin dodaje przy edycji przed publish – OK dla MVP                                            |
 
 ## Deploy Notes
 

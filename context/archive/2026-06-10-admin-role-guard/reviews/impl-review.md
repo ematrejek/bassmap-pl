@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Admin Role Guard (F-02)
 
 - **Plan**: `context/changes/admin-role-guard/plan.md`
@@ -9,14 +10,14 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | PASS ✅ |
-| Scope Discipline | WARNING ⚠️ |
-| Safety & Quality | PASS ✅ |
-| Architecture | PASS ✅ |
+| Dimension           | Verdict    |
+| ------------------- | ---------- |
+| Plan Adherence      | PASS ✅    |
+| Scope Discipline    | WARNING ⚠️ |
+| Safety & Quality    | PASS ✅    |
+| Architecture        | PASS ✅    |
 | Pattern Consistency | WARNING ⚠️ |
-| Success Criteria | WARNING ⚠️ |
+| Success Criteria    | WARNING ⚠️ |
 
 ## Findings
 
@@ -111,16 +112,16 @@
 
 ## Automated verification (re-run)
 
-| Command | Result |
-|---------|--------|
-| `npm run lint` | PASS |
-| `npm run build` | PASS |
+| Command                 | Result                         |
+| ----------------------- | ------------------------------ |
+| `npm run lint`          | PASS                           |
+| `npm run build`         | PASS                           |
 | `npx supabase db reset` | PASS (Phase 1, commit fac264a) |
 
 ## Manual verification status
 
-| Item | Status |
-|------|--------|
-| 1.2 RLS / migracja GRANT | ✅ confirmed |
-| 2.3 isAdmin true/false | ⚠️ admin OK; nie-admin/anon nie potwierdzone |
-| 3.3 pełny flow admin/403/signin | ⚠️ admin OK po fix e-mail; reszta pending |
+| Item                            | Status                                       |
+| ------------------------------- | -------------------------------------------- |
+| 1.2 RLS / migracja GRANT        | ✅ confirmed                                 |
+| 2.3 isAdmin true/false          | ⚠️ admin OK; nie-admin/anon nie potwierdzone |
+| 3.3 pełny flow admin/403/signin | ⚠️ admin OK po fix e-mail; reszta pending    |

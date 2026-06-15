@@ -18,21 +18,21 @@ Zalogowany admin wchodzi na `/admin`, widzi tabelę wydarzeń, dodaje/edytuje/us
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-| -------- | ------ | ---------------- | ------ |
-| Architektura zapisu | API `/api/admin/events/*` + `requireAdmin()` | Middleware nie chroni `/api/*`; zgodne z AGENTS.md i impl-review F-02 | Research / Plan |
-| Geokodowanie | Nominatim (OSM), serwer przy POST/PUT | Zero kosztu MVP; współrzędne zapisane raz przy entry — S-02 tylko czyta | User / Plan |
-| Kiedy geokodować | Przy zapisie eventu (S-01), nie w S-02 | Admin to źródło danych; mapa fana konsumuje gotowe coords | User / Plan |
-| Tryb lokalizacji | `address` (domyślny) vs `coordinates` (tajna) | Adres → auto coords; secret event bez ulicy, tylko ręczne współrzędne | User / Plan |
-| Provider geokodowania | Nominatim + policy OSM (User-Agent, rate limit) | Darmowy; bez klucza API w MVP | Plan |
-| Adres przy trybie coords | `address_street`/`address_number` nullable (migracja) | Unikamy fałszywego „—” w UI fana; venue + miasto nadal wymagane | Plan |
-| Odczyt listy / edycji | SSR w Astro frontmatter | Prostsze niż osobny GET API | Plan |
-| Wysyłka formularza | React island + `fetch()` JSON | Tryb lokalizacji, tablice, inline błędy geokodowania | Plan |
-| Status przy tworzeniu | Zawsze `published` | PRD: admin-add = od razu publiczne | PRD / Plan |
-| Lineup | Textarea — jeden artysta na linię | Prosty input; mapowanie na `text[]` | Plan |
-| Usuwanie | Hard delete + dialog | FR-007 | Plan |
-| Walidacja | zod | AGENTS.md | Plan |
-| Język UI | Polski | PRD §Language | PRD |
+| Decision                 | Choice                                                | Why (1 sentence)                                                        | Source          |
+| ------------------------ | ----------------------------------------------------- | ----------------------------------------------------------------------- | --------------- |
+| Architektura zapisu      | API `/api/admin/events/*` + `requireAdmin()`          | Middleware nie chroni `/api/*`; zgodne z AGENTS.md i impl-review F-02   | Research / Plan |
+| Geokodowanie             | Nominatim (OSM), serwer przy POST/PUT                 | Zero kosztu MVP; współrzędne zapisane raz przy entry — S-02 tylko czyta | User / Plan     |
+| Kiedy geokodować         | Przy zapisie eventu (S-01), nie w S-02                | Admin to źródło danych; mapa fana konsumuje gotowe coords               | User / Plan     |
+| Tryb lokalizacji         | `address` (domyślny) vs `coordinates` (tajna)         | Adres → auto coords; secret event bez ulicy, tylko ręczne współrzędne   | User / Plan     |
+| Provider geokodowania    | Nominatim + policy OSM (User-Agent, rate limit)       | Darmowy; bez klucza API w MVP                                           | Plan            |
+| Adres przy trybie coords | `address_street`/`address_number` nullable (migracja) | Unikamy fałszywego „—” w UI fana; venue + miasto nadal wymagane         | Plan            |
+| Odczyt listy / edycji    | SSR w Astro frontmatter                               | Prostsze niż osobny GET API                                             | Plan            |
+| Wysyłka formularza       | React island + `fetch()` JSON                         | Tryb lokalizacji, tablice, inline błędy geokodowania                    | Plan            |
+| Status przy tworzeniu    | Zawsze `published`                                    | PRD: admin-add = od razu publiczne                                      | PRD / Plan      |
+| Lineup                   | Textarea — jeden artysta na linię                     | Prosty input; mapowanie na `text[]`                                     | Plan            |
+| Usuwanie                 | Hard delete + dialog                                  | FR-007                                                                  | Plan            |
+| Walidacja                | zod                                                   | AGENTS.md                                                               | Plan            |
+| Język UI                 | Polski                                                | PRD §Language                                                           | PRD             |
 
 ## Scope
 
@@ -59,11 +59,11 @@ src/lib/services/events.ts       resolveCoordinates() przed INSERT/UPDATE
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| ----- | ---------------- | -------- |
-| 1. Backend + geokodowanie | migracja adresu, Nominatim, zod, serwis, API | Rate limit Nominatim; błąd „nie znaleziono adresu” |
-| 2. Lista admina | `/admin` z tabelą | — |
-| 3. Formularze + delete | tryb adres vs współrzędne, new/edit, usuwanie | UX przełącznika trybu; re-geokod przy zmianie adresu |
+| Phase                     | What it delivers                              | Key risk                                             |
+| ------------------------- | --------------------------------------------- | ---------------------------------------------------- |
+| 1. Backend + geokodowanie | migracja adresu, Nominatim, zod, serwis, API  | Rate limit Nominatim; błąd „nie znaleziono adresu”   |
+| 2. Lista admina           | `/admin` z tabelą                             | —                                                    |
+| 3. Formularze + delete    | tryb adres vs współrzędne, new/edit, usuwanie | UX przełącznika trybu; re-geokod przy zmianie adresu |
 
 **Prerequisites:** F-01 + F-02; konto Auth na e-mailu z `admin_allowlist`.
 

@@ -64,9 +64,9 @@ Dwie fazy: (1) parser URL + filtr w serwisie + testy; (2) checkbox w UI + `hasAc
 
 ### Parametr URL
 
-| Param | Wartość aktywna | Semantyka |
-| ----- | --------------- | --------- |
-| `free` | `1` | Pokaż tylko wydarzenia z `is_free = true` |
+| Param  | Wartość aktywna | Semantyka                                 |
+| ------ | --------------- | ----------------------------------------- |
+| `free` | `1`             | Pokaż tylko wydarzenia z `is_free = true` |
 
 Walidacja w `parseFanFilters`:
 
@@ -96,7 +96,7 @@ Kolejność łańcuchowania `.eq` / `.or` nie ma znaczenia dla PostgREST przy ty
     type="checkbox"
     name="free"
     value="1"
-    defaultChecked={currentFilters.freeOnly}
+    defaultChecked="{currentFilters.freeOnly}"
     className="size-4 rounded border-white/30 accent-purple-500"
   />
   <span>Pokaż tylko darmowe</span>
@@ -166,13 +166,13 @@ export interface FanEventFilters {
 
 **Contract** — przypadki:
 
-| Test | Oczekiwanie |
-| ---- | ----------- |
-| Brak `free` | `freeOnly: false` |
-| `free=1` | `freeOnly: true` |
-| `free=true` / `free=0` / `free=` | `freeOnly: false` |
-| Round-trip z `freeOnly: true` | URL zawiera `free=1`; parse przywraca flagę |
-| Kombinacja `city` + `free=1` + daty | wszystkie pola poprawnie |
+| Test                                | Oczekiwanie                                 |
+| ----------------------------------- | ------------------------------------------- |
+| Brak `free`                         | `freeOnly: false`                           |
+| `free=1`                            | `freeOnly: true`                            |
+| `free=true` / `free=0` / `free=`    | `freeOnly: false`                           |
+| Round-trip z `freeOnly: true`       | URL zawiera `free=1`; parse przywraca flagę |
+| Kombinacja `city` + `free=1` + daty | wszystkie pola poprawnie                    |
 
 #### 4. (Opcjonalnie) Fixture integracyjny
 

@@ -41,13 +41,13 @@ Jak zbudowany jest frontend stron festiwali/eventów (np. labiryntfestiwal.pl)? 
 
 ### 1. labiryntfestiwal.pl (Labirynt Festiwal)
 
-| Aspekt | Obserwacja | Źródło |
-|--------|------------|--------|
-| Typ strony | Post-event / marketing: „Dziękujemy”, statystyki, 12 scen jako karty, galeria | [labiryntfestiwal.pl](https://labiryntfestiwal.pl/) |
-| Technologia | **JavaScript** (custom front); brak WordPress/CMS w wykryciu W3Techs; LiteSpeed, Brotli, HTTP/3 | [W3Techs – labiryntfestiwal.pl](https://w3techs.com/sites/info/labiryntfestiwal.pl) |
-| Layout | Długi scroll, sekcje full-width, duże liczby (25 000 m², 88 artystów), siatka kart scen | live site |
-| Estetyka | Ciemne tło, sceny z własną tożsamością kolorystyczną; DnB scena „175 BPM”; copy „Cyberglow – neonowy puls” | live site |
-| Nawigacja | Brak klasycznego portalu – **jedna opowieść**, nie menu aplikacji | live site |
+| Aspekt      | Obserwacja                                                                                                 | Źródło                                                                              |
+| ----------- | ---------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------- |
+| Typ strony  | Post-event / marketing: „Dziękujemy”, statystyki, 12 scen jako karty, galeria                              | [labiryntfestiwal.pl](https://labiryntfestiwal.pl/)                                 |
+| Technologia | **JavaScript** (custom front); brak WordPress/CMS w wykryciu W3Techs; LiteSpeed, Brotli, HTTP/3            | [W3Techs – labiryntfestiwal.pl](https://w3techs.com/sites/info/labiryntfestiwal.pl) |
+| Layout      | Długi scroll, sekcje full-width, duże liczby (25 000 m², 88 artystów), siatka kart scen                    | live site                                                                           |
+| Estetyka    | Ciemne tło, sceny z własną tożsamością kolorystyczną; DnB scena „175 BPM”; copy „Cyberglow – neonowy puls” | live site                                                                           |
+| Nawigacja   | Brak klasycznego portalu – **jedna opowieść**, nie menu aplikacji                                          | live site                                                                           |
 
 **Wniosek dla BassMap:** Labirynt to wzór pod **S-09 marketing homepage** (scroll, emocja, sekcje), nie pod **F-04 app shell** listy/map. Warto skopiować **klimat** (ciemność, neon w copy i akcentach), nie strukturę.
 
@@ -59,11 +59,11 @@ Wiele mniejszych festiwali (np. porównywalne UK) stoi na **WordPress + Elemento
 
 ### 3. Resident Advisor (portal eventów)
 
-| Aspekt | Obserwacja |
-|--------|------------|
-| Cel | Odkrywanie + ticketing + editorial |
-| Frontend | React, główna strona Next.js, GraphQL backend (.NET) |
-| UX | Lista/wyszukiwarka, filtry geograficzne/gatunkowe, strona eventu – **blisko BassMap S-02** |
+| Aspekt   | Obserwacja                                                                                 |
+| -------- | ------------------------------------------------------------------------------------------ |
+| Cel      | Odkrywanie + ticketing + editorial                                                         |
+| Frontend | React, główna strona Next.js, GraphQL backend (.NET)                                       |
+| UX       | Lista/wyszukiwarka, filtry geograficzne/gatunkowe, strona eventu – **blisko BassMap S-02** |
 
 Źródła: [RA job posting – Next.js/React](https://app.welcometothejungle.com/jobs/WUNtNkF5), [echoloc tech stack](https://echoloc.ai/company/ra/).
 
@@ -71,11 +71,11 @@ Wiele mniejszych festiwali (np. porównywalne UK) stoi na **WordPress + Elemento
 
 ### 4. Stackpackers / Luminal (DnB / festiwal – design-heavy)
 
-| Wzorzec | Opis | Legalność inspiracji |
-|---------|------|----------------------|
+| Wzorzec            | Opis                                                      | Legalność inspiracji             |
+| ------------------ | --------------------------------------------------------- | -------------------------------- |
 | Next.js + Tailwind | Strona duetu DnB z gradientem, particle/lightning overlay | MIT stack – wzór architektury OK |
-| Motion / GSAP | Animacje wejścia, scroll | MIT – OK komercyjnie |
-| Tiered motion | Ciężkie efekty tylko gdy urządzenie da radę | Dobry wzorzec wydajności |
+| Motion / GSAP      | Animacje wejścia, scroll                                  | MIT – OK komercyjnie             |
+| Tiered motion      | Ciężkie efekty tylko gdy urządzenie da radę               | Dobry wzorzec wydajności         |
 
 Źródła: [stackpackers-website](https://github.com/saradomincroft/stackpackers-website), [Luminal case study](https://www.thecodra.com/work/luminal).
 
@@ -106,13 +106,13 @@ Strona główna (`index.astro`): `bg-cosmic` + `Topbar` + `DiscoveryShell` + sto
 
 ### Istniejąca estetyka (zgodna z wymaganiami użytkownika)
 
-| Element | Implementacja | Ocena vs wymaganie |
-|---------|---------------|-------------------|
-| Ciemne tło | `@utility bg-cosmic` – gradient `#0a0e1a → #0f1529` | ✅ ciemna kolorystyka DnB |
-| Szkło / panele | `border-white/10 bg-white/5 backdrop-blur-xl` | ✅ nowoczesne, czytelne |
-| Tekst | `text-white`, `text-blue-100/70` | ✅ jasnoszary / biały |
-| Akcenty | głównie **purple** (`purple-200`, `purple-300`, `purple-400`) | ⚠️ częściowo OK; user chce **jasnoniebieski + jasnozielony** jako neony |
-| Nawigacja | `Topbar.astro` – pasek linków, bez menu mobilnego / ról | ❌ to właśnie F-04 |
+| Element        | Implementacja                                                 | Ocena vs wymaganie                                                      |
+| -------------- | ------------------------------------------------------------- | ----------------------------------------------------------------------- |
+| Ciemne tło     | `@utility bg-cosmic` – gradient `#0a0e1a → #0f1529`           | ✅ ciemna kolorystyka DnB                                               |
+| Szkło / panele | `border-white/10 bg-white/5 backdrop-blur-xl`                 | ✅ nowoczesne, czytelne                                                 |
+| Tekst          | `text-white`, `text-blue-100/70`                              | ✅ jasnoszary / biały                                                   |
+| Akcenty        | głównie **purple** (`purple-200`, `purple-300`, `purple-400`) | ⚠️ częściowo OK; user chce **jasnoniebieski + jasnozielony** jako neony |
+| Nawigacja      | `Topbar.astro` – pasek linków, bez menu mobilnego / ról       | ❌ to właśnie F-04                                                      |
 
 ### shadcn/ui + Tailwind 4
 
@@ -122,25 +122,25 @@ Projekt ma już tokeny CSS w `global.css` (OKLCH, `.dark`) i komponenty w `src/c
 
 ### ✅ Zalecane (już w projekcie lub bezpieczne do dodania)
 
-| Narzędzie | Licencja | Zastosowanie w F-04 / Partia II |
-|-----------|----------|----------------------------------|
-| **Tailwind CSS 4** | MIT | layout, responsywność, tokeny kolorów |
-| **shadcn/ui** (Radix) | MIT | Sheet (menu mobilne), Navigation Menu, Tabs, Button, Dropdown |
-| **Lucide React** | ISC | ikony menu, hamburger, mapa, kalendarz |
-| **tw-animate-css** | (w projekcie) | subtelne wejścia panelu menu |
-| **Motion** (`motion/react`) | MIT | animacja otwarcia drawer / active tab (opcjonalnie) |
-| **Lucide Animated** | MIT | animowane ikony hover w nav (opcjonalnie, mały bundle) |
-| **Google Fonts (OFL)** | SIL OFL | np. **Space Grotesk** (nagłówki) + **Inter** (tekst) – darmowe komercyjnie |
-| **Leaflet / react-leaflet** | BSD-2 | mapa – bez zmian |
+| Narzędzie                   | Licencja      | Zastosowanie w F-04 / Partia II                                            |
+| --------------------------- | ------------- | -------------------------------------------------------------------------- |
+| **Tailwind CSS 4**          | MIT           | layout, responsywność, tokeny kolorów                                      |
+| **shadcn/ui** (Radix)       | MIT           | Sheet (menu mobilne), Navigation Menu, Tabs, Button, Dropdown              |
+| **Lucide React**            | ISC           | ikony menu, hamburger, mapa, kalendarz                                     |
+| **tw-animate-css**          | (w projekcie) | subtelne wejścia panelu menu                                               |
+| **Motion** (`motion/react`) | MIT           | animacja otwarcia drawer / active tab (opcjonalnie)                        |
+| **Lucide Animated**         | MIT           | animowane ikony hover w nav (opcjonalnie, mały bundle)                     |
+| **Google Fonts (OFL)**      | SIL OFL       | np. **Space Grotesk** (nagłówki) + **Inter** (tekst) – darmowe komercyjnie |
+| **Leaflet / react-leaflet** | BSD-2         | mapa – bez zmian                                                           |
 
 ### ⚠️ Ostrożnie
 
-| Narzędzie | Ryzyko |
-|-----------|--------|
-| **Three.js / R3F** | MIT, ale ciężkie – tylko hero homepage (S-09), nie app shell |
-| **GSAP** | Standardowa licencja – darmowa dla większości użyć; sprawdzić przy pluginach premium |
-| **Szablony ThemeForest / klon Labiryntu** | Prawa autorskie layoutu/grafik – **nie kopiować** kodu ani assetów |
-| **Fonty z cudzych stron** | Wyciąganie WOFF z Labiryntu = naruszenie licencji |
+| Narzędzie                                 | Ryzyko                                                                               |
+| ----------------------------------------- | ------------------------------------------------------------------------------------ |
+| **Three.js / R3F**                        | MIT, ale ciężkie – tylko hero homepage (S-09), nie app shell                         |
+| **GSAP**                                  | Standardowa licencja – darmowa dla większości użyć; sprawdzić przy pluginach premium |
+| **Szablony ThemeForest / klon Labiryntu** | Prawa autorskie layoutu/grafik – **nie kopiować** kodu ani assetów                   |
+| **Fonty z cudzych stron**                 | Wyciąganie WOFF z Labiryntu = naruszenie licencji                                    |
 
 ### ❌ Nie robić
 
@@ -154,17 +154,17 @@ Zgodnie z wymaganiami użytkownika: **ciemno + neony stonowane** (nie jaskrawy m
 
 ### Paleta (propozycja tokenów CSS)
 
-| Rola | Token / wartość | Użycie |
-|------|-----------------|--------|
-| Tło główne | `#0a0e1a` (obecny cosmic) | cała aplikacja |
-| Tło podniesione | `oklch(0.18 0.02 260)` / `slate-900/80` | karty, menu |
-| Tekst główny | `white` / `oklch(0.98 0 0)` | nagłówki, treść |
-| Tekst drugorzędny | `oklch(0.75 0.02 250)` | opisy, meta eventów |
-| Obramowania | `white/10` | panele (już jest) |
-| **Neon niebieski** | `oklch(0.78 0.12 220)` ≈ `sky-300` | linki aktywne, focus ring, ikony nav |
-| **Neon zielony** | `oklch(0.78 0.14 155)` ≈ `emerald-300` | CTA „Znajdź event”, badge „darmowe” |
-| **Neon szary** | `oklch(0.85 0.02 250)` | hover tekstu, separators |
-| Akcent legacy | `purple-300` → **stopniowo zastąpić** sky/emerald | spójność z obecnymi formularzami |
+| Rola               | Token / wartość                                   | Użycie                               |
+| ------------------ | ------------------------------------------------- | ------------------------------------ |
+| Tło główne         | `#0a0e1a` (obecny cosmic)                         | cała aplikacja                       |
+| Tło podniesione    | `oklch(0.18 0.02 260)` / `slate-900/80`           | karty, menu                          |
+| Tekst główny       | `white` / `oklch(0.98 0 0)`                       | nagłówki, treść                      |
+| Tekst drugorzędny  | `oklch(0.75 0.02 250)`                            | opisy, meta eventów                  |
+| Obramowania        | `white/10`                                        | panele (już jest)                    |
+| **Neon niebieski** | `oklch(0.78 0.12 220)` ≈ `sky-300`                | linki aktywne, focus ring, ikony nav |
+| **Neon zielony**   | `oklch(0.78 0.14 155)` ≈ `emerald-300`            | CTA „Znajdź event”, badge „darmowe”  |
+| **Neon szary**     | `oklch(0.85 0.02 250)`                            | hover tekstu, separators             |
+| Akcent legacy      | `purple-300` → **stopniowo zastąpić** sky/emerald | spójność z obecnymi formularzami     |
 
 ### Wzorce UI (z benchmarków, dopasowane do BassMap)
 
@@ -176,10 +176,10 @@ Zgodnie z wymaganiami użytkownika: **ciemno + neony stonowane** (nie jaskrawy m
 
 ### Typografia (propozycja)
 
-| Warstwa | Font | Uzasadnienie |
-|---------|------|--------------|
+| Warstwa        | Font                   | Uzasadnienie                             |
+| -------------- | ---------------------- | ---------------------------------------- |
 | Display / logo | Space Grotesk lub Sora | geometryczny, „elektronika”, darmowy OFL |
-| UI / body | Inter lub Geist | czytelność filtrów i list na desktop |
+| UI / body      | Inter lub Geist        | czytelność filtrów i list na desktop     |
 
 ## Rekomendacja architektury frontendu (F-04)
 
@@ -202,12 +202,12 @@ Layout.astro
 
 ## Porównanie frameworków (gdyby startować od zera – dla kontekstu)
 
-| Framework | Festiwale / eventy | Verdict dla BassMap |
-|-----------|-------------------|---------------------|
-| WordPress + Elementor | Bardzo częste u organizatorów | ❌ zły fit pod mapę + SSR + auth |
-| Next.js + Tailwind | RA, artist sites, nowe festiwale | ✅ wzór branżowy, ale **migracja nieuzasadniona** |
-| Astro + islands | Mniej festiwali, dobry portal | ✅ **już wybrany i wdrożony** |
-| Webflow / Framer | Szybki marketing | ❌ oddzielny hosting, brak Supabase SSR |
+| Framework             | Festiwale / eventy               | Verdict dla BassMap                               |
+| --------------------- | -------------------------------- | ------------------------------------------------- |
+| WordPress + Elementor | Bardzo częste u organizatorów    | ❌ zły fit pod mapę + SSR + auth                  |
+| Next.js + Tailwind    | RA, artist sites, nowe festiwale | ✅ wzór branżowy, ale **migracja nieuzasadniona** |
+| Astro + islands       | Mniej festiwali, dobry portal    | ✅ **już wybrany i wdrożony**                     |
+| Webflow / Framer      | Szybki marketing                 | ❌ oddzielny hosting, brak Supabase SSR           |
 
 ## Code References (BassMap)
 

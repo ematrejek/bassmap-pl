@@ -12,10 +12,10 @@ Grounding for rollout Phase 3 of `context/foundation/test-plan.md`. Verifies Ris
 
 ## Executive summary
 
-| Risk | Verdict | Cheapest useful layer |
-|------|---------|------------------------|
-| #2 Wrong map locations | **Real runtime path** — map pins use `resolveMapCoordinates` (stored lat/lng, else city table, else Poland center); DB allows `NULL` coords pairs | **Unit** on `src/lib/geocoding/city-centers.ts` — no DB, no Leaflet, no Nominatim |
-| #7 Bad API input | **Real boundary** — admin write API validates via `parseEventCreate` / `parseEventUpdate` (Zod) before `createEvent` / `updateEvent`; fan URL filters sanitized in `parseFanFilters` | **Unit** on `src/lib/events/schema.ts` + `fan-schema.ts`; optional thin **integration** smoke that valid admin create persists coords |
+| Risk                   | Verdict                                                                                                                                                                              | Cheapest useful layer                                                                                                                 |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------- |
+| #2 Wrong map locations | **Real runtime path** — map pins use `resolveMapCoordinates` (stored lat/lng, else city table, else Poland center); DB allows `NULL` coords pairs                                    | **Unit** on `src/lib/geocoding/city-centers.ts` — no DB, no Leaflet, no Nominatim                                                     |
+| #7 Bad API input       | **Real boundary** — admin write API validates via `parseEventCreate` / `parseEventUpdate` (Zod) before `createEvent` / `updateEvent`; fan URL filters sanitized in `parseFanFilters` | **Unit** on `src/lib/events/schema.ts` + `fan-schema.ts`; optional thin **integration** smoke that valid admin create persists coords |
 
 **Test-base profile:** Vitest 3.2.x, `fileParallelism: false`, harness from Phases 1–2 (`tests/helpers/supabase.ts`, mutation fixtures with `locationMode: "coordinates"`).
 
@@ -161,13 +161,13 @@ Full Astro `POST` harness is deferred under cost × signal. `parseEventCreate` u
 
 ## Response-guidance corrections vs test-plan
 
-| Test-plan cell | Research correction |
-|----------------|---------------------|
-| #2 "unit on pure mapping/fallback logic" | **Confirmed** — `city-centers.ts` is the pin oracle; mapper is pass-through |
-| #2 "Geocode at save time…" | **Narrowed** — still test null-coords fallback; do not rely on geocode-only |
-| #7 "unit on validation" | **Confirmed** — `schema.ts` + `fan-schema.ts`; admin API routes thin-wrap parsers |
-| #7 "integration" | **Optional smoke** — valid coordinates create persists lat/lng; not required for every invalid case |
-| §6.1 TBD | **Fill in Phase 3** — unit file pattern under `tests/unit/` |
+| Test-plan cell                           | Research correction                                                                                 |
+| ---------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| #2 "unit on pure mapping/fallback logic" | **Confirmed** — `city-centers.ts` is the pin oracle; mapper is pass-through                         |
+| #2 "Geocode at save time…"               | **Narrowed** — still test null-coords fallback; do not rely on geocode-only                         |
+| #7 "unit on validation"                  | **Confirmed** — `schema.ts` + `fan-schema.ts`; admin API routes thin-wrap parsers                   |
+| #7 "integration"                         | **Optional smoke** — valid coordinates create persists lat/lng; not required for every invalid case |
+| §6.1 TBD                                 | **Fill in Phase 3** — unit file pattern under `tests/unit/`                                         |
 
 ---
 

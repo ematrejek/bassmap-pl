@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Filtr dat w odkrywaniu
 
 - **Plan**: context/changes/date-range-filter/plan.md
@@ -9,22 +10,22 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | PASS |
-| Scope Discipline | PASS |
-| Safety & Quality | WARNING |
-| Architecture | PASS |
-| Pattern Consistency | WARNING |
-| Success Criteria | PASS (automated); manual pending |
+| Dimension           | Verdict                          |
+| ------------------- | -------------------------------- |
+| Plan Adherence      | PASS                             |
+| Scope Discipline    | PASS                             |
+| Safety & Quality    | WARNING                          |
+| Architecture        | PASS                             |
+| Pattern Consistency | WARNING                          |
+| Success Criteria    | PASS (automated); manual pending |
 
 ## Automated Verification
 
-| Command | Result |
-|---------|--------|
-| `npm run lint` | PASS |
-| `npm run build` | PASS |
-| `npm test` | PASS (68 tests) |
+| Command         | Result          |
+| --------------- | --------------- |
+| `npm run lint`  | PASS            |
+| `npm run build` | PASS            |
+| `npm test`      | PASS (68 tests) |
 
 ## Findings
 

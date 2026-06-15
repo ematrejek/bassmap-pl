@@ -126,18 +126,21 @@ Layout.astro (font linki w <head>)
 
 Dodać w `:root` / `@theme inline`:
 
-| Token | Wartość (propozycja) | Użycie |
-|-------|----------------------|--------|
-| `--neon-sky` | `oklch(0.78 0.12 220)` | linki aktywne, focus |
-| `--neon-emerald` | `oklch(0.78 0.14 155)` | CTA primary |
-| `--text-muted-dnb` | `oklch(0.75 0.02 250)` | copy drugorzędny |
+| Token              | Wartość (propozycja)   | Użycie               |
+| ------------------ | ---------------------- | -------------------- |
+| `--neon-sky`       | `oklch(0.78 0.12 220)` | linki aktywne, focus |
+| `--neon-emerald`   | `oklch(0.78 0.14 155)` | CTA primary          |
+| `--text-muted-dnb` | `oklch(0.75 0.02 250)` | copy drugorzędny     |
 
 **File**: `src/layouts/Layout.astro` – w `<head>`:
 
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@500;700;800;900&display=swap" rel="stylesheet" />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Orbitron:wght@500;700;800;900&display=swap"
+  rel="stylesheet"
+/>
 ```
 
 Klasy utility: `font-heading` / `font-display` → Orbitron, body → Inter (w `@layer base`).
@@ -202,14 +205,14 @@ CREATE POLICY events_select_past_public
 
 ### Aktualizacja linków wewnętrznych
 
-| Plik | Zmiana |
-|------|--------|
-| `EventFilters.tsx` | `action={DISCOVERY_PATH}`, clear → `DISCOVERY_PATH` |
-| `DateRangeFilter.tsx` | `buildFilterHref` → `${DISCOVERY_PATH}?…` |
-| `events/[id].astro` | „Wróć” / breadcrumb → `DISCOVERY_PATH` |
-| `Topbar.astro` | usunąć po migracji |
-| `signin.ts`, `signout.ts` | redirect → `HOME_PATH` (`/`); signout → `/` |
-| `403.astro` | link → `HOME_PATH` |
+| Plik                      | Zmiana                                              |
+| ------------------------- | --------------------------------------------------- |
+| `EventFilters.tsx`        | `action={DISCOVERY_PATH}`, clear → `DISCOVERY_PATH` |
+| `DateRangeFilter.tsx`     | `buildFilterHref` → `${DISCOVERY_PATH}?…`           |
+| `events/[id].astro`       | „Wróć” / breadcrumb → `DISCOVERY_PATH`              |
+| `Topbar.astro`            | usunąć po migracji                                  |
+| `signin.ts`, `signout.ts` | redirect → `HOME_PATH` (`/`); signout → `/`         |
+| `403.astro`               | link → `HOME_PATH`                                  |
 
 ---
 
@@ -248,13 +251,13 @@ Dostosować `sheet.tsx` do ciemnego tła (`border-white/10`, `bg-slate-950/90`).
 
 **Contract AppMenu** – pozycje (gość):
 
-| Etykieta | href |
-|----------|------|
-| Lista eventów | `/events` (na tej fazie jeszcze `/` – zaktualizować w fazie 2) |
-| Zaloguj się | `/auth/signin` |
-| Zarejestruj się | `/auth/signup` |
-| Zgłoś problem | `REPORT_ISSUE_PATH` (`/report-issue`) |
-| Archiwum wydarzeń | `ARCHIVE_PATH` (`/archive`) |
+| Etykieta          | href                                                           |
+| ----------------- | -------------------------------------------------------------- |
+| Lista eventów     | `/events` (na tej fazie jeszcze `/` – zaktualizować w fazie 2) |
+| Zaloguj się       | `/auth/signin`                                                 |
+| Zarejestruj się   | `/auth/signup`                                                 |
+| Zgłoś problem     | `REPORT_ISSUE_PATH` (`/report-issue`)                          |
+| Archiwum wydarzeń | `ARCHIVE_PATH` (`/archive`)                                    |
 
 #### 5. Podpięcie próbne
 
@@ -341,13 +344,13 @@ Nowa strona główna z sekcjami scroll zgodnie z `frame.md`.
 
 **Directory**: `src/components/home/`
 
-| Komponent | Zawartość |
-|-----------|-----------|
-| `HomeHero.astro` | BassMap PL (font-display), slogan, animated cosmic bg |
-| `HomeCta.astro` | Przycisk „Znajdź swój event!” → `DISCOVERY_PATH` |
-| `HomeAbout.astro` | Copy „Kim jesteśmy…” z frame |
-| `HomeContact.astro` | Sugestie/współpraca + mailto `CONTACT_EMAIL` |
-| `HomeLegalLinks.astro` | Polityka + Regulamin (`text-white/40`) |
+| Komponent              | Zawartość                                             |
+| ---------------------- | ----------------------------------------------------- |
+| `HomeHero.astro`       | BassMap PL (font-display), slogan, animated cosmic bg |
+| `HomeCta.astro`        | Przycisk „Znajdź swój event!” → `DISCOVERY_PATH`      |
+| `HomeAbout.astro`      | Copy „Kim jesteśmy…” z frame                          |
+| `HomeContact.astro`    | Sugestie/współpraca + mailto `CONTACT_EMAIL`          |
+| `HomeLegalLinks.astro` | Polityka + Regulamin (`text-white/40`)                |
 
 #### 2. Strona główna
 
@@ -467,13 +470,13 @@ Krótka notatka w `context/deployment/deploy-plan.md` lub komentarz w planie: Em
 
 ## Risks and Mitigations
 
-| Ryzyko | Mitygacja |
-|--------|-----------|
-| Email Sending nie skonfigurowany na produkcji | Jawny komunikat 503; krok w deploy checklist; mailto jako fallback w stopce |
-| Duży refactor layoutu psuje admin | Migrować strony jedna po drugiej; manualna regresja `/admin` |
-| RLS + serwis niespójne dla archiwum | Użyć `getStartOfTodayWarsawUtcIso()` + `NOT is_upcoming` w polityce; test integracyjny |
-| Spam na formularzu kontaktowym | MVP bez Turnstile; ewentualnie w kolejnym slice; walidacja Zod + sensowny limit długości |
-| Dwa razy przebudowa filtrów | Faza 2 od razu po AppShell – jedna zmiana `DISCOVERY_PATH` |
+| Ryzyko                                        | Mitygacja                                                                                |
+| --------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| Email Sending nie skonfigurowany na produkcji | Jawny komunikat 503; krok w deploy checklist; mailto jako fallback w stopce              |
+| Duży refactor layoutu psuje admin             | Migrować strony jedna po drugiej; manualna regresja `/admin`                             |
+| RLS + serwis niespójne dla archiwum           | Użyć `getStartOfTodayWarsawUtcIso()` + `NOT is_upcoming` w polityce; test integracyjny   |
+| Spam na formularzu kontaktowym                | MVP bez Turnstile; ewentualnie w kolejnym slice; walidacja Zod + sensowny limit długości |
+| Dwa razy przebudowa filtrów                   | Faza 2 od razu po AppShell – jedna zmiana `DISCOVERY_PATH`                               |
 
 ## Deploy Notes
 
@@ -572,8 +575,8 @@ Szczegółowy przegląd: `plan-review.md` (2026-06-14). Werdykt: **zatwierdzony 
 
 ## Addendum (impl-review 2026-06-14)
 
-| Temat | Ustalenie |
-|-------|-----------|
-| Migracja archiwum | `20260615120000` na remote |
-| Smooth scroll (Lenis) | Włączony na `/` |
-| Font display | Orbitron + Inter |
+| Temat                 | Ustalenie                  |
+| --------------------- | -------------------------- |
+| Migracja archiwum     | `20260615120000` na remote |
+| Smooth scroll (Lenis) | Włączony na `/`            |
+| Font display          | Orbitron + Inter           |

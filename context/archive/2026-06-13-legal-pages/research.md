@@ -44,12 +44,12 @@ Jak inne portale (szczególnie event discovery) udostępniają Regulamin i Polit
 
 #### Ogólne best practices (TermsFeed, PrivacyPolicies, Eleken footer UX 2026)
 
-| Miejsce | Co umieścić | Priorytet |
-| ------- | ------------- | --------- |
-| Stopka (footer) | Polityka prywatności, Regulamin, ewentualnie Cookies | **Obowiązkowe** — użytkownicy tego oczekują |
-| Formularz rejestracji | Checkbox „Akceptuję Regulamin” + linki | **Obowiązkowe** — clickwrap, dowód zgody |
-| Formularz kontaktowy | Klauzula RODO + link do polityki | Gdy powstanie (S-10) |
-| Strona główna | Dyskretny wiersz linków (alternatywa do footera) | OK na MVP bez globalnego footera |
+| Miejsce               | Co umieścić                                          | Priorytet                                   |
+| --------------------- | ---------------------------------------------------- | ------------------------------------------- |
+| Stopka (footer)       | Polityka prywatności, Regulamin, ewentualnie Cookies | **Obowiązkowe** — użytkownicy tego oczekują |
+| Formularz rejestracji | Checkbox „Akceptuję Regulamin” + linki               | **Obowiązkowe** — clickwrap, dowód zgody    |
+| Formularz kontaktowy  | Klauzula RODO + link do polityki                     | Gdy powstanie (S-10)                        |
+| Strona główna         | Dyskretny wiersz linków (alternatywa do footera)     | OK na MVP bez globalnego footera            |
 
 **Nie wystarczy** tylko stopka — przy każdym miejscu zbierania danych osobowych (rejestracja) musi być bezpośredni dostęp do polityki i akceptacja regulaminu.
 
@@ -65,6 +65,7 @@ Jak inne portale (szczególnie event discovery) udostępniają Regulamin i Polit
 Gotowe dokumenty od właściciela produktu (13.06.2026):
 
 **Polityka prywatności** — sekcje:
+
 1. Administrator (Emilia Matrejek, matrejekemilia@gmail.com, osoba fizyczna)
 2. Jakie dane (konto: email, login, opcjonalnie imię/nazwisko/miasto; dane techniczne: IP)
 3. Podmioty przetwarzające (Supabase, Cloudflare, Resend — transfer do USA ze standardowymi klauzulami)
@@ -74,6 +75,7 @@ Gotowe dokumenty od właściciela produktu (13.06.2026):
 7. Zmiany polityki
 
 **Regulamin** — sekcje:
+
 1. Postanowienia ogólne (agregator DnB, nie sprzedaje biletów)
 2. Usługi (lista, filtry, mapa, konta)
 3. Rejestracja i konto
@@ -125,11 +127,13 @@ src/components/SiteFooter.astro
 ```
 
 Mały, dyskretny footer:
+
 - Polityka prywatności · Regulamin
 - Opcjonalnie: © 2026 BassMap PL · kontakt@bassmap.pl
 - Klasy: `text-xs text-blue-100/50`, zgodne z design system
 
 **Gdzie dodać:**
+
 - `index.astro` — pod RoadmapTeaser
 - `events/[id].astro` — na dole
 - `auth/signup.astro` — pod kartą formularza
@@ -162,19 +166,20 @@ Backend (`signup.ts`): opcjonalnie walidacja `acceptTerms === "on"` — defense 
 #### 4. Po Partii II (F-04 / S-09)
 
 Gdy powstanie app shell z marketing homepage:
+
 - Przenieść `SiteFooter` do globalnego layoutu shellu (linki na **wszystkich** stronach)
 - Homepage marketingowa może mieć rozbudowaną stopkę z sekcjami
 - Checkbox rejestracji zostaje niezależnie od shellu
 
 ### Dlaczego nie czekać na S-09 (marketing homepage)?
 
-| Argument | Wyjaśnienie |
-| -------- | ----------- |
-| Rejestracja już działa | Użytkownicy mogą zakładać konta **teraz** — bez regulaminu to luka prawna |
-| Cookies sesji | Supabase auth ustawia cookies — polityka powinna być dostępna |
-| Niski koszt | 2 strony Astro + mały footer + checkbox ≈ 1 mały slice |
-| Treść gotowa | Docx od właściciela — nie trzeba placeholderów |
-| Roadmapa oryginalna | S-11 miało prerequisite S-09 tylko dlatego, że link miał być „na stronie głównej marketingowej” — obecna `/` to lista eventów; footer/link na dole wystarczy |
+| Argument               | Wyjaśnienie                                                                                                                                                  |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| Rejestracja już działa | Użytkownicy mogą zakładać konta **teraz** — bez regulaminu to luka prawna                                                                                    |
+| Cookies sesji          | Supabase auth ustawia cookies — polityka powinna być dostępna                                                                                                |
+| Niski koszt            | 2 strony Astro + mały footer + checkbox ≈ 1 mały slice                                                                                                       |
+| Treść gotowa           | Docx od właściciela — nie trzeba placeholderów                                                                                                               |
+| Roadmapa oryginalna    | S-11 miało prerequisite S-09 tylko dlatego, że link miał być „na stronie głównej marketingowej” — obecna `/` to lista eventów; footer/link na dole wystarczy |
 
 ## Code References
 

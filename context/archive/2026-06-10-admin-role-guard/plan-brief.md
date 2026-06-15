@@ -18,19 +18,19 @@ Po wdrożeniu: zalogowany użytkownik z e-mailem z `admin_allowlist` ma `locals.
 
 ## Key Decisions Made
 
-| Decision              | Choice                                      | Why (1 sentence)                                              | Source |
-| --------------------- | ------------------------------------------- | --------------------------------------------------------------- | ------ |
-| Źródło roli admina    | `admin_allowlist` + RPC `is_admin()`        | Ta sama logika co RLS w F-01 — zero dryfu                       | Plan   |
-| Nie-admin na `/admin` | Strona 403 po polsku                        | Jasny komunikat; user wie, że brak roli                         | Plan   |
-| Trasy admina          | Prefix `/admin/*`                           | Czytelna separacja od `/dashboard` (auth test)                  | Plan   |
-| RPC scope             | Na każdym request                           | `locals.isAdmin` zawsze dostępne (nav, strony)                  | Plan   |
-| Strona w F-02         | Placeholder `/admin`                        | Ręczna weryfikacja guarda przed S-01                            | Plan   |
-| Signup                | Otwarty dla wszystkich                      | Zgodne z PRD; admin = allowlist, nie blokada rejestracji        | Plan   |
-| Nav                   | Link „Panel admina” tylko gdy `isAdmin`     | Fan nie widzi opcji bez uprawnień                               | Plan   |
-| API w F-02            | Tylko `requireAuth` / `requireAdmin`        | CRUD eventów to S-01                                            | Plan   |
-| `/dashboard`          | Zostaje (auth-only)                         | Scaffold nadal użyteczny do testów logowania                    | Plan   |
-| Błąd RPC              | `isAdmin = false` (fail-closed dla admina)  | Bezpieczne; publiczne strony działają                            | Plan   |
-| Migracja SQL          | Tylko `GRANT EXECUTE` na `is_admin()`       | Minimalny diff; F-01 bez zmian                                  | Plan   |
+| Decision              | Choice                                     | Why (1 sentence)                                         | Source |
+| --------------------- | ------------------------------------------ | -------------------------------------------------------- | ------ |
+| Źródło roli admina    | `admin_allowlist` + RPC `is_admin()`       | Ta sama logika co RLS w F-01 — zero dryfu                | Plan   |
+| Nie-admin na `/admin` | Strona 403 po polsku                       | Jasny komunikat; user wie, że brak roli                  | Plan   |
+| Trasy admina          | Prefix `/admin/*`                          | Czytelna separacja od `/dashboard` (auth test)           | Plan   |
+| RPC scope             | Na każdym request                          | `locals.isAdmin` zawsze dostępne (nav, strony)           | Plan   |
+| Strona w F-02         | Placeholder `/admin`                       | Ręczna weryfikacja guarda przed S-01                     | Plan   |
+| Signup                | Otwarty dla wszystkich                     | Zgodne z PRD; admin = allowlist, nie blokada rejestracji | Plan   |
+| Nav                   | Link „Panel admina” tylko gdy `isAdmin`    | Fan nie widzi opcji bez uprawnień                        | Plan   |
+| API w F-02            | Tylko `requireAuth` / `requireAdmin`       | CRUD eventów to S-01                                     | Plan   |
+| `/dashboard`          | Zostaje (auth-only)                        | Scaffold nadal użyteczny do testów logowania             | Plan   |
+| Błąd RPC              | `isAdmin = false` (fail-closed dla admina) | Bezpieczne; publiczne strony działają                    | Plan   |
+| Migracja SQL          | Tylko `GRANT EXECUTE` na `is_admin()`      | Minimalny diff; F-01 bez zmian                           | Plan   |
 
 ## Scope
 
@@ -53,11 +53,11 @@ Postgres RLS → is_admin() (ostateczna bariera zapisu)
 
 ## Phases at a Glance
 
-| Phase                    | What it delivers                         | Key risk                                      |
-| ------------------------ | ---------------------------------------- | --------------------------------------------- |
-| 1. Migracja GRANT        | RPC `is_admin()` wywoływalne z klienta   | Brak GRANT → isAdmin zawsze false             |
-| 2. Auth layer            | helpery, middleware, typy locals         | Zapomnienie `prerender = false` na `/admin`   |
-| 3. Strony + nawigacja    | `/admin`, `/403`, link w Topbarze        | Topbar tylko na Welcome — admin page też nav  |
+| Phase                 | What it delivers                       | Key risk                                     |
+| --------------------- | -------------------------------------- | -------------------------------------------- |
+| 1. Migracja GRANT     | RPC `is_admin()` wywoływalne z klienta | Brak GRANT → isAdmin zawsze false            |
+| 2. Auth layer         | helpery, middleware, typy locals       | Zapomnienie `prerender = false` na `/admin`  |
+| 3. Strony + nawigacja | `/admin`, `/403`, link w Topbarze      | Topbar tylko na Welcome — admin page też nav |
 
 **Prerequisites:** F-01 wdrożony lokalnie (`npx supabase db reset`), konto Supabase Auth na e-mailu z allowlisty.
 

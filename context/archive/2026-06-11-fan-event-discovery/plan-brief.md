@@ -18,21 +18,21 @@ Niezalogowany fan wchodzi na `/`, wybiera miasto (dropdown z bazy) i jeden lub w
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-| -------- | ------ | ---------------- | ------ |
-| Biblioteka map | Leaflet + OpenStreetMap | Zero kosztu MVP, dojrzały ekosystem react-leaflet | Plan |
-| Routing | `/` = odkrywanie, `/events/[id]` = szczegóły | Naturalny north star; łatwe udostępnianie eventu | Plan |
-| Layout | Split lista+mapa (desktop), zakładki (mobile) | Spełnia FR-001 i FR-005 jednocześnie | Plan |
-| Filtr miasta | Dropdown z unikalnych miast w DB | Brak literówek, spójne z danymi admina | Plan |
-| Filtr podgatunku | Multi-select, logika OR | Fan szuka „tego albo tego”; zgodne z wieloma tagami na evencie | Plan |
-| Stan filtrów | Query params w URL + nawigacja SSR | Shareable linki; jedna ścieżka danych | Plan |
-| Ładowanie danych | SSR w Astro (Supabase w frontmatter) | Ten sam wzorzec co admin; szybki first paint | Plan (agent) |
-| Klik lista/mapa | Podgląd (popup) → pełna strona szczegółów | Szybki skan bez utraty kontekstu mapy | User / Plan |
-| Zdjęcie eventu | Placeholder graficzny (brak pola w DB) | Zero migracji; prawdziwe plakaty w przyszłym slice | Plan |
-| Brak współrzędnych | Fallback: centrum miasta (statyczna mapa) | Rzadki edge case po S-01; event nadal na mapie | User / Plan |
-| Link biletowy | `target=_blank` + `rel=noopener` | Fan wraca łatwo do BassMap | Plan |
-| Geokodowanie runtime | Brak — tylko odczyt z DB | Rozstrzygnięte w S-01/roadmapie | Research |
-| Filtr dat (FR-008) | Poza zakresem | Nice-to-have w PRD | PRD |
+| Decision             | Choice                                        | Why (1 sentence)                                               | Source       |
+| -------------------- | --------------------------------------------- | -------------------------------------------------------------- | ------------ |
+| Biblioteka map       | Leaflet + OpenStreetMap                       | Zero kosztu MVP, dojrzały ekosystem react-leaflet              | Plan         |
+| Routing              | `/` = odkrywanie, `/events/[id]` = szczegóły  | Naturalny north star; łatwe udostępnianie eventu               | Plan         |
+| Layout               | Split lista+mapa (desktop), zakładki (mobile) | Spełnia FR-001 i FR-005 jednocześnie                           | Plan         |
+| Filtr miasta         | Dropdown z unikalnych miast w DB              | Brak literówek, spójne z danymi admina                         | Plan         |
+| Filtr podgatunku     | Multi-select, logika OR                       | Fan szuka „tego albo tego”; zgodne z wieloma tagami na evencie | Plan         |
+| Stan filtrów         | Query params w URL + nawigacja SSR            | Shareable linki; jedna ścieżka danych                          | Plan         |
+| Ładowanie danych     | SSR w Astro (Supabase w frontmatter)          | Ten sam wzorzec co admin; szybki first paint                   | Plan (agent) |
+| Klik lista/mapa      | Podgląd (popup) → pełna strona szczegółów     | Szybki skan bez utraty kontekstu mapy                          | User / Plan  |
+| Zdjęcie eventu       | Placeholder graficzny (brak pola w DB)        | Zero migracji; prawdziwe plakaty w przyszłym slice             | Plan         |
+| Brak współrzędnych   | Fallback: centrum miasta (statyczna mapa)     | Rzadki edge case po S-01; event nadal na mapie                 | User / Plan  |
+| Link biletowy        | `target=_blank` + `rel=noopener`              | Fan wraca łatwo do BassMap                                     | Plan         |
+| Geokodowanie runtime | Brak — tylko odczyt z DB                      | Rozstrzygnięte w S-01/roadmapie                                | Research     |
+| Filtr dat (FR-008)   | Poza zakresem                                 | Nice-to-have w PRD                                             | PRD          |
 
 ## Scope
 
@@ -60,12 +60,12 @@ RLS filtruje `published` + nadchodzące — serwis dodaje `.eq('city')` i OR po 
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| ----- | ---------------- | -------- |
-| 1. Serwis odczytu | zapytania publiczne, schema URL, helpery coords/format | Zapytanie OR po wielu podgatunkach w PostgREST |
-| 2. Strona odkrywania | `/` filtry + lista + URL sync | Zastąpienie startera bez regresji layoutu |
-| 3. Mapa + podgląd | Leaflet, popup, sync lista↔mapa | Hydratacja Leaflet w Astro SSR / Cloudflare |
-| 4. Szczegóły + shell | `/events/[id]`, Layout PL, Topbar | 404 dla niepublikowanych / przeszłych (RLS → null) |
+| Phase                | What it delivers                                       | Key risk                                           |
+| -------------------- | ------------------------------------------------------ | -------------------------------------------------- |
+| 1. Serwis odczytu    | zapytania publiczne, schema URL, helpery coords/format | Zapytanie OR po wielu podgatunkach w PostgREST     |
+| 2. Strona odkrywania | `/` filtry + lista + URL sync                          | Zastąpienie startera bez regresji layoutu          |
+| 3. Mapa + podgląd    | Leaflet, popup, sync lista↔mapa                        | Hydratacja Leaflet w Astro SSR / Cloudflare        |
+| 4. Szczegóły + shell | `/events/[id]`, Layout PL, Topbar                      | 404 dla niepublikowanych / przeszłych (RLS → null) |
 
 **Prerequisites:** F-01 + S-01 done; seed lub eventy admina w bazie.
 

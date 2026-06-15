@@ -57,7 +57,7 @@ Cztery fazy sekwencyjne:
 
 ## Critical Implementation Details
 
-- **Kolejność create:** `POST /api/admin/events` → odczyt `event.id` z JSON → `storage.upload(\`${id}/cover.${ext}\`, { upsert: true })` → `PUT` z `{ coverPath }`. Błąd uploadu po udanym create: pokaż komunikat PL („Wydarzenie zapisane, ale okładka nie została wgrana”) i przekieruj do edycji — event istnieje bez `cover_path`.
+- **Kolejność create:** `POST /api/admin/events` → odczyt `event.id` z JSON → `storage.upload(\`${id}/cover.${ext}\`, { upsert: true })`→`PUT`z`{ coverPath }`. Błąd uploadu po udanym create: pokaż komunikat PL („Wydarzenie zapisane, ale okładka nie została wgrana”) i przekieruj do edycji — event istnieje bez `cover_path`.
 - **Ścieżka pliku:** `{event_uuid}/cover.{jpg|jpeg|png|webp}` — jeden obiekt na event; rozszerzenie z MIME uploadu.
 - **Stałe:** `MAX_COVER_BYTES = 5 * 1024 * 1024`; bucket `file_size_limit = 5242880` w migracji.
 - **Konfig Supabase w adminie:** ~~przekaż `supabaseUrl` + `supabaseAnonKey` z `astro:env/server` w `new.astro` / `edit.astro` do `EventForm`~~ **(zmienione — patrz Addendum poniżej).** Fan nie dostaje klucza w HTML poza publicznym URL obrazów.

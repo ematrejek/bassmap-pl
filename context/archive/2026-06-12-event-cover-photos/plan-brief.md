@@ -17,16 +17,16 @@ Admin może opcjonalnie dodać, zmienić lub usunąć okładkę (max 5 MB). Fan 
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-| -------- | ------ | ---------------- | ------ |
-| Magazyn plików | Supabase Storage, bucket public `event-covers` | Ten sam stack co DB/auth; zero nowych bindingów Cloudflare | Research |
-| Pole w DB | `cover_path text` nullable | Stare wiersze bez migracji danych; URL budowany w kodzie | Research |
-| Max rozmiar | **5 MB** | Zgodnie z decyzją użytkownika i limitem bucketa | Plan |
-| Okładka przy create | **Opcjonalna** | Nie blokować dodawania eventu bez plakatu | Plan / User |
-| Usuń okładkę na edit | **Tak** | Przycisk czyści Storage + `cover_path` | User |
-| Miniatura w tabeli admina | **Tak** | Szybka weryfikacja wizualna listy wydarzeń | User |
-| Upload path | Przeglądarka admina → Storage, potem PUT `coverPath` | Mniej kodu na Workerze niż multipart API | Research |
-| Format pliku | JPEG / PNG / WebP, oryginalne rozszerzenie | Prosto dla admina bez konwersji | Research |
+| Decision                  | Choice                                               | Why (1 sentence)                                           | Source      |
+| ------------------------- | ---------------------------------------------------- | ---------------------------------------------------------- | ----------- |
+| Magazyn plików            | Supabase Storage, bucket public `event-covers`       | Ten sam stack co DB/auth; zero nowych bindingów Cloudflare | Research    |
+| Pole w DB                 | `cover_path text` nullable                           | Stare wiersze bez migracji danych; URL budowany w kodzie   | Research    |
+| Max rozmiar               | **5 MB**                                             | Zgodnie z decyzją użytkownika i limitem bucketa            | Plan        |
+| Okładka przy create       | **Opcjonalna**                                       | Nie blokować dodawania eventu bez plakatu                  | Plan / User |
+| Usuń okładkę na edit      | **Tak**                                              | Przycisk czyści Storage + `cover_path`                     | User        |
+| Miniatura w tabeli admina | **Tak**                                              | Szybka weryfikacja wizualna listy wydarzeń                 | User        |
+| Upload path               | Przeglądarka admina → Storage, potem PUT `coverPath` | Mniej kodu na Workerze niż multipart API                   | Research    |
+| Format pliku              | JPEG / PNG / WebP, oryginalne rozszerzenie           | Prosto dla admina bez konwersji                            | Research    |
 
 ## Scope
 
@@ -47,12 +47,12 @@ Pliki pod `{event_uuid}/cover.{ext}`; publiczny odczyt przez URL Supabase; zapis
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| ----- | ---------------- | -------- |
-| 1. Fundament | Kolumna, bucket, typy, helpery, serwis cleanup | Błędne polityki RLS Storage |
-| 2. Admin upload | Formularz + klient browser + walidacja 5 MB | Upload fail po udanym create |
-| 3. Fan + admin UI | Miniatury, hero, tabela admina | Layout mobile przy miniaturach |
-| 4. Testy | Unit + integracja cover_path | CI bez lokalnego Supabase |
+| Phase             | What it delivers                               | Key risk                       |
+| ----------------- | ---------------------------------------------- | ------------------------------ |
+| 1. Fundament      | Kolumna, bucket, typy, helpery, serwis cleanup | Błędne polityki RLS Storage    |
+| 2. Admin upload   | Formularz + klient browser + walidacja 5 MB    | Upload fail po udanym create   |
+| 3. Fan + admin UI | Miniatury, hero, tabela admina                 | Layout mobile przy miniaturach |
+| 4. Testy          | Unit + integracja cover_path                   | CI bez lokalnego Supabase      |
 
 **Prerequisites:** Supabase lokalny (Docker) do migracji i testów; sekrety `SUPABASE_*` w CI.
 **Estimated effort:** ~2–3 sesje, 4 fazy sekwencyjne.

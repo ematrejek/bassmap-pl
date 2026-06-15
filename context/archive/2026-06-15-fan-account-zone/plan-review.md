@@ -14,13 +14,13 @@ verdict: approved-with-amendments
 
 ## Scorecard (5 punktów)
 
-| Obszar | Ocena | Uwagi |
-|--------|-------|-------|
-| **Zgodność z produktem** | 4/5 | Zakres S-12 (menu, profil, submit, placeholdery, moderacja) kompletny; doprecyzowano: menu fana **tylko dla nie-admina** (roadmap L315). |
-| **Architektura** | 4/5 | Reużycie schema + serwisu + EventForm sensowne; doprecyzowano `created_by` w INSERT, PATCH status, kolejność middleware vs strony. |
-| **Wykonalność faz** | 4/5 | 5 faz logiczne; fazy 3–4 lekko przestawione (routing przed stronami). |
-| **Testowalność** | 4/5 | Nowy `fan-event-submit.test.ts` + aktualizacja deny – OK; brak E2E przeglądarki (akceptowalne przy MVP). |
-| **Ryzyka / deploy** | 4/5 | Migracja RLS + `db push` opisane; spam bez Turnstile świadomie odłożone; PRD Non-Goals nadal rozjechany. |
+| Obszar                   | Ocena | Uwagi                                                                                                                                    |
+| ------------------------ | ----- | ---------------------------------------------------------------------------------------------------------------------------------------- |
+| **Zgodność z produktem** | 4/5   | Zakres S-12 (menu, profil, submit, placeholdery, moderacja) kompletny; doprecyzowano: menu fana **tylko dla nie-admina** (roadmap L315). |
+| **Architektura**         | 4/5   | Reużycie schema + serwisu + EventForm sensowne; doprecyzowano `created_by` w INSERT, PATCH status, kolejność middleware vs strony.       |
+| **Wykonalność faz**      | 4/5   | 5 faz logiczne; fazy 3–4 lekko przestawione (routing przed stronami).                                                                    |
+| **Testowalność**         | 4/5   | Nowy `fan-event-submit.test.ts` + aktualizacja deny – OK; brak E2E przeglądarki (akceptowalne przy MVP).                                 |
+| **Ryzyka / deploy**      | 4/5   | Migracja RLS + `db push` opisane; spam bez Turnstile świadomie odłożone; PRD Non-Goals nadal rozjechany.                                 |
 
 **Średnia: 4.0/5**
 
@@ -37,12 +37,12 @@ verdict: approved-with-amendments
 
 ### 1. Menu fana vs admin (roadmap)
 
-Roadmap S-12: *„po zalogowaniu **fan (nie admin)** widzi zakładki…”*.
+Roadmap S-12: _„po zalogowaniu **fan (nie admin)** widzi zakładki…”_.
 
-| Było w planie | Po poprawce |
-|---------------|-------------|
+| Było w planie                       | Po poprawce                                                                             |
+| ----------------------------------- | --------------------------------------------------------------------------------------- |
 | Admin widzi fanLinks + Panel admina | **`fanLinks` tylko gdy `!isAdmin`**; admin: navLinks publiczne + Panel admina + Wyloguj |
-| Fan API zwraca 403 dla admina | **OK** – admin dodaje w `/admin/events/new` (published); fan API tylko dla fanów |
+| Fan API zwraca 403 dla admina       | **OK** – admin dodaje w `/admin/events/new` (published); fan API tylko dla fanów        |
 
 ### 2. `created_by` musi trafić do wiersza INSERT
 

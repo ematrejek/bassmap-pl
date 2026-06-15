@@ -14,13 +14,13 @@ verdict: approved-with-amendments
 
 ## Scorecard (5 punktów)
 
-| Obszar | Ocena | Uwagi |
-|--------|-------|-------|
-| **Zgodność z produktem** | 5/5 | Routing `/` + `/events`, copy, menu gościa, archiwum – zgodne z frame (2026-06-14). |
-| **Architektura** | 4/5 | AppShell + islands + `routes.ts` – dobre; doprecyzowano dostęp do EMAIL binding i `ArchiveEventList`. |
-| **Wykonalność faz** | 5/5 | 5 faz logicznie uporządkowanych; zależności jasne. |
-| **Testowalność** | 4/5 | Integracja archiwum + schema formularza – OK; brak E2E redirect (akceptowalne przy MVP). |
-| **Ryzyka / deploy** | 4/5 | Email Sending wymaga kroku operatorskiego – opisane; spam bez Turnstile – świadomie odłożone. |
+| Obszar                   | Ocena | Uwagi                                                                                                 |
+| ------------------------ | ----- | ----------------------------------------------------------------------------------------------------- |
+| **Zgodność z produktem** | 5/5   | Routing `/` + `/events`, copy, menu gościa, archiwum – zgodne z frame (2026-06-14).                   |
+| **Architektura**         | 4/5   | AppShell + islands + `routes.ts` – dobre; doprecyzowano dostęp do EMAIL binding i `ArchiveEventList`. |
+| **Wykonalność faz**      | 5/5   | 5 faz logicznie uporządkowanych; zależności jasne.                                                    |
+| **Testowalność**         | 4/5   | Integracja archiwum + schema formularza – OK; brak E2E redirect (akceptowalne przy MVP).              |
+| **Ryzyka / deploy**      | 4/5   | Email Sending wymaga kroku operatorskiego – opisane; spam bez Turnstile – świadomie odłożone.         |
 
 **Średnia: 4.4/5**
 
@@ -37,10 +37,10 @@ verdict: approved-with-amendments
 
 ### 1. Angielskie URL (decyzja użytkownika 2026-06-14)
 
-| Było w planie | Po poprawce |
-|---------------|-------------|
+| Było w planie    | Po poprawce         |
+| ---------------- | ------------------- |
 | `/zglos-problem` | **`/report-issue`** |
-| `/archiwum` | **`/archive`** |
+| `/archiwum`      | **`/archive`**      |
 
 Etykiety w menu **po polsku** („Zgłoś problem”, „Archiwum wydarzeń”). Istniejące `/polityka-prywatnosci` i `/regulamin` **bez zmian** (już na produkcji).
 

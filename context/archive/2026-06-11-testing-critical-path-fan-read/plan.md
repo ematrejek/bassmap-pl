@@ -48,15 +48,15 @@ After this plan completes:
 
 Sub-phases ordered by **cost × signal** and **risk priority** (#1 before #6 depth, bootstrap first):
 
-| Order | Sub-phase | Cost | Signal | Risk |
-|-------|-----------|------|--------|------|
-| 1 | Vitest bootstrap + Supabase harness | Low | Enables all | — |
-| 2 | `listPublishedEvents` — not falsely empty (anon) | Medium | Highest | #1 |
-| 3 | `listPublishedEvents` — excludes draft/past (anon) | Low (same file) | High | #1 |
-| 4 | `listPublishedEvents` — admin parity | Medium | High | #6 |
-| 5 | `getPublishedEventById` — admin detail guard | Medium | Medium | #6 |
-| 6 | `listDistinctCities` — admin city guard | Low | Medium | #6 |
-| 7 | Cookbook + test-plan §6 update | Low | Durability | — |
+| Order | Sub-phase                                          | Cost            | Signal      | Risk |
+| ----- | -------------------------------------------------- | --------------- | ----------- | ---- |
+| 1     | Vitest bootstrap + Supabase harness                | Low             | Enables all | —    |
+| 2     | `listPublishedEvents` — not falsely empty (anon)   | Medium          | Highest     | #1   |
+| 3     | `listPublishedEvents` — excludes draft/past (anon) | Low (same file) | High        | #1   |
+| 4     | `listPublishedEvents` — admin parity               | Medium          | High        | #6   |
+| 5     | `getPublishedEventById` — admin detail guard       | Medium          | Medium      | #6   |
+| 6     | `listDistinctCities` — admin city guard            | Low             | Medium      | #6   |
+| 7     | Cookbook + test-plan §6 update                     | Low             | Durability  | —    |
 
 Each integration sub-phase uses a **fixture contract**: service-role client inserts rows with fixed `starts_at` values guaranteed upcoming relative to test run date (e.g. `now + 30 days`, `now + 60 days` for published-upcoming; `now - 7 days` for published-past; draft rows with future dates). Cleanup in `afterAll` deletes fixture IDs only.
 
@@ -131,23 +131,23 @@ Core Risk #1 proof: when fixture data contains two published-upcoming events, `l
 
 ### Test sub-phase 2a — Not falsely empty
 
-| Field | Value |
-|-------|-------|
-| **Behavior asserted** | After inserting 2 published-upcoming fixture rows, `listPublishedEvents` returns `{ data }` with `data.length >= 2` and both fixture IDs present |
-| **Regression caught** | Missing/wrong `.eq("status")` or `.gte("starts_at")`, broken query chain, silent empty due to filter bug |
-| **Research source** | `research.md` Risk #1 "What would prove protection"; test-plan §2 Risk #1 |
-| **Edge/boundary** | Assert against **fixture insert IDs**, not count from seed; use relative future `starts_at` so test is not date-flaky |
-| **Anti-pattern avoided** | Asserting `length === 0` as expected; re-implementing `getStartOfTodayWarsawUtcIso()` as expected output; relying on `seed.sql` alone |
+| Field                    | Value                                                                                                                                            |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Behavior asserted**    | After inserting 2 published-upcoming fixture rows, `listPublishedEvents` returns `{ data }` with `data.length >= 2` and both fixture IDs present |
+| **Regression caught**    | Missing/wrong `.eq("status")` or `.gte("starts_at")`, broken query chain, silent empty due to filter bug                                         |
+| **Research source**      | `research.md` Risk #1 "What would prove protection"; test-plan §2 Risk #1                                                                        |
+| **Edge/boundary**        | Assert against **fixture insert IDs**, not count from seed; use relative future `starts_at` so test is not date-flaky                            |
+| **Anti-pattern avoided** | Asserting `length === 0` as expected; re-implementing `getStartOfTodayWarsawUtcIso()` as expected output; relying on `seed.sql` alone            |
 
 ### Test sub-phase 2b — Excludes non-public rows (anon)
 
-| Field | Value |
-|-------|-------|
-| **Behavior asserted** | Same call returns IDs matching **only** published-upcoming fixtures; excludes draft-upcoming and published-past control rows |
-| **Regression caught** | Service returns drafts or past events to anon (broken status/date filters) |
-| **Research source** | `research.md` recommended case #3; failure path B |
-| **Edge/boundary** | Control rows use same city/subgenre as fixtures where possible — proves exclusion is status/date, not accidental city mismatch |
-| **Anti-pattern avoided** | Happy-path-only (only asserting count ≥ 2 without checking excluded IDs appear absent) |
+| Field                    | Value                                                                                                                          |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------ |
+| **Behavior asserted**    | Same call returns IDs matching **only** published-upcoming fixtures; excludes draft-upcoming and published-past control rows   |
+| **Regression caught**    | Service returns drafts or past events to anon (broken status/date filters)                                                     |
+| **Research source**      | `research.md` recommended case #3; failure path B                                                                              |
+| **Edge/boundary**        | Control rows use same city/subgenre as fixtures where possible — proves exclusion is status/date, not accidental city mismatch |
+| **Anti-pattern avoided** | Happy-path-only (only asserting count ≥ 2 without checking excluded IDs appear absent)                                         |
 
 ### Changes Required
 
@@ -188,33 +188,33 @@ Prove admin-authenticated clients get the **same filtered results** as anon when
 
 ### Test sub-phase 3a — Admin list parity
 
-| Field | Value |
-|-------|-------|
-| **Behavior asserted** | `listPublishedEvents(adminClient)` returns same published-upcoming ID set as anon; draft and past fixture IDs absent |
-| **Regression caught** | Public pages wired to unfiltered queries; `.eq("status")` removed because "RLS handles it" |
-| **Research source** | `research.md` Risk #6; `lessons.md` fan-read filters |
-| **Edge/boundary** | Admin user confirmed on allowlist (`is_admin()` true via uid migration) — test fails loudly if admin setup wrong |
+| Field                    | Value                                                                                                                      |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------- |
+| **Behavior asserted**    | `listPublishedEvents(adminClient)` returns same published-upcoming ID set as anon; draft and past fixture IDs absent       |
+| **Regression caught**    | Public pages wired to unfiltered queries; `.eq("status")` removed because "RLS handles it"                                 |
+| **Research source**      | `research.md` Risk #6; `lessons.md` fan-read filters                                                                       |
+| **Edge/boundary**        | Admin user confirmed on allowlist (`is_admin()` true via uid migration) — test fails loudly if admin setup wrong           |
 | **Anti-pattern avoided** | RLS test "admin can SELECT all rows" without calling `listPublishedEvents`; using `listEventsForAdmin` in public-path test |
 
 ### Test sub-phase 3b — Admin detail path
 
-| Field | Value |
-|-------|-------|
-| **Behavior asserted** | `getPublishedEventById(adminClient, publishedPastId)` → `null`; `getPublishedEventById(adminClient, publishedUpcomingId)` → event |
-| **Regression caught** | Detail page refactor to `getEventById` exposes past/draft events to admin on `/events/[id]` |
-| **Research source** | `research.md` call graph `events/[id].astro` → `getPublishedEventById`; recommended case #5 |
-| **Edge/boundary** | Past event ID is known to exist in DB (inserted by fixture) but must not be returned by published getter |
-| **Anti-pattern avoided** | Testing only list, not detail entry point |
+| Field                    | Value                                                                                                                             |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------- |
+| **Behavior asserted**    | `getPublishedEventById(adminClient, publishedPastId)` → `null`; `getPublishedEventById(adminClient, publishedUpcomingId)` → event |
+| **Regression caught**    | Detail page refactor to `getEventById` exposes past/draft events to admin on `/events/[id]`                                       |
+| **Research source**      | `research.md` call graph `events/[id].astro` → `getPublishedEventById`; recommended case #5                                       |
+| **Edge/boundary**        | Past event ID is known to exist in DB (inserted by fixture) but must not be returned by published getter                          |
+| **Anti-pattern avoided** | Testing only list, not detail entry point                                                                                         |
 
 ### Test sub-phase 3c — Admin city dropdown
 
-| Field | Value |
-|-------|-------|
-| **Behavior asserted** | `listDistinctCities(adminClient)` includes cities from published-upcoming fixtures only; excludes city exclusive to draft-only or past-only control row if applicable |
-| **Regression caught** | City filter dropdown shows draft/past venues on homepage for admin |
-| **Research source** | `research.md` recommended case #6; `index.astro` → `listDistinctCities` |
-| **Edge/boundary** | If control rows share city with fixtures, assert count/subset logic carefully — prefer unique city on draft-only row for clear signal |
-| **Anti-pattern avoided** | Mirror implementation (re-copying `.eq`/`.gte` in test expectations instead of fixture-derived city set) |
+| Field                    | Value                                                                                                                                                                 |
+| ------------------------ | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Behavior asserted**    | `listDistinctCities(adminClient)` includes cities from published-upcoming fixtures only; excludes city exclusive to draft-only or past-only control row if applicable |
+| **Regression caught**    | City filter dropdown shows draft/past venues on homepage for admin                                                                                                    |
+| **Research source**      | `research.md` recommended case #6; `index.astro` → `listDistinctCities`                                                                                               |
+| **Edge/boundary**        | If control rows share city with fixtures, assert count/subset logic carefully — prefer unique city on draft-only row for clear signal                                 |
+| **Anti-pattern avoided** | Mirror implementation (re-copying `.eq`/`.gte` in test expectations instead of fixture-derived city set)                                                              |
 
 ### Changes Required
 

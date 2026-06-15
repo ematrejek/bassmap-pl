@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Admin Event Management (S-01)
 
 - **Plan**: context/changes/admin-event-management/plan.md
@@ -9,14 +10,14 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | WARNING ⚠️ |
-| Scope Discipline | WARNING ⚠️ |
-| Safety & Quality | PASS ✅ (po fix F1, F4, F5, F8) |
-| Architecture | PASS ✅ |
-| Pattern Consistency | WARNING ⚠️ |
-| Success Criteria | WARNING ⚠️ |
+| Dimension           | Verdict                         |
+| ------------------- | ------------------------------- |
+| Plan Adherence      | WARNING ⚠️                      |
+| Scope Discipline    | WARNING ⚠️                      |
+| Safety & Quality    | PASS ✅ (po fix F1, F4, F5, F8) |
+| Architecture        | PASS ✅                         |
+| Pattern Consistency | WARNING ⚠️                      |
+| Success Criteria    | WARNING ⚠️                      |
 
 ## Findings
 

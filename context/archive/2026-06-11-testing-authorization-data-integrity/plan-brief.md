@@ -17,14 +17,14 @@ Phase 1 shipped Vitest, localhost Supabase harness, and fan-read integration tes
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-|----------|--------|------------------|--------|
-| Test layer | Service integration + guard unit | Catches RLS bypass and API guard without Astro HTTP harness | Research |
-| Raw RLS probes | Service-first only | Service is what API calls; duplicate signal low | Research / Plan |
-| Mutation fixtures | `mutation-fixtures.ts`, coordinates mode | Avoids Nominatim; separate from fan-read read fixtures | Research |
-| Non-admin user | Dedicated `createNonAdminClient()` | Distinct email, no allowlist row | Research |
-| Risk #3 scope | Count-delta on `deleteEvent` | Proves scoped delete; migration smoke deferred | Research |
-| HTTP API tests | Deferred | `requireAdmin` unit + service tests sufficient under cost × signal | Research |
+| Decision          | Choice                                   | Why (1 sentence)                                                   | Source          |
+| ----------------- | ---------------------------------------- | ------------------------------------------------------------------ | --------------- |
+| Test layer        | Service integration + guard unit         | Catches RLS bypass and API guard without Astro HTTP harness        | Research        |
+| Raw RLS probes    | Service-first only                       | Service is what API calls; duplicate signal low                    | Research / Plan |
+| Mutation fixtures | `mutation-fixtures.ts`, coordinates mode | Avoids Nominatim; separate from fan-read read fixtures             | Research        |
+| Non-admin user    | Dedicated `createNonAdminClient()`       | Distinct email, no allowlist row                                   | Research        |
+| Risk #3 scope     | Count-delta on `deleteEvent`             | Proves scoped delete; migration smoke deferred                     | Research        |
+| HTTP API tests    | Deferred                                 | `requireAdmin` unit + service tests sufficient under cost × signal | Research        |
 
 ## Scope
 
@@ -46,13 +46,13 @@ Tests use localhost-only clients from Phase 1 harness; fixtures inserted/deleted
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-|-------|------------------|----------|
-| 1. Harness + unit guard | `createNonAdminClient`, mutation fixtures, `requireAdmin` tests | None (no DB) |
-| 2. Mutation denied | Anon + non-admin cannot CUD | False negative if only UI tested |
-| 3. Admin allow | `is_admin` RPC + admin CUD | uid migration not applied |
-| 4. Delete integrity | Count delta exactly 1 | Unscoped cleanup |
-| 5. Cookbook | §6.4 + §6.6 docs | — |
+| Phase                   | What it delivers                                                | Key risk                         |
+| ----------------------- | --------------------------------------------------------------- | -------------------------------- |
+| 1. Harness + unit guard | `createNonAdminClient`, mutation fixtures, `requireAdmin` tests | None (no DB)                     |
+| 2. Mutation denied      | Anon + non-admin cannot CUD                                     | False negative if only UI tested |
+| 3. Admin allow          | `is_admin` RPC + admin CUD                                      | uid migration not applied        |
+| 4. Delete integrity     | Count delta exactly 1                                           | Unscoped cleanup                 |
+| 5. Cookbook             | §6.4 + §6.6 docs                                                | —                                |
 
 **Prerequisites:** Docker + local Supabase, `.env.test`, migration `20260611140000` applied.
 

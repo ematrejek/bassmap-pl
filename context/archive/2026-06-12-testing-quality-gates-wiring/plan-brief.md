@@ -18,14 +18,14 @@ Każdy PR i push do `main` odpala pełny `npm test` w Actions (Supabase lokalny,
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-|----------|--------|------------------|--------|
-| CI job layout | Jeden job: lint → Supabase → test → build | Prosty YAML, jeden cold start, łatwy debug | Plan |
-| Deploy gate | Testy w `ci.yml` **i** `deploy.yml` | Deploy nie poleci przy czerwonych testach nawet bez branch protection | Plan |
-| Lokalny skip | Zostaje bez zmian | Developer bez Dockera nie jest blokowany; CI zawsze ma env | Plan |
-| Pre-commit | Bez `npm test` w husky | Integracja wymaga Dockera — za wolne na każdy commit | Plan |
-| DRY workflows | `scripts/ci-supabase-test.sh` | Ten sam krok w dwóch workflow bez kopiowania logiki | Plan |
-| Supabase w CI | `supabase/setup-cli@v2` + `start -x` zbędne serwisy | Oficjalny wzorzec; szybszy start niż pełny stack | Plan |
+| Decision      | Choice                                              | Why (1 sentence)                                                      | Source |
+| ------------- | --------------------------------------------------- | --------------------------------------------------------------------- | ------ |
+| CI job layout | Jeden job: lint → Supabase → test → build           | Prosty YAML, jeden cold start, łatwy debug                            | Plan   |
+| Deploy gate   | Testy w `ci.yml` **i** `deploy.yml`                 | Deploy nie poleci przy czerwonych testach nawet bez branch protection | Plan   |
+| Lokalny skip  | Zostaje bez zmian                                   | Developer bez Dockera nie jest blokowany; CI zawsze ma env            | Plan   |
+| Pre-commit    | Bez `npm test` w husky                              | Integracja wymaga Dockera — za wolne na każdy commit                  | Plan   |
+| DRY workflows | `scripts/ci-supabase-test.sh`                       | Ten sam krok w dwóch workflow bez kopiowania logiki                   | Plan   |
+| Supabase w CI | `supabase/setup-cli@v2` + `start -x` zbędne serwisy | Oficjalny wzorzec; szybszy start niż pełny stack                      | Plan   |
 
 ## Scope
 
@@ -47,12 +47,12 @@ Trzy zmienne testowe: `SUPABASE_URL`, `SUPABASE_KEY`, `SUPABASE_SERVICE_ROLE_KEY
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-|-------|------------------|----------|
+| Phase            | What it delivers                                | Key risk                                                   |
+| ---------------- | ----------------------------------------------- | ---------------------------------------------------------- |
 | 1. Shared script | `ci-supabase-test.sh` + wykrywanie cichego skip | Fałszywy fail jeśli grep złapie warning z innego kontekstu |
-| 2. CI workflow | `npm test` w `ci.yml` | Timeout / flaky Supabase start w Actions |
-| 3. Deploy gate | Ten sam test przed buildem w `deploy.yml` | Podwójny Supabase start na main (~2–4 min) |
-| 4. Docs sync | test-plan + README | Phase 4 status w §3 dopiero przy archive |
+| 2. CI workflow   | `npm test` w `ci.yml`                           | Timeout / flaky Supabase start w Actions                   |
+| 3. Deploy gate   | Ten sam test przed buildem w `deploy.yml`       | Podwójny Supabase start na main (~2–4 min)                 |
+| 4. Docs sync     | test-plan + README                              | Phase 4 status w §3 dopiero przy archive                   |
 
 **Prerequisites:** Phases 1–3 test rollout done; Docker available on `ubuntu-latest`; `supabase` CLI v2.23.x in devDependencies.
 

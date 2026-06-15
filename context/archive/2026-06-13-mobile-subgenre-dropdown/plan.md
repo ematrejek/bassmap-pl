@@ -61,14 +61,12 @@ Dwie fazy: (1) nowy komponent `SubgenreFilter` ze wspólnym stanem i ukrytymi po
 
 ```tsx
 // Pseudokod — src/components/discovery/SubgenreFilter.tsx
-const [selected, setSelected] = useState<Set<Subgenre>>(
-  () => new Set(currentFilters.subgenres),
-);
+const [selected, setSelected] = useState<Set<Subgenre>>(() => new Set(currentFilters.subgenres));
 
 // Zawsze w DOM (wewnątrz <form>):
-{[...selected].map((subgenre) => (
-  <input key={subgenre} type="hidden" name="subgenre" value={subgenre} />
-))}
+{
+  [...selected].map((subgenre) => <input key={subgenre} type="hidden" name="subgenre" value={subgenre} />);
+}
 ```
 
 Widoczne checkboxy (mobile i desktop) **bez** atrybutu `name` — tylko `checked` + `onCheckedChange` aktualizują `selected`.
@@ -90,11 +88,11 @@ function toggleSubgenre(subgenre: Subgenre, checked: boolean) {
 
 **File:** helper w `SubgenreFilter.tsx` (inline, bez osobnego modułu — 26 etykiet to stała mapa).
 
-| Wybrane | Tekst na przycisku |
-| ------- | ------------------ |
-| 0 | „Wybierz podgatunki” |
-| 1 | `SUBGENRE_LABELS[selected[0]]` |
-| 2+ | „{n} podgatunki” (np. „3 podgatunki”) |
+| Wybrane | Tekst na przycisku                    |
+| ------- | ------------------------------------- |
+| 0       | „Wybierz podgatunki”                  |
+| 1       | `SUBGENRE_LABELS[selected[0]]`        |
+| 2+      | „{n} podgatunki” (np. „3 podgatunki”) |
 
 Styl triggera: spójny z `DateRangeFilter` — `Button variant="outline"`, `border-white/20 bg-white/5`, opcjonalnie `ChevronDown` z lucide.
 
@@ -127,9 +125,7 @@ Styl triggera: spójny z `DateRangeFilter` — `Button variant="outline"`, `bord
 ```tsx
 <fieldset className="hidden space-y-2 sm:block">
   <legend>Podgatunki</legend>
-  <div className="grid grid-cols-2 gap-2">
-    {/* te same SUBGENRES.map — Checkbox controlled */}
-  </div>
+  <div className="grid grid-cols-2 gap-2">{/* te same SUBGENRES.map — Checkbox controlled */}</div>
   <p className="text-xs …">Zaznacz kilka — pokażemy wydarzenia pasujące do dowolnego z nich.</p>
 </fieldset>
 ```

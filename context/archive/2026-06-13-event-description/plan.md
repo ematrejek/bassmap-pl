@@ -109,6 +109,7 @@ description: z
 **Intent**: Regresja walidacji opisu.
 
 **Contract**: Testy:
+
 - akceptuje `description: null` i brak pola;
 - akceptuje sensowny tekst wieloliniowy;
 - odrzuca > 5000 znaków;
@@ -146,6 +147,7 @@ Textarea w formularzu admina oraz sekcja opisu na publicznej stronie wydarzenia.
 **Intent**: Umożliwić adminowi wpisanie opisu przy tworzeniu i edycji.
 
 **Contract**:
+
 - Stan `description` z `initialEvent?.description ?? ""`.
 - Textarea „Opis wydarzenia” (np. po sekcji lineup, przed okładką), `rows={5}`, placeholder po polsku, opcjonalne.
 - `buildBody()` — `description: description.trim() || null`.
@@ -158,6 +160,7 @@ Textarea w formularzu admina oraz sekcja opisu na publicznej stronie wydarzenia.
 **Intent**: Fan czyta opis na stronie szczegółów.
 
 **Contract**:
+
 - Sekcja warunkowa: renderuj tylko gdy `event.description` truthy po trim.
 - Nagłówek: „Opis” (uppercase jak „Lineup”).
 - Treść: `<p class="whitespace-pre-wrap text-blue-100/80">` — Astro escapuje HTML automatycznie.

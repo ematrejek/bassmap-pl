@@ -19,16 +19,16 @@ Aplikacja działa pod własną domeną `.pl` (DNS w Cloudflare), baza prod ma sc
 
 ## Key Decisions Made
 
-| Decision              | Choice                                              | Why (1 sentence)                                                          | Source |
-| --------------------- | --------------------------------------------------- | ------------------------------------------------------------------------- | ------ |
-| Adres publiczny       | Domena `.pl` (rejestrator PL → DNS Cloudflare)      | Cloudflare nie rejestruje `.pl`, ale obsługuje je jako strefę DNS         | Plan   |
-| Dane startowe         | Puste — admin dodaje eventy ręcznie                 | Tylko prawdziwe dane, pełna kontrola                                      | Plan   |
-| Potwierdzenie e-mail  | Wyłączone teraz, włączyć przed publicznym launch    | Łatwiejsze testy MVP; bezpieczeństwo przed udostępnieniem linku           | Plan   |
-| Sposób deployu kodu   | Auto-deploy GitHub Actions na `main`                | Zgodne z tech-stack; każdy merge = produkcja                              | Plan   |
-| Konto admina          | `matrejekemilia@gmail.com` (z migracji/seed)        | Spójność z allowlist w migracji `fix_admin_allowlist_email`               | Plan   |
-| Migracje prod         | Agent uruchamia `supabase db push` (CLI + link)     | Szybciej niż ręczny SQL Editor; wymaga `supabase login`                   | Plan   |
-| Preview w chmurze     | Tylko lokalny `npm run preview` w F-03              | Najprostsze dla solo MVP; PR preview → faza 2                             | Plan   |
-| Dokumentacja          | Aktualizacja `deploy-plan.md` + `README.md`         | Jeden dokument operacyjny + onboarding dla współpracowników               | Plan   |
+| Decision             | Choice                                           | Why (1 sentence)                                                  | Source |
+| -------------------- | ------------------------------------------------ | ----------------------------------------------------------------- | ------ |
+| Adres publiczny      | Domena `.pl` (rejestrator PL → DNS Cloudflare)   | Cloudflare nie rejestruje `.pl`, ale obsługuje je jako strefę DNS | Plan   |
+| Dane startowe        | Puste — admin dodaje eventy ręcznie              | Tylko prawdziwe dane, pełna kontrola                              | Plan   |
+| Potwierdzenie e-mail | Wyłączone teraz, włączyć przed publicznym launch | Łatwiejsze testy MVP; bezpieczeństwo przed udostępnieniem linku   | Plan   |
+| Sposób deployu kodu  | Auto-deploy GitHub Actions na `main`             | Zgodne z tech-stack; każdy merge = produkcja                      | Plan   |
+| Konto admina         | `matrejekemilia@gmail.com` (z migracji/seed)     | Spójność z allowlist w migracji `fix_admin_allowlist_email`       | Plan   |
+| Migracje prod        | Agent uruchamia `supabase db push` (CLI + link)  | Szybciej niż ręczny SQL Editor; wymaga `supabase login`           | Plan   |
+| Preview w chmurze    | Tylko lokalny `npm run preview` w F-03           | Najprostsze dla solo MVP; PR preview → faza 2                     | Plan   |
+| Dokumentacja         | Aktualizacja `deploy-plan.md` + `README.md`      | Jeden dokument operacyjny + onboarding dla współpracowników       | Plan   |
 
 ## Scope
 
@@ -81,12 +81,12 @@ Worker (`bassmap-pl`) łączy się z Supabase cloud przez sekrety `SUPABASE_URL`
 
 ## Phases at a Glance
 
-| Phase     | What it delivers                          | Key risk                                      |
-| --------- | ----------------------------------------- | --------------------------------------------- |
-| 1. Baza   | Schemat events + admin allowlist na prod  | Brak `supabase login` / zły project ref       |
-| 2. Domena | Publiczny adres `.pl` → Worker            | Propagacja DNS 24–48 h; DNSSEC u rejestratora |
-| 3. Deploy | Kod MVP live przez CI/CD                  | Push na złą gałąź (`master` vs `main`)        |
-| 4. Testy  | Smoke MVP + zaktualizowana dokumentacja   | Leaflet/hydratacja na Workers runtime         |
+| Phase     | What it delivers                         | Key risk                                      |
+| --------- | ---------------------------------------- | --------------------------------------------- |
+| 1. Baza   | Schemat events + admin allowlist na prod | Brak `supabase login` / zły project ref       |
+| 2. Domena | Publiczny adres `.pl` → Worker           | Propagacja DNS 24–48 h; DNSSEC u rejestratora |
+| 3. Deploy | Kod MVP live przez CI/CD                 | Push na złą gałąź (`master` vs `main`)        |
+| 4. Testy  | Smoke MVP + zaktualizowana dokumentacja  | Leaflet/hydratacja na Workers runtime         |
 
 **Prerequisites:** Konto Cloudflare (aktywne), projekt Supabase cloud, GitHub Secrets (4 szt.), Docker opcjonalnie (lokalny Supabase nie jest wymagany do prod push).
 

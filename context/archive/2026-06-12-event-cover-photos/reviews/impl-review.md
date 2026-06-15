@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Event Cover Photos
 
 - **Plan**: context/changes/event-cover-photos/plan.md
@@ -9,14 +10,14 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | WARNING ⚠️ |
-| Scope Discipline | WARNING ⚠️ |
-| Safety & Quality | WARNING ⚠️ |
-| Architecture | WARNING ⚠️ |
-| Pattern Consistency | PASS ✅ |
-| Success Criteria | PASS ✅ |
+| Dimension           | Verdict    |
+| ------------------- | ---------- |
+| Plan Adherence      | WARNING ⚠️ |
+| Scope Discipline    | WARNING ⚠️ |
+| Safety & Quality    | WARNING ⚠️ |
+| Architecture        | WARNING ⚠️ |
+| Pattern Consistency | PASS ✅    |
+| Success Criteria    | PASS ✅    |
 
 ## Findings
 

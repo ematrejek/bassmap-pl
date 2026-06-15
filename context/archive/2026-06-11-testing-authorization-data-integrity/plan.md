@@ -50,13 +50,13 @@ After this plan completes:
 
 Sub-phases ordered by **cost × signal** and **dependency** (harness → deny → allow → integrity → docs):
 
-| Order | Sub-phase | Cost | Signal | Risk |
-|-------|-----------|------|--------|------|
-| 1 | Harness + `requireAdmin` unit | Low | Enables all | #5 (API guard) |
-| 2 | Non-admin mutation denied | Medium | Highest | #4 |
-| 3 | Admin mutation + `is_admin` RPC | Medium | High | #5 |
-| 4 | Scoped delete count stability | Low | Medium | #3 |
-| 5 | Cookbook §6.4 + test-plan sync | Low | Durability | — |
+| Order | Sub-phase                       | Cost   | Signal      | Risk           |
+| ----- | ------------------------------- | ------ | ----------- | -------------- |
+| 1     | Harness + `requireAdmin` unit   | Low    | Enables all | #5 (API guard) |
+| 2     | Non-admin mutation denied       | Medium | Highest     | #4             |
+| 3     | Admin mutation + `is_admin` RPC | Medium | High        | #5             |
+| 4     | Scoped delete count stability   | Low    | Medium      | #3             |
+| 5     | Cookbook §6.4 + test-plan sync  | Low    | Durability  | —              |
 
 Fixture contract: service-role inserts tracked rows; mutation attempts use **fixture IDs** or **unique name prefix** (`integration-auth-mutation`); cleanup deletes **only** tracked IDs.
 
@@ -122,21 +122,21 @@ Prove anon and authenticated non-admin clients cannot create, update, or delete 
 
 ### Test sub-phase 2a — Create denied
 
-| Field | Value |
-|-------|-------|
-| **Behavior asserted** | `createEvent(anonClient, payload)` and `createEvent(nonAdminClient, payload)` return `{ error }`; no row with fixture name in DB (service-role select) |
-| **Regression caught** | RLS or service allows INSERT for non-admin |
-| **Edge/boundary** | Coordinates mode payload — no geocode network |
-| **Anti-pattern avoided** | Only testing `/admin` redirect |
+| Field                    | Value                                                                                                                                                  |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Behavior asserted**    | `createEvent(anonClient, payload)` and `createEvent(nonAdminClient, payload)` return `{ error }`; no row with fixture name in DB (service-role select) |
+| **Regression caught**    | RLS or service allows INSERT for non-admin                                                                                                             |
+| **Edge/boundary**        | Coordinates mode payload — no geocode network                                                                                                          |
+| **Anti-pattern avoided** | Only testing `/admin` redirect                                                                                                                         |
 
 ### Test sub-phase 2b — Update and delete denied
 
-| Field | Value |
-|-------|-------|
-| **Behavior asserted** | After service-role insert fixture: `updateEvent(nonAdminClient, id, { name: "…" })` → error; `deleteEvent(nonAdminClient, id)` → error; row still present unchanged |
-| **Regression caught** | UPDATE/DELETE policies bypassed at service layer |
-| **Edge/boundary** | Same fixture id for both operations |
-| **Anti-pattern avoided** | Happy-path-only create denial without update/delete |
+| Field                    | Value                                                                                                                                                               |
+| ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Behavior asserted**    | After service-role insert fixture: `updateEvent(nonAdminClient, id, { name: "…" })` → error; `deleteEvent(nonAdminClient, id)` → error; row still present unchanged |
+| **Regression caught**    | UPDATE/DELETE policies bypassed at service layer                                                                                                                    |
+| **Edge/boundary**        | Same fixture id for both operations                                                                                                                                 |
+| **Anti-pattern avoided** | Happy-path-only create denial without update/delete                                                                                                                 |
 
 ### Changes Required
 
@@ -169,19 +169,19 @@ Prove allowlisted admin session passes `is_admin()` and can create, update, and 
 
 ### Test sub-phase 3a — RPC and create
 
-| Field | Value |
-|-------|-------|
-| **Behavior asserted** | `adminClient.rpc("is_admin")` → `true`; `nonAdminClient.rpc("is_admin")` → `false`; `createEvent(adminClient, payload)` → `{ data }` with id |
-| **Regression caught** | Allowlist / uid migration regression; admin cannot persist |
-| **Anti-pattern avoided** | Allowlist row without signed-in session |
+| Field                    | Value                                                                                                                                        |
+| ------------------------ | -------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Behavior asserted**    | `adminClient.rpc("is_admin")` → `true`; `nonAdminClient.rpc("is_admin")` → `false`; `createEvent(adminClient, payload)` → `{ data }` with id |
+| **Regression caught**    | Allowlist / uid migration regression; admin cannot persist                                                                                   |
+| **Anti-pattern avoided** | Allowlist row without signed-in session                                                                                                      |
 
 ### Test sub-phase 3b — Update and delete
 
-| Field | Value |
-|-------|-------|
-| **Behavior asserted** | `updateEvent(adminClient, id, patch)` succeeds; `deleteEvent(adminClient, id)` succeeds; fixture id absent after delete |
-| **Regression caught** | Admin UPDATE/DELETE broken while INSERT works |
-| **Anti-pattern avoided** | Testing only RPC without mutation |
+| Field                    | Value                                                                                                                   |
+| ------------------------ | ----------------------------------------------------------------------------------------------------------------------- |
+| **Behavior asserted**    | `updateEvent(adminClient, id, patch)` succeeds; `deleteEvent(adminClient, id)` succeeds; fixture id absent after delete |
+| **Regression caught**    | Admin UPDATE/DELETE broken while INSERT works                                                                           |
+| **Anti-pattern avoided** | Testing only RPC without mutation                                                                                       |
 
 ### Changes Required
 
@@ -213,18 +213,18 @@ Prove `deleteEvent` affects exactly one row and failed deletes leave count uncha
 
 ### Test sub-phase 4a — Single-row delete delta
 
-| Field | Value |
-|-------|-------|
-| **Behavior asserted** | `countEvents` before delete; `deleteEvent(admin, fixtureId)` success; `countEvents` after === before - 1 |
-| **Regression caught** | Unscoped delete in service or test cleanup |
-| **Anti-pattern avoided** | Asserting absolute seed count |
+| Field                    | Value                                                                                                    |
+| ------------------------ | -------------------------------------------------------------------------------------------------------- |
+| **Behavior asserted**    | `countEvents` before delete; `deleteEvent(admin, fixtureId)` success; `countEvents` after === before - 1 |
+| **Regression caught**    | Unscoped delete in service or test cleanup                                                               |
+| **Anti-pattern avoided** | Asserting absolute seed count                                                                            |
 
 ### Test sub-phase 4b — Missing id
 
-| Field | Value |
-|-------|-------|
+| Field                 | Value                                                           |
+| --------------------- | --------------------------------------------------------------- |
 | **Behavior asserted** | `deleteEvent(admin, randomUuid)` → `{ error }`; count unchanged |
-| **Regression caught** | Silent no-op on missing row treated as success |
+| **Regression caught** | Silent no-op on missing row treated as success                  |
 
 ### Changes Required
 
@@ -374,7 +374,6 @@ Document mutation/auth integration pattern for future rollout phases.
 #### Manual
 
 - [x] 4.2 None — f0c7127
-
 
 ### Phase 5: Cookbook and test-plan §6 sync
 

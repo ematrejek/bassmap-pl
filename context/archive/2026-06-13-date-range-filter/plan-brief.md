@@ -26,18 +26,18 @@ Fan na stronie głównej (`/`) może zawęzić listę i mapę do **konkretnego d
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-| -------- | ------ | ---------------- | ------ |
-| Parametry URL | `from` + `to` (`YYYY-MM-DD`) | Spójne z formularzem GET; jeden dzień = `from=to` | Plan |
-| Strefa czasu | Europe/Warsaw | Jak RLS `is_upcoming` i istniejące helpery formatu | Roadmap unknown |
-| Tydzień (preset) | Poniedziałek–niedziela bieżącego tygodnia ISO w Warszawie | Naturalne „w tym tygodniu” w PL | Plan |
-| Miesiąc (preset) | 1.–ostatni dzień bieżącego miesiąca kalendarzowego w Warszawie | „W tym miesiącu” bez magii „30 dni” | Plan |
-| Dolna granica zapytania | `max(zakres od użytkownika, dziś)` | Produkt nadal pokazuje tylko nadchodzące eventy | Lesson fan read |
-| Górna granica | Półotwarty przedział: `starts_at < początek dnia po `to`` | Włącza cały ostatni dzień zakresu | Plan |
-| UI kalendarza | shadcn Calendar + Popover (react-day-picker) | Roadmap wymaga kalendarza; spójne z shadcn w projekcie | Plan |
-| Presety | Linki/nawigacja GET z wyliczonym `from`/`to` | Działa bez JS; zgodne z SSR | Plan |
-| Migracja DB | Brak | Filtr na `starts_at` — kolumna już jest | Codebase |
-| Lista miast | Bez zmiany (wszystkie miasta z nadchodzących) | YAGNI — dropdown miast bez filtra daty na MVP | Plan |
+| Decision                | Choice                                                         | Why (1 sentence)                                       | Source          |
+| ----------------------- | -------------------------------------------------------------- | ------------------------------------------------------ | --------------- |
+| Parametry URL           | `from` + `to` (`YYYY-MM-DD`)                                   | Spójne z formularzem GET; jeden dzień = `from=to`      | Plan            |
+| Strefa czasu            | Europe/Warsaw                                                  | Jak RLS `is_upcoming` i istniejące helpery formatu     | Roadmap unknown |
+| Tydzień (preset)        | Poniedziałek–niedziela bieżącego tygodnia ISO w Warszawie      | Naturalne „w tym tygodniu” w PL                        | Plan            |
+| Miesiąc (preset)        | 1.–ostatni dzień bieżącego miesiąca kalendarzowego w Warszawie | „W tym miesiącu” bez magii „30 dni”                    | Plan            |
+| Dolna granica zapytania | `max(zakres od użytkownika, dziś)`                             | Produkt nadal pokazuje tylko nadchodzące eventy        | Lesson fan read |
+| Górna granica           | Półotwarty przedział: `starts_at < początek dnia po `to``      | Włącza cały ostatni dzień zakresu                      | Plan            |
+| UI kalendarza           | shadcn Calendar + Popover (react-day-picker)                   | Roadmap wymaga kalendarza; spójne z shadcn w projekcie | Plan            |
+| Presety                 | Linki/nawigacja GET z wyliczonym `from`/`to`                   | Działa bez JS; zgodne z SSR                            | Plan            |
+| Migracja DB             | Brak                                                           | Filtr na `starts_at` — kolumna już jest                | Codebase        |
+| Lista miast             | Bez zmiany (wszystkie miasta z nadchodzących)                  | YAGNI — dropdown miast bez filtra daty na MVP          | Plan            |
 
 ## Scope
 
@@ -51,10 +51,10 @@ Rozszerzenie istniejącego przepływu SSR: **URL → `parseFanFilters` → `list
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| ----- | ---------------- | -------- |
-| 1. Filtr w danych | Schema URL, helpery dat, zapytanie Supabase, testy | Błędne granice UTC przy DST |
-| 2. UI odkrywania | Kalendarz, presety, copy, `hasActiveFilters` | Formularz GET nie przenosi dat |
+| Phase             | What it delivers                                   | Key risk                       |
+| ----------------- | -------------------------------------------------- | ------------------------------ |
+| 1. Filtr w danych | Schema URL, helpery dat, zapytanie Supabase, testy | Błędne granice UTC przy DST    |
+| 2. UI odkrywania  | Kalendarz, presety, copy, `hasActiveFilters`       | Formularz GET nie przenosi dat |
 
 **Prerequisites:** S-02 done; Vitest skonfigurowany.
 

@@ -28,17 +28,17 @@ Fan na stronie głównej (`/`) może włączyć **„Pokaż tylko darmowe”** i
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-| -------- | ------ | ---------------- | ------ |
-| Parametr URL | `free=1` | Krótki, czytelny w GET; checkbox HTML `name="free" value="1"` | Plan |
-| Semantyka parsera | Tylko `free=1` aktywuje filtr | Unikamy niejednoznaczności (`true`, `yes`, puste) | Plan |
-| Pole w typie | `freeOnly: boolean` (domyślnie `false`) | Prostsze niż `null`; brak parametru = wyłączone | Plan |
-| Zapytanie DB | `.eq("is_free", true)` gdy `freeOnly` | Bezpośrednio na istniejącej kolumnie | Roadmap |
-| UI | Checkbox w formularzu GET (jak podgatunki) | Działa bez JS przy „Filtruj”; spójne z SSR S-02/S-05 | Plan |
-| shadcn Switch | Nie na MVP | Checkbox wystarczy; roadmap mówi „przełącznik” — copy PL, kontrolka może być checkbox ze stylami | Plan |
-| `listDistinctCities` | Bez zmiany | YAGNI — dropdown miast bez filtra darmowych na MVP | Plan |
-| Migracja DB | Brak | `is_free` już jest | Codebase |
-| Indeks DB | Brak | Niski wolumen MVP; filtr łączy się z `starts_at` / `status` | Plan |
+| Decision             | Choice                                     | Why (1 sentence)                                                                                 | Source   |
+| -------------------- | ------------------------------------------ | ------------------------------------------------------------------------------------------------ | -------- |
+| Parametr URL         | `free=1`                                   | Krótki, czytelny w GET; checkbox HTML `name="free" value="1"`                                    | Plan     |
+| Semantyka parsera    | Tylko `free=1` aktywuje filtr              | Unikamy niejednoznaczności (`true`, `yes`, puste)                                                | Plan     |
+| Pole w typie         | `freeOnly: boolean` (domyślnie `false`)    | Prostsze niż `null`; brak parametru = wyłączone                                                  | Plan     |
+| Zapytanie DB         | `.eq("is_free", true)` gdy `freeOnly`      | Bezpośrednio na istniejącej kolumnie                                                             | Roadmap  |
+| UI                   | Checkbox w formularzu GET (jak podgatunki) | Działa bez JS przy „Filtruj”; spójne z SSR S-02/S-05                                             | Plan     |
+| shadcn Switch        | Nie na MVP                                 | Checkbox wystarczy; roadmap mówi „przełącznik” — copy PL, kontrolka może być checkbox ze stylami | Plan     |
+| `listDistinctCities` | Bez zmiany                                 | YAGNI — dropdown miast bez filtra darmowych na MVP                                               | Plan     |
+| Migracja DB          | Brak                                       | `is_free` już jest                                                                               | Codebase |
+| Indeks DB            | Brak                                       | Niski wolumen MVP; filtr łączy się z `starts_at` / `status`                                      | Plan     |
 
 ## Scope
 
@@ -52,10 +52,10 @@ Rozszerzenie istniejącego przepływu SSR: **URL → `parseFanFilters` → `list
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-| ----- | ---------------- | -------- |
-| 1. Filtr w danych | Schema URL, zapytanie Supabase, testy parsera | Zapomnienie `.eq("is_free")` przy kombinacji filtrów |
-| 2. UI odkrywania | Checkbox, `hasActiveFilters`, zachowanie presetów dat | Preset dat gubi stan „tylko darmowe” |
+| Phase             | What it delivers                                      | Key risk                                             |
+| ----------------- | ----------------------------------------------------- | ---------------------------------------------------- |
+| 1. Filtr w danych | Schema URL, zapytanie Supabase, testy parsera         | Zapomnienie `.eq("is_free")` przy kombinacji filtrów |
+| 2. UI odkrywania  | Checkbox, `hasActiveFilters`, zachowanie presetów dat | Preset dat gubi stan „tylko darmowe”                 |
 
 **Prerequisites:** S-02 done; S-05 done (filtr dat — `FanEventFilters` już rozszerzony).
 

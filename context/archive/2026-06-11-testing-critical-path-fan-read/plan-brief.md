@@ -17,14 +17,14 @@ No test runner or test files. Fan-read filters already exist in `src/lib/service
 
 ## Key Decisions Made
 
-| Decision | Choice | Why (1 sentence) | Source |
-|----------|--------|------------------|--------|
-| Test runner | Vitest standalone (Node env) | Avoids Astro 6 + `getViteConfig` CJS crash; service tests don't need Astro | Research |
-| Test layer | Integration (service + DB) | Catches filter/wiring bugs unit tests and RLS-only tests miss | Research / Test-plan |
-| Fixture oracle | Insert contract with relative dates | Independent of `getStartOfTodayWarsawUtcIso()` and seed.sql calendar | Research |
-| CI behavior | Skip integration if env unset | Phase 4 wires CI; don't block lint/build now | Research |
-| Page/env-null tests | Deferred | Lower signal per cost; service integration covers filter bugs | Plan |
-| Admin setup | Real auth + allowlist via uid migration | Matches production `is_admin()` behavior | Research |
+| Decision            | Choice                                  | Why (1 sentence)                                                           | Source               |
+| ------------------- | --------------------------------------- | -------------------------------------------------------------------------- | -------------------- |
+| Test runner         | Vitest standalone (Node env)            | Avoids Astro 6 + `getViteConfig` CJS crash; service tests don't need Astro | Research             |
+| Test layer          | Integration (service + DB)              | Catches filter/wiring bugs unit tests and RLS-only tests miss              | Research / Test-plan |
+| Fixture oracle      | Insert contract with relative dates     | Independent of `getStartOfTodayWarsawUtcIso()` and seed.sql calendar       | Research             |
+| CI behavior         | Skip integration if env unset           | Phase 4 wires CI; don't block lint/build now                               | Research             |
+| Page/env-null tests | Deferred                                | Lower signal per cost; service integration covers filter bugs              | Plan                 |
+| Admin setup         | Real auth + allowlist via uid migration | Matches production `is_admin()` behavior                                   | Research             |
 
 ## Scope
 
@@ -46,12 +46,12 @@ Sub-phases ordered: bootstrap → Risk #1 not empty → Risk #1 exclusion → Ri
 
 ## Phases at a Glance
 
-| Phase | What it delivers | Key risk |
-|-------|------------------|----------|
-| 1. Bootstrap | Vitest + Supabase helpers + smoke test | Wrong path alias / env loading |
-| 2. Risk #1 anon | List not empty; excludes draft/past | False green from seed coupling |
-| 3. Risk #6 admin | Same filters with admin session | RLS-only false confidence |
-| 4. Cookbook | test-plan §6.2 + §6.6 | Patterns not durable for Phase 2 |
+| Phase            | What it delivers                       | Key risk                         |
+| ---------------- | -------------------------------------- | -------------------------------- |
+| 1. Bootstrap     | Vitest + Supabase helpers + smoke test | Wrong path alias / env loading   |
+| 2. Risk #1 anon  | List not empty; excludes draft/past    | False green from seed coupling   |
+| 3. Risk #6 admin | Same filters with admin session        | RLS-only false confidence        |
+| 4. Cookbook      | test-plan §6.2 + §6.6                  | Patterns not durable for Phase 2 |
 
 **Prerequisites:** Docker, local Supabase, migration `20260611140000_fix_is_admin_use_uid.sql` applied.
 

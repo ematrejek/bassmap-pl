@@ -166,11 +166,11 @@
 }
 
 @utility surface-panel {
-  @apply rounded-2xl border border-primary/30 bg-card/50 backdrop-blur-md shadow-glow-violet;
+  @apply border-primary/30 bg-card/50 shadow-glow-violet rounded-2xl border backdrop-blur-md;
 }
 
 @utility surface-panel-flat {
-  @apply rounded-2xl border border-border/70 bg-card/50 backdrop-blur-md;
+  @apply border-border/70 bg-card/50 rounded-2xl border backdrop-blur-md;
 }
 
 @utility bg-cosmic {
@@ -191,7 +191,7 @@
     @apply border-border outline-ring/50;
   }
   body {
-    @apply bg-background font-sans text-foreground;
+    @apply bg-background text-foreground font-sans;
   }
 }
 

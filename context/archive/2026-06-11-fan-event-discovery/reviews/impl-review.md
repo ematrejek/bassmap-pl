@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Fan Event Discovery (S-02)
 
 - **Plan**: context/changes/fan-event-discovery/plan.md
@@ -9,21 +10,21 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | WARNING |
-| Scope Discipline | WARNING |
-| Safety & Quality | WARNING |
-| Architecture | PASS |
-| Pattern Consistency | PASS |
-| Success Criteria | WARNING |
+| Dimension           | Verdict |
+| ------------------- | ------- |
+| Plan Adherence      | WARNING |
+| Scope Discipline    | WARNING |
+| Safety & Quality    | WARNING |
+| Architecture        | PASS    |
+| Pattern Consistency | PASS    |
+| Success Criteria    | WARNING |
 
 ## Automated Verification
 
-| Command | Result |
-|---------|--------|
-| `npm run lint` | PASS |
-| `npm run build` | PASS |
+| Command         | Result |
+| --------------- | ------ |
+| `npm run lint`  | PASS   |
+| `npm run build` | PASS   |
 
 ## Manual Verification
 

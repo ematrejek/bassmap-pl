@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Quality-gates wiring
 
 - **Plan**: context/changes/testing-quality-gates-wiring/plan.md
@@ -9,14 +10,14 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | PASS (post-triage) |
-| Scope Discipline | PASS |
-| Safety & Quality | PASS |
-| Architecture | PASS |
+| Dimension           | Verdict            |
+| ------------------- | ------------------ |
+| Plan Adherence      | PASS (post-triage) |
+| Scope Discipline    | PASS               |
+| Safety & Quality    | PASS               |
+| Architecture        | PASS               |
 | Pattern Consistency | PASS (post-triage) |
-| Success Criteria | PASS |
+| Success Criteria    | PASS               |
 
 ## Findings
 
@@ -81,12 +82,12 @@
 
 ## Automated verification (review run)
 
-| Command | Result | Notes |
-|---------|--------|-------|
-| `bash -n scripts/ci-supabase-test.sh` | N/A (Windows — bash niedostępny) | Plan Progress 1.1 zielony w commit `6b66f5c` |
-| `npm run lint` | FAIL lokalnie | CRLF w `tests/smoke/vitest.test.ts` — plik poza diffem tej zmiany; CI Linux prawdopodobnie OK |
-| `npm run build` | PASS | Review 2026-06-12 |
-| GitHub Actions (plan Progress) | PASS | 2.1–2.3, 3.1–3.3 oznaczone done z commitami |
+| Command                               | Result                           | Notes                                                                                         |
+| ------------------------------------- | -------------------------------- | --------------------------------------------------------------------------------------------- |
+| `bash -n scripts/ci-supabase-test.sh` | N/A (Windows — bash niedostępny) | Plan Progress 1.1 zielony w commit `6b66f5c`                                                  |
+| `npm run lint`                        | FAIL lokalnie                    | CRLF w `tests/smoke/vitest.test.ts` — plik poza diffem tej zmiany; CI Linux prawdopodobnie OK |
+| `npm run build`                       | PASS                             | Review 2026-06-12                                                                             |
+| GitHub Actions (plan Progress)        | PASS                             | 2.1–2.3, 3.1–3.3 oznaczone done z commitami                                                   |
 
 ## Plan drift accepted as fixes (not findings)
 

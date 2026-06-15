@@ -23,13 +23,13 @@ Zalogowany fan (nie admin) widzi w menu: Lista eventów, Mój profil, Moje event
 
 ## Routing
 
-| URL | Zawartość |
-|-----|-----------|
-| `/profile` | Profil fana |
-| `/my-events` | Lista własnych zgłoszeń |
+| URL              | Zawartość                    |
+| ---------------- | ---------------------------- |
+| `/profile`       | Profil fana                  |
+| `/my-events`     | Lista własnych zgłoszeń      |
 | `/my-events/new` | Formularz „Dodaj wydarzenie” |
-| `/team` | Placeholder „Moja ekipa” |
-| `/forum` | Placeholder „Forum” |
+| `/team`          | Placeholder „Moja ekipa”     |
+| `/forum`         | Placeholder „Forum”          |
 
 Redirect `/dashboard` → `/profile` (301).
 

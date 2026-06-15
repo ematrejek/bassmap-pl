@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Polityka prywatności i Regulamin (legal-pages)
 
 - **Plan**: brak `plan.md` — spec: `context/changes/legal-pages/change.md` + `research.md`
@@ -9,21 +10,21 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | PASS ✅ |
-| Scope Discipline | PASS ✅ |
-| Safety & Quality | WARNING ⚠️ |
-| Architecture | PASS ✅ |
+| Dimension           | Verdict    |
+| ------------------- | ---------- |
+| Plan Adherence      | PASS ✅    |
+| Scope Discipline    | PASS ✅    |
+| Safety & Quality    | WARNING ⚠️ |
+| Architecture        | PASS ✅    |
 | Pattern Consistency | WARNING ⚠️ |
-| Success Criteria | PASS ✅ |
+| Success Criteria    | PASS ✅    |
 
 ## Success Criteria
 
-| Check | Result |
-|-------|--------|
-| CI (lint + build) on `main` | ✅ success — run `27474234344` |
-| Deploy produkcyjny | ✅ success — run `27474234342` |
+| Check                                               | Result                                                      |
+| --------------------------------------------------- | ----------------------------------------------------------- |
+| CI (lint + build) on `main`                         | ✅ success — run `27474234344`                              |
+| Deploy produkcyjny                                  | ✅ success — run `27474234342`                              |
 | Manual — strony prawne + stopka + tekst rejestracji | ✅ potwierdzone przez właściciela produktu („gra wszystko”) |
 
 ## Findings
@@ -90,11 +91,11 @@
 
 ## Plan Adherence Summary
 
-| Element | Werdykt |
-|---------|---------|
-| `/polityka-prywatnosci`, `/regulamin` | MATCH |
-| Statyczne czytelne strony (treść z docx) | MATCH |
-| `SiteFooter` na stronie głównej, szczegółach, auth | MATCH |
-| Tekst browsewrap przy rejestracji z linkami | MATCH |
-| Brak checkboxa (decyzja w change.md) | MATCH |
-| Checkbox + API (research) | Celowy DRIFT — outcome wygrywa |
+| Element                                            | Werdykt                        |
+| -------------------------------------------------- | ------------------------------ |
+| `/polityka-prywatnosci`, `/regulamin`              | MATCH                          |
+| Statyczne czytelne strony (treść z docx)           | MATCH                          |
+| `SiteFooter` na stronie głównej, szczegółach, auth | MATCH                          |
+| Tekst browsewrap przy rejestracji z linkami        | MATCH                          |
+| Brak checkboxa (decyzja w change.md)               | MATCH                          |
+| Checkbox + API (research)                          | Celowy DRIFT — outcome wygrywa |

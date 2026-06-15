@@ -4,11 +4,11 @@ Scope: privacy follow-up (PR #17), S-07 mobile subgenre, S-08 structured price.
 
 ## Verdicts
 
-| Area | Verdict | Notes |
-|------|---------|-------|
-| Privacy (checkbox, cookies, RLS) | **APPROVED WITH NOTES** | Shipped PR #17; deploy OK. Optional: test POST signup without consent; timestamp akceptacji regulaminu na przyszłość. |
-| S-07 SubgenreFilter | **APPROVED WITH NOTES** | UI-only; brak testów E2E mobile — akceptowalne. |
-| S-08 Structured price | **APPROVED** (after fix) | Bug: domyślne `PLN` blokowało „Cena do ustalenia” — naprawione w cleanup commit. |
+| Area                             | Verdict                  | Notes                                                                                                                 |
+| -------------------------------- | ------------------------ | --------------------------------------------------------------------------------------------------------------------- |
+| Privacy (checkbox, cookies, RLS) | **APPROVED WITH NOTES**  | Shipped PR #17; deploy OK. Optional: test POST signup without consent; timestamp akceptacji regulaminu na przyszłość. |
+| S-07 SubgenreFilter              | **APPROVED WITH NOTES**  | UI-only; brak testów E2E mobile — akceptowalne.                                                                       |
+| S-08 Structured price            | **APPROVED** (after fix) | Bug: domyślne `PLN` blokowało „Cena do ustalenia” — naprawione w cleanup commit.                                      |
 
 ## Housekeeping done
 

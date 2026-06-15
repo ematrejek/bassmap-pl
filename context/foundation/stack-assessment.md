@@ -36,7 +36,7 @@ gates_failed: 0
 ## Quality Gate Assessment
 
 | Component   | Typed | Convention | Training Data | Documented | Verdict |
-|-------------|-------|------------|---------------|------------|---------|
+| ----------- | ----- | ---------- | ------------- | ---------- | ------- |
 | Language    | ✓     | —          | —             | —          | pass    |
 | Framework   | —     | ✓          | ✓             | ✓          | pass    |
 | Build tool  | —     | ✓          | ✓             | ✓          | pass    |

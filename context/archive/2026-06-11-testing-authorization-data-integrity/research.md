@@ -12,11 +12,11 @@ Grounding for rollout Phase 2 of `context/foundation/test-plan.md`. Verifies Ris
 
 ## Executive summary
 
-| Risk | Verdict | Cheapest useful layer |
-|------|---------|------------------------|
-| #4 Non-admin mutates events | **Real bypass surface** — mutations go through service + Supabase; RLS is the data-layer gate; API adds `requireAdmin` before service calls | **Integration** — `createEvent` / `updateEvent` / `deleteEvent` + direct `.from("events")` with anon and non-admin clients; **unit** on `requireAdmin` for HTTP 401/403 |
-| #5 Admin cannot access admin panel | **Real, occurred in prod** — chain is `middleware` → `resolveIsAdmin` → RPC `is_admin()` matched via `auth.uid()` + allowlist email | **Integration** — RPC + service mutation success for allowlisted admin; **unit** on `requireAdmin` / `resolveIsAdmin` with mocked locals |
-| #3 Events disappear / list resets | **Partially testable** — destructive ops are scoped `deleteEvent` by id; test cleanup must stay ID-scoped; migration wipe is out of integration scope | **Integration** — row-count oracle around single-id delete; document migration smoke as manual/CI follow-up |
+| Risk                               | Verdict                                                                                                                                               | Cheapest useful layer                                                                                                                                                   |
+| ---------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| #4 Non-admin mutates events        | **Real bypass surface** — mutations go through service + Supabase; RLS is the data-layer gate; API adds `requireAdmin` before service calls           | **Integration** — `createEvent` / `updateEvent` / `deleteEvent` + direct `.from("events")` with anon and non-admin clients; **unit** on `requireAdmin` for HTTP 401/403 |
+| #5 Admin cannot access admin panel | **Real, occurred in prod** — chain is `middleware` → `resolveIsAdmin` → RPC `is_admin()` matched via `auth.uid()` + allowlist email                   | **Integration** — RPC + service mutation success for allowlisted admin; **unit** on `requireAdmin` / `resolveIsAdmin` with mocked locals                                |
+| #3 Events disappear / list resets  | **Partially testable** — destructive ops are scoped `deleteEvent` by id; test cleanup must stay ID-scoped; migration wipe is out of integration scope | **Integration** — row-count oracle around single-id delete; document migration smoke as manual/CI follow-up                                                             |
 
 **Test-base profile:** Vitest 3.2.x shipped (Phase 1). Harness: `tests/helpers/supabase.ts` (localhost guard, anon/service/admin clients). Patterns: `tests/integration/fan-read-*.test.ts`, `tests/helpers/event-fixtures.ts`.
 
@@ -93,12 +93,12 @@ CREATE POLICY events_delete_admin
 
 ### Mutation entry points (call graph)
 
-| Path | Guard | Service | DB |
-|------|-------|---------|-----|
-| `POST /api/admin/events` | `requireAdmin` | `createEvent` | `INSERT` |
-| `PUT /api/admin/events/[id]` | `requireAdmin` | `updateEvent` | `UPDATE` |
-| `DELETE /api/admin/events/[id]` | `requireAdmin` | `deleteEvent` | `DELETE .eq("id")` |
-| Direct Supabase client (bypass) | none | optional service call | RLS only |
+| Path                            | Guard          | Service               | DB                 |
+| ------------------------------- | -------------- | --------------------- | ------------------ |
+| `POST /api/admin/events`        | `requireAdmin` | `createEvent`         | `INSERT`           |
+| `PUT /api/admin/events/[id]`    | `requireAdmin` | `updateEvent`         | `UPDATE`           |
+| `DELETE /api/admin/events/[id]` | `requireAdmin` | `deleteEvent`         | `DELETE .eq("id")` |
+| Direct Supabase client (bypass) | none           | optional service call | RLS only           |
 
 No other write paths found under `src/pages/api/`. Auth routes (`signin`, `signup`, `signout`) do not touch `events`.
 
@@ -214,13 +214,13 @@ Before/after `deleteEvent`: `serviceClient.from("events").select("id", { count: 
 
 ## Response-guidance corrections vs test-plan
 
-| Test-plan cell | Research correction |
-|----------------|---------------------|
-| #4 "integration (RLS + API)" | **Confirmed** — split: RLS+service integration is highest signal; API `requireAdmin` adds cheap **unit** tests (no Astro request harness needed) |
-| #4 "Must challenge middleware on `/admin`" | **Confirmed** — test direct Supabase + service paths |
-| #5 "Auth session, RPC/allowlist, middleware" | **Confirmed** — integration on RPC + admin mutation; unit on `requireAdmin` |
-| #3 "integration + seed smoke" | **Narrowed** — integration proves scoped delete + count stability; full migration/seed smoke deferred |
-| §6.2 anti-pattern "RLS-only without service" | **Applies to reads**; for **writes**, service+RLS together is correct — service is what API calls |
+| Test-plan cell                               | Research correction                                                                                                                              |
+| -------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| #4 "integration (RLS + API)"                 | **Confirmed** — split: RLS+service integration is highest signal; API `requireAdmin` adds cheap **unit** tests (no Astro request harness needed) |
+| #4 "Must challenge middleware on `/admin`"   | **Confirmed** — test direct Supabase + service paths                                                                                             |
+| #5 "Auth session, RPC/allowlist, middleware" | **Confirmed** — integration on RPC + admin mutation; unit on `requireAdmin`                                                                      |
+| #3 "integration + seed smoke"                | **Narrowed** — integration proves scoped delete + count stability; full migration/seed smoke deferred                                            |
+| §6.2 anti-pattern "RLS-only without service" | **Applies to reads**; for **writes**, service+RLS together is correct — service is what API calls                                                |
 
 ---
 

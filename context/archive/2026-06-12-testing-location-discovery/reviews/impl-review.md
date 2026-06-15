@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: Location and discovery hot-spots
 
 - **Plan**: context/changes/testing-location-discovery/plan.md
@@ -9,22 +10,22 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | PASS |
-| Scope Discipline | PASS |
-| Safety & Quality | WARNING |
-| Architecture | PASS |
+| Dimension           | Verdict |
+| ------------------- | ------- |
+| Plan Adherence      | PASS    |
+| Scope Discipline    | PASS    |
+| Safety & Quality    | WARNING |
+| Architecture        | PASS    |
 | Pattern Consistency | WARNING |
-| Success Criteria | PASS |
+| Success Criteria    | PASS    |
 
 ## Automated verification
 
-| Command | Result |
-|---------|--------|
-| `npm test` (with `.env.test`) | PASS — 33 tests, 12 files |
+| Command                          | Result                                                    |
+| -------------------------------- | --------------------------------------------------------- |
+| `npm test` (with `.env.test`)    | PASS — 33 tests, 12 files                                 |
 | `npm test` (without `.env.test`) | PASS — 21 unit tests pass, 12 integration skipped, exit 0 |
-| `npm run lint` | PASS |
+| `npm run lint`                   | PASS                                                      |
 
 ## Findings
 

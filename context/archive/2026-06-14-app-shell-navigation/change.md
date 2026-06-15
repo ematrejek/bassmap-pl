@@ -26,13 +26,13 @@ Gość wchodzi na **`/`** – dynamiczną okładkę z typografią BassMap PL, sl
 
 ## Routing
 
-| URL | Zawartość |
-|-----|-----------|
-| `/` | Marketing homepage |
-| `/events` | Lista + mapa + filtry |
-| `/archive` | Przeszłe eventy (lista, bez mapy) |
-| `/report-issue` | Formularz „Zgłoś problem” → e-mail |
-| `/auth/signin`, `/auth/signup` | Auth |
+| URL                            | Zawartość                          |
+| ------------------------------ | ---------------------------------- |
+| `/`                            | Marketing homepage                 |
+| `/events`                      | Lista + mapa + filtry              |
+| `/archive`                     | Przeszłe eventy (lista, bez mapy)  |
+| `/report-issue`                | Formularz „Zgłoś problem” → e-mail |
+| `/auth/signin`, `/auth/signup` | Auth                               |
 
 Redirect `/?query` → `/events?query` (302). Stare slugi prawne → `/privacy-policy`, `/terms` (301).
 

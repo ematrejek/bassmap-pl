@@ -1,4 +1,5 @@
 <!-- IMPL-REVIEW-REPORT -->
+
 # Implementation Review: App shell, strona główna i nawigacja gościa
 
 - **Plan**: `context/changes/app-shell-navigation/plan.md`
@@ -9,37 +10,37 @@
 
 ## Verdicts
 
-| Dimension | Verdict |
-|-----------|---------|
-| Plan Adherence | PASS ✅ |
-| Scope Discipline | PASS ✅ |
-| Safety & Quality | PASS ✅ |
-| Architecture | PASS ✅ |
-| Pattern Consistency | PASS ✅ |
-| Success Criteria | WARNING ⚠️ (manual QA + flaki testów lokalnych) |
+| Dimension           | Verdict                                         |
+| ------------------- | ----------------------------------------------- |
+| Plan Adherence      | PASS ✅                                         |
+| Scope Discipline    | PASS ✅                                         |
+| Safety & Quality    | PASS ✅                                         |
+| Architecture        | PASS ✅                                         |
+| Pattern Consistency | PASS ✅                                         |
+| Success Criteria    | WARNING ⚠️ (manual QA + flaki testów lokalnych) |
 
 ## Automated Verification
 
-| Command | Result |
-|---------|--------|
-| `npm run lint` | ✅ PASS |
-| `npm run build` | ✅ PASS |
-| `npm test` | ⚠️ czerwony lokalnie – patrz F2, F10 |
+| Command         | Result                               |
+| --------------- | ------------------------------------ |
+| `npm run lint`  | ✅ PASS                              |
+| `npm run build` | ✅ PASS                              |
+| `npm test`      | ⚠️ czerwony lokalnie – patrz F2, F10 |
 
 ## Success Criteria (plan)
 
-| Kryterium | Status |
-|-----------|--------|
-| `/` marketing homepage + CTA → `/events` | ✅ MATCH |
-| `/events` discovery bez RoadmapTeaser | ✅ MATCH |
-| Redirect `/?query` → `/events?query` (302) | ✅ MATCH |
-| AppShell + Sheet menu globalnie | ✅ MATCH |
-| Menu gościa (5 pozycji) + auth/admin | ✅ MATCH |
-| `/archive` lista bez mapy | ✅ MATCH |
-| `/report-issue` + API e-mail + 503 bez bindingu | ✅ MATCH |
-| Po logowaniu redirect → `/` | ✅ MATCH |
-| Migracja archiwum RLS na remote | ✅ MATCH (20260615120000) |
-| Weryfikacja manualna | ⏳ PENDING |
+| Kryterium                                       | Status                    |
+| ----------------------------------------------- | ------------------------- |
+| `/` marketing homepage + CTA → `/events`        | ✅ MATCH                  |
+| `/events` discovery bez RoadmapTeaser           | ✅ MATCH                  |
+| Redirect `/?query` → `/events?query` (302)      | ✅ MATCH                  |
+| AppShell + Sheet menu globalnie                 | ✅ MATCH                  |
+| Menu gościa (5 pozycji) + auth/admin            | ✅ MATCH                  |
+| `/archive` lista bez mapy                       | ✅ MATCH                  |
+| `/report-issue` + API e-mail + 503 bez bindingu | ✅ MATCH                  |
+| Po logowaniu redirect → `/`                     | ✅ MATCH                  |
+| Migracja archiwum RLS na remote                 | ✅ MATCH (20260615120000) |
+| Weryfikacja manualna                            | ⏳ PENDING                |
 
 ## Findings
 
@@ -95,12 +96,12 @@
 
 ## Plan Adherence Summary
 
-| Element planu | Werdykt |
-|---------------|---------|
-| Routing, shell, homepage, archiwum, kontakt | MATCH |
-| Auth redirect po login → `/` | MATCH |
-| Fonty Orbitron + Inter | MATCH |
-| Topbar usunięty, public roadmap | MATCH |
+| Element planu                               | Werdykt |
+| ------------------------------------------- | ------- |
+| Routing, shell, homepage, archiwum, kontakt | MATCH   |
+| Auth redirect po login → `/`                | MATCH   |
+| Fonty Orbitron + Inter                      | MATCH   |
+| Topbar usunięty, public roadmap             | MATCH   |
 
 ## Następne kroki
 

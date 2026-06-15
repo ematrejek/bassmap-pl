@@ -65,10 +65,10 @@ Dwie fazy: (1) parser URL + helpery granic UTC + filtr w serwisie + testy; (2) s
 
 ### Parametry URL
 
-| Param | Format | Semantyka |
-| ----- | ------ | --------- |
+| Param  | Format       | Semantyka                                           |
+| ------ | ------------ | --------------------------------------------------- |
 | `from` | `YYYY-MM-DD` | Pierwszy dzień zakresu (włącznie), kalendarz Warsaw |
-| `to` | `YYYY-MM-DD` | Ostatni dzień zakresu (włącznie); opcjonalny |
+| `to`   | `YYYY-MM-DD` | Ostatni dzień zakresu (włącznie); opcjonalny        |
 
 Walidacja: regex `^\d{4}-\d{2}-\d{2}$` + sensowna data (`Date` nie NaN po złożeniu z `T12:00:00` w UTC lub przez `parseDatetimeLocalWarsaw` z `T00:00`).
 
@@ -76,11 +76,11 @@ Walidacja: regex `^\d{4}-\d{2}-\d{2}$` + sensowna data (`Date` nie NaN po złoż
 
 Obliczane w `src/lib/events/date-range.ts` względem bieżącego momentu (parametr `referenceDate?: Date` na potrzeby testów):
 
-| Preset | `from` | `to` |
-| ------ | ------ | ---- |
-| **Dziś** | dzisiejsza data Warsaw | ta sama |
+| Preset             | `from`                              | `to`                    |
+| ------------------ | ----------------------------------- | ----------------------- |
+| **Dziś**           | dzisiejsza data Warsaw              | ta sama                 |
 | **W tym tygodniu** | poniedziałek bieżącego tygodnia ISO | niedziela tego tygodnia |
-| **W tym miesiącu** | 1. dzień miesiąca | ostatni dzień miesiąca |
+| **W tym miesiącu** | 1. dzień miesiąca                   | ostatni dzień miesiąca  |
 
 ISO tydzień: poniedziałek = start. Użyj `Intl` / ręcznej arytmetyki na datach kalendarzowych Warsaw (nie `Date.getDay()` w UTC).
 
@@ -193,17 +193,17 @@ export interface FanEventFilters {
 
 **Contract** — przykładowe przypadki:
 
-| Test | Oczekiwanie |
-| ---- | ----------- |
-| Brak parametrów | `dateFrom: null`, `dateTo: null` |
-| `from=2026-06-15` | `dateFrom` i `dateTo` = `2026-06-15` |
-| `from=2026-06-20&to=2026-06-10` | po swap: `from` 10, `to` 20 |
-| `from=invalid` | oba null |
-| Preset „today” z `vi.setSystemTime` | znane `from`/`to` |
-| Preset „week” w środku tygodnia | pon–ndz ISO |
-| Preset „month” w lutym non-leap | `to` = 28 lub 29 |
-| `resolvePublishedDateBounds` z przeszłym `from` | `gte` = start dziś (mock today) |
-| `resolvePublishedDateBounds` z `to` | `lt` = start następnego dnia po `to` |
+| Test                                            | Oczekiwanie                          |
+| ----------------------------------------------- | ------------------------------------ |
+| Brak parametrów                                 | `dateFrom: null`, `dateTo: null`     |
+| `from=2026-06-15`                               | `dateFrom` i `dateTo` = `2026-06-15` |
+| `from=2026-06-20&to=2026-06-10`                 | po swap: `from` 10, `to` 20          |
+| `from=invalid`                                  | oba null                             |
+| Preset „today” z `vi.setSystemTime`             | znane `from`/`to`                    |
+| Preset „week” w środku tygodnia                 | pon–ndz ISO                          |
+| Preset „month” w lutym non-leap                 | `to` = 28 lub 29                     |
+| `resolvePublishedDateBounds` z przeszłym `from` | `gte` = start dziś (mock today)      |
+| `resolvePublishedDateBounds` z `to`             | `lt` = start następnego dnia po `to` |
 
 Użyć `vi.setSystemTime` + `vi.useFakeTimers` w `date-range.test.ts`; przy testach DST rozważyć jeden przypadek graniczny (opcjonalnie).
 
@@ -275,9 +275,7 @@ Widoczny filtr dat w panelu odkrywania; presety i kalendarz zsynchronizowane z U
 
 ```typescript
 const hasActiveFilters =
-  currentFilters.city !== null ||
-  currentFilters.subgenres.length > 0 ||
-  currentFilters.dateFrom !== null;
+  currentFilters.city !== null || currentFilters.subgenres.length > 0 || currentFilters.dateFrom !== null;
 ```
 
 - Opcjonalnie zaktualizować podtytuł: „… miasto, podgatunek i dacie …”.

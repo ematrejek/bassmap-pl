@@ -82,13 +82,13 @@ Zastosowanie 5 migracji na projekt cloud, weryfikacja schematu i przygotowanie k
 
 Lista migracji:
 
-| Plik | Cel |
-| ---- | --- |
-| `20260610100000_create_events.sql` | Tabela events, RLS, admin_allowlist, is_admin() |
-| `20260610110000_grant_is_admin_rpc.sql` | GRANT EXECUTE na is_admin() |
-| `20260610120000_fix_admin_allowlist_email.sql` | Allowlist: matrejekemilia@gmail.com |
-| `20260611100000_nullable_event_address.sql` | Nullable address (lokalizacja tajna) |
-| `20260611120000_add_dancefloor_subgenre.sql` | Enum dancefloor |
+| Plik                                           | Cel                                             |
+| ---------------------------------------------- | ----------------------------------------------- |
+| `20260610100000_create_events.sql`             | Tabela events, RLS, admin_allowlist, is_admin() |
+| `20260610110000_grant_is_admin_rpc.sql`        | GRANT EXECUTE na is_admin()                     |
+| `20260610120000_fix_admin_allowlist_email.sql` | Allowlist: matrejekemilia@gmail.com             |
+| `20260611100000_nullable_event_address.sql`    | Nullable address (lokalizacja tajna)            |
+| `20260611120000_add_dancefloor_subgenre.sql`   | Enum dancefloor                                 |
 
 #### 3. Konto admina w Auth
 
