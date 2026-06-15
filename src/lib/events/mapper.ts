@@ -1,4 +1,14 @@
-import type { CoverAspect, Event, EventCurrency, EventInsert, EventPriceMode, EventStatus, Subgenre } from "@/types";
+import type {
+  CoverAspect,
+  CoverDeclarationKind,
+  CoverSource,
+  Event,
+  EventCurrency,
+  EventInsert,
+  EventPriceMode,
+  EventStatus,
+  Subgenre,
+} from "@/types";
 
 export interface EventRow {
   id: string;
@@ -22,6 +32,10 @@ export interface EventRow {
   status: EventStatus;
   cover_path: string | null;
   cover_aspect: CoverAspect | null;
+  description_rights_accepted_at: string | null;
+  cover_source: CoverSource | null;
+  cover_declaration_kind: CoverDeclarationKind | null;
+  cover_copyright_declared_at: string | null;
   created_by: string | null;
   created_at: string;
   updated_at: string;
@@ -57,6 +71,10 @@ export function mapEventRow(row: EventRow): Event {
     status: row.status,
     coverPath: row.cover_path,
     coverAspect: row.cover_aspect,
+    descriptionRightsAcceptedAt: row.description_rights_accepted_at,
+    coverSource: row.cover_source,
+    coverDeclarationKind: row.cover_declaration_kind,
+    coverCopyrightDeclaredAt: row.cover_copyright_declared_at,
     createdBy: row.created_by,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
@@ -85,6 +103,10 @@ export function toEventInsertRow(input: EventInsert): Record<string, unknown> {
     status: input.status ?? "published",
     cover_path: input.coverPath ?? null,
     cover_aspect: input.coverAspect ?? null,
+    description_rights_accepted_at: input.descriptionRightsAcceptedAt ?? null,
+    cover_source: input.coverSource ?? null,
+    cover_declaration_kind: input.coverDeclarationKind ?? null,
+    cover_copyright_declared_at: input.coverCopyrightDeclaredAt ?? null,
     ...(input.createdBy !== undefined ? { created_by: input.createdBy } : {}),
   };
 }
@@ -112,6 +134,12 @@ export function toEventUpdateRow(input: Partial<EventInsert>): Record<string, un
   if (input.status !== undefined) row.status = input.status;
   if (input.coverPath !== undefined) row.cover_path = input.coverPath;
   if (input.coverAspect !== undefined) row.cover_aspect = input.coverAspect;
+  if (input.descriptionRightsAcceptedAt !== undefined) {
+    row.description_rights_accepted_at = input.descriptionRightsAcceptedAt;
+  }
+  if (input.coverSource !== undefined) row.cover_source = input.coverSource;
+  if (input.coverDeclarationKind !== undefined) row.cover_declaration_kind = input.coverDeclarationKind;
+  if (input.coverCopyrightDeclaredAt !== undefined) row.cover_copyright_declared_at = input.coverCopyrightDeclaredAt;
 
   return row;
 }

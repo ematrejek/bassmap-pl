@@ -90,6 +90,12 @@ export type EventStatus = "draft" | "pending" | "published" | "rejected";
 /** Portrait = event poster; landscape = wide social / FB cover. */
 export type CoverAspect = "portrait" | "landscape";
 
+/** Where the cover image was sourced from (S-17 audit). */
+export type CoverSource = "facebook" | "instagram" | "organizer_website" | "own";
+
+/** Kind of copyright declaration for cover upload (S-17 audit). */
+export type CoverDeclarationKind = "creator_consent" | "own_copyright";
+
 export type EventPriceMode = "exact" | "from" | "range";
 export type EventCurrency = "PLN" | "EUR" | "CZK";
 
@@ -115,6 +121,10 @@ export interface Event {
   status: EventStatus;
   coverPath: string | null;
   coverAspect: CoverAspect | null;
+  descriptionRightsAcceptedAt: string | null;
+  coverSource: CoverSource | null;
+  coverDeclarationKind: CoverDeclarationKind | null;
+  coverCopyrightDeclaredAt: string | null;
   createdBy: string | null;
   createdAt: string;
   updatedAt: string;
@@ -150,6 +160,10 @@ export interface EventInsert {
   status?: EventStatus;
   coverPath?: string | null;
   coverAspect?: CoverAspect | null;
+  descriptionRightsAcceptedAt?: string | null;
+  coverSource?: CoverSource | null;
+  coverDeclarationKind?: CoverDeclarationKind | null;
+  coverCopyrightDeclaredAt?: string | null;
   createdBy?: string | null;
 }
 
