@@ -7,7 +7,7 @@ import { mapEventRow, toEventInsertRow, toEventUpdateRow, type EventRow } from "
 import { clearStructuredPriceFields } from "@/lib/events/price";
 import type { ParsedEventCreate, ParsedEventUpdate } from "@/lib/events/schema";
 import { EVENT_COVERS_BUCKET } from "@/lib/storage/event-covers";
-import type { Event, EventInsert } from "@/types";
+import type { Event, EventInsert, EventStatus } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
 
@@ -264,6 +264,7 @@ function parsedCreateToInsert(
   parsed: ParsedEventCreate,
   coords: { latitude: number; longitude: number },
   startsAtIso: string,
+  options?: { status?: EventStatus; createdBy?: string },
 ): EventInsert {
   const base: EventInsert = {
     name: parsed.name,
@@ -276,7 +277,8 @@ function parsedCreateToInsert(
     lineup: parsed.lineup ?? null,
     description: parsed.description ?? null,
     ticketUrl: parsed.ticketUrl ?? null,
-    status: "published",
+    status: options?.status ?? "published",
+    createdBy: options?.createdBy,
     latitude: coords.latitude,
     longitude: coords.longitude,
   };
@@ -298,7 +300,11 @@ function parsedCreateToInsert(
   };
 }
 
-export async function createEvent(supabase: SupabaseClient, parsed: ParsedEventCreate): Promise<ServiceResult<Event>> {
+export async function createEvent(
+  supabase: SupabaseClient,
+  parsed: ParsedEventCreate,
+  options?: { status?: EventStatus; createdBy?: string },
+): Promise<ServiceResult<Event>> {
   const startsAt = toStoredStartsAt(parsed.startsAt);
   if (isStartsAtError(startsAt)) {
     return { error: startsAt.error };
@@ -309,8 +315,44 @@ export async function createEvent(supabase: SupabaseClient, parsed: ParsedEventC
     return { error: coords.error };
   }
 
-  const insert = toEventInsertRow(parsedCreateToInsert(parsed, coords, startsAt));
+  const insert = toEventInsertRow(parsedCreateToInsert(parsed, coords, startsAt, options));
   const response = await supabase.from("events").insert(insert).select("*").single();
+
+  if (response.error) {
+    return { error: mapSupabaseError(response.error.message) };
+  }
+
+  return { data: mapEventRow(response.data as EventRow) };
+}
+
+export async function createFanSubmittedEvent(
+  supabase: SupabaseClient,
+  userId: string,
+  parsed: ParsedEventCreate,
+): Promise<ServiceResult<Event>> {
+  return createEvent(supabase, parsed, { status: "pending", createdBy: userId });
+}
+
+export async function listEventsByCreator(supabase: SupabaseClient, userId: string): Promise<ServiceResult<Event[]>> {
+  const response = await supabase
+    .from("events")
+    .select("*")
+    .eq("created_by", userId)
+    .order("created_at", { ascending: false });
+
+  if (response.error) {
+    return { error: "Nie udało się załadować Twoich wydarzeń" };
+  }
+
+  return { data: (response.data as EventRow[]).map(mapEventRow) };
+}
+
+export async function setEventStatus(
+  supabase: SupabaseClient,
+  id: string,
+  status: "published" | "rejected",
+): Promise<ServiceResult<Event>> {
+  const response = await supabase.from("events").update({ status }).eq("id", id).select("*").single();
 
   if (response.error) {
     return { error: mapSupabaseError(response.error.message) };

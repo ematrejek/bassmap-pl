@@ -115,12 +115,19 @@ export interface Event {
   status: EventStatus;
   coverPath: string | null;
   coverAspect: CoverAspect | null;
+  createdBy: string | null;
   createdAt: string;
   updatedAt: string;
 }
 
 /** Event z gotowym publicznym URL okładki (dodawany na SSR przed przekazaniem do UI). */
 export type EventWithCoverUrl = Event & { coverUrl: string | null };
+
+/** Wiersz w panelu admina – opcjonalnie z danymi zgłaszającego fana. */
+export type AdminEventRow = EventWithCoverUrl & {
+  submitterEmail?: string | null;
+  submitterLogin?: string | null;
+};
 
 export interface EventInsert {
   name: string;
@@ -143,6 +150,7 @@ export interface EventInsert {
   status?: EventStatus;
   coverPath?: string | null;
   coverAspect?: CoverAspect | null;
+  createdBy?: string | null;
 }
 
 export type EventUpdate = Partial<EventInsert>;

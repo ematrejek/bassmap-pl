@@ -1,15 +1,27 @@
 import { Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import {
+  Sheet,
+  SheetClose,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import {
   ADMIN_PATH,
   ARCHIVE_PATH,
-  DASHBOARD_PATH,
   DISCOVERY_PATH,
+  FORUM_PATH,
+  MY_EVENTS_NEW_PATH,
+  MY_EVENTS_PATH,
+  PROFILE_PATH,
   REPORT_ISSUE_PATH,
   SIGN_IN_PATH,
   SIGN_UP_PATH,
+  TEAM_PATH,
 } from "@/lib/routes";
 import { shellMenuLink } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
@@ -33,6 +45,19 @@ export default function AppMenu({ userEmail, isAdmin }: Props) {
     { label: "Lista eventów", href: DISCOVERY_PATH },
     { label: "Archiwum wydarzeń", href: ARCHIVE_PATH },
     { label: "Zgłoś problem", href: REPORT_ISSUE_PATH },
+  ];
+
+  const fanLinks: MenuLink[] = [
+    { label: "Mój profil", href: PROFILE_PATH },
+    { label: "Moje eventy", href: MY_EVENTS_PATH },
+    { label: "Dodaj wydarzenie", href: MY_EVENTS_NEW_PATH },
+    { label: "Moja ekipa", href: TEAM_PATH },
+    { label: "Forum", href: FORUM_PATH },
+  ];
+
+  const adminLinks: MenuLink[] = [
+    { label: "Panel admina", href: ADMIN_PATH },
+    { label: "Forum", href: FORUM_PATH },
   ];
 
   return (
@@ -70,9 +95,11 @@ export default function AppMenu({ userEmail, isAdmin }: Props) {
 
         <nav className="flex flex-col gap-1 py-2" aria-label="Menu główne">
           {navLinks.map((link) => (
-            <a key={link.href} href={link.href} className={shellMenuLink}>
-              {link.label}
-            </a>
+            <SheetClose asChild key={link.href}>
+              <a href={link.href} className={shellMenuLink}>
+                {link.label}
+              </a>
+            </SheetClose>
           ))}
         </nav>
 
@@ -80,14 +107,28 @@ export default function AppMenu({ userEmail, isAdmin }: Props) {
           {isLoggedIn ? (
             <div className="space-y-2">
               <p className="text-muted-foreground truncate px-3 text-xs">{userEmail}</p>
-              {isAdmin && (
-                <a href={ADMIN_PATH} className={shellMenuLink}>
-                  Panel admina
-                </a>
+              {!isAdmin ? (
+                <>
+                  <div className="border-border my-2 border-t" aria-hidden />
+                  {fanLinks.map((link) => (
+                    <SheetClose asChild key={link.href}>
+                      <a href={link.href} className={shellMenuLink}>
+                        {link.label}
+                      </a>
+                    </SheetClose>
+                  ))}
+                </>
+              ) : (
+                <>
+                  {adminLinks.map((link) => (
+                    <SheetClose asChild key={link.href}>
+                      <a href={link.href} className={shellMenuLink}>
+                        {link.label}
+                      </a>
+                    </SheetClose>
+                  ))}
+                </>
               )}
-              <a href={DASHBOARD_PATH} className={shellMenuLink}>
-                Dashboard
-              </a>
               <form method="POST" action="/api/auth/signout" className="px-3">
                 <button type="submit" className={cn(shellMenuLink, "w-full text-left")}>
                   Wyloguj
@@ -96,12 +137,16 @@ export default function AppMenu({ userEmail, isAdmin }: Props) {
             </div>
           ) : (
             <div className="flex flex-col gap-1">
-              <a href={SIGN_IN_PATH} className={shellMenuLink}>
-                Zaloguj się
-              </a>
-              <a href={SIGN_UP_PATH} className={shellMenuLink}>
-                Zarejestruj się
-              </a>
+              <SheetClose asChild>
+                <a href={SIGN_IN_PATH} className={shellMenuLink}>
+                  Zaloguj się
+                </a>
+              </SheetClose>
+              <SheetClose asChild>
+                <a href={SIGN_UP_PATH} className={shellMenuLink}>
+                  Zarejestruj się
+                </a>
+              </SheetClose>
             </div>
           )}
         </div>

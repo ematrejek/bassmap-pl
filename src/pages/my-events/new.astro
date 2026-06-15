@@ -1,0 +1,27 @@
+---
+import AppShell from "@/components/shell/AppShell.astro";
+import FanEventForm from "@/components/fan/FanEventForm";
+import Layout from "@/layouts/Layout.astro";
+import { MY_EVENTS_PATH } from "@/lib/routes";
+import { shellHeading, shellLink } from "@/lib/shell-styles";
+
+export const prerender = false;
+---
+
+<Layout title="Dodaj wydarzenie">
+  <AppShell showFooter={true}>
+    <div class="mx-auto max-w-2xl px-2 py-8 sm:px-4">
+      <div class="mb-6">
+        <a href={MY_EVENTS_PATH} class:list={[shellLink, "text-sm hover:underline"]}> ← Wróć do moich eventów </a>
+        <h1 class:list={[shellHeading, "mt-2"]}>Dodaj wydarzenie</h1>
+        <p class="text-muted-foreground mt-2 text-sm">
+          Wypełnij formularz – admin sprawdzi zgłoszenie przed publikacją na liście eventów.
+        </p>
+      </div>
+
+      <div class="surface-panel p-6 sm:p-8">
+        <FanEventForm client:load />
+      </div>
+    </div>
+  </AppShell>
+</Layout>

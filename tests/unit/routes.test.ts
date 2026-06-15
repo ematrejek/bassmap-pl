@@ -1,5 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { buildDiscoverySearchUrl, DISCOVERY_PATH } from "@/lib/routes";
+import {
+  buildDiscoverySearchUrl,
+  DISCOVERY_PATH,
+  FORUM_PATH,
+  MY_EVENTS_NEW_PATH,
+  MY_EVENTS_PATH,
+  PROFILE_PATH,
+  TEAM_PATH,
+} from "@/lib/routes";
 import type { Subgenre } from "@/types";
 
 const emptyFilters = {
@@ -35,5 +43,15 @@ describe("buildDiscoverySearchUrl", () => {
         dateTo: "2026-06-20",
       }),
     ).toBe("/events?from=2026-06-15&to=2026-06-20");
+  });
+});
+
+describe("fan account zone paths", () => {
+  it("exports profile and fan zone routes", () => {
+    expect(PROFILE_PATH).toBe("/profile");
+    expect(MY_EVENTS_PATH).toBe("/my-events");
+    expect(MY_EVENTS_NEW_PATH).toBe("/my-events/new");
+    expect(TEAM_PATH).toBe("/team");
+    expect(FORUM_PATH).toBe("/forum");
   });
 });
