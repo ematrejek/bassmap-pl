@@ -616,7 +616,7 @@ Pomijalne – kilka nullable kolumn na istniejącym wierszu; brak dodatkowych za
 
 - [ ] 5.1 `npm run lint` przechodzi
 - [ ] 5.2 `npm run build` przechodzi
-- [ ] 5.3 `npm test` przechodzi
+- [x] 5.3 `npm test` przechodzi
 
 #### Manual
 
