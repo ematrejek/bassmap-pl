@@ -283,9 +283,7 @@ export default function EventForm({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify(
-            requiresContentRights ? { ...body, [FAN_CONTENT_RIGHTS_FIELD]: true } : body,
-          ),
+          body: JSON.stringify(requiresContentRights ? { ...body, [FAN_CONTENT_RIGHTS_FIELD]: true } : body),
         });
 
         const createData: unknown = await createResponse.json();

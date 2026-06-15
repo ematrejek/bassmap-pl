@@ -5,9 +5,9 @@ export function stripFanSubmitConsent(body: unknown): { payload: unknown; accept
     return { payload: body, accepted: false };
   }
 
-  const record = { ...(body as Record<string, unknown>) };
+  const record = body as Record<string, unknown>;
   const accepted = record[FAN_CONTENT_RIGHTS_FIELD] === true;
-  delete record[FAN_CONTENT_RIGHTS_FIELD];
+  const { [FAN_CONTENT_RIGHTS_FIELD]: _consent, ...payload } = record;
 
-  return { payload: record, accepted };
+  return { payload, accepted };
 }
