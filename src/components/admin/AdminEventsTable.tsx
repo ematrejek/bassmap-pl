@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatEventDate } from "@/lib/events/format";
+import { formatCoverSourceLabel } from "@/lib/legal/cover-rights";
 import { STATUS_LABELS, statusBadgeClass } from "@/lib/events/status-labels";
 import { ADMIN_PATH } from "@/lib/routes";
 import { shellBtnOutline, shellPanel, shellPanelFlat, shellTextMuted } from "@/lib/shell-styles";
@@ -45,13 +46,23 @@ export default function AdminEventsTable({
           {events.map((event) => (
             <TableRow key={event.id} className="border-border/70 hover:bg-secondary/40">
               <TableCell>
-                <EventCoverImage
-                  coverUrl={event.coverUrl}
-                  alt={`Okładka: ${event.name}`}
-                  variant="thumb"
-                  coverAspect={event.coverAspect}
-                  className="size-10"
-                />
+                <div className="flex flex-col gap-1">
+                  <EventCoverImage
+                    coverUrl={event.coverUrl}
+                    alt={`Okładka: ${event.name}`}
+                    variant="thumb"
+                    coverAspect={event.coverAspect}
+                    className="size-10"
+                  />
+                  {showModerationActions && event.coverPath ? (
+                    <div className={cn("max-w-[140px] text-[10px] leading-snug", shellTextMuted)}>
+                      <span className="block">{formatCoverSourceLabel(event.coverSource)}</span>
+                      {event.coverCopyrightDeclaredAt ? (
+                        <span className="block">{formatEventDate(event.coverCopyrightDeclaredAt)}</span>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
               </TableCell>
               <TableCell className="text-foreground max-w-[200px] truncate font-medium sm:max-w-xs">
                 {event.name}
