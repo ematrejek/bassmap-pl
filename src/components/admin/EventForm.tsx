@@ -2,6 +2,16 @@ import { useEffect, useRef, useState } from "react";
 import { Calendar, CircleAlert, ImageIcon, Link2, Music, Ticket } from "lucide-react";
 import { readApiError, readCreatedEventId } from "@/lib/api/json";
 import { ServerError } from "@/components/auth/ServerError";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
@@ -10,6 +20,12 @@ import { Textarea } from "@/components/ui/textarea";
 import { toDatetimeLocalValue } from "@/lib/events/format";
 import { parseEventCreate, parseEventUpdate } from "@/lib/events/schema";
 import { TERMS_PATH } from "@/lib/legal/paths";
+import {
+  COVER_SOURCES,
+  COVER_SOURCE_LABELS,
+  DECLARATION_LABELS,
+  declarationKindForSource,
+} from "@/lib/legal/cover-rights";
 import { MY_EVENTS_PATH } from "@/lib/routes";
 import { getCoverAspectClassName, validateCoverFile } from "@/lib/storage/event-covers";
 import { FAN_CONTENT_RIGHTS_FIELD } from "@/lib/legal/fan-submit-consent";
@@ -19,6 +35,7 @@ import {
   SUBGENRES,
   SUBGENRE_LABELS,
   type CoverAspect,
+  type CoverSource,
   type Event,
   type EventCurrency,
   type EventPriceMode,
@@ -78,10 +95,13 @@ async function uploadCoverFile(
   file: File,
   coverAspect: CoverAspect,
   uploadUrl: string,
+  coverSource: CoverSource,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const formData = new FormData();
   formData.append("file", file);
   formData.append("coverAspect", coverAspect);
+  formData.append("coverSource", coverSource);
+  formData.append("coverDeclarationAccepted", "true");
 
   const response = await fetch(uploadUrl, {
     method: "POST",
@@ -100,6 +120,10 @@ async function uploadCoverFile(
 
 function coverUploadUrlFor(eventId: string, variant: "admin" | "fan"): string {
   return variant === "fan" ? `/api/fan/events/${eventId}/cover` : `/api/admin/events/${eventId}/cover`;
+}
+
+function hasCompleteCoverAudit(coverSource: CoverSource | null, coverDeclarationAccepted: boolean): boolean {
+  return coverSource !== null && coverDeclarationAccepted;
 }
 
 interface Props {
@@ -162,6 +186,10 @@ export default function EventForm({
   const [submitting, setSubmitting] = useState(false);
   const [acceptContentRights, setAcceptContentRights] = useState(false);
   const [contentRightsError, setContentRightsError] = useState<string | null>(null);
+  const [coverSource, setCoverSource] = useState<CoverSource | null>(null);
+  const [coverDeclarationAccepted, setCoverDeclarationAccepted] = useState(false);
+  const [coverSourceError, setCoverSourceError] = useState<string | null>(null);
+  const [coverWithoutDeclarationDialogOpen, setCoverWithoutDeclarationDialogOpen] = useState(false);
   const localPreviewUrlRef = useRef<string | null>(null);
 
   const requiresContentRights = variant === "fan" && mode === "create";
@@ -198,6 +226,9 @@ export default function EventForm({
     revokeLocalPreview();
     setCoverFile(file);
     setRemoveCover(false);
+    setCoverSource(null);
+    setCoverDeclarationAccepted(false);
+    setCoverSourceError(null);
     setServerError(null);
     if (file) {
       setLocalPreviewUrl(URL.createObjectURL(file));
@@ -208,6 +239,9 @@ export default function EventForm({
     revokeLocalPreview();
     setCoverFile(null);
     setRemoveCover(true);
+    setCoverSource(null);
+    setCoverDeclarationAccepted(false);
+    setCoverSourceError(null);
     setServerError(null);
   }
 
@@ -247,26 +281,13 @@ export default function EventForm({
   const showRemoveCoverButton =
     mode === "edit" && !removeCover && (coverFile !== null || (initialEvent?.coverPath ?? null) !== null);
 
-  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
-    e.preventDefault();
-    setServerError(null);
-    setContentRightsError(null);
-
-    if (requiresContentRights && !acceptContentRights) {
-      setContentRightsError("Musisz potwierdzić prawa do zamieszczanych materiałów graficznych i opisowych");
-      return;
-    }
-
+  async function performSubmit(skipCoverUpload: boolean) {
     const body = buildBody();
-    const parsed = mode === "create" ? parseEventCreate(body) : parseEventUpdate({ ...body, locationMode });
+    const activeCoverFile = skipCoverUpload ? null : coverFile;
+    const activeCoverSource = skipCoverUpload ? null : coverSource;
 
-    if (!parsed.success) {
-      setServerError(parsed.error);
-      return;
-    }
-
-    if (coverFile && showCoverUpload) {
-      const fileValidation = validateCoverFile(coverFile);
+    if (activeCoverFile && showCoverUpload) {
+      const fileValidation = validateCoverFile(activeCoverFile);
       if (!fileValidation.ok) {
         setServerError(fileValidation.error);
         return;
@@ -299,12 +320,13 @@ export default function EventForm({
           return;
         }
 
-        if (showCoverUpload && coverFile) {
+        if (showCoverUpload && activeCoverFile && activeCoverSource) {
           const uploadResult = await uploadCoverFile(
             eventId,
-            coverFile,
+            activeCoverFile,
             coverAspect,
             coverUploadUrlFor(eventId, variant),
+            activeCoverSource,
           );
           if (!uploadResult.ok) {
             window.location.href =
@@ -324,12 +346,13 @@ export default function EventForm({
         return;
       }
 
-      if (coverFile) {
+      if (activeCoverFile && activeCoverSource) {
         const uploadResult = await uploadCoverFile(
           eventId,
-          coverFile,
+          activeCoverFile,
           coverAspect,
           coverUploadUrlFor(eventId, variant),
+          activeCoverSource,
         );
         if (!uploadResult.ok) {
           setServerError(uploadResult.error);
@@ -372,6 +395,61 @@ export default function EventForm({
     } finally {
       setSubmitting(false);
     }
+  }
+
+  function validateBeforeSubmit(): boolean {
+    setServerError(null);
+    setContentRightsError(null);
+    setCoverSourceError(null);
+
+    if (requiresContentRights && !acceptContentRights) {
+      setContentRightsError("Musisz potwierdzić prawa do zamieszczanych materiałów graficznych i opisowych");
+      return false;
+    }
+
+    const body = buildBody();
+    const parsed = mode === "create" ? parseEventCreate(body) : parseEventUpdate({ ...body, locationMode });
+
+    if (!parsed.success) {
+      setServerError(parsed.error);
+      return false;
+    }
+
+    return true;
+  }
+
+  async function handleSubmitWithoutCover() {
+    setCoverWithoutDeclarationDialogOpen(false);
+    revokeLocalPreview();
+    setCoverFile(null);
+    setCoverSource(null);
+    setCoverDeclarationAccepted(false);
+    setCoverSourceError(null);
+
+    if (!validateBeforeSubmit()) {
+      return;
+    }
+
+    await performSubmit(true);
+  }
+
+  async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+    e.preventDefault();
+
+    if (!validateBeforeSubmit()) {
+      return;
+    }
+
+    if (
+      coverFile &&
+      showCoverUpload &&
+      !hasCompleteCoverAudit(coverSource, coverDeclarationAccepted)
+    ) {
+      setCoverWithoutDeclarationDialogOpen(true);
+      return;
+    }
+
+    await performSubmit(false);
   }
 
   return (
@@ -620,6 +698,63 @@ export default function EventForm({
             }}
           />
           <p className="text-muted-foreground text-xs">Opcjonalnie. JPEG, PNG lub WebP, max 5 MB.</p>
+
+          {coverFile !== null && (
+            <div className="space-y-3 border-t border-white/10 pt-3">
+              <div className="space-y-2">
+                <Label htmlFor="coverSource" className="text-foreground/90">
+                  Źródło grafiki
+                </Label>
+                <select
+                  id="coverSource"
+                  value={coverSource ?? ""}
+                  onChange={(e) => {
+                    const next = e.target.value;
+                    setCoverSource(next === "" ? null : (next as CoverSource));
+                    setCoverDeclarationAccepted(false);
+                    setCoverSourceError(null);
+                  }}
+                  aria-invalid={Boolean(coverSourceError)}
+                  className={cn(
+                    fieldClass,
+                    "h-10 w-full rounded-md px-3 [color-scheme:dark]",
+                    coverSourceError && "border-red-400/60",
+                  )}
+                >
+                  <option value="" style={selectOptionStyle}>
+                    Wybierz źródło grafiki
+                  </option>
+                  {COVER_SOURCES.map((source) => (
+                    <option key={source} value={source} style={selectOptionStyle}>
+                      {COVER_SOURCE_LABELS[source]}
+                    </option>
+                  ))}
+                </select>
+                {coverSourceError ? (
+                  <p className="flex items-center gap-1 text-xs text-red-300">
+                    <CircleAlert className="size-3" />
+                    {coverSourceError}
+                  </p>
+                ) : null}
+              </div>
+
+              {coverSource !== null && (
+                <label htmlFor="coverDeclarationAccepted" className="flex cursor-pointer items-start gap-2">
+                  <Checkbox
+                    id="coverDeclarationAccepted"
+                    checked={coverDeclarationAccepted}
+                    onCheckedChange={(checked) => {
+                      setCoverDeclarationAccepted(checked === true);
+                    }}
+                    className="border-border data-[state=checked]:border-primary data-[state=checked]:bg-primary mt-0.5"
+                  />
+                  <span className="text-muted-foreground text-xs leading-relaxed">
+                    {DECLARATION_LABELS[declarationKindForSource(coverSource)]}
+                  </span>
+                </label>
+              )}
+            </div>
+          )}
 
           {(coverFile !== null || (initialEvent?.coverPath && !removeCover)) && (
             <fieldset className="space-y-2">
@@ -902,6 +1037,31 @@ export default function EventForm({
               : "Zapisz zmiany"}
         </Button>
       </div>
+
+      <AlertDialog open={coverWithoutDeclarationDialogOpen} onOpenChange={setCoverWithoutDeclarationDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Kontynuować bez grafiki?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Nie zadeklarowałeś możliwości publikacji grafiki. Czy chcesz kontynuować bez dodawania grafiki?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-white/20 bg-transparent text-white hover:bg-white/10">
+              Nie
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className={shellBtnPrimary}
+              onClick={(e) => {
+                e.preventDefault();
+                void handleSubmitWithoutCover();
+              }}
+            >
+              Tak
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </form>
   );
 }

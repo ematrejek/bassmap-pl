@@ -587,7 +587,7 @@ Pomijalne – kilka nullable kolumn na istniejącym wierszu; brak dodatkowych za
 #### Automated
 
 - [ ] 3.1 `npm run lint` przechodzi
-- [ ] 3.2 `npm run build` przechodzi
+- [x] 3.2 `npm run build` przechodzi
 
 #### Manual
 
