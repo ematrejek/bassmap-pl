@@ -99,8 +99,11 @@ export const prerender = false;
   <p>
     Dane konta użytkownika przechowywane są przez okres posiadania konta w Serwisie. Zgłoszenia wydarzeń powiązane z
     kontem przechowywane są do czasu moderacji i — w przypadku publikacji — tak długo, jak wydarzenie jest widoczne w
-    Serwisie (identyfikator zgłaszającego może być zachowany w bazie w celach moderacji). Po usunięciu konta przez
-    użytkownika lub Administratora, dane osobowe są usuwane lub anonimizowane. Wyjątek stanowi sytuacja, w której
+    Serwisie (identyfikator     zgłaszającego może być zachowany w bazie w celach moderacji). Po usunięciu konta przez
+    użytkownika lub Administratora, dane osobowe konta (e-mail, hasło) są usuwane. Komentarze
+    opublikowane przez użytkownika przed usunięciem konta pozostają widoczne w Serwisie, lecz
+    autor jest wyświetlany jako „Usunięty użytkownik” — bez możliwości powiązania treści z
+    tożsamością usuniętego konta. Wyjątek stanowi sytuacja, w której
     ograniczone dane (np. adres IP, logi systemowe lub historia zgłoszeń) muszą zostać zachowane w celu obrony lub
     dochodzenia ewentualnych roszczeń cywilnoprawnych albo realizacji obowiązków prawnych nakładanych przez organy
     ścigania. Podstawą prawną takiego przetwarzania jest prawnie uzasadniony interes Administratora (art. 6 ust. 1 lit.

@@ -1,9 +1,9 @@
 ---
 project: BassMap PL
-version: 1
+version: 2
 status: draft
 created: 2026-06-09
-updated: 2026-06-10
+updated: 2026-06-15
 context_type: greenfield
 product_type: web-app
 target_scale:
@@ -72,6 +72,10 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
   > Socrates: No counter-argument; it stands as written.
 
+- FR-009: Event has an optional description field; fan sees it on the event detail page. Priority: must-have (Partia I)
+
+  > Socrates: Counter-argument considered: "description belongs inside FR-004." Resolution: kept as separate FR — description is optional content distinct from core detail fields and shipped in its own slice (S-04).
+
 - FR-008: Fan can filter events by date range (single day or range) with calendar presets for today, this week, and this month; filters persist in URL; list and map show the same filtered set. Priority: must-have (Partia I)
 
   > Socrates: Counter-argument considered: "default sort by date already handles most cases." Resolution: originally demoted to nice-to-have for MVP; elevated to must-have (Partia I, 2026-06-13) — date filtering is the lead discovery slice after S-02.
@@ -88,20 +92,48 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
   > Socrates: Counter-argument considered: "free-text price is flexible for promoters." Resolution: kept — structured price improves list readability and data quality; optional price when paid remains allowed ("price TBD" for fans).
 
+### Site, legal & guest navigation
+
+- FR-013: Homepage presents the product (logo, tagline, informational sections, CTA to the event list). Priority: must-have (Partia II)
+
+- FR-014: Guest uses the app navigation menu (event list, sign-in, sign-up, report problem, archive). Priority: must-have (Partia II)
+
+- FR-015: Fan browses an archive of past published events (list only, no map). Priority: must-have (Partia II)
+
+- FR-016: Site provides Privacy Policy and Terms of Service; registration shows acceptance text with links to both documents. Priority: must-have (Partia I)
+
+- FR-024: Guest can report a problem via a contact form; the message is sent by email to the site contact address and is not stored in the application database. Priority: must-have (Partia II)
+
+### Fan account & user contributions
+
+- FR-017: Logged-in fan (non-admin) has dedicated navigation and a profile page. Priority: must-have (Partia II)
+
+- FR-018: Fan can submit an event for admin moderation (`pending` status — not publicly visible until approved). Priority: must-have (Partia II)
+
+- FR-019: System warns when a similar event may already exist (name, address, date). Priority: must-have (Partia II)
+
+- FR-020: Fan submits change suggestions for an existing event; admin reviews them in a dedicated panel section. Priority: must-have (Partia II)
+
+- FR-021: Logged-in fan can comment on an event; comments are publicly readable; admin can delete any comment. Priority: must-have (Partia II)
+
+- FR-022: User can permanently delete their account (with confirmation). Personal account data is removed; existing public comments remain visible with author shown as "Deleted user" (anonymized — no link to the deleted identity). Priority: must-have (Partia II)
+
 ### Admin management
 
 - FR-006: Admin can add an event directly. Priority: must-have
 
-  > Socrates: Counter-argument considered: "admin bottleneck limits scale." Resolution: kept for MVP; organizer self-service is v2. Admin-only entry keeps data quality high at launch.
+  > Socrates: Counter-argument considered: "admin bottleneck limits scale." Resolution: kept for MVP; full organizer self-service portal remains v2+. Admin direct entry keeps data quality high at launch.
 
 - FR-007: Admin can edit or remove an event. Priority: must-have
 
   > Socrates: No counter-argument; it stands as written.
 
+- FR-023: Admin can publish or reject fan-submitted events in `pending` status. Priority: must-have (Partia II)
+
 ## Non-Functional Requirements
 
 - **Language**: all user-facing UI text in Polish.
-- **Privacy**: no personal data collected from anonymous fans; browsing does not require cookies or tracking.
+- **Privacy**: anonymous browsing requires no account; only essential auth-session cookies when logged in — no marketing or tracking cookies. Registered users provide email and password (hashed by auth provider); fan-submitted content (events, comments, suggestions) is linked to the account per the Privacy Policy. Legal pages at `/privacy-policy` and `/terms`.
 - **Device**: desktop-first web app (responsive layout, but desktop is the primary design target).
 - **Scale path**: MVP serves a single tester; architecture must support growth to national use (thousands of users) without a ground-up rewrite.
 - **Operating cost**: MVP incurs no monetary cost for hosting or services; paid infrastructure is deferred until budget is available.
@@ -113,7 +145,7 @@ BassMap surfaces upcoming DnB events near the user, filtered by subgenre, and hi
 Supporting rules:
 
 - An event is "upcoming" if its date is today or in the future (local Polish time). Past events are hidden from the public list and map automatically.
-- Subgenre tags are set by the admin at entry time. An event can have multiple subgenre tags. Each tag must be one of the **25 closed-catalog values** below (no free text). UI shows display labels; storage uses stable identifiers (e.g. `jump_up`, `hardcore_oldschool`).
+- Subgenre tags are set at entry time (admin or fan submitter). An event can have multiple subgenre tags. Each tag must be one of the **25 closed-catalog values** below (no free text). UI shows display labels; storage uses stable identifiers (e.g. `jump_up`, `hardcore_oldschool`).
 
   **Subgenre catalog (display label → storage id):**
 
@@ -145,32 +177,34 @@ Supporting rules:
   | Ambient DnB          | `ambient_dnb`        |
   | Intelligent DnB      | `intelligent_dnb`    |
 
-- An event requires: name, date, city, venue. Lineup, ticket link, and price are optional.
-- Events are visible publicly only after admin verification (admin-added events are immediately published; any future organizer-submitted events require explicit admin approval).
+- An event requires: name, date, city, venue. Description, lineup, ticket link, and price are optional.
+- Events are visible publicly only after admin verification (admin-added events are immediately `published`; fan-submitted events start as `pending` until admin publishes or rejects).
+- On account deletion, the user's personal data is removed from auth; published comments they authored remain visible with author label "Deleted user" (Polish UI: „Usunięty użytkownik”) — content preserved, identity unlinked.
 
 ## Access Control
 
-- **Anonymous fan**: full read access — no login required to browse events, filter, or view event details.
-- **Fan (optional account)**: creates an account to access future extras (favorites, notifications). Account creation is optional — all core browsing is public.
-- **Organizer**: submits events for admin review. _Note: organizer self-service is post-MVP (v2). In MVP, only admins add events._
-- **Admin**: full write access — adds, edits, and removes events directly.
+- **Anonymous guest**: full read access to published upcoming events, event archive, and legal pages — no login required to browse, filter, or view event details; can submit a problem report via contact form.
+- **Fan (registered, non-admin)**: optional account for profile, own event submissions (`pending` until moderated), and (Partia II) comments and change suggestions; placeholders for crew-finding and forum. Core discovery remains public without login.
+- **Organizer (full portal)**: _post-MVP (v2)_ — branded self-service beyond fan submit + moderate. Partia II fan submit is not a full organizer portal.
+- **Admin**: full write access — adds, edits, and removes events directly; publishes or rejects fan submissions; deletes comments; reviews change suggestions.
 
-Auth model: optional login (email + password or OAuth). Browsing is fully public.
+Auth model: optional login (email + password). Browsing is fully public.
 
 ## Non-Goals
 
-- No organizer self-service portal in MVP — admin is the sole data entry point. Rationale: keeps data quality high at launch; organizer accounts are v2.
-- No fan accounts / personalization in MVP — browsing is fully anonymous. Rationale: reduces auth complexity for v1.
+- No full organizer self-service portal (branding, stats, bulk tools) — Partia II adds fan event submit with admin moderation; full organizer portal is v2+.
 - No music preview / artist audio samples — v2 feature.
-- No carpooling / crew-finding forum — v3 feature.
-- No affiliate or monetization features in MVP — booking.com links etc. are post-launch.
-- No events outside Poland in MVP — international events (nearby abroad, major European events) are v2+.
+- No full crew-finding or forum — Partia II shows navigation placeholders only; full features remain v3+.
+- No affiliate or monetization features — booking.com links etc. are post-launch.
+- No events outside Poland — international events (nearby abroad, major European events) are v2+.
 
 ## Open Questions
 
-_(none — resolved 2026-06-09)_
+_(none blocking — see Resolved decisions.)_
 
 Resolved decisions:
 
 1. **Target scale** — MVP: single tester (`users: small`, `qps: low`, `data_volume: small`). Growth target: national scale, thousands of users (captured in NFR **Scale path**).
 2. **Timeline budget** — MVP: 3 weeks, after-hours only, no hard deadline. Monetary budget: zero for MVP; paid services deferred to a future phase (captured in NFR **Operating cost**).
+3. **PRD sync with Partia I/II roadmap** — FR-009, FR-016, FR-013–FR-024 added; Non-Goals and Access Control updated for fan accounts and UGC. Resolved 2026-06-15.
+4. **Comments after account deletion** — keep comment text; show author as „Usunięty użytkownik” (anonymize, do not delete). Resolved 2026-06-15 (Option B).

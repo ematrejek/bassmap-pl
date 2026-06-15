@@ -58,6 +58,7 @@ Canonical roadmap: @context/foundation/roadmap.md. Public backlog (issues + boar
 2. When status changes in `roadmap.md` (`ready` → `blocked`, unknown resolved, etc.): update the issue body/status field on the board the same session.
 3. When a change archives (`/10x-archive`): flip `Status` in `roadmap.md` to `done`, **close** the GitHub issue, move the board item to **Done**.
 4. Map `roadmap.md` status → board: `ready`/`proposed` → Todo; in active plan/implement → In Progress; `blocked` → keep open, ensure **Blocked by** links are current; `done` → Done + closed issue.
+5. **Legal pages (UGC slices):** when archiving a slice that collects or publishes user content, update legal copy in the **same session** — @src/pages/privacy-policy.astro, @src/pages/terms.astro, and `LEGAL_UPDATED_AT` in @src/lib/legal/paths.ts. Applies at minimum to: `fan-account-zone` (S-12), `change-suggestions` (S-14), `event-comments` (S-15), `account-deletion` (S-16). Add or adjust sections for new processing purposes (what data, why, retention, user rights). S-11 already shipped base documents; Partia II extends them per feature.
 
 Use `gh` (needs `project` scope): `gh project item-edit`, `gh issue close`, `gh issue comment`. Match tickets by **Change ID** or Roadmap ID table in `## Backlog Handoff`.
 

@@ -3,16 +3,16 @@ project: BassMap PL
 version: 2
 status: active
 created: 2026-06-10
-updated: 2026-06-14
+updated: 2026-06-15
 subgenre_catalog_version: 1
-prd_version: 1
+prd_version: 2
 main_goal: market-feedback
 top_blocker: decisions
 ---
 
 # Roadmap: BassMap PL
 
-> Derived from `context/foundation/prd.md` (v1) + auto-researched codebase baseline + user notes 2026-06-13 (Partia I / Partia II).
+> Derived from `context/foundation/prd.md` (v2) + auto-researched codebase baseline + user notes 2026-06-13 (Partia I / Partia II).
 > Edit-in-place; archive when superseded.
 > Slices below are listed in dependency order. The "At a glance" table is the index.
 
@@ -24,9 +24,9 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 
 ## North star
 
-**S-05: Fan filtruje wydarzenia po dacie** — fan wybiera dowolną datę lub zakres z kalendarza albo skrót „dziś / w tym tygodniu / w tym miesiącu” i widzi dopasowaną listę z mapą.
+**S-12: Fan zgłasza wydarzenie do bazy** — zalogowany fan wypełnia formularz „Dodaj wydarzenie”, admin publikuje lub odrzuca zgłoszenie, a po akceptacji wydarzenie pojawia się na liście i mapie jak event dodany przez admina.
 
-> Gwiazda przewodnia — najmniejszy przepływ end-to-end, którego udane dowiezienie udowadnia, że BassMap realnie ułatwia planowanie wyjścia na event (nie tylko przeglądanie listy). Partia I jest must-have przed Partią II; filtr dat to najczęstszy sygnał od fanów po launchu MVP.
+> Gwiazda przewodnia Partii II — najmniejszy przepływ end-to-end od treści od fanów do publicznego odkrywania; udowadnia, że społeczność może zasilać BassMap bez utraty jakości (bramka moderacji admina). Poprzednia north star Partii I: **S-05** (filtr dat) — **done** 2026-06-13.
 
 ## At a glance
 
@@ -51,7 +51,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-13 | duplicate-event-detection | system wykrywa podobne wydarzenie (nazwa/adres/data) i pokazuje właściwy komunikat   | S-12          | notes 2026-06-13                  | proposed |
 | S-14 | change-suggestions        | fan/admin zgłasza sugestię zmian; admin ocenia w panelu „Sugestie zmian”             | S-12, S-13    | notes 2026-06-13                  | proposed |
 | S-15 | event-comments            | zalogowany fan komentuje wydarzenie; wszyscy czytają; admin usuwa komentarze         | S-12          | notes 2026-06-13                  | proposed |
-| S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto                                              | S-12          | NFR Privacy, notes 2026-06-13     | proposed |
+| S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto; komentarze zostają jako „Usunięty użytkownik” | S-12, S-15    | FR-022, NFR Privacy               | proposed |
 
 ## Streams
 
@@ -62,7 +62,7 @@ Nawigacja — grupy elementów współdzielących łańcuch zależności. Kanoni
 | A      | MVP (zamknięte)          | `F-01` → `S-01` → `S-02` → `S-03`                                   | Done — odkrywanie i okładki na produkcji.                            |
 | B      | Partia I — odkrywanie    | `S-04` / `S-05` / `S-06` / `S-11` / `S-07` / `S-08` (równolegle po `S-02`) | Must-have przed Partią II; `S-11` podniesione z Partii II (RODO + gotowe dokumenty). |
 | C      | Partia II — layout       | `F-04` → `S-09` → `S-10`                                            | **Done** (2026-06-14) — jeden slice `app-shell-navigation`.         |
-| D      | Partia II — konta i UGC  | `S-12` → `S-13` → `S-14` / `S-15` / `S-16`                          | Dołącza do Stream C przy `F-04`; komentarze i usuwanie konta równolegle z `S-14`. |
+| D      | Partia II — konta i UGC  | `S-12` → `S-13` → `S-14` / `S-15` → `S-16`                          | Dołącza do Stream C przy `F-04`; **S-12** = moderacja nowych zgłoszeń eventów; **S-14** = osobna kolejka sugestii zmian; **S-16** po **S-15** (anonimizacja komentarzy). |
 
 ## Baseline
 
@@ -312,20 +312,21 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-12: Strefa zalogowanego użytkownika (nie-admin)
 
-- **Outcome:** po zalogowaniu fan (nie admin) widzi zakładki: Lista wydarzeń, Mój profil, Moje eventy, Dodaj wydarzenie, Moja ekipa (placeholder), Forum (placeholder), Wyloguj się; admin dodatkowo Panel admina (istniejący CRUD + kolejka zgłoszeń w S-13/S-14).
+- **Outcome:** po zalogowaniu fan (nie admin) widzi zakładki: Lista wydarzeń, Mój profil, Moje eventy, Dodaj wydarzenie, Moja ekipa (placeholder), Forum (placeholder), Wyloguj się; admin widzi nav publiczne + Panel admina + Wyloguj (bez zakładek fana). **W tym slice:** fan wysyła nowe wydarzenie (`pending`), admin w panelu **publikuje lub odrzuca** zgłoszenie (FR-023) — to podstawowa moderacja UGC, nie mylić z kolejką sugestii zmian w S-14.
 - **Change ID:** fan-account-zone
-- **PRD refs:** Access Control, notes 2026-06-13
+- **PRD refs:** FR-017, FR-018, FR-023, Access Control, notes 2026-06-13
 - **Prerequisites:** F-04, S-10
 - **Parallel with:** —
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** PRD §Non-Goals mówiło „no fan accounts in MVP” — Partia II świadomie to odblokowuje; wymaga aktualizacji PRD i NFR Privacy (konta = dane osobowe).
+- **Risk:** Duży skok zakresu (konta + submit + moderacja) — plan fazowy w `context/changes/fan-account-zone/plan.md` ogranicza scope (brak okładek fana, brak S-13–S-16).
 - **Status:** in progress — plan w `context/changes/fan-account-zone/plan.md` (2026-06-14)
 
-**FR (propozycja do PRD):**
+**FR (w PRD v2):**
 
 - **FR-017:** Zalogowany fan ma dedykowaną nawigację i profil. Priority: must-have (Partia II).
 - **FR-018:** Fan może dodać wydarzenie do moderacji (nie od razu publiczne). Priority: must-have (Partia II).
+- **FR-023:** Admin publikuje lub odrzuca zgłoszenia fanów w statusie `pending`. Priority: must-have (Partia II).
 
 ### S-13: Wykrywanie duplikatów wydarzeń
 
@@ -346,17 +347,17 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-14: Sugestie zmian wydarzeń
 
-- **Outcome:** na stronie szczegółów wydarzenia fan klika „Zasugeruj zmiany”, wypełnia formularz ze szczegółami; admin w panelu ma sekcję „Sugestie zmian” do oceny i wdrożenia lub odrzucenia.
+- **Outcome:** na stronie szczegółów **już opublikowanego** wydarzenia fan klika „Zasugeruj zmiany”, wypełnia formularz ze szczegółami; admin w panelu ma **osobną** sekcję „Sugestie zmian” (nie ta sama kolejka co Opublikuj/Odrzuć dla nowych zgłoszeń w S-12) do oceny i wdrożenia lub odrzucenia.
 - **Change ID:** change-suggestions
-- **PRD refs:** notes 2026-06-13
+- **PRD refs:** FR-020, notes 2026-06-13
 - **Prerequisites:** S-12, S-13
 - **Parallel with:** S-15
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** Nakłada się z flow duplikatów (S-13) — jeden model danych „zgłoszenie użytkownika” może obsłużyć oba przypadki.
+- **Risk:** Nakłada się z flow duplikatów (S-13) — jeden model danych „zgłoszenie użytkownika” może obsłużyć oba przypadki; **nie** nakłada się z moderacją nowych eventów (S-12).
 - **Status:** proposed
 
-**FR (propozycja do PRD):**
+**FR (w PRD v2):**
 
 - **FR-020:** Fan zgłasza sugestię zmian wydarzenia; admin ją przegląda w panelu. Priority: must-have (Partia II).
 
@@ -366,7 +367,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Change ID:** event-comments
 - **PRD refs:** notes 2026-06-13
 - **Prerequisites:** S-12
-- **Parallel with:** S-14, S-16
+- **Parallel with:** S-14
 - **Blockers:** —
 - **Unknowns:**
   - Moderacja treści (słowa wulgarne, spam) — Owner: user. Block: no (MVP: tylko admin delete).
@@ -379,26 +380,27 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-16: Usuwanie konta
 
-- **Outcome:** zalogowany użytkownik usuwa swoje konto (z potwierdzeniem); dane osobowe i powiązane treści UGC są usuwane lub anonimizowane zgodnie z polityką prywatności.
+- **Outcome:** zalogowany użytkownik usuwa swoje konto (z potwierdzeniem); dane osobowe konta są usuwane; **komentarze pozostają**, autor wyświetlany jako „Usunięty użytkownik” (anonimizacja — treść zostaje, powiązanie z tożsamością znika). Zgłoszenia wydarzeń i sugestie — zgodnie z polityką prywatności (S-16 plan).
 - **Change ID:** account-deletion
-- **PRD refs:** NFR Privacy, notes 2026-06-13
-- **Prerequisites:** S-12
-- **Parallel with:** S-15
+- **PRD refs:** FR-022, NFR Privacy, notes 2026-06-13
+- **Prerequisites:** S-12, S-15
+- **Parallel with:** —
 - **Blockers:** —
-- **Unknowns:**
-  - Co z komentarzami po usunięciu konta (usunąć vs „usunięty użytkownik”) — Owner: user. Block: no.
-- **Risk:** Wymaga integracji z Supabase Auth (delete user) i kaskady w bazie.
+- **Unknowns:** —
+- **Risk:** Wymaga integracji z Supabase Auth (delete user) i kaskady w bazie (anonimizacja autora na komentarzach).
 - **Status:** proposed
 
-**FR (propozycja do PRD):**
+**FR (w PRD v2):**
 
-- **FR-022:** Użytkownik może trwale usunąć konto. Priority: must-have (Partia II).
+- **FR-022:** Użytkownik może trwale usunąć konto; komentarze zostają z etykietą „Usunięty użytkownik”. Priority: must-have (Partia II).
 
 ## Backlog Handoff
 
 **External backlog (public):** [GitHub Project — Bassmap PL Roadmap](https://github.com/users/ematrejek/projects/2) · [Issues `label:roadmap`](https://github.com/ematrejek/bassmap-pl/issues?q=label%3Aroadmap) · [Indeks #6](https://github.com/ematrejek/bassmap-pl/issues/6)
 
 **Sync rule (agents):** `roadmap.md` and the GitHub board stay aligned throughout work — not only at generation or archive. When picking up, blocking, or finishing a slice/foundation: update `Status` here, the matching issue, and the project column in the **same session** (`Todo` / `In Progress` / `Done`; close issue on `done`). See @AGENTS.md §Roadmap & external backlog.
+
+**Legal sync (UGC):** slice’y z treścią od użytkowników (`S-12`, `S-14`, `S-15`, `S-16`) — przy `/10x-archive` zaktualizuj w tej samej sesji @src/pages/privacy-policy.astro, @src/pages/terms.astro oraz `LEGAL_UPDATED_AT` w @src/lib/legal/paths.ts (nowe cele przetwarzania, retencja, prawa użytkownika). S-11 dostarczył dokumenty bazowe; Partia II rozszerza je per funkcja.
 
 | Roadmap ID | Change ID                 | GitHub | Suggested issue title                              | Ready for `/10x-plan` | Notes                                                |
 | ---------- | ------------------------- | ------ | -------------------------------------------------- | --------------------- | ---------------------------------------------------- |
@@ -421,17 +423,26 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-13       | duplicate-event-detection | #25    | Wykrywanie duplikatów wydarzeń                     | no                    | Partia II                                            |
 | S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                            | no                    | Partia II                                            |
 | S-15       | event-comments            | #27    | Komentarze pod wydarzeniami                        | no                    | Partia II                                            |
-| S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                         | no                    | Partia II                                            |
+| S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                         | no                    | Partia II — po S-15 (anonimizacja komentarzy)        |
 
 ## Open Roadmap Questions
 
 1. **Routing po Partii II:** **`/` = strona marketingowa (okładka), `/events` = lista+mapa** — Owner: user. **Resolved 2026-06-14** → `context/archive/2026-06-14-app-shell-navigation/frame.md`.
-2. **Aktualizacja PRD:** Partia I podnosi FR-008 do must-have; Partia II dodaje konta fanów, UGC, komentarze (obecnie Non-Goals) — kiedy zsynchronizować `prd.md`? — Owner: user. Block: no (roadmap jest actionable bez tego, ale PRD będzie rozjechany).
-3. **Próg fuzzy match duplikatów** — Owner: team. Block: S-13 planning only.
-4. **Treść Polityki prywatności / Regulaminu** — Owner: user. Block: no — **resolved:** gotowe dokumenty w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026); archived `context/archive/2026-06-13-legal-pages/`.
-5. **Komentarze po usunięciu konta** — usunąć vs anonimizować — Owner: user. Block: S-16 planning only.
+2. **Próg fuzzy match duplikatów** — Owner: team. Block: S-13 planning only.
+3. **Treść Polityki prywatności / Regulaminu** — Owner: user. Block: no — **resolved:** gotowe dokumenty w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026); archived `context/archive/2026-06-13-legal-pages/`. Aktualizacja §2.2 (zgłoszenia eventów) — 2026-06-15.
 
 ## Resolved (history)
+
+### 2026-06-15 — komentarze po usunięciu konta (S-16)
+
+- **Decyzja (Option B):** treść komentarzy zostaje; autor wyświetlany jako „Usunięty użytkownik” (anonimizacja, bez powiązania z usuniętym kontem).
+- **S-16** wymaga **S-15** (komentarze muszą istnieć przed wdrożeniem usuwania konta).
+- Zapis w `prd.md` FR-022 + Business Logic.
+
+### 2026-06-15 — PRD sync (Partia I + Partia II)
+
+- **`context/foundation/prd.md` v2** — FR-009, FR-016, FR-013–FR-024; zaktualizowane Non-Goals, Access Control, NFR Privacy, Business Logic.
+- **North star** przeniesiona z S-05 (done) na **S-12** (fan submit → moderacja → discovery).
 
 ### 2026-06-14 — angielskie URL (F-04 / plan-review)
 
