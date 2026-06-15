@@ -56,8 +56,29 @@ describe("POST /api/fan/events", () => {
     await expect(response.json()).resolves.toEqual({ error: "Admin dodaje wydarzenia w panelu admina" });
   });
 
+  it("returns 400 when content rights not accepted", async () => {
+    const payload = buildMutationCreatePayload("fan-api-no-rights");
+    const response = await POST(
+      mockContext(
+        {
+          user: mockUser,
+          isAdmin: false,
+        },
+        payload,
+      ),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: "Musisz potwierdzić prawa do zamieszczanych materiałów graficznych i opisowych",
+    });
+  });
+
   it("returns 201 for non-admin fan submit", async () => {
-    const payload = buildMutationCreatePayload("fan-api");
+    const payload = {
+      ...buildMutationCreatePayload("fan-api"),
+      acceptContentRights: true,
+    };
     const response = await POST(
       mockContext(
         {

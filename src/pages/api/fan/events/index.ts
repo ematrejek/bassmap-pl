@@ -2,6 +2,7 @@ import type { APIRoute } from "astro";
 import { jsonResponse } from "@/lib/api/json";
 import { requireAuth } from "@/lib/auth/guards";
 import { parseEventCreate } from "@/lib/events/schema";
+import { stripFanSubmitConsent } from "@/lib/legal/fan-submit-consent";
 import { createFanSubmittedEvent } from "@/lib/services/events";
 import { createClient } from "@/lib/supabase";
 
@@ -34,7 +35,15 @@ export const POST: APIRoute = async (context) => {
     return jsonResponse({ error: "Nieprawidłowe dane JSON" }, 400);
   }
 
-  const parsed = parseEventCreate(body);
+  const { payload, accepted } = stripFanSubmitConsent(body);
+  if (!accepted) {
+    return jsonResponse(
+      { error: "Musisz potwierdzić prawa do zamieszczanych materiałów graficznych i opisowych" },
+      400,
+    );
+  }
+
+  const parsed = parseEventCreate(payload);
   if (!parsed.success) {
     return jsonResponse({ error: parsed.error }, 400);
   }

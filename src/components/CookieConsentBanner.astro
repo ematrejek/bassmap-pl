@@ -2,7 +2,7 @@
 import { PRIVACY_POLICY_PATH } from "@/lib/legal/paths";
 import { shellBtnOutline, shellLink } from "@/lib/shell-styles";
 
-const STORAGE_KEY = "bassmap-cookie-notice-dismissed";
+const STORAGE_KEY = "bassmap-cookie-notice-dismissed-v1";
 ---
 
 <div
@@ -14,10 +14,10 @@ const STORAGE_KEY = "bassmap-cookie-notice-dismissed";
 >
   <div class="mx-auto flex max-w-4xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
     <p class="text-muted-foreground text-sm leading-relaxed">
-      Nasz serwis używa wyłącznie niezbędnych plików cookies do obsługi Twojej sesji (logowania). Szczegóły znajdziesz w
-      naszej
+      Używamy wyłącznie niezbędnych plików cookies do utrzymania sesji logowania (Supabase Auth). Nie stosujemy cookies
+      marketingowych ani śledzących. Szczegóły w
       <a href={PRIVACY_POLICY_PATH} class:list={[shellLink, "underline-offset-2 hover:underline"]}>
-        Polityce Prywatności
+        Polityce prywatności
       </a>.
     </p>
     <button
@@ -58,7 +58,7 @@ const STORAGE_KEY = "bassmap-cookie-notice-dismissed";
 
     let dismissed = false;
     try {
-      dismissed = sessionStorage.getItem(STORAGE_KEY) === "1";
+      dismissed = localStorage.getItem(STORAGE_KEY) === "1";
     } catch {
       dismissed = false;
     }
@@ -72,7 +72,7 @@ const STORAGE_KEY = "bassmap-cookie-notice-dismissed";
 
     dismissButton.addEventListener("click", function () {
       try {
-        sessionStorage.setItem(STORAGE_KEY, "1");
+        localStorage.setItem(STORAGE_KEY, "1");
       } catch {
         // Ignore storage failures; banner still closes for this page view.
       }

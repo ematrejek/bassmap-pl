@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Calendar, ImageIcon, Link2, Music, Ticket } from "lucide-react";
+import { Calendar, CircleAlert, ImageIcon, Link2, Music, Ticket } from "lucide-react";
 import { readApiError, readCreatedEventId } from "@/lib/api/json";
 import { ServerError } from "@/components/auth/ServerError";
 import { Button } from "@/components/ui/button";
@@ -9,8 +9,9 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { toDatetimeLocalValue } from "@/lib/events/format";
 import { parseEventCreate, parseEventUpdate } from "@/lib/events/schema";
-import { MY_EVENTS_PATH } from "@/lib/routes";
+import { MY_EVENTS_PATH, TERMS_PATH } from "@/lib/routes";
 import { getCoverAspectClassName, validateCoverFile } from "@/lib/storage/event-covers";
+import { FAN_CONTENT_RIGHTS_FIELD } from "@/lib/legal/fan-submit-consent";
 import { shellBtnOutline, shellBtnPrimary } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import {
@@ -158,7 +159,11 @@ export default function EventForm({
   const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null);
   const [serverError, setServerError] = useState<string | null>(initialServerError ?? null);
   const [submitting, setSubmitting] = useState(false);
+  const [acceptContentRights, setAcceptContentRights] = useState(false);
+  const [contentRightsError, setContentRightsError] = useState<string | null>(null);
   const localPreviewUrlRef = useRef<string | null>(null);
+
+  const requiresContentRights = variant === "fan" && mode === "create";
 
   const locationMode = coordinatesMode ? "coordinates" : "address";
   const coverPreviewUrl = removeCover ? null : (localPreviewUrl ?? initialCoverUrl);
@@ -244,6 +249,12 @@ export default function EventForm({
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setServerError(null);
+    setContentRightsError(null);
+
+    if (requiresContentRights && !acceptContentRights) {
+      setContentRightsError("Musisz potwierdzić prawa do zamieszczanych materiałów graficznych i opisowych");
+      return;
+    }
 
     const body = buildBody();
     const parsed = mode === "create" ? parseEventCreate(body) : parseEventUpdate({ ...body, locationMode });
@@ -271,7 +282,9 @@ export default function EventForm({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           credentials: "include",
-          body: JSON.stringify(body),
+          body: JSON.stringify(
+            requiresContentRights ? { ...body, [FAN_CONTENT_RIGHTS_FIELD]: true } : body,
+          ),
         });
 
         const createData: unknown = await createResponse.json();
@@ -824,6 +837,50 @@ export default function EventForm({
       </label>
 
       <ServerError message={serverError} />
+
+      {requiresContentRights ? (
+        <div>
+          <div className="flex items-start gap-2">
+            <Checkbox
+              id="acceptContentRights"
+              checked={acceptContentRights}
+              onCheckedChange={(checked) => {
+                setAcceptContentRights(checked === true);
+                if (checked === true) {
+                  setContentRightsError(null);
+                }
+              }}
+              aria-invalid={Boolean(contentRightsError)}
+              className={cn(
+                "border-border bg-card/60 data-[state=checked]:border-primary data-[state=checked]:bg-primary mt-0.5",
+                contentRightsError && "border-red-400/60",
+              )}
+            />
+            <label htmlFor="acceptContentRights" className="text-muted-foreground text-xs leading-relaxed">
+              <span className="text-red-400" aria-hidden="true">
+                *{" "}
+              </span>
+              Oświadczam, że posiadam prawa do zamieszczonych materiałów graficznych i opisowych (w tym okładki i opisu
+              wydarzenia) lub działam za zgodą ich właściciela. Znam{" "}
+              <a
+                href={`${TERMS_PATH}#event-submissions`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary hover:text-accent hover:underline"
+              >
+                zasady zgłaszania wydarzeń
+              </a>{" "}
+              w Regulaminie.
+            </label>
+          </div>
+          {contentRightsError ? (
+            <p className="mt-1 flex items-center gap-1 text-xs text-red-300">
+              <CircleAlert className="size-3" />
+              {contentRightsError}
+            </p>
+          ) : null}
+        </div>
+      ) : null}
 
       <div className="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
         <Button
