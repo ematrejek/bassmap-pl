@@ -8,6 +8,7 @@ updated: 2026-06-15
 github-issue: 24
 plan: context/changes/fan-account-zone/plan.md
 plan-review: context/changes/fan-account-zone/plan-review.md
+impl-review: context/changes/fan-account-zone/reviews/impl-review.md
 ---
 
 # Change: fan-account-zone

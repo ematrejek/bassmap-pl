@@ -36,16 +36,34 @@ export const prerender = false;
   <h3>2.2 Zgłoszenia wydarzeń</h3>
   <p>
     Zalogowany użytkownik może zgłosić wydarzenie do publikacji w Serwisie. Przy zgłoszeniu przetwarzamy dane podane w
-    formularzu (np. nazwa wydarzenia, data, miejsce, opis, link biletowy, cena) oraz identyfikator konta użytkownika
-    (adres e-mail powiązany z kontem), w celu moderacji i ewentualnej publikacji w Serwisie. Zgłoszenie nie jest
-    widoczne publicznie do momentu akceptacji przez Administratora.
+    formularzu (np. nazwa wydarzenia, data, miejsce, adres lub współrzędne geograficzne, opis, podgatunki, skład,
+    link biletowy, cena) oraz identyfikator konta użytkownika (adres e-mail powiązany z kontem), w celu moderacji i
+    ewentualnej publikacji w Serwisie. Zgłoszenie nie jest widoczne publicznie do momentu akceptacji przez
+    Administratora.
+  </p>
+  <p>
+    Opcjonalnie możesz dodać okładkę wydarzenia (plik graficzny) — przechowywaną w magazynie plików Supabase Storage
+    powiązanym z danym zgłoszeniem. Okładka jest publikowana wyłącznie po akceptacji zgłoszenia.
+  </p>
+  <p>
+    W celu wyświetlenia wydarzenia na mapie adres podany w formularzu może być przekazany do usługi geokodowania
+    OpenStreetMap Nominatim (patrz punkt 3) — wyłącznie w zakresie niezbędnym do ustalenia współrzędnych.
   </p>
   <p>
     Podstawa prawna: art. 6 ust. 1 pkt b RODO (świadczenie usługi) oraz art. 6 ust. 1 pkt f RODO (uzasadniony interes –
     jakość i wiarygodność bazy wydarzeń).
   </p>
 
-  <h3>2.3 Dane techniczne</h3>
+  <h3>2.3 Zgłoszenia problemów (formularz kontaktowy)</h3>
+  <p>
+    Każdy użytkownik (także bez konta) może wysłać wiadomość przez formularz „Zgłoś problem” w Serwisie. Przetwarzamy
+    wtedy podany adres e-mail, opcjonalnie imię lub nick oraz treść wiadomości — w celu udzielenia odpowiedzi i
+    poprawy działania Serwisu. Wiadomość jest przekazywana na skrzynkę Administratora za pośrednictwem infrastruktury
+    e-mail Cloudflare (patrz punkt 3).
+  </p>
+  <p>Podstawa prawna: art. 6 ust. 1 pkt f RODO (uzasadniony interes – obsługa zgłoszeń i kontakt z użytkownikami).</p>
+
+  <h3>2.4 Dane techniczne</h3>
   <p>
     Serwis automatycznie może rejestrować dane techniczne, takie jak adres IP czy informacje o przeglądarce, w celach
     bezpieczeństwa i diagnostycznych. Dane te nie są łączone z profilem użytkownika.
@@ -54,7 +72,7 @@ export const prerender = false;
     Podstawa prawna: art. 6 ust. 1 pkt f RODO (prawnie uzasadniony interes administratora – bezpieczeństwo serwisu).
   </p>
 
-  <h3>2.4 Zautomatyzowane podejmowanie decyzji</h3>
+  <h3>2.5 Zautomatyzowane podejmowanie decyzji</h3>
   <p>
     Twoje dane osobowe nie będą wykorzystywane do zautomatyzowanego podejmowania decyzji, które mogłyby wywołać wobec
     Ciebie skutki prawne lub w podobny sposób istotnie na Ciebie wpłynąć, w tym nie będą poddawane profilowaniu
@@ -68,13 +86,14 @@ export const prerender = false;
   </p>
   <ul>
     <li>
-      <strong>Supabase Inc.</strong> – dostawca bazy danych PostgreSQL oraz systemu uwierzytelniania. Dane przechowywane są
-      na serwerach w UE lub z odpowiednimi zabezpieczeniami transferu (standardowe klauzule umowne). Polityka prywatności:
+      <strong>Supabase Inc.</strong> – dostawca bazy danych PostgreSQL, systemu uwierzytelniania oraz magazynu plików (Storage,
+      m.in. okładki wydarzeń). Dane przechowywane są na serwerach w UE lub z odpowiednimi zabezpieczeniami transferu
+      (standardowe klauzule umowne). Polityka prywatności:
       <a href="https://supabase.com/privacy" target="_blank" rel="noopener noreferrer">supabase.com/privacy</a>
     </li>
     <li>
-      <strong>Cloudflare Inc.</strong> – sieć dostarczania treści (CDN), ochrona przed atakami DDoS, obsługa ruchu. Polityka
-      prywatności:
+      <strong>Cloudflare Inc.</strong> – hosting Serwisu, sieć dostarczania treści (CDN), ochrona przed atakami DDoS, obsługa
+      ruchu oraz wysyłka wiadomości e-mail z formularza „Zgłoś problem”. Polityka prywatności:
       <a href="https://www.cloudflare.com/privacypolicy/" target="_blank" rel="noopener noreferrer"
         >cloudflare.com/privacypolicy</a
       >
@@ -84,6 +103,13 @@ export const prerender = false;
       prywatności:
       <a href="https://resend.com/legal/privacy-policy" target="_blank" rel="noopener noreferrer"
         >resend.com/legal/privacy-policy</a
+      >
+    </li>
+    <li>
+      <strong>OpenStreetMap Foundation</strong> (usługa Nominatim) – geokodowanie adresów wydarzeń podanych w formularzu w celu
+      ustalenia współrzędnych na mapie. Przekazywany jest wyłącznie adres (ulica, numer, miasto). Polityka prywatności:
+      <a href="https://wiki.osmfoundation.org/wiki/Privacy_Policy" target="_blank" rel="noopener noreferrer"
+        >wiki.osmfoundation.org/wiki/Privacy_Policy</a
       >
     </li>
   </ul>
@@ -99,7 +125,9 @@ export const prerender = false;
   <p>
     Dane konta użytkownika przechowywane są przez okres posiadania konta w Serwisie. Zgłoszenia wydarzeń powiązane z
     kontem przechowywane są do czasu moderacji i — w przypadku publikacji — tak długo, jak wydarzenie jest widoczne w
-    Serwisie (identyfikator     zgłaszającego może być zachowany w bazie w celach moderacji). Po usunięciu konta przez
+    Serwisie (identyfikator zgłaszającego może być zachowany w bazie w celach moderacji). Wiadomości z formularza
+    „Zgłoś problem” przechowywane są przez okres niezbędny do obsługi zgłoszenia, nie dłużej niż 12 miesięcy od
+    ostatniej korespondencji w danej sprawie. Po usunięciu konta przez
     użytkownika lub Administratora, dane osobowe konta (e-mail, hasło) są usuwane. Komentarze
     opublikowane przez użytkownika przed usunięciem konta pozostają widoczne w Serwisie, lecz
     autor jest wyświetlany jako „Usunięty użytkownik” — bez możliwości powiązania treści z
