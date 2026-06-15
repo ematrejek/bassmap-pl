@@ -70,7 +70,7 @@ describe("POST /api/fan/events", () => {
 
     expect(response.status).toBe(400);
     await expect(response.json()).resolves.toEqual({
-      error: "Musisz potwierdzić prawa do zamieszczanych materiałów graficznych i opisowych",
+      error: "Musisz potwierdzić oświadczenie dotyczące opisu wydarzenia",
     });
   });
 

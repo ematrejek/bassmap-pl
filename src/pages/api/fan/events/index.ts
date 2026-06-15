@@ -38,7 +38,7 @@ export const POST: APIRoute = async (context) => {
   const { payload, accepted } = stripFanSubmitConsent(body);
   if (!accepted) {
     return jsonResponse(
-      { error: "Musisz potwierdzić prawa do zamieszczanych materiałów graficznych i opisowych" },
+      { error: "Musisz potwierdzić oświadczenie dotyczące opisu wydarzenia" },
       400,
     );
   }
