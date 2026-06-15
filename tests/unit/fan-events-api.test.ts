@@ -34,7 +34,7 @@ function mockContext(locals: Partial<App.Locals>, body?: unknown): APIContext {
       merge: () => undefined,
       headers: () => new Headers(),
     },
-  } as APIContext;
+  } as unknown as APIContext;
 }
 
 describe("POST /api/fan/events", () => {
