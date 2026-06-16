@@ -3,7 +3,7 @@ project: BassMap PL
 version: 2
 status: active
 created: 2026-06-10
-updated: 2026-06-15
+updated: 2026-06-16
 subgenre_catalog_version: 1
 prd_version: 2
 main_goal: market-feedback
@@ -24,9 +24,9 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 
 ## North star
 
-**S-17: Prawa autorskie treści zgłoszenia** — zgłaszający wybiera źródło okładki (Facebook / Instagram / Strona organizatora / Własna), składa wymagane oświadczenie praw autorskich, a system zapisuje wybór i timestamp w bazie; submit bez oświadczenia jest odrzucany.
+**S-13: Wykrywanie duplikatów wydarzeń** — przy dodawaniu wydarzenia system sprawdza podobieństwo po nazwie, adresie i dacie; użytkownik dostaje komunikat zamiast ślepo duplikować wpis.
 
-> Gwiazda przewodnia Partii II po **S-12** (done 2026-06-15) — compliance przed skalowaniem zgłoszeń fanów; odblokowuje S-13 (duplikaty). Poprzednia north star: **S-12** (fan submit → moderacja → discovery) — **done** 2026-06-15.
+> Gwiazda przewodnia Partii II po **S-17** (done 2026-06-16) — skalowanie zgłoszeń fanów z compliance okładki; odblokowuje S-14 (sugestie zmian). Poprzednia north star: **S-17** (prawa autorskie okładki + audyt w DB) — **done** 2026-06-16.
 
 ## At a glance
 
@@ -48,7 +48,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-09 | marketing-homepage        | fan widzi płynnie przewijaną stronę główną z logo, sloganem, sekcjami i CTA                 | F-04          | notes 2026-06-13                 | done        |
 | S-10 | guest-nav-and-archive     | gość korzysta z menu (lista, logowanie, rejestracja, zgłoszenie problemu, archiwum)         | F-04, S-09    | notes 2026-06-13                 | done        |
 | S-12 | fan-account-zone          | zalogowany fan ma zakładki profil, moje eventy, dodaj event, placeholdery, wyloguj          | F-04, S-10    | Access Control, notes 2026-06-13 | done        |
-| S-17 | event-content-copyright   | zgłaszający wybiera źródło okładki i składa wymagane oświadczenie praw autorskich           | S-12          | FR-025, notes 2026-06-15         | in progress |
+| S-17 | event-content-copyright   | zgłaszający wybiera źródło okładki i składa wymagane oświadczenie praw autorskich           | S-12          | FR-025, notes 2026-06-15         | done        |
 | S-13 | duplicate-event-detection | system wykrywa podobne wydarzenie (nazwa/adres/data) i pokazuje właściwy komunikat          | S-12, S-17    | notes 2026-06-13                 | proposed    |
 | S-14 | change-suggestions        | fan/admin zgłasza sugestię zmian; admin ocenia w panelu „Sugestie zmian”                    | S-12, S-13    | notes 2026-06-13                 | proposed    |
 | S-15 | event-comments            | zalogowany fan komentuje wydarzenie; wszyscy czytają; admin usuwa komentarze                | S-12          | notes 2026-06-13                 | proposed    |
@@ -63,7 +63,7 @@ Nawigacja — grupy elementów współdzielących łańcuch zależności. Kanoni
 | A      | MVP (zamknięte)         | `F-01` → `S-01` → `S-02` → `S-03`                                          | Done — odkrywanie i okładki na produkcji.                                                                                                        |
 | B      | Partia I — odkrywanie   | `S-04` / `S-05` / `S-06` / `S-11` / `S-07` / `S-08` (równolegle po `S-02`) | Must-have przed Partią II; `S-11` podniesione z Partii II (RODO + gotowe dokumenty).                                                             |
 | C      | Partia II — layout      | `F-04` → `S-09` → `S-10`                                                   | **Done** (2026-06-14) — jeden slice `app-shell-navigation`.                                                                                      |
-| D      | Partia II — konta i UGC | `S-12` → **`S-17`** → `S-13` → `S-14` / `S-15` → `S-16`                    | **S-12 done** (2026-06-15). **S-17** (prawa autorskie okładki + opis) — north star; przed S-13. **S-14** = sugestie zmian; **S-16** po **S-15**. |
+| D      | Partia II — konta i UGC | `S-12` → `S-17` → **`S-13`** → `S-14` / `S-15` → `S-16`                    | **S-12 + S-17 done** (2026-06-15 / 2026-06-16). **S-13** (duplikaty) — north star. **S-14** = sugestie zmian; **S-16** po **S-15**. |
 
 ## Baseline
 
@@ -72,7 +72,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **Frontend:** present — Astro 6 SSR + React 19 + Tailwind 4; AppShell + Sheet menu; `/` marketing homepage; `/events` discovery; `/archive`, `/report-issue`; strefa fana: `/profile`, `/my-events`, `/my-events/new`, `/team`, `/forum`
 - **Backend / API:** partial — Astro SSR na Cloudflare; trasy auth + admin events + fan event submit/moderation + contact report-issue (e-mail); brak API komentarzy, sugestii, wykrywania duplikatów
-- **Data:** partial — tabela `events` z opisem, ustrukturyzowaną ceną, `created_by` (fan submit); RLS archiwum (`events_select_past_public`); brak tabel komentarzy, sugestii, audytu źródła okładki (S-17)
+- **Data:** partial — tabela `events` z opisem, ustrukturyzowaną ceną, `created_by` (fan submit), audytem okładki S-17 (`cover_source`, `cover_declaration_kind`, `cover_copyright_declared_at`, `description_rights_accepted_at`); RLS archiwum (`events_select_past_public`); brak tabel komentarzy, sugestii, wykrywania duplikatów
 - **Auth:** present — Supabase Auth, sesje cookie SSR, middleware, rola admin; strefa fana (profil, zgłoszenia, moderacja); brak usuwania konta
 - **Deploy / infra:** present — https://bassmap.pl na Cloudflare Workers; CI lint/build/deploy
 - **Observability:** partial — `observability.enabled` w Wrangler; brak logowania i error trackingu w aplikacji
@@ -173,7 +173,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Partia I — must-have (po MVP)
 
-> Ustalone 2026-06-13. **Partia I zamknięta** (2026-06-14). **F-04 + S-09 + S-10 done** (2026-06-14). **S-12 done** (2026-06-15). Następny krok Partii II: **S-17** (prawa autorskie okładki + opis).
+> Ustalone 2026-06-13. **Partia I zamknięta** (2026-06-14). **F-04 + S-09 + S-10 done** (2026-06-14). **S-12 + S-17 done** (2026-06-15 / 2026-06-16). Następny krok Partii II: **S-13** (wykrywanie duplikatów).
 
 ### S-04: Pole opisu wydarzenia
 
@@ -341,7 +341,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Czy ten sam dropdown + checkbox w panelu admina od razu — Owner: user. Block: no (domyślnie fan-only w S-17).
   - Final legal copy art. 29 (zakres cytatu vs pełny opis) — Owner: user + weryfikacja prawna. Block: no (roadmap actionable; tekst regulaminu przed deployem).
 - **Risk:** Ogólny checkbox w regulaminie (§5.6) **nie zastępuje** UI — bez S-17 brak dowodu źródła i rodzaju oświadczenia. **Prawo cytatu (art. 29) dotyczy opisów tekstowych, nie grafik** — cytat wymaga wskazania autora/źródła i uzasadnionego zakresu; pełne wklejenie cudzego opisu może wykraczać poza cytat.
-- **Status:** proposed
+- **Status:** done — archived 2026-06-16 → `context/archive/2026-06-15-event-content-copyright/` (issue #30). Fan + admin: dropdown źródła okładki, warunkowe oświadczenia, audyt w DB; legal sync §5.6–5.9 + polityka.
 
 **FR (propozycja do PRD):**
 
@@ -439,8 +439,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-09       | marketing-homepage        | #22    | Strona główna marketingowa (scroll)            | —                     | Done — w slice F-04                                |
 | S-10       | guest-nav-and-archive     | #23    | Menu gościa, formularz problemu, archiwum      | —                     | Done — w slice F-04                                |
 | S-12       | fan-account-zone          | #24    | Strefa zalogowanego fana + nawigacja           | —                     | Done — archived 2026-06-15; PR #29                 |
-| S-17       | event-content-copyright   | #30    | Prawa autorskie: źródło okładki + oświadczenia | **yes**               | **North star** — must-have przed S-13; In Progress |
-| S-13       | duplicate-event-detection | #25    | Wykrywanie duplikatów wydarzeń                 | no                    | Partia II — wymaga S-17                            |
+| S-17       | event-content-copyright   | #30    | Prawa autorskie: źródło okładki + oświadczenia | —                     | Done — archived 2026-06-16                         |
+| S-13       | duplicate-event-detection | #25    | Wykrywanie duplikatów wydarzeń                 | **yes**               | **North star** — Partia II                         |
 | S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                        | no                    | Partia II                                          |
 | S-15       | event-comments            | #27    | Komentarze pod wydarzeniami                    | no                    | Partia II                                          |
 | S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                     | no                    | Partia II — po S-15 (anonimizacja komentarzy)      |
@@ -449,10 +449,17 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 1. **Routing po Partii II:** **`/` = strona marketingowa (okładka), `/events` = lista+mapa** — Owner: user. **Resolved 2026-06-14** → `context/archive/2026-06-14-app-shell-navigation/frame.md`.
 2. **Próg fuzzy match duplikatów** — Owner: team. Block: S-13 planning only.
-3. **Treść Polityki prywatności / Regulaminu** — Owner: user. Block: no — **resolved:** gotowe dokumenty w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026); archived `context/archive/2026-06-13-legal-pages/`. Aktualizacja §2.2 (zgłoszenia eventów) + §2.1/§2.6 — 2026-06-15 (S-12 archive). **S-17:** dropdown źródła okładki + art. 29 dla opisów + audyt w DB — następny slice.
-4. **Formularz admina — te same oświadczenia co fan?** — Owner: user. Block: S-17 scope only.
+3. **Treść Polityki prywatności / Regulaminu** — Owner: user. Block: no — **resolved:** gotowe dokumenty w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026); archived `context/archive/2026-06-13-legal-pages/`. Aktualizacja §2.2 (zgłoszenia eventów) + §2.1/§2.6 — 2026-06-15 (S-12 archive). **S-17 done:** dropdown źródła okładki + art. 29 dla opisów + audyt w DB — archived 2026-06-16.
+4. **Formularz admina — te same oświadczenia co fan?** — Owner: user. Block: no — **resolved 2026-06-16:** fan + admin (decyzja planowania S-17).
 
 ## Resolved (history)
+
+### 2026-06-16 — archiwum S-17 (event-content-copyright)
+
+- **S-17 done** — archived `context/archive/2026-06-15-event-content-copyright/`; issue #30 zamknięte.
+- **North star** przeniesiona z **S-17** na **S-13** (duplikaty przed skalowaniem sugestii).
+- **Legal sync S-17:** §5.6–5.9 regulaminu, §2.2/§4 polityki, `LEGAL_UPDATED_AT` 2026-06-16.
+- **Manual QA pending:** pełna ścieżka fan/admin w przeglądarce — nie blokuje archive.
 
 ### 2026-06-15 — archiwum S-12 (fan-account-zone)
 
@@ -535,3 +542,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-08: admin wpisuje cenę jako liczbę z walutą PLN/EUR/CZK; fan widzi sformatowaną cenę.** — Archived 2026-06-14 → `context/archive/2026-06-14-structured-price-currency/`. Lesson: domyślna waluta w formularzu admina musi być `null`, dopóki admin nie poda kompletnej ceny — inaczej blokuje „Cena do ustalenia”.
 - **S-07: fan na telefonie wybiera podgatunki z rozwijanej listy wielokrotnego wyboru.** — Archived 2026-06-13 → `context/archive/2026-06-13-mobile-subgenre-dropdown/`. Lesson: —
 - **S-12: zalogowany fan ma strefę konta, zgłasza wydarzenia do moderacji; admin publikuje lub odrzuca.** — Archived 2026-06-15 → `context/archive/2026-06-15-fan-account-zone/`. Lesson: okładki fana w MVP — zaakceptowany drift; pełny compliance (S-17) przed skalowaniem zgłoszeń.
+- **S-17: zgłaszający wybiera źródło okładki i składa wymagane oświadczenie praw autorskich.** — Archived 2026-06-16 → `context/archive/2026-06-15-event-content-copyright/`. Lesson: fan + admin ten sam wzorzec okładki; manual QA w przeglądarce odłożone po archive.

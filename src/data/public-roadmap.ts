@@ -18,7 +18,7 @@ export interface PublicRoadmapItem {
 
 export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
   {
-    id: "event-content-copyright",
-    label: "Clearer cover-image rights when you add an event",
+    id: "duplicate-event-detection",
+    label: "Warnings when a similar event might already exist",
   },
 ];
