@@ -3,7 +3,7 @@ import { z } from "zod";
 import { jsonResponse } from "@/lib/api/json";
 import { requireAuth } from "@/lib/auth/guards";
 import { parseCoverRightsFormData } from "@/lib/legal/cover-rights";
-import { getEventById } from "@/lib/services/events";
+import { getEventById, mapSupabaseError, removeEventCoverFromStorage } from "@/lib/services/events";
 import {
   buildCoverStoragePath,
   EVENT_COVERS_BUCKET,
@@ -77,6 +77,8 @@ export const POST: APIRoute = async (context) => {
     return jsonResponse({ error: "Okładkę można dodać tylko do zgłoszenia oczekującego" }, 400);
   }
 
+  const oldCoverPath = existing.coverPath;
+
   let formData: FormData;
   try {
     formData = await context.request.formData();
@@ -139,12 +141,16 @@ export const POST: APIRoute = async (context) => {
 
   if (updateResult.error) {
     await storageClient.storage.from(EVENT_COVERS_BUCKET).remove([storagePath]);
-    return jsonResponse({ error: "Nie udało się zapisać okładki" }, 400);
+    return jsonResponse({ error: mapSupabaseError(updateResult.error.message) }, 400);
   }
 
   if (!updateResult.data) {
     await storageClient.storage.from(EVENT_COVERS_BUCKET).remove([storagePath]);
     return jsonResponse({ error: "Nie znaleziono wydarzenia" }, 404);
+  }
+
+  if (oldCoverPath !== null && oldCoverPath !== storagePath) {
+    await removeEventCoverFromStorage(storageClient, oldCoverPath);
   }
 
   return jsonResponse({ ok: true }, 200);

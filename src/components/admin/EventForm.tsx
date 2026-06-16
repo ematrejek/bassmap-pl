@@ -4,6 +4,16 @@ import { readApiError, readCreatedEventId } from "@/lib/api/json";
 import { ServerError } from "@/components/auth/ServerError";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -180,6 +190,7 @@ export default function EventForm({
   const [coverDeclarationAccepted, setCoverDeclarationAccepted] = useState(false);
   const [coverSourceError, setCoverSourceError] = useState<string | null>(null);
   const [coverDeclarationError, setCoverDeclarationError] = useState<string | null>(null);
+  const [coverWithoutDeclarationDialogOpen, setCoverWithoutDeclarationDialogOpen] = useState(false);
   const localPreviewUrlRef = useRef<string | null>(null);
   const coverAuditSectionRef = useRef<HTMLDivElement>(null);
 
@@ -293,10 +304,12 @@ export default function EventForm({
   const showRemoveCoverButton =
     !removeCover && (coverFile !== null || (mode === "edit" && (initialEvent?.coverPath ?? null) !== null));
 
-  async function performSubmit() {
+  async function performSubmit(options?: { skipCoverUpload?: boolean }) {
     const body = buildBody();
+    const shouldUploadCover =
+      !options?.skipCoverUpload && showCoverUpload && coverFile !== null && coverSource !== null;
 
-    if (coverFile && showCoverUpload) {
+    if (shouldUploadCover) {
       const fileValidation = validateCoverFile(coverFile);
       if (!fileValidation.ok) {
         setServerError(fileValidation.error);
@@ -330,7 +343,7 @@ export default function EventForm({
           return;
         }
 
-        if (showCoverUpload && coverFile && coverSource) {
+        if (shouldUploadCover && eventId) {
           const uploadResult = await uploadCoverFile(
             eventId,
             coverFile,
@@ -356,7 +369,7 @@ export default function EventForm({
         return;
       }
 
-      if (coverFile && coverSource) {
+      if (shouldUploadCover) {
         const uploadResult = await uploadCoverFile(
           eventId,
           coverFile,
@@ -365,7 +378,7 @@ export default function EventForm({
           coverSource,
         );
         if (!uploadResult.ok) {
-          setServerError(uploadResult.error);
+          setServerError(`Nie udało się wgrać okładki: ${uploadResult.error}`);
           return;
         }
       } else if (removeCover) {
@@ -407,26 +420,6 @@ export default function EventForm({
     }
   }
 
-  function focusCoverAuditIssue(): void {
-    coverAuditSectionRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
-
-    if (coverSource === null) {
-      setCoverSourceError("Wybierz źródło grafiki okładki");
-      setCoverDeclarationError(null);
-      requestAnimationFrame(() => {
-        document.getElementById("coverSource")?.focus();
-      });
-      return;
-    }
-
-    if (!coverDeclarationAccepted) {
-      setCoverDeclarationError("Zaznacz oświadczenie dotyczące okładki powyżej");
-      requestAnimationFrame(() => {
-        document.getElementById("coverDeclarationAccepted")?.focus();
-      });
-    }
-  }
-
   function validateBeforeSubmit(): boolean {
     setServerError(null);
     setContentRightsError(null);
@@ -449,6 +442,12 @@ export default function EventForm({
     return true;
   }
 
+  async function handleContinueWithoutCover() {
+    setCoverWithoutDeclarationDialogOpen(false);
+    clearSelectedCoverFile();
+    await performSubmit({ skipCoverUpload: true });
+  }
+
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
 
@@ -457,7 +456,7 @@ export default function EventForm({
     }
 
     if (coverFile && showCoverUpload && !hasCompleteCoverAudit(coverSource, coverDeclarationAccepted)) {
-      focusCoverAuditIssue();
+      setCoverWithoutDeclarationDialogOpen(true);
       return;
     }
 
@@ -1073,6 +1072,31 @@ export default function EventForm({
               : "Zapisz zmiany"}
         </Button>
       </div>
+
+      <AlertDialog open={coverWithoutDeclarationDialogOpen} onOpenChange={setCoverWithoutDeclarationDialogOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Kontynuować bez grafiki?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Nie zadeklarowałeś możliwości publikacji grafiki. Czy chcesz kontynuować bez dodawania grafiki?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-white/20 bg-transparent text-white hover:bg-white/10">
+              Nie
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className={shellBtnPrimary}
+              onClick={(e) => {
+                e.preventDefault();
+                void handleContinueWithoutCover();
+              }}
+            >
+              Tak
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </form>
   );
 }
