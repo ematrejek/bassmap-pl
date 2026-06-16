@@ -2,7 +2,7 @@
 change_id: event-content-copyright
 title: Prawa autorskie treści zgłoszenia (okładka + opis)
 roadmap_ref: S-17
-status: implementing
+status: impl_reviewed
 created: 2026-06-15
 updated: 2026-06-16
 legal_copy_approved: 2026-06-15

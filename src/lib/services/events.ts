@@ -23,7 +23,7 @@ function isStartsAtError(value: string | { error: string }): value is { error: s
   return typeof value !== "string";
 }
 
-function mapSupabaseError(message: string): string {
+export function mapSupabaseError(message: string): string {
   if (message.includes("events_subgenres_min_one")) {
     return "Wybierz co najmniej jeden podgatunek";
   }
@@ -35,6 +35,16 @@ function mapSupabaseError(message: string): string {
   }
   if (message.includes("events_cover_aspect")) {
     return "Nieprawidłowy format okładki";
+  }
+  if (
+    message.includes("cover_source") ||
+    message.includes("cover_declaration_kind") ||
+    message.includes("cover_copyright_declared_at") ||
+    message.includes("description_rights_accepted_at") ||
+    message.includes("schema cache") ||
+    /column .+ does not exist/i.test(message)
+  ) {
+    return "Baza danych nie ma jeszcze kolumn audytu okładki (migracja S-17). Uruchom na produkcji: npx supabase db push";
   }
   return "Nie udało się zapisać wydarzenia";
 }
@@ -377,6 +387,20 @@ export async function setEventStatus(
   return { data: mapEventRow(response.data as EventRow) };
 }
 
+export async function applyEventCoverUpload(
+  supabase: SupabaseClient,
+  eventId: string,
+  data: {
+    coverPath: string;
+    coverAspect: import("@/types").CoverAspect;
+    coverSource: CoverSource;
+    coverDeclarationKind: CoverDeclarationKind;
+    coverCopyrightDeclaredAt: string;
+  },
+): Promise<ServiceResult<Event>> {
+  return updateEvent(supabase, eventId, data);
+}
+
 export async function updateEvent(
   supabase: SupabaseClient,
   id: string,
@@ -409,6 +433,10 @@ export async function updateEvent(
   let coverPathToRemoveAfterUpdate: string | null = null;
 
   if (parsed.coverPath !== undefined) {
+    if (parsed.coverPath !== null && parsed.coverPath !== existing.coverPath) {
+      return { error: "Okładkę można wgrać tylko przez formularz uploadu okładki" };
+    }
+
     const clearingCover = parsed.coverPath === null && existing.coverPath !== null;
     const replacingCover =
       parsed.coverPath !== null && existing.coverPath !== null && parsed.coverPath !== existing.coverPath;
