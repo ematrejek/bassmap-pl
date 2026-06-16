@@ -1,6 +1,7 @@
 import type { User } from "@supabase/supabase-js";
 import type { APIContext } from "astro";
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { buildUnitTestEvent } from "../helpers/event-fixtures";
 import { getEventById } from "@/lib/services/events";
 import { POST } from "@/pages/api/fan/events/[id]/cover";
 
@@ -92,11 +93,13 @@ describe("POST /api/fan/events/[id]/cover", () => {
     mockRemove.mockClear();
     mockMaybeSingle.mockClear();
     mockGetEventById.mockReset();
-    mockGetEventById.mockResolvedValue({
-      id: EVENT_ID,
-      createdBy: mockUser.id,
-      status: "pending",
-    });
+    mockGetEventById.mockResolvedValue(
+      buildUnitTestEvent({
+        id: EVENT_ID,
+        createdBy: mockUser.id,
+        status: "pending",
+      }),
+    );
   });
 
   it("returns 400 when cover audit fields are missing", async () => {

@@ -1,4 +1,40 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Event } from "@/types";
+
+/** Pełny obiekt Event do testów jednostkowych (mock getEventById itd.). */
+export function buildUnitTestEvent(overrides: Partial<Event> = {}): Event {
+  return {
+    id: "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+    name: "Unit Test Event",
+    startsAt: "2026-06-20T20:00:00.000Z",
+    city: "Warszawa",
+    venueName: "Test Venue",
+    addressStreet: null,
+    addressNumber: null,
+    latitude: null,
+    longitude: null,
+    subgenres: [],
+    lineup: null,
+    description: null,
+    ticketUrl: null,
+    isFree: false,
+    priceMode: null,
+    priceMin: null,
+    priceMax: null,
+    currency: null,
+    status: "pending",
+    coverPath: null,
+    coverAspect: null,
+    descriptionRightsAcceptedAt: null,
+    coverSource: null,
+    coverDeclarationKind: null,
+    coverCopyrightDeclaredAt: null,
+    createdBy: "11111111-1111-1111-1111-111111111111",
+    createdAt: "2026-06-16T08:00:00.000Z",
+    updatedAt: "2026-06-16T08:00:00.000Z",
+    ...overrides,
+  };
+}
 
 export interface FanReadFixtures {
   publishedUpcomingIds: [string, string];
