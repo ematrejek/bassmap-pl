@@ -1,5 +1,4 @@
 import { Button } from "@/components/ui/button";
-import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import {
   calendarDateToLocalDate,
@@ -13,9 +12,16 @@ import { shellBtnOutline, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import { SUBGENRES, type Subgenre } from "@/types";
 import { CalendarIcon } from "lucide-react";
-import { useRef, useState } from "react";
+import { lazy, Suspense, useRef, useState } from "react";
 import type { DateRange } from "react-day-picker";
-import "react-day-picker/style.css";
+
+/** Ładowany dopiero po otwarciu popovera — unika crashu workera dev przy SSR całego react-day-picker. */
+const LazyCalendar = lazy(() =>
+  import("@/components/ui/calendar").then((module) => {
+    void import("react-day-picker/style.css");
+    return { default: module.Calendar };
+  }),
+);
 
 interface Props {
   currentFilters: FanEventFilters;
@@ -177,13 +183,17 @@ export default function DateRangeFilter({ currentFilters }: Props) {
             align="start"
             className="border-border bg-card/95 text-foreground w-auto p-0 backdrop-blur-xl"
           >
-            <Calendar
-              mode="range"
-              selected={toSelectedRange(fromValue || null, toValue || null)}
-              onSelect={handleRangeSelect}
-              disabled={{ before: calendarDateToLocalDate(getWarsawCalendarDate()) }}
-              numberOfMonths={1}
-            />
+            {open ? (
+              <Suspense fallback={<p className={cn("p-4 text-sm", shellTextMuted)}>Ładowanie kalendarza…</p>}>
+                <LazyCalendar
+                  mode="range"
+                  selected={toSelectedRange(fromValue || null, toValue || null)}
+                  onSelect={handleRangeSelect}
+                  disabled={{ before: calendarDateToLocalDate(getWarsawCalendarDate()) }}
+                  numberOfMonths={1}
+                />
+              </Suspense>
+            ) : null}
           </PopoverContent>
         </Popover>
 

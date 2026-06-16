@@ -15,6 +15,9 @@ export default defineConfig({
     resolve: {
       dedupe: ["react", "react-dom"],
     },
+    optimizeDeps: {
+      include: ["leaflet", "react-leaflet"],
+    },
     ssr: {
       noExternal: ["@radix-ui/react-dialog"],
     },

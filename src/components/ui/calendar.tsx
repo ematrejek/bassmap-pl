@@ -1,6 +1,6 @@
 import { DayPicker, type DayPickerProps } from "react-day-picker";
 import type { ChevronProps } from "react-day-picker";
-import { pl } from "date-fns/locale";
+import { pl } from "react-day-picker/locale/pl";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";

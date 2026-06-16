@@ -9,7 +9,36 @@ import type { EventWithCoverUrl } from "@/types";
 import { lazy, Suspense, useState, useSyncExternalStore } from "react";
 
 /** Leaflet wymaga `window` – ładujemy mapę dopiero po montażu w przeglądarce. */
-const EventsMap = lazy(() => import("@/components/discovery/EventsMap"));
+const EventsMap = lazy(async () => {
+  try {
+    return await import("@/components/discovery/EventsMap");
+  } catch {
+    return { default: MapLoadError };
+  }
+});
+
+function MapLoadError({ className }: { className?: string }) {
+  return (
+    <div
+      className={cn(
+        "flex min-h-[320px] flex-col items-center justify-center gap-2 px-4 text-center",
+        shellPanelFlat,
+        className,
+      )}
+    >
+      <p className={cn("text-sm", shellTextMuted)}>Mapa chwilowo niedostępna.</p>
+      <button
+        type="button"
+        className={cn("text-accent text-xs underline underline-offset-2")}
+        onClick={() => {
+          window.location.reload();
+        }}
+      >
+        Odśwież stronę
+      </button>
+    </div>
+  );
+}
 
 function useIsClient(): boolean {
   return useSyncExternalStore(
