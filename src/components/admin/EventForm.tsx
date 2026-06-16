@@ -291,8 +291,7 @@ export default function EventForm({
   }
 
   const showRemoveCoverButton =
-    !removeCover &&
-    (coverFile !== null || (mode === "edit" && (initialEvent?.coverPath ?? null) !== null));
+    !removeCover && (coverFile !== null || (mode === "edit" && (initialEvent?.coverPath ?? null) !== null));
 
   async function performSubmit() {
     const body = buildBody();
@@ -457,11 +456,7 @@ export default function EventForm({
       return;
     }
 
-    if (
-      coverFile &&
-      showCoverUpload &&
-      !hasCompleteCoverAudit(coverSource, coverDeclarationAccepted)
-    ) {
+    if (coverFile && showCoverUpload && !hasCompleteCoverAudit(coverSource, coverDeclarationAccepted)) {
       focusCoverAuditIssue();
       return;
     }
@@ -792,7 +787,6 @@ export default function EventForm({
                   ) : null}
                 </div>
               )}
-
             </div>
           )}
 

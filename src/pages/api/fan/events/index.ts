@@ -37,10 +37,7 @@ export const POST: APIRoute = async (context) => {
 
   const { payload, accepted } = stripFanSubmitConsent(body);
   if (!accepted) {
-    return jsonResponse(
-      { error: "Musisz potwierdzić oświadczenie dotyczące opisu wydarzenia" },
-      400,
-    );
+    return jsonResponse({ error: "Musisz potwierdzić oświadczenie dotyczące opisu wydarzenia" }, 400);
   }
 
   const parsed = parseEventCreate(payload);
