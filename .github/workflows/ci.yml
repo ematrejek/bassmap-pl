@@ -22,7 +22,7 @@ jobs:
         run: npm audit --audit-level=critical
       - run: npx astro sync
       - run: npx astro check
-      - run: npm run lint
+      - run: npm run lint:all
       - uses: supabase/setup-cli@v2
         with:
           version: 2.98.2

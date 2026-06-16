@@ -9,7 +9,15 @@ import eslintPluginReactHooks from "eslint-plugin-react-hooks";
 import path from "node:path";
 import tseslint from "typescript-eslint";
 
+import noEmDash from "./eslint-rules/no-em-dash.mjs";
+
 const gitignorePath = path.resolve(import.meta.dirname, ".gitignore");
+
+const bassmapTypographyPlugin = {
+  rules: {
+    "no-em-dash": noEmDash,
+  },
+};
 
 const baseConfig = tseslint.config({
   extends: [eslint.configs.recommended, tseslint.configs.strictTypeChecked, tseslint.configs.stylisticTypeChecked],
@@ -68,6 +76,16 @@ const astroConfig = tseslint.config({
   },
 });
 
+const typographyConfig = tseslint.config({
+  files: ["src/**/*.{ts,tsx,astro}", "tests/**/*.{ts,tsx}"],
+  plugins: {
+    bassmap: bassmapTypographyPlugin,
+  },
+  rules: {
+    "bassmap/no-em-dash": "error",
+  },
+});
+
 export default tseslint.config(
   { ignores: ["bassmap-pl-ui/**", "worker-configuration.d.ts"] },
   includeIgnoreFile(gitignorePath),
@@ -76,5 +94,6 @@ export default tseslint.config(
   eslintPluginAstro.configs["flat/recommended"],
   ...eslintPluginAstro.configs["flat/jsx-a11y-recommended"],
   astroConfig,
+  typographyConfig,
   eslintPluginPrettier,
 );

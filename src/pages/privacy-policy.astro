@@ -14,27 +14,38 @@ export const prerender = false;
   </p>
   <p>
     Nie jestem przedsiębiorcą ani firmą – prowadzę serwis jako osoba fizyczna. W sprawach dotyczących danych osobowych
-    możesz skontaktować się ze mną pod powyższym adresem e-mail.
+    możesz skontaktować się ze mną pod powyższym adresem e-mail. Nie wyznaczyłam inspektora ochrony danych – przy
+    skali tego serwisu nie jest to wymagane.
   </p>
 
   <h2>2. Jakie dane zbieramy i w jakim celu</h2>
+  <p>
+    Przy każdym celu przetwarzania poniżej wskazuję, czy podanie danych jest <strong>obowiązkowe</strong> (bez nich dana
+    funkcja nie zadziała), czy <strong>dobrowolne</strong>. Nie musisz zakładać konta, aby przeglądać publiczne treści
+    Serwisu.
+  </p>
 
   <h3>2.1 Dane konta</h3>
-  <p>Podczas rejestracji zbieramy wyłącznie:</p>
+  <p>Podczas rejestracji zbieramy:</p>
   <ul>
     <li>
-      adres e-mail – niezbędny do założenia konta i wysyłki wiadomości systemowych (np. potwierdzenie rejestracji, reset
-      hasła),
+      <strong>adres e-mail</strong> (obowiązkowy) – niezbędny do założenia konta i wysyłki wiadomości systemowych (np.
+      potwierdzenie rejestracji, reset hasła),
     </li>
     <li>
-      hasło – przechowywane w formie zahashowanej przez dostawcę uwierzytelniania (Supabase); Administrator nie ma
-      dostępu do hasła w postaci jawnej.
+      <strong>hasło</strong> (obowiązkowe) – przechowywane w formie zahashowanej przez dostawcę uwierzytelniania (Supabase);
+      Administrator nie ma dostępu do hasła w postaci jawnej.
     </li>
   </ul>
   <p>
-    W miarę rozwoju Serwisu konto może obejmować także dobrowolnie uzupełniany profil (np. pseudonim wyświetlany w
-    Serwisie, miasto, ulubione podgatunki, linki do profili społecznościowych). Dane te będą przetwarzane wyłącznie po
-    ich dobrowolnym podaniu przez użytkownika i w zakresie opisanym w aktualnej wersji niniejszej polityki.
+    Wyświetlana na stronie profilu nazwa lub nick wynikająca z części adresu e-mail przed znakiem „@” jest generowana
+    wyłącznie w interfejsie Serwisu i <strong>nie jest osobno zapisywana</strong> w bazie danych.
+  </p>
+  <p>
+    W miarę rozwoju Serwisu konto może obejmować także <strong>dobrowolnie</strong> uzupełniany profil (np. pseudonim
+    wyświetlany w Serwisie, miasto, ulubione podgatunki, linki do profili społecznościowych). Funkcje te mogą być
+    udostępniane stopniowo – po ich włączeniu niniejsza polityka zostanie zaktualizowana. Dane profilowe będą
+    przetwarzane wyłącznie po ich dobrowolnym podaniu.
   </p>
   <p>Podstawa prawna: art. 6 ust. 1 pkt b RODO (wykonanie umowy / świadczenie usługi).</p>
 
@@ -42,12 +53,13 @@ export const prerender = false;
   <p>
     Zalogowany użytkownik może zgłosić wydarzenie do publikacji w Serwisie. Przy zgłoszeniu przetwarzamy dane podane w
     formularzu (np. nazwa wydarzenia, data, miejsce, adres lub współrzędne geograficzne, opis, podgatunki, skład, link
-    biletowy, cena) oraz identyfikator konta użytkownika (adres e-mail powiązany z kontem), w celu moderacji i
-    ewentualnej publikacji w Serwisie. Zgłoszenie nie jest widoczne publicznie do momentu akceptacji przez
-    Administratora.
+    biletowy, cena) oraz identyfikator konta użytkownika powiązany z adresem e-mail konta, w celu moderacji i
+    ewentualnej publikacji w Serwisie. Pola wymagane w formularzu są <strong>obowiązkowe</strong> do wysłania zgłoszenia;
+    okładka wydarzenia jest <strong>opcjonalna</strong>. Zgłoszenie nie jest widoczne publicznie do momentu akceptacji
+    przez Administratora.
   </p>
   <p>
-    Opcjonalnie możesz dodać okładkę wydarzenia (plik graficzny) — przechowywaną w magazynie plików Supabase Storage
+    Opcjonalnie możesz dodać okładkę wydarzenia (plik graficzny) – przechowywaną w magazynie plików Supabase Storage
     powiązanym z danym zgłoszeniem. Okładka jest publikowana wyłącznie po akceptacji zgłoszenia.
   </p>
   <p>
@@ -60,7 +72,7 @@ export const prerender = false;
   </p>
   <p>
     W celu wyświetlenia wydarzenia na mapie adres podany w formularzu może być przekazany do usługi geokodowania
-    OpenStreetMap Nominatim (patrz punkt 3) — wyłącznie w zakresie niezbędnym do ustalenia współrzędnych.
+    OpenStreetMap Nominatim (patrz punkt 3) – wyłącznie w zakresie niezbędnym do ustalenia współrzędnych.
   </p>
   <p>
     Podstawa prawna: art. 6 ust. 1 pkt b RODO (świadczenie usługi) oraz art. 6 ust. 1 pkt f RODO (uzasadniony interes –
@@ -70,16 +82,18 @@ export const prerender = false;
   <h3>2.3 Zgłoszenia problemów (formularz kontaktowy)</h3>
   <p>
     Każdy użytkownik (także bez konta) może wysłać wiadomość przez formularz „Zgłoś problem” w Serwisie. Przetwarzamy
-    wtedy podany adres e-mail, opcjonalnie imię lub nick oraz treść wiadomości — w celu udzielenia odpowiedzi i poprawy
-    działania Serwisu. Wiadomość jest przekazywana na skrzynkę Administratora za pośrednictwem infrastruktury e-mail
-    Cloudflare (patrz punkt 3).
+    wtedy podany <strong>obowiązkowo</strong> adres e-mail i treść wiadomości oraz <strong>opcjonalnie</strong> imię lub
+    nick – w celu udzielenia odpowiedzi i poprawy działania Serwisu. Wiadomość nie jest zapisywana w bazie danych
+    Serwisu; jest przekazywana na skrzynkę pocztową Administratora za pośrednictwem infrastruktury e-mail Cloudflare
+    (patrz punkt 3) i tam przechowywana przez okres opisany w punkcie 4.
   </p>
   <p>Podstawa prawna: art. 6 ust. 1 pkt f RODO (uzasadniony interes – obsługa zgłoszeń i kontakt z użytkownikami).</p>
 
   <h3>2.4 Dane techniczne</h3>
   <p>
     Serwis automatycznie może rejestrować dane techniczne, takie jak adres IP czy informacje o przeglądarce, w celach
-    bezpieczeństwa i diagnostycznych. Dane te nie są łączone z profilem użytkownika.
+    bezpieczeństwa i diagnostycznych – w szczególności po stronie dostawcy hostingu (Cloudflare). Dane te nie są przez
+    Administratora rutynowo łączone z profilem użytkownika w Serwisie.
   </p>
   <p>
     Podstawa prawna: art. 6 ust. 1 pkt f RODO (prawnie uzasadniony interes administratora – bezpieczeństwo serwisu).
@@ -89,7 +103,7 @@ export const prerender = false;
   <p>
     Twoje dane osobowe nie będą wykorzystywane do zautomatyzowanego podejmowania decyzji, które mogłyby wywołać wobec
     Ciebie skutki prawne lub w podobny sposób istotnie na Ciebie wpłynąć, w tym nie będą poddawane profilowaniu
-    marketingowemu.
+    marketingowemu. Serwis nie wykorzystuje sztucznej inteligencji do przetwarzania Twoich danych osobowych.
   </p>
 
   <h3>2.6 Informacje o wydarzeniach, składzie i twórcach</h3>
@@ -100,12 +114,21 @@ export const prerender = false;
   </p>
   <p>
     Jeśli Twoje dane (np. pseudonim sceniczny) zostały zamieszczone w Serwisie bez Twojej zgody lub chcesz żądać
-    usunięcia / sprostowania — skontaktuj się z Administratorem pod adresem e-mail podanym w punkcie 1. Administrator
-    rozpatrzy zgłoszenie i — w razie potrzeby — usunie lub zmodyfikuje informację.
+    usunięcia / sprostowania – skontaktuj się z Administratorem pod adresem e-mail podanym w punkcie 1. Administrator
+    rozpatrzy zgłoszenie i – w razie potrzeby – usunie lub zmodyfikuje informację.
   </p>
   <p>
-    Podstawa prawna: art. 6 ust. 1 pkt f RODO (prawnie uzasadniony interes — informowanie o wydarzeniach kulturalnych),
-    a w przypadku żądania usunięcia — realizacja praw osoby, której dane dotyczą (art. 6 ust. 1 pkt c RODO).
+    Podstawa prawna: art. 6 ust. 1 pkt f RODO (prawnie uzasadniony interes – informowanie o wydarzeniach kulturalnych).
+    W przypadku skorzystania z prawa do usunięcia lub sprzeciwu przetwarzanie w tym zakresie odbywa się na podstawie
+    realizacji Twoich praw wynikających z RODO (m.in. art. 17 i 21 RODO).
+  </p>
+
+  <h3>2.7 Komentarze pod wydarzeniami (planowana funkcja)</h3>
+  <p>
+    W przyszłości zalogowani użytkownicy mogą publikować komentarze pod wydarzeniami. Po uruchomieniu tej funkcji
+    będziemy przetwarzać treść komentarza oraz identyfikator konta autora w celu wyświetlenia komentarza w Serwisie i
+    moderacji. Niniejsza polityka zostanie zaktualizowana przed udostępnieniem komentarzy. Do tego czasu komentarze
+    użytkowników <strong>nie są zbierane</strong>.
   </p>
 
   <h2>3. Podmioty przetwarzające dane</h2>
@@ -153,23 +176,33 @@ export const prerender = false;
   <h2>4. Jak długo przechowujemy dane</h2>
   <p>
     Dane konta użytkownika przechowywane są przez okres posiadania konta w Serwisie. Zgłoszenia wydarzeń powiązane z
-    kontem przechowywane są do czasu moderacji i — w przypadku publikacji — tak długo, jak wydarzenie jest widoczne w
+    kontem przechowywane są do czasu moderacji i – w przypadku publikacji – tak długo, jak wydarzenie jest widoczne w
     Serwisie (identyfikator zgłaszającego może być zachowany w bazie w celach moderacji). Dane audytu oświadczeń (źródło
     okładki, rodzaj oświadczenia, daty) przechowywane są tak długo, jak powiązane zgłoszenie lub opublikowane wydarzenie
     pozostaje w Serwisie, a po usunięciu wydarzenia – przez okres niezbędny do obrony przed roszczeniami, nie dłużej niż
     przedawnienie roszczeń cywilnych, o ile dalsze przechowywanie nie wynika z obowiązku prawnego. Wiadomości z
-    formularza „Zgłoś problem” przechowywane są przez okres niezbędny do obsługi zgłoszenia, nie dłużej niż 12 miesięcy
-    od ostatniej korespondencji w danej sprawie. Po usunięciu konta przez użytkownika lub Administratora, dane osobowe
-    konta (e-mail, hasło) są usuwane. Komentarze opublikowane przez użytkownika przed usunięciem konta pozostają
-    widoczne w Serwisie, lecz autor jest wyświetlany jako „Usunięty użytkownik” — bez możliwości powiązania treści z
-    tożsamością usuniętego konta. Wyjątek stanowi sytuacja, w której ograniczone dane (np. adres IP, logi systemowe lub
-    historia zgłoszeń) muszą zostać zachowane w celu obrony lub dochodzenia ewentualnych roszczeń cywilnoprawnych albo
-    realizacji obowiązków prawnych nakładanych przez organy ścigania. Podstawą prawną takiego przetwarzania jest prawnie
-    uzasadniony interes Administratora (art. 6 ust. 1 lit. f RODO), a dane te będą przechowywane wyłącznie przez okres
-    przedawnienia tych roszczeń.
+    formularza „Zgłoś problem” przechowywane są w skrzynce pocztowej Administratora przez okres niezbędny do obsługi
+    zgłoszenia, nie dłużej niż 12 miesięcy od ostatniej korespondencji w danej sprawie.
+  </p>
+  <p>
+    Po usunięciu konta na Twoje żądanie lub przez Administratora dane osobowe konta (e-mail, hasło) są usuwane z systemu
+    uwierzytelniania. Powiązanie zgłoszeń wydarzeń z kontem może zostać odłączone (anonimizacja identyfikatora
+    zgłaszającego), przy czym treść opublikowanych wydarzeń może pozostać w Serwisie jako informacja publiczna.
+  </p>
+  <p>
+    <strong>Komentarze (po uruchomieniu funkcji):</strong> jeśli przed usunięciem konta opublikowałeś komentarze, mogą one
+    pozostać widoczne w Serwisie z oznaczeniem autora jako „Usunięty użytkownik”, bez możliwości powiązania treści z
+    tożsamością usuniętego konta – zgodnie z aktualną wersją niniejszej polityki w momencie uruchomienia komentarzy.
+  </p>
+  <p>
+    Wyjątek stanowi sytuacja, w której ograniczone dane (np. logi techniczne u dostawcy hostingu lub historia zgłoszeń)
+    muszą zostać zachowane w celu obrony lub dochodzenia ewentualnych roszczeń cywilnoprawnych albo realizacji
+    obowiązków prawnych nakładanych przez organy. Podstawą prawną takiego przetwarzania jest prawnie uzasadniony interes
+    Administratora (art. 6 ust. 1 lit. f RODO), a dane te będą przechowywane wyłącznie przez okres przedawnienia tych
+    roszczeń.
   </p>
 
-  <h2>5. Prawa użytkownika</h2>
+  <h2>5. Prawa użytkownika i sposób ich realizacji</h2>
   <p>Przysługują Ci następujące prawa w związku z przetwarzaniem Twoich danych:</p>
   <ul>
     <li>prawo dostępu do danych – możesz zażądać informacji o tym, jakie dane przechowujemy,</li>
@@ -186,18 +219,38 @@ export const prerender = false;
       >).
     </li>
   </ul>
+
+  <h3>5.1 Jak złożyć wniosek</h3>
   <p>
-    Aby skorzystać z tych praw, skontaktuj się ze mną pod adresem:
-    <a href="mailto:matrejekemilia@gmail.com">matrejekemilia@gmail.com</a>. Administrator realizuje żądania użytkowników
-    związane z ich prawami bez zbędnej zwłoki, nie później niż w terminie jednego miesiąca od otrzymania zgłoszenia. W
-    przypadkach skomplikowanych termin ten może ulec wydłużeniu o kolejne dwa miesiące, o czym użytkownik zostanie
-    uprzednio poinformowany.
+    Aby skorzystać z powyższych praw, wyślij wiadomość na adres:
+    <a href="mailto:matrejekemilia@gmail.com">matrejekemilia@gmail.com</a>. Wniosek o usunięcie konta lub kopię danych
+    najlepiej wysłać <strong>z adresu e-mail powiązanego z kontem</strong> – ułatwia to weryfikację tożsamości. Jeśli
+    piszesz z innego adresu, Administrator może poprosić o dodatkowe potwierdzenie.
+  </p>
+  <p>
+    Serwis <strong>nie udostępnia</strong> publicznego automatycznego eksportu danych (np. przycisku „pobierz wszystko”
+    ani API dla użytkowników). Na zweryfikowany wniosek Administrator przygotuje i prześle kopię danych osobowych
+    powiązanych z kontem – w szczególności adres e-mail konta, listę zgłoszeń wydarzeń powiązanych z kontem oraz
+    metadane audytu oświadczeń – w ustrukturyzowanym, powszechnie używanym formacie elektronicznym (np. plik JSON lub
+    CSV), o ile jest to technicznie możliwe.
+  </p>
+  <p>
+    <strong>Usunięcie konta:</strong> do czasu udostępnienia funkcji samodzielnego usuwania konta w panelu użytkownika
+    wystarczy wniosek e-mailem zgodnie z powyższymi zasadami. Po weryfikacji Administrator usuwa konto i dane opisane w
+    punkcie 4. Szczegóły także w Regulaminie (§3.6).
+  </p>
+
+  <h3>5.2 Terminy odpowiedzi</h3>
+  <p>
+    Administrator realizuje żądania użytkowników związane z ich prawami bez zbędnej zwłoki, nie później niż w terminie
+    jednego miesiąca od otrzymania zgłoszenia. W przypadkach skomplikowanych termin ten może ulec wydłużeniu o kolejne
+    dwa miesiące, o czym użytkownik zostanie uprzednio poinformowany wraz z uzasadnieniem.
   </p>
 
   <h2>6. Pliki cookies</h2>
   <p>
     Serwis <strong>używa wyłącznie niezbędnych plików cookies</strong> (oraz podobnych mechanizmów sesji) wymaganych do działania
-    uwierzytelniania — w szczególności cookies ustawianych przez Supabase Auth w celu utrzymania sesji zalogowanego użytkownika.
+    uwierzytelniania – w szczególności cookies ustawianych przez Supabase Auth w celu utrzymania sesji zalogowanego użytkownika.
     Bez nich logowanie i korzystanie z konta nie są możliwe.
   </p>
   <p>

@@ -10,4 +10,4 @@ export const LEGACY_LEGAL_REDIRECTS: Record<string, string> = {
   [LEGACY_TERMS_PATH]: TERMS_PATH,
 };
 
-export const LEGAL_UPDATED_AT = "16 czerwca 2026";
+export const LEGAL_UPDATED_AT = "16 czerwca 2026 r.";

@@ -5,6 +5,7 @@ import { FormField } from "@/components/auth/FormField";
 import { readApiError } from "@/lib/api/json";
 import { ServerError } from "@/components/auth/ServerError";
 import { Button } from "@/components/ui/button";
+import { PRIVACY_POLICY_PATH } from "@/lib/legal/paths";
 import { shellBtnPrimary, shellTextMuted } from "@/lib/shell-styles";
 import { CONTACT_EMAIL } from "@/lib/routes";
 import { cn } from "@/lib/utils";
@@ -145,6 +146,23 @@ export default function ReportIssueForm() {
       </div>
 
       <ServerError message={serverError} />
+
+      <p className={cn("text-xs leading-relaxed", shellTextMuted)}>
+        Administratorem danych z tego formularza jest Emilia Matrejek. Przetwarzamy Twój e-mail, opcjonalnie imię lub
+        nick oraz treść wiadomości wyłącznie po to, żeby odpowiedzieć na zgłoszenie (podstawa: prawnie uzasadniony
+        interes – art. 6 ust. 1 lit. f RODO). E-mail i treść są <strong className="text-foreground/80">wymagane</strong>{" "}
+        do wysłania formularza; imię lub nick jest dobrowolne. Wiadomość nie trafia do bazy Serwisu – jest wysyłana na
+        skrzynkę Administratora. Więcej informacji:{" "}
+        <a
+          href={PRIVACY_POLICY_PATH}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary hover:text-accent underline"
+        >
+          Polityka prywatności
+        </a>
+        .
+      </p>
 
       <Button type="submit" disabled={submitting} className={cn("w-full rounded-lg px-4 py-2", shellBtnPrimary)}>
         {submitting ? (

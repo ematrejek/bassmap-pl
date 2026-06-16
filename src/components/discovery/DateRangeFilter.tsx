@@ -15,7 +15,7 @@ import { CalendarIcon } from "lucide-react";
 import { lazy, Suspense, useRef, useState } from "react";
 import type { DateRange } from "react-day-picker";
 
-/** Ładowany dopiero po otwarciu popovera — unika crashu workera dev przy SSR całego react-day-picker. */
+/** Ładowany dopiero po otwarciu popovera – unika crashu workera dev przy SSR całego react-day-picker. */
 const LazyCalendar = lazy(() =>
   import("@/components/ui/calendar").then((module) => {
     void import("react-day-picker/style.css");
