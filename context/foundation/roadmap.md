@@ -49,7 +49,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-10 | guest-nav-and-archive     | gość korzysta z menu (lista, logowanie, rejestracja, zgłoszenie problemu, archiwum)         | F-04, S-09    | notes 2026-06-13                 | done        |
 | S-12 | fan-account-zone          | zalogowany fan ma zakładki profil, moje eventy, dodaj event, placeholdery, wyloguj          | F-04, S-10    | Access Control, notes 2026-06-13 | done        |
 | S-17 | event-content-copyright   | zgłaszający wybiera źródło okładki i składa wymagane oświadczenie praw autorskich           | S-12          | FR-025, notes 2026-06-15         | done        |
-| S-13 | duplicate-event-detection | system wykrywa podobne wydarzenie (nazwa/adres/data) i pokazuje właściwy komunikat          | S-12, S-17    | notes 2026-06-13                 | planned     |
+| S-13 | duplicate-event-detection | system wykrywa podobne wydarzenie (nazwa/adres/data) i pokazuje właściwy komunikat          | S-12, S-17    | notes 2026-06-13                 | ready       |
 | S-14 | change-suggestions        | fan/admin zgłasza sugestię zmian; admin ocenia w panelu „Sugestie zmian”                    | S-12, S-13    | notes 2026-06-13                 | proposed    |
 | S-15 | event-comments            | zalogowany fan komentuje wydarzenie; wszyscy czytają; admin usuwa komentarze                | S-12          | notes 2026-06-13                 | proposed    |
 | S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto; komentarze zostają jako „Usunięty użytkownik”      | S-12, S-15    | FR-022, NFR Privacy              | proposed    |
@@ -358,7 +358,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Próg fuzzy match (np. Levenshtein / pg_trgm) \u2013 Owner: team. Block: no.
 - **Risk:** Fałszywe pozytywy irytują; fałszywe negatywy = duplikaty w bazie \u2013 warto zacząć konserwatywnie.
-- **Status:** planned \u2013 `context/changes/duplicate-event-detection/plan.md` (2026-06-16)
+- **Status:** ready – implementacja zakończona (fazy 1–5); archive po merge i manual QA – `context/changes/duplicate-event-detection/`
 
 **FR (propozycja do PRD):**
 
@@ -440,7 +440,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-10       | guest-nav-and-archive     | #23    | Menu gościa, formularz problemu, archiwum      | \u2013                     | Done \u2013 w slice F-04                                |
 | S-12       | fan-account-zone          | #24    | Strefa zalogowanego fana + nawigacja           | \u2013                     | Done \u2013 archived 2026-06-15; PR #29                 |
 | S-17       | event-content-copyright   | #30    | Prawa autorskie: źródło okładki + oświadczenia | \u2013                     | Done \u2013 archived 2026-06-16                         |
-| S-13       | duplicate-event-detection | #25    | Wykrywanie duplikatów wydarzeń                 | \u2013                     | **Planned** \u2013 `context/changes/duplicate-event-detection/` |
+| S-13       | duplicate-event-detection | #25    | Wykrywanie duplikatów wydarzeń                 | \u2013                     | **Ready** \u2013 fazy 1–5 done; czeka na archive      |
 | S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                        | no                    | Partia II                                          |
 | S-15       | event-comments            | #27    | Komentarze pod wydarzeniami                    | no                    | Partia II                                          |
 | S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                     | no                    | Partia II \u2013 po S-15 (anonimizacja komentarzy)      |

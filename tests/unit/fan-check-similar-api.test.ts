@@ -12,6 +12,7 @@ const mockMatch = {
   name: "Bass Night",
   startsAt: "2026-07-15T18:00:00.000Z",
   city: "Warszawa",
+  status: "published" as const,
   similarityScore: 0.8,
 };
 
@@ -99,6 +100,7 @@ describe("POST /api/fan/events/check-similar", () => {
     await expect(response.json()).resolves.toEqual({ matches: [mockMatch] });
     expect(mockFindSimilarEvents).toHaveBeenCalledWith(expect.anything(), expect.any(Object), {
       excludeCreatedBy: mockUser.id,
+      includePending: false,
     });
   });
 

@@ -567,12 +567,14 @@ export default function EventForm({
   }
 
   const primarySimilarMatch = similarMatches.at(0) ?? null;
-  const similarEventHref =
-    primarySimilarMatch && variant === "fan"
+  const similarEventPublicHref =
+    primarySimilarMatch && variant === "fan" && primarySimilarMatch.status === "published"
       ? `/events/${primarySimilarMatch.id}`
-      : primarySimilarMatch
-        ? `/admin/events/${primarySimilarMatch.id}/edit`
-        : null;
+      : null;
+  const similarEventAdminHref =
+    primarySimilarMatch && variant === "admin" ? `/admin/events/${primarySimilarMatch.id}/edit` : null;
+  const similarPendingModerationNote =
+    primarySimilarMatch && variant === "fan" && primarySimilarMatch.status === "pending";
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
@@ -1232,11 +1234,16 @@ export default function EventForm({
                 ) : (
                   <p>Znaleźliśmy podobne wydarzenie w katalogu.</p>
                 )}
-                {similarEventHref ? (
+                {similarEventPublicHref ? (
                   <p>
-                    <a href={similarEventHref} className="text-primary underline-offset-2 hover:underline">
+                    <a href={similarEventPublicHref} className="text-primary underline-offset-2 hover:underline">
                       Zobacz istniejące wydarzenie
                     </a>
+                  </p>
+                ) : null}
+                {similarPendingModerationNote ? (
+                  <p className="text-muted-foreground">
+                    To zgłoszenie jest w moderacji – nie ma jeszcze publicznej strony.
                   </p>
                 ) : null}
               </div>
@@ -1250,9 +1257,9 @@ export default function EventForm({
               <Button type="button" variant="outline" className={shellBtnOutline} onClick={openSuggestionDialog}>
                 Zasugeruj zmiany
               </Button>
-            ) : similarEventHref ? (
+            ) : similarEventAdminHref ? (
               <Button type="button" variant="outline" className={shellBtnOutline} asChild>
-                <a href={similarEventHref}>Wprowadź zmiany</a>
+                <a href={similarEventAdminHref}>Wprowadź zmiany</a>
               </Button>
             ) : null}
             <AlertDialogAction

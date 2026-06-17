@@ -41,7 +41,10 @@ export const POST: APIRoute = async (context) => {
     return jsonResponse({ error: parsed.error }, 400);
   }
 
-  const result = await findSimilarEvents(supabase, parsed.data, { excludeCreatedBy: user.id });
+  const result = await findSimilarEvents(supabase, parsed.data, {
+    excludeCreatedBy: user.id,
+    includePending: false,
+  });
   if ("error" in result) {
     return jsonResponse({ error: result.error }, 400);
   }

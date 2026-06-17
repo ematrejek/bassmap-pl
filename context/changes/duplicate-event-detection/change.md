@@ -2,7 +2,7 @@
 id: duplicate-event-detection
 roadmap: S-13
 title: Wykrywanie duplikatów wydarzeń
-status: implementing
+status: implemented
 created: 2026-06-16
 updated: 2026-06-17
 github_issue: 25

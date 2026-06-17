@@ -16,10 +16,24 @@ export default defineConfig({
       dedupe: ["react", "react-dom"],
     },
     optimizeDeps: {
-      include: ["leaflet", "react-leaflet"],
+      include: [
+        "react",
+        "react-dom",
+        "react/jsx-runtime",
+        "react/jsx-dev-runtime",
+        "leaflet",
+        "react-leaflet",
+        "lucide-react",
+      ],
     },
     ssr: {
-      noExternal: ["@radix-ui/react-dialog"],
+      // Bundle these with the SSR graph so dev/prod share one React instance (avoids invalid hook call).
+      noExternal: [
+        "lucide-react",
+        "@radix-ui/react-dialog",
+        "@radix-ui/react-checkbox",
+        "@radix-ui/react-alert-dialog",
+      ],
     },
   },
   adapter: cloudflare(),

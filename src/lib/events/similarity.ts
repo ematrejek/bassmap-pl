@@ -1,7 +1,9 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { isWithinCoordProximity, normalizeAddressParts, normalizeVenueName } from "@/lib/events/address-normalize";
+import { NAME_SIMILARITY_THRESHOLD } from "@/lib/events/similarity-constants";
 import { parseDatetimeLocalWarsaw } from "@/lib/events/format";
 import type { ParsedEventCreate } from "@/lib/events/schema";
+import type { EventStatus } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
 
@@ -10,6 +12,7 @@ export interface SimilarEventMatch {
   name: string;
   startsAt: string;
   city: string;
+  status: EventStatus;
   similarityScore: number;
 }
 
@@ -23,6 +26,7 @@ export interface SimilarEventCandidate {
   addressNumber: string | null;
   latitude: number | null;
   longitude: number | null;
+  status: EventStatus;
   similarityScore: number;
 }
 
@@ -36,12 +40,15 @@ interface SimilarEventCandidateRow {
   address_number: string | null;
   latitude: number | null;
   longitude: number | null;
+  status: EventStatus;
   similarity_score: number;
 }
 
 export interface FindSimilarEventsOptions {
   excludeEventId?: string;
   excludeCreatedBy?: string;
+  /** When false, only published events are candidates (fan check-similar). Default true. */
+  includePending?: boolean;
 }
 
 function candidateHasAddress(candidate: SimilarEventCandidate): boolean {
@@ -63,6 +70,7 @@ function mapCandidateRow(row: SimilarEventCandidateRow): SimilarEventCandidate {
     addressNumber: row.address_number,
     latitude: row.latitude,
     longitude: row.longitude,
+    status: row.status,
     similarityScore: row.similarity_score,
   };
 }
@@ -99,6 +107,8 @@ export async function findSimilarEvents(
     p_starts_at: startsAtIso,
     p_exclude_event_id: options.excludeEventId ?? null,
     p_exclude_created_by: options.excludeCreatedBy ?? null,
+    p_include_pending: options.includePending !== false,
+    p_name_threshold: NAME_SIMILARITY_THRESHOLD,
   });
 
   if (response.error) {
@@ -115,6 +125,7 @@ export async function findSimilarEvents(
       name: candidate.name,
       startsAt: candidate.startsAt,
       city: candidate.city,
+      status: candidate.status,
       similarityScore: candidate.similarityScore,
     }));
 

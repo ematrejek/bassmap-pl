@@ -122,7 +122,25 @@ export const prerender = false;
     realizacji Twoich praw wynikających z RODO (m.in. art. 17 i 21 RODO).
   </p>
 
-  <h3>2.7 Komentarze pod wydarzeniami (planowana funkcja)</h3>
+  <h3>2.7 Sugestie zmian w katalogu wydarzeń</h3>
+  <p>
+    Zalogowany użytkownik może zamiast duplikować wpis wysłać <strong>tekstową sugestię zmian</strong> dotyczącą istniejącego
+    wydarzenia (opublikowanego lub oczekującego na moderację). Przetwarzamy treść sugestii (od 10 do 2000 znaków) oraz identyfikator
+    konta autora i powiązanie z danym wydarzeniem – w celu moderacji katalogu i uniknięcia zbędnych duplikatów. Treść sugestii
+    jest <strong>obowiązkowa</strong> do wysłania formularza.
+  </p>
+  <p>
+    Przy dodawaniu wydarzenia Serwis może porównać nazwę, datę i lokalizację z istniejącymi wpisami, aby zaproponować
+    wysłanie sugestii zamiast tworzenia duplikatu. W tym celu przetwarzamy dane podane w formularzu (nazwa, miasto,
+    data, adres lub współrzędne) – wyłącznie w zakresie niezbędnym do wykrycia podobieństwa; nie prowadzimy profilowania
+    ani zautomatyzowanej decyzji blokującej zgłoszenie.
+  </p>
+  <p>
+    Podstawa prawna: art. 6 ust. 1 pkt b RODO (świadczenie usługi – obsługa konta i zgłoszeń użytkownika) oraz art. 6
+    ust. 1 pkt f RODO (uzasadniony interes – jakość i spójność bazy wydarzeń).
+  </p>
+
+  <h3>2.8 Komentarze pod wydarzeniami (planowana funkcja)</h3>
   <p>
     W przyszłości zalogowani użytkownicy mogą publikować komentarze pod wydarzeniami. Po uruchomieniu tej funkcji
     będziemy przetwarzać treść komentarza oraz identyfikator konta autora w celu wyświetlenia komentarza w Serwisie i
@@ -181,7 +199,10 @@ export const prerender = false;
     pozostaje w Serwisie, a po usunięciu wydarzenia – przez okres niezbędny do obrony przed roszczeniami, nie dłużej niż
     przedawnienie roszczeń cywilnych, o ile dalsze przechowywanie nie wynika z obowiązku prawnego. Wiadomości z
     formularza „Zgłoś problem” przechowywane są w skrzynce pocztowej Administratora przez okres niezbędny do obsługi
-    zgłoszenia, nie dłużej niż 12 miesięcy od ostatniej korespondencji w danej sprawie.
+    zgłoszenia, nie dłużej niż 12 miesięcy od ostatniej korespondencji w danej sprawie. <strong>Sugestie zmian</strong>
+    przechowywane są do rozpatrzenia przez Administratora (status oczekujący, przyjęty lub odrzucony), a po rozstrzygnięciu
+    – przez okres niezbędny do dokumentacji moderacji i obrony przed roszczeniami, nie dłużej niż przedawnienie roszczeń cywilnych,
+    o ile dalsze przechowywanie nie wynika z obowiązku prawnego.
   </p>
   <p>
     Po usunięciu konta na Twoje żądanie lub przez Administratora dane osobowe konta (e-mail, hasło) są usuwane z systemu

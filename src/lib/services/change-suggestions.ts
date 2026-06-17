@@ -72,19 +72,16 @@ export async function createFanChangeSuggestion(
   userId: string,
   input: { eventId: string; body: string },
 ): Promise<ServiceResult<ChangeSuggestion>> {
-  const eventResponse = await supabase.from("events").select("id, status").eq("id", input.eventId).maybeSingle();
+  const eligibleResponse = await supabase.rpc("event_eligible_for_suggestion", {
+    p_event_id: input.eventId,
+  });
 
-  if (eventResponse.error) {
-    return { error: eventResponse.error.message };
+  if (eligibleResponse.error) {
+    return { error: eligibleResponse.error.message };
   }
 
-  const eventRow = eventResponse.data;
-  if (!eventRow || typeof eventRow !== "object" || !("status" in eventRow) || typeof eventRow.status !== "string") {
+  if (eligibleResponse.data !== true) {
     return { error: "Nie znaleziono wydarzenia" };
-  }
-
-  if (eventRow.status !== "published" && eventRow.status !== "pending") {
-    return { error: "Sugestie można wysyłać tylko do opublikowanych lub oczekujących wydarzeń" };
   }
 
   const response = await supabase

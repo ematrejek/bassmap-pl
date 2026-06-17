@@ -1,12 +1,11 @@
-import React, { useState } from "react";
 import { CircleAlert, Lock, Mail, UserPlus } from "lucide-react";
 import { FormField } from "@/components/auth/FormField";
 import { PasswordToggle } from "@/components/auth/PasswordToggle";
 import { SubmitButton } from "@/components/auth/SubmitButton";
 import { ServerError } from "@/components/auth/ServerError";
-import { Checkbox } from "@/components/ui/checkbox";
 import { PRIVACY_POLICY_PATH, TERMS_PATH } from "@/lib/legal/paths";
 import { cn } from "@/lib/utils";
+import { useState, type SubmitEvent } from "react";
 
 const MIN_PASSWORD_LENGTH = 6;
 
@@ -63,7 +62,7 @@ export default function SignUpForm({ serverError }: Props) {
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
   }
 
-  function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
+  function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     if (!validate()) {
       e.preventDefault();
     }
@@ -141,16 +140,17 @@ export default function SignUpForm({ serverError }: Props) {
 
       <div>
         <div className="flex items-start gap-2">
-          <Checkbox
+          <input
+            type="checkbox"
             id="acceptTerms"
             checked={acceptTerms}
-            onCheckedChange={(checked) => {
-              setAcceptTerms(checked === true);
+            onChange={(e) => {
+              setAcceptTerms(e.target.checked);
               clearError("acceptTerms");
             }}
             aria-invalid={Boolean(errors.acceptTerms)}
             className={cn(
-              "border-border bg-card/60 data-[state=checked]:border-primary data-[state=checked]:bg-primary mt-0.5",
+              "border-border bg-card/60 text-primary mt-0.5 size-4 shrink-0 cursor-pointer rounded-[4px] border accent-[var(--primary)]",
               errors.acceptTerms && "border-red-400/60",
             )}
           />

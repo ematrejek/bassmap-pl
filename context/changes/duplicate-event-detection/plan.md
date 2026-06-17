@@ -65,6 +65,16 @@ Pięć faz zgodnych z S-12/S-17: schema → serwis → API → UI → testy + le
 
 Check-similar musi wołać **ten sam parser** co create (`parseEventCreate`), inaczej fan zobaczy inne błędy niż przy zapisie. Dla fana wyklucz z kandydatów wiersze `pending` gdzie `created_by = auth.uid()` – inaczej własne wcześniejsze zgłoszenie blokuje ponowną próbę. Dialog duplikatu otwiera się **po** `validateBeforeSubmit()` i **przed** `setSubmitting(true)` – inaczej spinner zasłania dialog.
 
+## Plan addendum (impl-review 2026-06-17)
+
+Rozszerzenia poza oryginalnym opisem fazy 4 – zaakceptowane po przeglądzie implementacji:
+
+1. **Fan „Moje eventy”** – pełna tabela `FanChangeSuggestionsTable` + `listChangeSuggestionsForFan` (nie tylko banner `?suggestionSubmitted=1`). Commit `6314d5b`.
+2. **Fan check-similar** – kandydaci tylko `published` (`includePending: false`); admin nadal `published` + `pending`. Migracja `20260617180200`.
+3. **Sugestie do cudzego pending** – RPC `event_eligible_for_suggestion` omija RLS na `events` przy INSERT sugestii. Migracja `20260617180000`.
+4. **RLS sugestii** – wzmocnione polityki INSERT (`source`, status eventu) + trigger status-only UPDATE. Migracja `20260617180300`.
+5. **Niezwiązane** – uproszczenie copy RODO w `ReportIssueForm.tsx` (osobny commit / PR poza S-13).
+
 ---
 
 ## Phase 1: Schema, typy i RLS sugestii
@@ -474,10 +484,10 @@ RLS sugestii, integracja z CI, aktualizacja dokumentów prawnych i `public-roadm
 
 #### Automated
 
-- [ ] 5.1 `npm run test` – integracja RLS przechodzi
-- [ ] 5.2 `npm run lint` i `npm run build` przechodzą
+- [x] 5.1 `npm run test` – integracja RLS przechodzi
+- [x] 5.2 `npm run lint` i `npm run build` przechodzą
 
 #### Manual
 
-- [ ] 5.3 Polityka i regulamin – sekcje o sugestiach zaakceptowane przez właściciela
+- [x] 5.3 Polityka i regulamin – sekcje o sugestiach zaakceptowane przez właściciela
 - [ ] 5.4 Pełny manual QA z sekcji Testing Strategy wykonany w przeglądarce
