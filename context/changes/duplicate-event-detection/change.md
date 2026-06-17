@@ -4,7 +4,7 @@ roadmap: S-13
 title: Wykrywanie duplikatów wydarzeń
 status: implementing
 created: 2026-06-16
-updated: 2026-06-16
+updated: 2026-06-17
 github_issue: 25
 prd_refs:
   - FR-019
