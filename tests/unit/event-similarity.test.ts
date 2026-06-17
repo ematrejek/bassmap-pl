@@ -60,6 +60,7 @@ function buildCandidate(overrides: Partial<SimilarEventCandidate> = {}): Similar
     addressNumber: "32",
     latitude: 52.2297,
     longitude: 21.0122,
+    status: "published",
     similarityScore: 0.9,
     ...overrides,
   };
