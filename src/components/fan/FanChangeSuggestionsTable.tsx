@@ -1,26 +1,21 @@
-import ChangeSuggestionActions from "@/components/admin/ChangeSuggestionActions";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatEventDate } from "@/lib/events/format";
-import { ADMIN_PATH } from "@/lib/routes";
-import { shellPanel, shellPanelFlat, shellTextMuted } from "@/lib/shell-styles";
+import { shellPanel, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import type { ChangeSuggestionStatus } from "@/types";
 
-export interface ChangeSuggestionTableRow {
+export interface FanChangeSuggestionRow {
   id: string;
   eventId: string;
   eventName: string;
   body: string;
   status: ChangeSuggestionStatus;
   createdAt: string;
-  submitterEmail?: string | null;
-  submitterLogin?: string | null;
 }
 
 interface Props {
-  suggestions: ChangeSuggestionTableRow[];
-  emptyMessage?: string;
+  suggestions: FanChangeSuggestionRow[];
 }
 
 const SUGGESTION_STATUS_LABELS: Record<ChangeSuggestionStatus, string> = {
@@ -47,31 +42,26 @@ function truncateBody(body: string, maxLength = 120): string {
   return `${body.slice(0, maxLength).trimEnd()}…`;
 }
 
-export default function ChangeSuggestionsTable({ suggestions, emptyMessage = "Brak sugestii zmian." }: Props) {
-  if (suggestions.length === 0) {
-    return <div className={cn("p-8 text-center", shellPanelFlat, shellTextMuted)}>{emptyMessage}</div>;
-  }
-
+export default function FanChangeSuggestionsTable({ suggestions }: Props) {
   return (
     <div className={cn("p-4 sm:p-6", shellPanel)}>
+      <p className={cn("mb-4 text-sm font-medium", shellTextMuted)}>Twoje sugestie zmian do istniejących wydarzeń</p>
       <Table>
         <TableHeader>
           <TableRow className="border-border/70 hover:bg-transparent">
             <TableHead className="text-muted-foreground">Data</TableHead>
             <TableHead className="text-muted-foreground">Wydarzenie</TableHead>
             <TableHead className="text-muted-foreground">Sugestia</TableHead>
-            <TableHead className="text-muted-foreground">Autor</TableHead>
             <TableHead className="text-muted-foreground">Status</TableHead>
-            <TableHead className="text-muted-foreground text-right">Akcje</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
-          {suggestions.map((suggestion: ChangeSuggestionTableRow) => (
+          {suggestions.map((suggestion) => (
             <TableRow key={suggestion.id} className="border-border/70 hover:bg-secondary/40">
               <TableCell className={shellTextMuted}>{formatEventDate(suggestion.createdAt)}</TableCell>
               <TableCell className="max-w-[180px]">
                 <a
-                  href={`${ADMIN_PATH}/events/${suggestion.eventId}/edit`}
+                  href={`/events/${suggestion.eventId}`}
                   className="text-primary hover:text-primary/80 truncate font-medium underline-offset-2 hover:underline"
                 >
                   {suggestion.eventName || "Wydarzenie"}
@@ -80,31 +70,10 @@ export default function ChangeSuggestionsTable({ suggestions, emptyMessage = "Br
               <TableCell className={cn("max-w-xs text-sm", shellTextMuted)} title={suggestion.body}>
                 {truncateBody(suggestion.body)}
               </TableCell>
-              <TableCell className="max-w-[180px]">
-                {suggestion.submitterLogin || suggestion.submitterEmail ? (
-                  <div className="flex flex-col gap-0.5">
-                    {suggestion.submitterLogin ? (
-                      <span className="text-primary font-mono text-sm">@{suggestion.submitterLogin}</span>
-                    ) : null}
-                    {suggestion.submitterEmail ? (
-                      <span className={cn("truncate text-xs", shellTextMuted)}>{suggestion.submitterEmail}</span>
-                    ) : null}
-                  </div>
-                ) : (
-                  <span className={shellTextMuted}>–</span>
-                )}
-              </TableCell>
               <TableCell>
                 <Badge variant="outline" className={cn("border", suggestionBadgeClass(suggestion.status))}>
                   {SUGGESTION_STATUS_LABELS[suggestion.status]}
                 </Badge>
-              </TableCell>
-              <TableCell className="text-right">
-                <ChangeSuggestionActions
-                  suggestionId={suggestion.id}
-                  eventId={suggestion.eventId}
-                  status={suggestion.status}
-                />
               </TableCell>
             </TableRow>
           ))}

@@ -1,4 +1,5 @@
 import FanEventsTable from "@/components/fan/FanEventsTable";
+import type { FanChangeSuggestionRow } from "@/components/fan/FanChangeSuggestionsTable";
 import MyEventsSectionHeader from "@/components/fan/MyEventsSectionHeader";
 import ProfileEventCard from "@/components/fan/ProfileEventCard";
 import { Button } from "@/components/ui/button";
@@ -9,6 +10,7 @@ import type { Event } from "@/types";
 
 interface Props {
   submittedEvents: Event[];
+  changeSuggestions: FanChangeSuggestionRow[];
   submitted?: boolean;
   suggestionSubmitted?: boolean;
 }
@@ -23,6 +25,37 @@ function pluralEvents(count: number): string {
     return "eventy";
   }
   return "eventów";
+}
+
+function pluralSuggestions(count: number): string {
+  if (count === 1) {
+    return "sugestia";
+  }
+  const mod10 = count % 10;
+  const mod100 = count % 100;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+    return "sugestie";
+  }
+  return "sugestii";
+}
+
+function dodajeCountLabel(eventCount: number, suggestionCount: number): string {
+  const total = eventCount + suggestionCount;
+  if (suggestionCount > 0 && eventCount === 0) {
+    return pluralSuggestions(total);
+  }
+  if (eventCount > 0 && suggestionCount === 0) {
+    return pluralSubmissions(total);
+  }
+  if (total === 1) {
+    return "pozycja";
+  }
+  const mod10 = total % 10;
+  const mod100 = total % 100;
+  if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
+    return "pozycje";
+  }
+  return "pozycji";
 }
 
 function pluralSubmissions(count: number): string {
@@ -48,7 +81,12 @@ function EmptyAttendingPanel({ message }: { message: string }) {
   );
 }
 
-export default function MyEventsPage({ submittedEvents, submitted = false, suggestionSubmitted = false }: Props) {
+export default function MyEventsPage({
+  submittedEvents,
+  changeSuggestions,
+  submitted = false,
+  suggestionSubmitted = false,
+}: Props) {
   // Placeholder – slice «Idę» / «Obserwuję» (RSVP) w przyszłości.
   const goingEvents: Event[] = [];
   const watchingEvents: Event[] = [];
@@ -97,11 +135,16 @@ export default function MyEventsPage({ submittedEvents, submitted = false, sugge
 
       <MyEventsSectionHeader
         title="Dodaję"
-        count={submittedEvents.length}
-        countLabel={pluralSubmissions(submittedEvents.length)}
+        count={submittedEvents.length + changeSuggestions.length}
+        countLabel={dodajeCountLabel(submittedEvents.length, changeSuggestions.length)}
         id="dodaje"
       >
-        <FanEventsTable events={submittedEvents} submitted={submitted} suggestionSubmitted={suggestionSubmitted} />
+        <FanEventsTable
+          events={submittedEvents}
+          suggestions={changeSuggestions}
+          submitted={submitted}
+          suggestionSubmitted={suggestionSubmitted}
+        />
       </MyEventsSectionHeader>
     </div>
   );

@@ -8,6 +8,10 @@ export interface AdminChangeSuggestionListItem extends ChangeSuggestion {
   eventName: string;
 }
 
+export interface FanChangeSuggestionListItem extends ChangeSuggestion {
+  eventName: string;
+}
+
 type ChangeSuggestionWithEventRow = ChangeSuggestionRow & {
   events: { name: string } | { name: string }[] | null;
 };
@@ -35,6 +39,24 @@ export async function listChangeSuggestionsForAdmin(
   const response = await supabase
     .from("change_suggestions")
     .select("id, event_id, submitted_by, body, status, source, created_at, updated_at, events(name)")
+    .order("created_at", { ascending: false });
+
+  if (response.error) {
+    return { error: response.error.message };
+  }
+
+  const rows = (response.data as ChangeSuggestionWithEventRow[] | null) ?? [];
+  return { data: rows.map(mapAdminListRow) };
+}
+
+export async function listChangeSuggestionsForFan(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<ServiceResult<FanChangeSuggestionListItem[]>> {
+  const response = await supabase
+    .from("change_suggestions")
+    .select("id, event_id, submitted_by, body, status, source, created_at, updated_at, events(name)")
+    .eq("submitted_by", userId)
     .order("created_at", { ascending: false });
 
   if (response.error) {

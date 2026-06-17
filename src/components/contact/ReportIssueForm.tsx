@@ -148,18 +148,14 @@ export default function ReportIssueForm() {
       <ServerError message={serverError} />
 
       <p className={cn("text-xs leading-relaxed", shellTextMuted)}>
-        Administratorem danych z tego formularza jest Emilia Matrejek. Przetwarzamy Twój e-mail, opcjonalnie imię lub
-        nick oraz treść wiadomości wyłącznie po to, żeby odpowiedzieć na zgłoszenie (podstawa: prawnie uzasadniony
-        interes – art. 6 ust. 1 lit. f RODO). E-mail i treść są <strong className="text-foreground/80">wymagane</strong>{" "}
-        do wysłania formularza; imię lub nick jest dobrowolne. Wiadomość nie trafia do bazy Serwisu – jest wysyłana na
-        skrzynkę Administratora. Więcej informacji:{" "}
+        Warunki przetwarzania Twoich danych osobowych znajdziesz w{" "}
         <a
           href={PRIVACY_POLICY_PATH}
           target="_blank"
           rel="noopener noreferrer"
           className="text-primary hover:text-accent underline"
         >
-          Polityka prywatności
+          Polityce prywatności
         </a>
         .
       </p>

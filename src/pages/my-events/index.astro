@@ -4,6 +4,7 @@ import MyEventsPage from "@/components/fan/MyEventsPage";
 import Layout from "@/layouts/Layout.astro";
 import type { Event } from "@/types";
 import { listEventsByCreator } from "@/lib/services/events";
+import { listChangeSuggestionsForFan } from "@/lib/services/change-suggestions";
 import { shellHeading, shellTextMuted } from "@/lib/shell-styles";
 import { createClient } from "@/lib/supabase";
 
@@ -15,8 +16,21 @@ const suggestionSubmitted = Astro.url.searchParams.get("suggestionSubmitted") ==
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 const listResult = supabase && user ? await listEventsByCreator(supabase, user.id) : { data: [] as Event[] };
+const suggestionsResult = supabase && user ? await listChangeSuggestionsForFan(supabase, user.id) : { data: [] };
 const submittedEvents: Event[] = "data" in listResult ? listResult.data : [];
+const changeSuggestions =
+  "data" in suggestionsResult
+    ? suggestionsResult.data.map((suggestion) => ({
+        id: suggestion.id,
+        eventId: suggestion.eventId,
+        eventName: suggestion.eventName,
+        body: suggestion.body,
+        status: suggestion.status,
+        createdAt: suggestion.createdAt,
+      }))
+    : [];
 const listError = "error" in listResult ? listResult.error : null;
+const suggestionsError = "error" in suggestionsResult ? suggestionsResult.error : null;
 ---
 
 <Layout title="Moje eventy">
@@ -30,6 +44,14 @@ const listError = "error" in listResult ? listResult.error : null;
         ) : null
       }
 
+      {
+        suggestionsError ? (
+          <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+            {suggestionsError}
+          </p>
+        ) : null
+      }
+
       <div class="mb-10">
         <h1 class:list={shellHeading}>Moje eventy</h1>
         <p class:list={["mt-1 text-sm", shellTextMuted]}>
@@ -39,6 +61,7 @@ const listError = "error" in listResult ? listResult.error : null;
 
       <MyEventsPage
         submittedEvents={submittedEvents}
+        changeSuggestions={changeSuggestions}
         submitted={submitted}
         suggestionSubmitted={suggestionSubmitted}
         client:load

@@ -1,20 +1,30 @@
 import { useState } from "react";
 import { readApiError } from "@/lib/api/json";
 import { Button } from "@/components/ui/button";
+import { ADMIN_PATH } from "@/lib/routes";
 import { shellBtnOutline } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 
 interface Props {
   suggestionId: string;
+  eventId: string;
   status: "pending" | "accepted" | "rejected";
 }
 
-export default function ChangeSuggestionActions({ suggestionId, status }: Props) {
+export default function ChangeSuggestionActions({ suggestionId, eventId, status }: Props) {
   const [busy, setBusy] = useState<"accepted" | "rejected" | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  const editHref = `${ADMIN_PATH}/events/${eventId}/edit`;
+
   if (status !== "pending") {
-    return <span className={cn("text-xs", "text-muted-foreground")}>–</span>;
+    return (
+      <div className="flex justify-end">
+        <Button asChild variant="outline" size="sm" className={shellBtnOutline}>
+          <a href={editHref}>Edytuj wydarzenie</a>
+        </Button>
+      </div>
+    );
   }
 
   async function patchStatus(nextStatus: "accepted" | "rejected") {
@@ -47,7 +57,10 @@ export default function ChangeSuggestionActions({ suggestionId, status }: Props)
   return (
     <div className="flex flex-col items-end gap-1">
       {error ? <span className="text-xs text-red-300">{error}</span> : null}
-      <div className="flex justify-end gap-2">
+      <div className="flex flex-wrap justify-end gap-2">
+        <Button asChild variant="outline" size="sm" className={shellBtnOutline}>
+          <a href={editHref}>Edytuj wydarzenie</a>
+        </Button>
         <Button
           type="button"
           variant="outline"
