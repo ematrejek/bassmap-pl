@@ -2,12 +2,12 @@
  * Supabase test client factories for integration tests.
  *
  * Required environment variables (copy from `npx supabase status --output json`):
- * - SUPABASE_URL — local default http://127.0.0.1:54321
- * - SUPABASE_KEY — anon public key (same as app `.env` / `.dev.vars`)
- * - SUPABASE_SERVICE_ROLE_KEY — service_role secret (fixture insert/delete only)
+ * - SUPABASE_URL – local default http://127.0.0.1:54321
+ * - SUPABASE_KEY – anon public key (same as app `.env` / `.dev.vars`)
+ * - SUPABASE_SERVICE_ROLE_KEY – service_role secret (fixture insert/delete only)
  *
  * Put values in `.env.test`, `.env`, or export in your shell before `npm test`.
- * Integration tests run only against local Supabase (127.0.0.1 / localhost) — never production.
+ * Integration tests run only against local Supabase (127.0.0.1 / localhost) – never production.
  * Integration suites should use `describe.skipIf(!isSupabaseConfigured())` and
  * call `logSkipIfNotConfigured()` once so missing env exits 0 with a warning.
  * Requires migration 20260611140000_fix_is_admin_use_uid.sql applied locally for admin tests.
@@ -15,7 +15,7 @@
 
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
-/** Shared with `scripts/ci-supabase-test.sh` (imported via Node) — do not change without updating CI grep. */
+/** Shared with `scripts/ci-supabase-test.sh` (imported via Node) – do not change without updating CI grep. */
 export const INTEGRATION_SKIP_WARNING_PREFIX = "Integration tests skipped";
 
 const INTEGRATION_ADMIN_EMAIL = "integration-fan-read-admin@example.com";
