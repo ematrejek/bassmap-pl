@@ -438,8 +438,8 @@ RLS sugestii, integracja z CI, aktualizacja dokumentów prawnych i `public-roadm
 
 #### Automated
 
-- [x] 2.1 `npm run test` – nowe testy unit similarity przechodzą — 523e916
-- [x] 2.2 `npm run lint` i `npm run build` przechodzą — 523e916
+- [x] 2.1 `npm run test` – nowe testy unit similarity przechodzą – 523e916
+- [x] 2.2 `npm run lint` i `npm run build` przechodzą – 523e916
 
 #### Manual
 
@@ -461,7 +461,7 @@ RLS sugestii, integracja z CI, aktualizacja dokumentów prawnych i `public-roadm
 
 #### Automated
 
-- [x] 4.1 `npm run lint` i `npm run build` przechodzą — 5a2d81e
+- [x] 4.1 `npm run lint` i `npm run build` przechodzą – 5a2d81e
 
 #### Manual
 
