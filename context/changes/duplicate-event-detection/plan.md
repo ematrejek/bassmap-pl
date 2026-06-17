@@ -461,7 +461,7 @@ RLS sugestii, integracja z CI, aktualizacja dokumentów prawnych i `public-roadm
 
 #### Automated
 
-- [ ] 4.1 `npm run lint` i `npm run build` przechodzą
+- [x] 4.1 `npm run lint` i `npm run build` przechodzą
 
 #### Manual
 

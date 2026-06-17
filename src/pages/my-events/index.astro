@@ -11,6 +11,7 @@ export const prerender = false;
 
 const { user } = Astro.locals;
 const submitted = Astro.url.searchParams.get("submitted") === "1";
+const suggestionSubmitted = Astro.url.searchParams.get("suggestionSubmitted") === "1";
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 const listResult = supabase && user ? await listEventsByCreator(supabase, user.id) : { data: [] as Event[] };
@@ -36,7 +37,12 @@ const listError = "error" in listResult ? listResult.error : null;
         </p>
       </div>
 
-      <MyEventsPage submittedEvents={submittedEvents} submitted={submitted} client:load />
+      <MyEventsPage
+        submittedEvents={submittedEvents}
+        submitted={submitted}
+        suggestionSubmitted={suggestionSubmitted}
+        client:load
+      />
     </div>
   </AppShell>
 </Layout>

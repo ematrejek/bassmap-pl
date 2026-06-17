@@ -2,7 +2,9 @@
 import Layout from "@/layouts/Layout.astro";
 import AppShell from "@/components/shell/AppShell.astro";
 import AdminEventsTable from "@/components/admin/AdminEventsTable";
+import ChangeSuggestionsTable, { type ChangeSuggestionTableRow } from "@/components/admin/ChangeSuggestionsTable";
 import { resolveSubmitterProfiles } from "@/lib/auth/submitter-profile";
+import { listChangeSuggestionsForAdmin, type AdminChangeSuggestionListItem } from "@/lib/services/change-suggestions";
 import { listEventsForAdmin } from "@/lib/services/events";
 import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
 import { ADMIN_PATH } from "@/lib/routes";
@@ -15,7 +17,10 @@ export const prerender = false;
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 const listResult = supabase ? await listEventsForAdmin(supabase) : { data: [] };
+const suggestionsResult = supabase ? await listChangeSuggestionsForAdmin(supabase) : { data: [] };
 const rawEvents: Event[] = "data" in listResult ? listResult.data : [];
+const rawSuggestions: AdminChangeSuggestionListItem[] = "data" in suggestionsResult ? suggestionsResult.data : [];
+const suggestionsError = "error" in suggestionsResult ? suggestionsResult.error : null;
 const supabaseUrl = SUPABASE_URL ?? "";
 
 function isFanSubmission(event: Event): boolean {
@@ -29,6 +34,25 @@ const otherEvents = rawEvents.filter((event) => !isFanSubmission(event));
 
 const submitterIds = fanPending.map((event) => event.createdBy).filter((id): id is string => id !== null);
 const submitterProfiles = await resolveSubmitterProfiles(submitterIds);
+
+const suggestionSubmitterIds = rawSuggestions.map((item) => item.submittedBy);
+const suggestionSubmitterProfiles = await resolveSubmitterProfiles(suggestionSubmitterIds);
+
+function toSuggestionRow(suggestion: AdminChangeSuggestionListItem): ChangeSuggestionTableRow {
+  const profile = suggestionSubmitterProfiles.get(suggestion.submittedBy);
+  return {
+    id: suggestion.id,
+    eventId: suggestion.eventId,
+    eventName: suggestion.eventName,
+    body: suggestion.body,
+    status: suggestion.status,
+    createdAt: suggestion.createdAt,
+    submitterEmail: profile?.email ?? null,
+    submitterLogin: profile?.login ?? null,
+  };
+}
+
+const suggestionRows = rawSuggestions.map(toSuggestionRow);
 
 function toAdminRow(event: Event, withSubmitter: boolean): AdminEventRow {
   const base = supabaseUrl
@@ -77,6 +101,23 @@ const listError = "error" in listResult ? listResult.error : null;
           Dodaj wydarzenie
         </a>
       </div>
+
+      <section class="mb-12">
+        <div class="mb-4">
+          <h2 class="font-heading text-foreground text-xl font-bold tracking-tight uppercase">Sugestie zmian</h2>
+          <p class:list={["mt-1 text-sm", shellTextMuted]}>
+            Propozycje korekt od fanów – niezależnie od kolejki nowych zgłoszeń.
+          </p>
+        </div>
+        {
+          suggestionsError ? (
+            <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+              {suggestionsError}
+            </p>
+          ) : null
+        }
+        <ChangeSuggestionsTable suggestions={suggestionRows} emptyMessage="Brak sugestii zmian." client:load />
+      </section>
 
       <section class="mb-12">
         <div class="mb-4">

@@ -17,7 +17,8 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { toDatetimeLocalValue } from "@/lib/events/format";
+import { formatEventDate, toDatetimeLocalValue } from "@/lib/events/format";
+import type { SimilarEventMatch } from "@/lib/events/similarity";
 import { parseEventCreate, parseEventUpdate } from "@/lib/events/schema";
 import { TERMS_PATH } from "@/lib/legal/paths";
 import {
@@ -118,6 +119,13 @@ async function uploadCoverFile(
   return { ok: true };
 }
 
+function deriveCheckSimilarUrl(submitUrl: string): string | undefined {
+  if (!submitUrl.endsWith("/events")) {
+    return undefined;
+  }
+  return submitUrl.replace(/\/events$/, "/events/check-similar");
+}
+
 function coverUploadUrlFor(eventId: string, variant: "admin" | "fan"): string {
   return variant === "fan" ? `/api/fan/events/${eventId}/cover` : `/api/admin/events/${eventId}/cover`;
 }
@@ -130,6 +138,7 @@ interface Props {
   mode: "create" | "edit";
   variant?: "admin" | "fan";
   submitUrl?: string;
+  checkSimilarUrl?: string;
   successRedirect?: string;
   showCoverUpload?: boolean;
   initialEvent?: Event;
@@ -141,6 +150,7 @@ export default function EventForm({
   mode,
   variant = "admin",
   submitUrl,
+  checkSimilarUrl: checkSimilarUrlProp,
   successRedirect,
   showCoverUpload: showCoverUploadProp,
   initialEvent,
@@ -149,6 +159,7 @@ export default function EventForm({
 }: Props) {
   const showCoverUpload = showCoverUploadProp ?? variant !== "fan";
   const createSubmitUrl = submitUrl ?? "/api/admin/events";
+  const checkSimilarUrl = checkSimilarUrlProp ?? deriveCheckSimilarUrl(createSubmitUrl);
   const createSuccessRedirect = successRedirect ?? "/admin";
   const initialMode = inferLocationMode(initialEvent);
 
@@ -191,6 +202,12 @@ export default function EventForm({
   const [coverSourceError, setCoverSourceError] = useState<string | null>(null);
   const [coverDeclarationError, setCoverDeclarationError] = useState<string | null>(null);
   const [coverWithoutDeclarationDialogOpen, setCoverWithoutDeclarationDialogOpen] = useState(false);
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
+  const [suggestionDialogOpen, setSuggestionDialogOpen] = useState(false);
+  const [similarMatches, setSimilarMatches] = useState<SimilarEventMatch[]>([]);
+  const [suggestionBody, setSuggestionBody] = useState("");
+  const [suggestionSubmitting, setSuggestionSubmitting] = useState(false);
+  const [suggestionError, setSuggestionError] = useState<string | null>(null);
   const localPreviewUrlRef = useRef<string | null>(null);
   const coverAuditSectionRef = useRef<HTMLDivElement>(null);
 
@@ -303,6 +320,92 @@ export default function EventForm({
 
   const showRemoveCoverButton =
     !removeCover && (coverFile !== null || (mode === "edit" && (initialEvent?.coverPath ?? null) !== null));
+
+  async function submitAfterValidation(options?: { skipCoverUpload?: boolean; skipSimilarCheck?: boolean }) {
+    if (mode === "create" && checkSimilarUrl && !options?.skipSimilarCheck) {
+      const body = buildBody();
+
+      try {
+        const checkResponse = await fetch(checkSimilarUrl, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          credentials: "include",
+          body: JSON.stringify(body),
+        });
+
+        const checkData: unknown = await checkResponse.json();
+
+        if (!checkResponse.ok) {
+          setServerError(readApiError(checkData) ?? "Nie udało się sprawdzić podobnych wydarzeń");
+          return;
+        }
+
+        const rawMatches = (checkData as { matches?: unknown }).matches;
+        const matches = Array.isArray(rawMatches) ? (rawMatches as SimilarEventMatch[]) : [];
+
+        if (matches.length > 0) {
+          setSimilarMatches(matches);
+          setDuplicateDialogOpen(true);
+          return;
+        }
+      } catch {
+        setServerError("Nie udało się sprawdzić podobnych wydarzeń. Spróbuj ponownie.");
+        return;
+      }
+    }
+
+    await performSubmit(options);
+  }
+
+  async function handleSubmitDespiteDuplicate() {
+    setDuplicateDialogOpen(false);
+    await performSubmit();
+  }
+
+  function openSuggestionDialog() {
+    setDuplicateDialogOpen(false);
+    setSuggestionBody("");
+    setSuggestionError(null);
+    setSuggestionDialogOpen(true);
+  }
+
+  async function handleSubmitSuggestion() {
+    const primaryMatch = similarMatches.at(0);
+    if (!primaryMatch) {
+      return;
+    }
+
+    const trimmed = suggestionBody.trim();
+    if (trimmed.length < 10) {
+      setSuggestionError("Sugestia musi mieć co najmniej 10 znaków");
+      return;
+    }
+
+    setSuggestionSubmitting(true);
+    setSuggestionError(null);
+
+    try {
+      const response = await fetch("/api/fan/change-suggestions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ eventId: primaryMatch.id, body: trimmed }),
+      });
+
+      const data: unknown = await response.json();
+
+      if (!response.ok) {
+        setSuggestionError(readApiError(data) ?? "Nie udało się wysłać sugestii");
+        setSuggestionSubmitting(false);
+        return;
+      }
+
+      window.location.href = `${MY_EVENTS_PATH}?suggestionSubmitted=1#dodaje`;
+    } catch {
+      setSuggestionError("Nie udało się wysłać sugestii. Spróbuj ponownie.");
+      setSuggestionSubmitting(false);
+    }
+  }
 
   async function performSubmit(options?: { skipCoverUpload?: boolean }) {
     const body = buildBody();
@@ -445,7 +548,7 @@ export default function EventForm({
   async function handleContinueWithoutCover() {
     setCoverWithoutDeclarationDialogOpen(false);
     clearSelectedCoverFile();
-    await performSubmit({ skipCoverUpload: true });
+    await submitAfterValidation({ skipCoverUpload: true });
   }
 
   async function handleSubmit(e: React.SubmitEvent<HTMLFormElement>) {
@@ -460,8 +563,16 @@ export default function EventForm({
       return;
     }
 
-    await performSubmit();
+    await submitAfterValidation();
   }
+
+  const primarySimilarMatch = similarMatches.at(0) ?? null;
+  const similarEventHref =
+    primarySimilarMatch && variant === "fan"
+      ? `/events/${primarySimilarMatch.id}`
+      : primarySimilarMatch
+        ? `/admin/events/${primarySimilarMatch.id}/edit`
+        : null;
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6" noValidate>
@@ -1093,6 +1204,121 @@ export default function EventForm({
               }}
             >
               Tak
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={duplicateDialogOpen}
+        onOpenChange={(open) => {
+          setDuplicateDialogOpen(open);
+          if (!open) {
+            setSimilarMatches([]);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Podobne wydarzenie już istnieje</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-3 text-sm">
+                {primarySimilarMatch ? (
+                  <p>
+                    Znaleźliśmy wpis: <strong>{primarySimilarMatch.name}</strong>,{" "}
+                    {formatEventDate(primarySimilarMatch.startsAt)}, {primarySimilarMatch.city}.
+                    {similarMatches.length > 1 ? ` (i ${String(similarMatches.length - 1)} innych podobnych)` : null}
+                  </p>
+                ) : (
+                  <p>Znaleźliśmy podobne wydarzenie w katalogu.</p>
+                )}
+                {similarEventHref ? (
+                  <p>
+                    <a href={similarEventHref} className="text-primary underline-offset-2 hover:underline">
+                      Zobacz istniejące wydarzenie
+                    </a>
+                  </p>
+                ) : null}
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter className="flex-col gap-2 sm:flex-row sm:flex-wrap sm:justify-end">
+            <AlertDialogCancel className="border-white/20 bg-transparent text-white hover:bg-white/10">
+              Anuluj
+            </AlertDialogCancel>
+            {variant === "fan" ? (
+              <Button type="button" variant="outline" className={shellBtnOutline} onClick={openSuggestionDialog}>
+                Zasugeruj zmiany
+              </Button>
+            ) : similarEventHref ? (
+              <Button type="button" variant="outline" className={shellBtnOutline} asChild>
+                <a href={similarEventHref}>Wprowadź zmiany</a>
+              </Button>
+            ) : null}
+            <AlertDialogAction
+              className={shellBtnPrimary}
+              onClick={(e) => {
+                e.preventDefault();
+                void handleSubmitDespiteDuplicate();
+              }}
+            >
+              {variant === "fan" ? "Wyślij mimo to" : "Dodaj mimo to"}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      <AlertDialog
+        open={suggestionDialogOpen}
+        onOpenChange={(open) => {
+          setSuggestionDialogOpen(open);
+          if (!open) {
+            setSuggestionBody("");
+            setSuggestionError(null);
+          }
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Zasugeruj zmiany</AlertDialogTitle>
+            <AlertDialogDescription asChild>
+              <div className="space-y-3">
+                <p className="text-sm">
+                  Opisz, co powinno się zmienić w istniejącym wydarzeniu. Admin przejrzy sugestię przed publikacją.
+                </p>
+                <div className="space-y-2">
+                  <Label htmlFor="suggestion-body" className="text-foreground/90">
+                    Twoja sugestia
+                  </Label>
+                  <Textarea
+                    id="suggestion-body"
+                    value={suggestionBody}
+                    onChange={(e) => {
+                      setSuggestionBody(e.target.value);
+                    }}
+                    rows={5}
+                    maxLength={2000}
+                    placeholder="Np. To samo wydarzenie – proszę poprawić godzinę startu na 22:00."
+                    className={fieldClass}
+                  />
+                </div>
+                {suggestionError ? <p className="text-sm text-red-300">{suggestionError}</p> : null}
+              </div>
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel className="border-white/20 bg-transparent text-white hover:bg-white/10">
+              Anuluj
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className={shellBtnPrimary}
+              disabled={suggestionSubmitting}
+              onClick={(e) => {
+                e.preventDefault();
+                void handleSubmitSuggestion();
+              }}
+            >
+              {suggestionSubmitting ? "Wysyłanie…" : "Wyślij sugestię"}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

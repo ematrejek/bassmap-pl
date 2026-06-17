@@ -8,9 +8,9 @@ import { cn } from "@/lib/utils";
 import type { Event } from "@/types";
 
 interface Props {
-  /** Zgłoszenia własne (Dodaję) – z bazy. */
   submittedEvents: Event[];
   submitted?: boolean;
+  suggestionSubmitted?: boolean;
 }
 
 function pluralEvents(count: number): string {
@@ -48,7 +48,7 @@ function EmptyAttendingPanel({ message }: { message: string }) {
   );
 }
 
-export default function MyEventsPage({ submittedEvents, submitted = false }: Props) {
+export default function MyEventsPage({ submittedEvents, submitted = false, suggestionSubmitted = false }: Props) {
   // Placeholder – slice «Idę» / «Obserwuję» (RSVP) w przyszłości.
   const goingEvents: Event[] = [];
   const watchingEvents: Event[] = [];
@@ -101,7 +101,7 @@ export default function MyEventsPage({ submittedEvents, submitted = false }: Pro
         countLabel={pluralSubmissions(submittedEvents.length)}
         id="dodaje"
       >
-        <FanEventsTable events={submittedEvents} submitted={submitted} />
+        <FanEventsTable events={submittedEvents} submitted={submitted} suggestionSubmitted={suggestionSubmitted} />
       </MyEventsSectionHeader>
     </div>
   );

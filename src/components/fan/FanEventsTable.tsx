@@ -9,12 +9,18 @@ import type { Event } from "@/types";
 interface Props {
   events: Event[];
   submitted?: boolean;
+  suggestionSubmitted?: boolean;
 }
 
-export default function FanEventsTable({ events, submitted = false }: Props) {
+export default function FanEventsTable({ events, submitted = false, suggestionSubmitted = false }: Props) {
   if (events.length === 0) {
     return (
       <div className="space-y-4">
+        {suggestionSubmitted ? (
+          <p className="border-neon-green/30 bg-neon-green/10 text-foreground rounded-lg border px-4 py-3 text-sm">
+            Sugestia wysłana do moderacji.
+          </p>
+        ) : null}
         {submitted ? (
           <p className="border-neon-green/30 bg-neon-green/10 text-foreground rounded-lg border px-4 py-3 text-sm">
             Wysłano do moderacji. Twoje zgłoszenie pojawi się na liście poniżej ze statusem „Oczekuje”.
@@ -29,6 +35,11 @@ export default function FanEventsTable({ events, submitted = false }: Props) {
 
   return (
     <div className="space-y-4">
+      {suggestionSubmitted ? (
+        <p className="border-neon-green/30 bg-neon-green/10 text-foreground rounded-lg border px-4 py-3 text-sm">
+          Sugestia wysłana do moderacji.
+        </p>
+      ) : null}
       {submitted ? (
         <p className="border-neon-green/30 bg-neon-green/10 text-foreground rounded-lg border px-4 py-3 text-sm">
           Wysłano do moderacji. Status zgłoszenia zobaczysz w tabeli poniżej.
