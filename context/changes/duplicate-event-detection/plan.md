@@ -425,21 +425,21 @@ RLS sugestii, integracja z CI, aktualizacja dokumentów prawnych i `public-roadm
 
 #### Automated
 
-- [x] 1.1 Migracja stosuje się lokalnie: `npx supabase db reset` (lub `migration up`) bez błędów
-- [x] 1.2 `npm run lint` przechodzi po dodaniu typów
-- [x] 1.3 `npm run build` przechodzi
+- [x] 1.1 Migracja stosuje się lokalnie: `npx supabase db reset` (lub `migration up`) bez błędów – 838dcfa
+- [x] 1.2 `npm run lint` przechodzi po dodaniu typów – 838dcfa
+- [x] 1.3 `npm run build` przechodzi – 838dcfa
 
 #### Manual
 
-- [x] 1.4 W Supabase Studio widać tabelę `change_suggestions` i extension `pg_trgm`
+- [x] 1.4 W Supabase Studio widać tabelę `change_suggestions` i extension `pg_trgm` – 838dcfa
 - [ ] 1.5 RLS: anon nie może INSERT; fan może INSERT własny; admin widzi wszystkie
 
 ### Phase 2: Serwis podobieństwa
 
 #### Automated
 
-- [ ] 2.1 `npm run test` – nowe testy unit similarity przechodzą
-- [ ] 2.2 `npm run lint` i `npm run build` przechodzą
+- [x] 2.1 `npm run test` – nowe testy unit similarity przechodzą — 523e916
+- [x] 2.2 `npm run lint` i `npm run build` przechodzą — 523e916
 
 #### Manual
 
@@ -449,8 +449,8 @@ RLS sugestii, integracja z CI, aktualizacja dokumentów prawnych i `public-roadm
 
 #### Automated
 
-- [ ] 3.1 `npm run test` – testy API przechodzą
-- [ ] 3.2 `npm run lint` i `npm run build` przechodzą
+- [x] 3.1 `npm run test` – testy API przechodzą
+- [x] 3.2 `npm run lint` i `npm run build` przechodzą
 
 #### Manual
 
