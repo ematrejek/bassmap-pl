@@ -168,3 +168,19 @@ export interface EventInsert {
 }
 
 export type EventUpdate = Partial<EventInsert>;
+
+export type ChangeSuggestionStatus = "pending" | "accepted" | "rejected";
+
+/** Where the suggestion was submitted from (duplicate_flow = S-13; event_page = S-14). */
+export type ChangeSuggestionSource = "duplicate_flow" | "event_page";
+
+export interface ChangeSuggestion {
+  id: string;
+  eventId: string;
+  submittedBy: string;
+  body: string;
+  status: ChangeSuggestionStatus;
+  source: ChangeSuggestionSource;
+  createdAt: string;
+  updatedAt: string;
+}
