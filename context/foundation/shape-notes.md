@@ -11,18 +11,18 @@ checkpoint:
 
 ## Vision & Problem Statement
 
-BassMap PL is the first centralized search engine for drum'n'bass events in Poland. The problem: DnB fans in Poland have no single source of truth for upcoming events. They must manually check Facebook, Instagram, friends, and partial ticketing portals (Biletomat, Muno) — each of which covers a different slice of the scene. Even when events are listed somewhere, fans cannot easily find artists they like. Existing platforms (Resident Advisor, Shotgun, Dice) focus on techno and international events; the Polish DnB scene is niche enough to be ignored by big platforms, yet large enough to sustain a dedicated portal. Facebook events are ephemeral and hard to aggregate. The insight: no one has built this for DnB in Poland specifically — and that is the gap BassMap fills.
+BassMap PL is the first centralized search engine for drum'n'bass events in Poland. The problem: DnB fans in Poland have no single source of truth for upcoming events. They must manually check Facebook, Instagram, friends, and partial ticketing portals (Biletomat, Muno) \u2013 each of which covers a different slice of the scene. Even when events are listed somewhere, fans cannot easily find artists they like. Existing platforms (Resident Advisor, Shotgun, Dice) focus on techno and international events; the Polish DnB scene is niche enough to be ignored by big platforms, yet large enough to sustain a dedicated portal. Facebook events are ephemeral and hard to aggregate. The insight: no one has built this for DnB in Poland specifically \u2013 and that is the gap BassMap fills.
 
 ## User & Persona
 
-**Primary persona**: DnB fan in Poland. They want to find upcoming DnB events near them, discover events by subgenre from a fixed DnB catalog (25 values — see PRD §Business Logic), and see full event details (venue, lineup, ticket link, price) — all in one place, in Polish, without having to hunt across social media.
+**Primary persona**: DnB fan in Poland. They want to find upcoming DnB events near them, discover events by subgenre from a fixed DnB catalog (25 values \u2013 see PRD §Business Logic), and see full event details (venue, lineup, ticket link, price) \u2013 all in one place, in Polish, without having to hunt across social media.
 
 ## Access Control
 
-- **Anonymous fan**: full read access — no login required to browse events, filter, or view event details.
-- **Fan (optional account)**: creates an account to access future extras (favorites, notifications). Account creation is optional — all core browsing is public.
+- **Anonymous fan**: full read access \u2013 no login required to browse events, filter, or view event details.
+- **Fan (optional account)**: creates an account to access future extras (favorites, notifications). Account creation is optional \u2013 all core browsing is public.
 - **Organizer**: submits events for admin review. _Note: organizer self-service is post-MVP (v2). In MVP, only admins add events._
-- **Admin**: full write access — adds, edits, and removes events directly.
+- **Admin**: full write access \u2013 adds, edits, and removes events directly.
 
 Auth model: optional login (email + password or OAuth). Browsing is fully public.
 
@@ -39,7 +39,7 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
 ### Guardrails
 
-- Event dates and locations must be accurate — wrong info is worse than no info.
+- Event dates and locations must be accurate \u2013 wrong info is worse than no info.
 - Admin approval gate must hold: no unverified event is publicly visible.
 
 ## Functional Requirements
@@ -60,7 +60,7 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
 - FR-004: Fan can view full event details (name, date, venue, lineup, ticket link, price). Priority: must-have
 
-  > Socrates: Counter-argument considered: "lineup may not be available at submission time." Resolution: kept; lineup field is optional — event can be published without a complete lineup.
+  > Socrates: Counter-argument considered: "lineup may not be available at submission time." Resolution: kept; lineup field is optional \u2013 event can be published without a complete lineup.
 
 - FR-005: Fan can view events on an interactive map of Poland. Priority: must-have
 
@@ -107,12 +107,12 @@ Supporting rules:
 
 ## Non-Goals
 
-- No organizer self-service portal in MVP — admin is the sole data entry point. Rationale: keeps data quality high at launch; organizer accounts are v2.
-- No fan accounts / personalization in MVP — browsing is fully anonymous. Rationale: reduces auth complexity for v1.
-- No music preview / artist audio samples — v2 feature.
-- No carpooling / crew-finding forum — v3 feature.
-- No affiliate or monetization features in MVP — booking.com links etc. are post-launch.
-- No events outside Poland in MVP — international events (nearby abroad, major European events) are v2+.
+- No organizer self-service portal in MVP \u2013 admin is the sole data entry point. Rationale: keeps data quality high at launch; organizer accounts are v2.
+- No fan accounts / personalization in MVP \u2013 browsing is fully anonymous. Rationale: reduces auth complexity for v1.
+- No music preview / artist audio samples \u2013 v2 feature.
+- No carpooling / crew-finding forum \u2013 v3 feature.
+- No affiliate or monetization features in MVP \u2013 booking.com links etc. are post-launch.
+- No events outside Poland in MVP \u2013 international events (nearby abroad, major European events) are v2+.
 
 ## Open Questions
 
@@ -120,4 +120,4 @@ _(none at close of shaping)_
 
 ## Forward: tech-stack
 
-_(no stack preferences captured — deferred to 10x-tech-stack-selector)_
+_(no stack preferences captured \u2013 deferred to 10x-tech-stack-selector)_

@@ -25,7 +25,7 @@ recommended_fixes: 3
 
 ## Summary
 
-**Health status: healthy** — Partia I (S-04…S-08, S-11) shipped to https://bassmap.pl. CI + Deploy green on PR #16 and #17 (2026-06-14). Primary remaining work is **housekeeping** (archive S-08, close issue #15) and **optional** dependency bumps — not blockers for Partia II (F-04).
+**Health status: healthy** \u2013 Partia I (S-04…S-08, S-11) shipped to https://bassmap.pl. CI + Deploy green on PR #16 and #17 (2026-06-14). Primary remaining work is **housekeeping** (archive S-08, close issue #15) and **optional** dependency bumps \u2013 not blockers for Partia II (F-04).
 
 ## Production & CI (2026-06-14)
 

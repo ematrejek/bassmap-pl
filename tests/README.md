@@ -1,6 +1,6 @@
 # Tests
 
-Integration tests need **local Supabase in Docker** — never production.
+Integration tests need **local Supabase in Docker** – never production.
 
 ## Setup
 
@@ -21,7 +21,7 @@ Integration tests need **local Supabase in Docker** — never production.
 
 Every push/PR to `main` runs full `npm test` in **CI**; push to `main` also
 runs tests in **Deploy** before production build. Workflows start local
-Supabase and call `scripts/ci-supabase-test.sh` — integration must run; a
+Supabase and call `scripts/ci-supabase-test.sh` – integration must run; a
 missing-env skip fails the job.
 
 Locally without Docker, `npm test` still passes (unit + smoke only; integration

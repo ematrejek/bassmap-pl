@@ -10,7 +10,7 @@ ALTER TABLE public.events
   ADD COLUMN currency public.event_currency;
 
 -- Heuristic migration from legacy text price (common admin/seed patterns).
--- Unmatched rows keep NULL price fields (fan sees "Cena do ustalenia") — not data loss on is_free/name/etc.
+-- Unmatched rows keep NULL price fields (fan sees "Cena do ustalenia") – not data loss on is_free/name/etc.
 
 UPDATE public.events
 SET

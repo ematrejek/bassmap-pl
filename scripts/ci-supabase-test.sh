@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # CI test runner: requires local Supabase env (SUPABASE_URL, SUPABASE_KEY,
-# SUPABASE_SERVICE_ROLE_KEY) — from the shell, from a workflow-written `.env.test`,
+# SUPABASE_SERVICE_ROLE_KEY) – from the shell, from a workflow-written `.env.test`,
 # or (locally only) auto-loaded from `.env.test` in the repo root.
 #
-# Local manual check for "missing env" errors: temporarily rename `.env.test` —
+# Local manual check for "missing env" errors: temporarily rename `.env.test` –
 # `unset` alone is not enough because this script reloads `.env.test` when present.
 set -euo pipefail
 
@@ -80,7 +80,7 @@ if [[ "${TEST_EXIT}" -ne 0 ]]; then
 fi
 
 if grep -q "${SKIP_WARNING}" "${OUTPUT_FILE}"; then
-  echo "ci-supabase-test: integration suites were skipped — CI requires a full integration run." >&2
+  echo "ci-supabase-test: integration suites were skipped – CI requires a full integration run." >&2
   echo "Ensure Supabase is running (supabase start) and env vars match 'supabase status -o env'." >&2
   exit 1
 fi

@@ -1,6 +1,6 @@
 -- S-17: audit columns for description consent (fan create) and cover copyright declarations.
 -- Invariant when cover_path is set: cover_source, cover_declaration_kind, cover_copyright_declared_at
--- must be NOT NULL — enforced in API on cover upload, not via DB CHECK (legacy rows may have cover without audit).
+-- must be NOT NULL – enforced in API on cover upload, not via DB CHECK (legacy rows may have cover without audit).
 
 ALTER TABLE public.events
   ADD COLUMN description_rights_accepted_at timestamptz NULL,

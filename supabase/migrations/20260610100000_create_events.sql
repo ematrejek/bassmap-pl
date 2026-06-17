@@ -1,4 +1,4 @@
--- F-01: Event data foundation — enums, events table, RLS, admin allowlist
+-- F-01: Event data foundation – enums, events table, RLS, admin allowlist
 
 -- ---------------------------------------------------------------------------
 -- Enums

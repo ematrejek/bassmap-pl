@@ -1,4 +1,4 @@
--- S-03: Event cover photos — cover_path column + public Storage bucket
+-- S-03: Event cover photos – cover_path column + public Storage bucket
 
 ALTER TABLE public.events
   ADD COLUMN cover_path text;

@@ -26,8 +26,8 @@
 
 **Context:** Copy UI, tytuły stron, komentarze w `src/`, dokumenty aktywnej zmiany.
 
-**Problem:** Długi myślnik em dash (U+2014, `—`) wygląda zbyt ciężko w polskim tekście i bywa niespójny między plikami.
+**Problem:** Długi myślnik em dash (U+2014, `\u2013`) wygląda zbyt ciężko w polskim tekście i bywa niespójny między plikami.
 
-**Rule:** Używaj wyłącznie **en dash** (U+2013, `–`, w JS/CSS `\u2013`). Nie używaj em dash w nowym kodzie ani copy. Przy edycji istniejących plików w `src/` zamieniaj `—` na `–`.
+**Rule:** Używaj wyłącznie **en dash** (U+2013, `–`, w JS/CSS `\u2013`). Nie używaj em dash w nowym kodzie ani copy. Przy edycji istniejących plików w `src/` zamieniaj `\u2013` na `–`.
 
 **Applies to:** `src/**`, `context/changes/**` (aktywne zmiany), teksty widoczne dla użytkownika.

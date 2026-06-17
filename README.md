@@ -33,7 +33,7 @@ cd 10x-astro-starter
 npm install
 ```
 
-3. Set up Supabase and configure environment variables — see [Supabase Configuration](#supabase-configuration) below.
+3. Set up Supabase and configure environment variables – see [Supabase Configuration](#supabase-configuration) below.
 
 4. Create a `.dev.vars` file for local Cloudflare dev secrets:
 
@@ -72,7 +72,7 @@ npm run dev
 
 ## Supabase Configuration
 
-This project uses [Supabase](https://supabase.com/) for authentication. Environment variables are declared via Astro's `astro:env` schema and are treated as **server-only secrets** — they are never exposed to the client.
+This project uses [Supabase](https://supabase.com/) for authentication. Environment variables are declared via Astro's `astro:env` schema and are treated as **server-only secrets** – they are never exposed to the client.
 
 ### First-time setup (local, no cloud project needed)
 
@@ -117,7 +117,7 @@ The local Studio UI is available at `http://localhost:54323`.
 npx supabase db reset
 ```
 
-Database schema lives in `supabase/migrations/`; sample DnB events and a dev admin allowlist entry are in `supabase/seed.sql`. The dev admin email (`matrejekemilia@gmail.com`) is seeded in both files for local INSERT testing — replace it with your own email if you use a different Supabase Auth account.
+Database schema lives in `supabase/migrations/`; sample DnB events and a dev admin allowlist entry are in `supabase/seed.sql`. The dev admin email (`matrejekemilia@gmail.com`) is seeded in both files for local INSERT testing – replace it with your own email if you use a different Supabase Auth account.
 
 ### Using a cloud Supabase project instead
 
@@ -183,10 +183,10 @@ Sekrety runtime Workera: `SUPABASE_URL`, `SUPABASE_KEY` (`npx wrangler secret pu
 
 ### Smoke test prod (skrót)
 
-- `/` — lista/mapа wydarzeń MVP
-- `/auth/signin` — logowanie; brak banneru Supabase
-- `/admin` — panel admina (tylko allowlist)
-- `/events/[id]` — szczegóły wydarzenia
+- `/` – lista/mapа wydarzeń MVP
+- `/auth/signin` – logowanie; brak banneru Supabase
+- `/admin` – panel admina (tylko allowlist)
+- `/events/[id]` – szczegóły wydarzenia
 
 ## CI
 
