@@ -12,6 +12,7 @@ const mockSuggestion = {
   eventId,
   submittedBy: mockUser.id,
   body: "Poprawcie godzinę startu na 22:00",
+  payload: null,
   status: "pending" as const,
   source: "duplicate_flow" as const,
   createdAt: "2026-06-17T10:00:00.000Z",

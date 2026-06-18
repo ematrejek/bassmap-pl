@@ -174,11 +174,37 @@ export type ChangeSuggestionStatus = "pending" | "accepted" | "rejected";
 /** Where the suggestion was submitted from (duplicate_flow = S-13; event_page = S-14). */
 export type ChangeSuggestionSource = "duplicate_flow" | "event_page";
 
+/** Partial event field updates for event_page suggestions (camelCase, same keys as EventUpdate). */
+export type ChangeSuggestionPayload = Partial<
+  Pick<
+    EventUpdate,
+    | "startsAt"
+    | "city"
+    | "venueName"
+    | "addressStreet"
+    | "addressNumber"
+    | "latitude"
+    | "longitude"
+    | "description"
+    | "lineup"
+    | "ticketUrl"
+    | "isFree"
+    | "priceMode"
+    | "priceMin"
+    | "priceMax"
+    | "currency"
+  >
+> & {
+  locationMode?: "address" | "coordinates";
+};
+
 export interface ChangeSuggestion {
   id: string;
   eventId: string;
   submittedBy: string;
-  body: string;
+  /** Text comment; required for duplicate_flow, optional for event_page. */
+  body: string | null;
+  payload: ChangeSuggestionPayload | null;
   status: ChangeSuggestionStatus;
   source: ChangeSuggestionSource;
   createdAt: string;

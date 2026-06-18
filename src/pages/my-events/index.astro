@@ -24,7 +24,7 @@ const changeSuggestions =
         id: suggestion.id,
         eventId: suggestion.eventId,
         eventName: suggestion.eventName,
-        body: suggestion.body,
+        body: suggestion.body ?? "",
         status: suggestion.status,
         createdAt: suggestion.createdAt,
       }))

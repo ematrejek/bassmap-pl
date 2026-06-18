@@ -38,7 +38,7 @@ export async function listChangeSuggestionsForAdmin(
 ): Promise<ServiceResult<AdminChangeSuggestionListItem[]>> {
   const response = await supabase
     .from("change_suggestions")
-    .select("id, event_id, submitted_by, body, status, source, created_at, updated_at, events(name)")
+    .select("id, event_id, submitted_by, body, payload, status, source, created_at, updated_at, events(name)")
     .order("created_at", { ascending: false });
 
   if (response.error) {
@@ -55,7 +55,7 @@ export async function listChangeSuggestionsForFan(
 ): Promise<ServiceResult<FanChangeSuggestionListItem[]>> {
   const response = await supabase
     .from("change_suggestions")
-    .select("id, event_id, submitted_by, body, status, source, created_at, updated_at, events(name)")
+    .select("id, event_id, submitted_by, body, payload, status, source, created_at, updated_at, events(name)")
     .eq("submitted_by", userId)
     .order("created_at", { ascending: false });
 
@@ -74,6 +74,7 @@ export async function createFanChangeSuggestion(
 ): Promise<ServiceResult<ChangeSuggestion>> {
   const eligibleResponse = await supabase.rpc("event_eligible_for_suggestion", {
     p_event_id: input.eventId,
+    p_source: "duplicate_flow",
   });
 
   if (eligibleResponse.error) {
@@ -93,7 +94,7 @@ export async function createFanChangeSuggestion(
       status: "pending",
       source: "duplicate_flow",
     })
-    .select("id, event_id, submitted_by, body, status, source, created_at, updated_at")
+    .select("id, event_id, submitted_by, body, payload, status, source, created_at, updated_at")
     .single();
 
   if (response.error) {
@@ -127,7 +128,7 @@ export async function updateChangeSuggestionStatus(
     .from("change_suggestions")
     .update({ status })
     .eq("id", id)
-    .select("id, event_id, submitted_by, body, status, source, created_at, updated_at")
+    .select("id, event_id, submitted_by, body, payload, status, source, created_at, updated_at")
     .single();
 
   if (response.error) {

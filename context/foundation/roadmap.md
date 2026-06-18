@@ -50,7 +50,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-12 | fan-account-zone          | zalogowany fan ma zakładki profil, moje eventy, dodaj event, placeholdery, wyloguj          | F-04, S-10    | Access Control, notes 2026-06-13 | done        |
 | S-17 | event-content-copyright   | zgłaszający wybiera źródło okładki i składa wymagane oświadczenie praw autorskich           | S-12          | FR-025, notes 2026-06-15         | done        |
 | S-13 | duplicate-event-detection | system wykrywa podobne wydarzenie (nazwa/adres/data) i pokazuje właściwy komunikat          | S-12, S-17    | notes 2026-06-13                 | done        |
-| S-14 | change-suggestions        | fan/admin zgłasza sugestię zmian; admin ocenia w panelu „Sugestie zmian”                    | S-12, S-13    | notes 2026-06-13                 | proposed    |
+| S-14 | change-suggestions        | fan/admin zgłasza sugestię zmian; admin ocenia w panelu „Sugestie zmian”                    | S-12, S-13    | notes 2026-06-13                 | in progress |
 | S-15 | event-comments            | zalogowany fan komentuje wydarzenie; wszyscy czytają; admin usuwa komentarze                | S-12          | notes 2026-06-13                 | proposed    |
 | S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto; komentarze zostają jako „Usunięty użytkownik”      | S-12, S-15    | FR-022, NFR Privacy              | proposed    |
 
@@ -374,7 +374,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** \u2013
 - **Unknowns:** \u2013
 - **Risk:** Nakłada się z flow duplikatów (S-13) \u2013 jeden model danych „zgłoszenie użytkownika” może obsłużyć oba przypadki; **nie** nakłada się z moderacją nowych eventów (S-12).
-- **Status:** proposed
+- **Status:** planned \u2013 `context/changes/change-suggestions/plan.md` (2026-06-18)
 
 **FR (w PRD v2):**
 
@@ -441,7 +441,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-12       | fan-account-zone          | #24    | Strefa zalogowanego fana + nawigacja           | \u2013                     | Done \u2013 archived 2026-06-15; PR #29                 |
 | S-17       | event-content-copyright   | #30    | Prawa autorskie: źródło okładki + oświadczenia | \u2013                     | Done \u2013 archived 2026-06-16                         |
 | S-13       | duplicate-event-detection | #25    | Wykrywanie duplikatów wydarzeń                 | \u2013                     | Done \u2013 archived 2026-06-18                         |
-| S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                        | no                    | Partia II                                          |
+| S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                        | in progress           | Partia II · plan `context/changes/change-suggestions/` · phase 1 done |
 | S-15       | event-comments            | #27    | Komentarze pod wydarzeniami                    | no                    | Partia II                                          |
 | S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                     | no                    | Partia II \u2013 po S-15 (anonimizacja komentarzy)      |
 

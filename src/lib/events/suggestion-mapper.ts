@@ -1,10 +1,16 @@
-import type { ChangeSuggestion, ChangeSuggestionSource, ChangeSuggestionStatus } from "@/types";
+import type {
+  ChangeSuggestion,
+  ChangeSuggestionPayload,
+  ChangeSuggestionSource,
+  ChangeSuggestionStatus,
+} from "@/types";
 
 export interface ChangeSuggestionRow {
   id: string;
   event_id: string;
   submitted_by: string;
-  body: string;
+  body: string | null;
+  payload: ChangeSuggestionPayload | null;
   status: ChangeSuggestionStatus;
   source: ChangeSuggestionSource;
   created_at: string;
@@ -17,6 +23,7 @@ export function mapChangeSuggestionRow(row: ChangeSuggestionRow): ChangeSuggesti
     eventId: row.event_id,
     submittedBy: row.submitted_by,
     body: row.body,
+    payload: row.payload,
     status: row.status,
     source: row.source,
     createdAt: row.created_at,

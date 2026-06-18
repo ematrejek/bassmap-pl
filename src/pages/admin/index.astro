@@ -44,7 +44,7 @@ function toSuggestionRow(suggestion: AdminChangeSuggestionListItem): ChangeSugge
     id: suggestion.id,
     eventId: suggestion.eventId,
     eventName: suggestion.eventName,
-    body: suggestion.body,
+    body: suggestion.body ?? "",
     status: suggestion.status,
     createdAt: suggestion.createdAt,
     submitterEmail: profile?.email ?? null,
