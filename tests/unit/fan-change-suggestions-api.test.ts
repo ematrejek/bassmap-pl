@@ -27,6 +27,14 @@ vi.mock("@/lib/services/change-suggestions", () => ({
   createFanChangeSuggestion: vi.fn(() => Promise.resolve({ data: mockSuggestion })),
 }));
 
+const mockEventPageSuggestion = {
+  ...mockSuggestion,
+  id: "44444444-4444-4444-4444-444444444444",
+  body: null,
+  payload: { description: "Nowy opis wydarzenia" },
+  source: "event_page" as const,
+};
+
 const mockCreateFanChangeSuggestion = vi.mocked(createFanChangeSuggestion);
 
 function mockContext(locals: Partial<App.Locals>, body?: unknown): APIContext {
@@ -119,5 +127,73 @@ describe("POST /api/fan/change-suggestions", () => {
       source: "duplicate_flow",
       body: "Poprawcie godzinę startu na 22:00",
     });
+  });
+
+  it("returns 201 for valid event_page payload suggestion", async () => {
+    mockCreateFanChangeSuggestion.mockResolvedValueOnce({ data: mockEventPageSuggestion });
+
+    const response = await POST(
+      mockContext(
+        {
+          user: mockUser,
+          isAdmin: false,
+        },
+        {
+          eventId,
+          source: "event_page",
+          payload: { description: "Nowy opis wydarzenia" },
+        },
+      ),
+    );
+
+    expect(response.status).toBe(201);
+    await expect(response.json()).resolves.toEqual({ suggestion: mockEventPageSuggestion });
+    expect(mockCreateFanChangeSuggestion).toHaveBeenCalledWith(expect.anything(), mockUser.id, {
+      eventId,
+      source: "event_page",
+      payload: { description: "Nowy opis wydarzenia" },
+      body: undefined,
+    });
+  });
+
+  it("returns 400 when event_page payload is empty", async () => {
+    mockCreateFanChangeSuggestion.mockResolvedValueOnce({
+      error: "Wybierz co najmniej jedno pole do zmiany",
+    });
+
+    const response = await POST(
+      mockContext(
+        {
+          user: mockUser,
+          isAdmin: false,
+        },
+        {
+          eventId,
+          source: "event_page",
+          payload: {},
+        },
+      ),
+    );
+
+    expect(response.status).toBe(400);
+  });
+
+  it("returns 400 when event_page comment is too long", async () => {
+    const response = await POST(
+      mockContext(
+        {
+          user: mockUser,
+          isAdmin: false,
+        },
+        {
+          eventId,
+          source: "event_page",
+          payload: { description: "Nowy opis" },
+          body: "x".repeat(2001),
+        },
+      ),
+    );
+
+    expect(response.status).toBe(400);
   });
 });

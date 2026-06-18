@@ -422,9 +422,9 @@ RLS event_page, dokumenty prawne, homepage roadmap.
 
 #### Automated
 
-- [ ] 3.1 `tests/unit/fan-change-suggestions-api.test.ts` przechodzi
-- [ ] 3.2 `tests/unit/admin-change-suggestions-apply-api.test.ts` przechodzi
-- [ ] 3.3 `npm run lint` i `npm run build`
+- [x] 3.1 `tests/unit/fan-change-suggestions-api.test.ts` przechodzi
+- [x] 3.2 `tests/unit/admin-change-suggestions-apply-api.test.ts` przechodzi
+- [x] 3.3 `npm run lint` i `npm run build`
 
 #### Manual
 
