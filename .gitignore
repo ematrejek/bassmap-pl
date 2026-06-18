@@ -38,3 +38,6 @@ bassmap-pl-ui/
 bassmap-pl-ui (1)/
 *.docx
 *.docs
+
+# root-level legal scratch only (tracked references: context/legal/)
+/legal/

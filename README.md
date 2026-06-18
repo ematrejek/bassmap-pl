@@ -54,7 +54,10 @@ npm run dev
 - `npm run preview` - Preview production build
 - `npm run lint` - Run ESLint with type-checked rules
 - `npm run lint:fix` - Auto-fix ESLint issues
+- `npm run lint:all` - ESLint + em-dash check on docs
 - `npm run format` - Run Prettier
+- `npm test` - Vitest (see `tests/README.md` for Supabase setup)
+- `npm run test:ci` - Full test gate (same as CI; requires Docker + `.env.test`)
 
 ## Project Structure
 

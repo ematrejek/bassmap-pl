@@ -26,7 +26,8 @@ missing-env skip fails the job.
 
 Locally without Docker, `npm test` still passes (unit + smoke only; integration
 skipped with a warning). Use `npm run test:ci` to match the CI entry point when
-`.env.test` is configured.
+`.env.test` is configured. With `.env.test` present, `git push` runs the same
+gate via `.husky/pre-push`.
 
 Workflows: `.github/workflows/ci.yml`, `.github/workflows/deploy.yml`.
 

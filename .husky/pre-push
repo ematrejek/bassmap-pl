@@ -1,0 +1,4 @@
+# Full CI test gate when local Supabase env is configured.
+if [ -f .env.test ]; then
+  bash scripts/ci-supabase-test.sh || exit 1
+fi
