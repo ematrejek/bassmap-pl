@@ -30,11 +30,12 @@ Node.js v22.14.0 (@.nvmrc).
 - `npm run build` – production SSR build
 - `npm run preview` – preview production build
 - `npm run lint` / `npm run lint:fix` – ESLint strict type-checked (@eslint.config.js)
+- `npm run lint:all` – ESLint + em-dash check on docs (`scripts/check-no-em-dash.mjs`)
 - `npm run format` – Prettier with Astro + Tailwind plugins
+- `npm test` – Vitest (unit + integration when local Supabase is up; see @tests/README.md)
+- `npm run test:ci` – same entry point as CI (`scripts/ci-supabase-test.sh`; requires `.env.test` + `supabase start`)
 
-Pre-commit: husky + lint-staged (@package.json) – ESLint on `*.{ts,tsx,astro}`, Prettier on `*.{json,css,md}`.
-
-No test runner is configured yet.
+Pre-commit: husky + lint-staged (@package.json) – ESLint on `*.{ts,tsx,astro}`, Prettier on `*.{json,css,md}`. Pre-push: full test gate when `.env.test` exists (`.husky/pre-push`).
 
 ## Coding Style
 
@@ -42,7 +43,7 @@ TypeScript strict (Astro config). ESLint: `@typescript-eslint/strictTypeChecked`
 
 ## Commit & Pull Request Guidelines
 
-Commits use descriptive sentences (e.g. `Initial scaffold: BassMap PL from 10x-astro-starter.`). Before PR to `main`, run `npm run lint:all` and `npm run build`. CI: `.github/workflows/ci.yml` – needs `SUPABASE_URL` and `SUPABASE_KEY` as GitHub secrets.
+Commits use descriptive sentences (e.g. `Initial scaffold: BassMap PL from 10x-astro-starter.`). Before PR to `main`, run `npm run lint:all`, `npm run test:ci` (Docker + local Supabase), and `npm run build`. CI: `.github/workflows/ci.yml` – needs `SUPABASE_URL` and `SUPABASE_KEY` as GitHub secrets.
 
 ## Architecture
 

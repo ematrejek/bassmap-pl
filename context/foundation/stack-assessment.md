@@ -1,6 +1,6 @@
 ---
 project: BassMap PL
-assessed_at: 2026-06-12T00:00:00Z
+assessed_at: 2026-06-18T09:30:00Z
 agent_readiness: ready
 context_type: brownfield
 stack_components:
@@ -23,7 +23,7 @@ gates_failed: 0
 
 **Build tool \u2013 Vite 7 (bundled with Astro).** Tailwind CSS 4 integrated via `@tailwindcss/vite`. Cloudflare adapter (`@astrojs/cloudflare`) produces a Workers-compatible SSR bundle. Env secrets declared in `astro.config.mjs` `env.schema` (`SUPABASE_URL`, `SUPABASE_KEY`).
 
-**Test runner \u2013 Vitest 3.2.** Configured in `vitest.config.ts` with `tests/**/*.test.ts`, Node environment, path alias `@/*`, and serial execution (`fileParallelism: false`). CI runs `npm run test:ci` via `scripts/ci-supabase-test.sh` with local Supabase. 13 test files across unit, integration, and smoke suites.
+**Test runner \u2013 Vitest 3.2.** Configured in `vitest.config.ts` with `tests/**/*.test.ts`, Node environment, path alias `@/*`, and serial execution (`fileParallelism: false`). CI runs `npm run test:ci` via `scripts/ci-supabase-test.sh` with local Supabase. 28 test files, 147 tests across unit (17), integration (10), and smoke (1) suites.
 
 **Package manager \u2013 npm.** Lockfile: `package-lock.json`. Node.js v22.14.0 (`.nvmrc`).
 
@@ -136,4 +136,4 @@ No mandatory additions required \u2013 existing `CLAUDE.md` and `AGENTS.md` alre
 
 **Key gaps:** None at the quality-gate level. Operational watch items: Astro 6 SSR novelty and Docker-dependent integration tests.
 
-**Recommended next step:** `/10x-health-check` \u2013 dependency audit, security scan, CI/CD evaluation, and missing-configuration analysis focused on the watch items above.
+**Recommended next step:** Continue feature work; re-run `/10x-health-check` after major infra changes. Latest report: `context/foundation/health-check.md` (2026-06-18, healthy).

@@ -6,7 +6,7 @@
 >
 > Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
 >
-> Last updated: 2026-06-12
+> Last updated: 2026-06-18
 
 ## 1. Strategy
 
@@ -302,6 +302,20 @@ Not applicable \u2013 SSR pages, not static content build.
   `studio,imgproxy,edge-runtime,logflare,vector`
 - Local vs CI: integration skip allowed locally only; CI hard-fails
 
+**Post-rollout feature tests (not separate §3 phases):**
+
+- Duplicate / similar events: `tests/unit/event-similarity.test.ts`,
+  `tests/unit/fan-check-similar-api.test.ts`
+- Change suggestions: `tests/integration/change-suggestions-rls.test.ts`,
+  `tests/unit/fan-change-suggestions-api.test.ts`
+- Event covers / fan cover API: `tests/unit/cover-rights.test.ts`,
+  `tests/unit/event-covers.test.ts`, `tests/unit/fan-cover-api.test.ts`,
+  `tests/integration/event-cover-read.test.ts`
+- Fan event submit: `tests/integration/fan-event-submit.test.ts`
+- Admin allowlist privacy: `tests/integration/admin-allowlist-privacy.test.ts`
+
+Current totals (2026-06-18): 28 files, 147 tests. See `context/foundation/health-check.md`.
+
 ## 7. What We Deliberately Don't Test
 
 Exclusions agreed during the rollout (Phase 2 interview, Q5). Future
@@ -311,12 +325,13 @@ contributors should respect these unless the underlying assumption changes.
 
 ## 8. Freshness Ledger
 
-- Strategy (§1–§5) last reviewed: 2026-06-12
-- Stack versions last verified: 2026-06-12
+- Strategy (§1–§5) last reviewed: 2026-06-18
+- Stack versions last verified: 2026-06-18
 - AI-native tool references last verified: 2026-06-12
 - Rollout §3 Phases 1–2 archived: 2026-06-12
 - Rollout §3 Phase 3 shipped: 2026-06-12
 - Rollout §3 Phase 4 shipped: 2026-06-12
+- Post-rollout feature tests catalogued: 2026-06-18
 
 Refresh (`/10x-test-plan --refresh`) when:
 
