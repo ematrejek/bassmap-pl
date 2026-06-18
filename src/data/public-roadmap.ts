@@ -16,9 +16,4 @@ export interface PublicRoadmapItem {
   label: string;
 }
 
-export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
-  {
-    id: "duplicate-event-detection",
-    label: "Warnings when a similar event might already exist",
-  },
-];
+export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [];
