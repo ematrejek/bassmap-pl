@@ -103,6 +103,7 @@ describe.skipIf(!runIntegration)("change_suggestions (RLS + service)", () => {
 
     const ownResult = await createFanChangeSuggestion(nonAdminClient, user.id, {
       eventId,
+      source: "duplicate_flow",
       body: "Poprawcie godzinę startu na 22:00 w opisie wydarzenia",
     });
 
@@ -147,6 +148,7 @@ describe.skipIf(!runIntegration)("change_suggestions (RLS + service)", () => {
 
     const ownResult = await createFanChangeSuggestion(nonAdminClient, fanUser.id, {
       eventId,
+      source: "duplicate_flow",
       body: "Fan own suggestion visible only to self and admin",
     });
 

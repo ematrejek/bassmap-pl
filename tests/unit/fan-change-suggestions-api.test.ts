@@ -116,6 +116,7 @@ describe("POST /api/fan/change-suggestions", () => {
     await expect(response.json()).resolves.toEqual({ suggestion: mockSuggestion });
     expect(mockCreateFanChangeSuggestion).toHaveBeenCalledWith(expect.anything(), mockUser.id, {
       eventId,
+      source: "duplicate_flow",
       body: "Poprawcie godzinę startu na 22:00",
     });
   });

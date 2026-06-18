@@ -414,9 +414,9 @@ RLS event_page, dokumenty prawne, homepage roadmap.
 
 #### Automated
 
-- [ ] 2.1 Unit testy `suggestion-schema.test.ts` przechodzą
-- [ ] 2.2 `npm run lint` przechodzi
-- [ ] 2.3 `npm run build` przechodzi
+- [x] 2.1 Unit testy `suggestion-schema.test.ts` przechodzą
+- [x] 2.2 `npm run lint` przechodzi
+- [x] 2.3 `npm run build` przechodzi
 
 ### Phase 3: API – fan submit + admin apply
 

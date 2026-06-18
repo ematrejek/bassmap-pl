@@ -48,7 +48,11 @@ export const POST: APIRoute = async (context) => {
     return jsonResponse({ error: firstIssue }, 400);
   }
 
-  const result = await createFanChangeSuggestion(supabase, user.id, parsed.data);
+  const result = await createFanChangeSuggestion(supabase, user.id, {
+    eventId: parsed.data.eventId,
+    source: "duplicate_flow",
+    body: parsed.data.body,
+  });
   if ("error" in result) {
     const status = result.error === "Nie znaleziono wydarzenia" ? 404 : 400;
     return jsonResponse({ error: result.error }, status);
