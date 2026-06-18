@@ -1,7 +1,8 @@
 ---
 import EventCoverImage from "@/components/discovery/EventCoverImage";
+import EventSuggestChangesForm from "@/components/fan/EventSuggestChangesForm";
 import AppShell from "@/components/shell/AppShell.astro";
-import { formatEventAddress, formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
+import { formatEventAddress, formatEventDate, formatEventPrice, formatEventVenueLine, isUpcomingEvent } from "@/lib/events/format";
 import { DISCOVERY_PATH } from "@/lib/routes";
 import { getPublishedEventById } from "@/lib/services/events";
 import { getEventCoverUrl } from "@/lib/storage/event-covers";
@@ -14,8 +15,11 @@ import { SUPABASE_URL } from "astro:env/server";
 export const prerender = false;
 
 const { id } = Astro.params;
+const { user, isAdmin } = Astro.locals;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 const event = supabase && id ? await getPublishedEventById(supabase, id) : null;
+const isLoggedIn = Boolean(user);
+const eventPagePath = id ? `/events/${id}` : DISCOVERY_PATH;
 
 if (!event) {
   Astro.response.status = 404;
@@ -23,6 +27,7 @@ if (!event) {
 
 const coverUrl = event && SUPABASE_URL ? getEventCoverUrl(event.coverPath, SUPABASE_URL) : null;
 const eventDescription = event?.description?.trim() ?? "";
+const showSuggestionForm = Boolean(event && isUpcomingEvent(event.startsAt));
 ---
 
 <Layout title={event ? `${event.name} – BassMap PL` : "Nie znaleziono – BassMap PL"} ogImage={coverUrl ?? undefined}>
@@ -102,6 +107,19 @@ const eventDescription = event?.description?.trim() ?? "";
                 <p class="text-muted-foreground">Brak potwierdzonego lineupu.</p>
               )}
             </section>
+
+            {showSuggestionForm && !isAdmin ? (
+              <section class="space-y-4">
+                <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Sugeruj zmiany</h2>
+                <EventSuggestChangesForm
+                  client:visible
+                  event={event}
+                  isLoggedIn={isLoggedIn}
+                  isAdmin={isAdmin}
+                  redirectPath={eventPagePath}
+                />
+              </section>
+            ) : null}
 
             {event.ticketUrl && (
               <a

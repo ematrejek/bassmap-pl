@@ -1,19 +1,37 @@
 import { useState } from "react";
+import ChangeSuggestionReviewDialog from "@/components/admin/ChangeSuggestionReviewDialog";
 import { readApiError } from "@/lib/api/json";
+import { type SuggestionEventSnapshot } from "@/lib/events/suggestion-format";
 import { Button } from "@/components/ui/button";
 import { ADMIN_PATH } from "@/lib/routes";
 import { shellBtnOutline } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
+import type { ChangeSuggestionPayload, ChangeSuggestionSource } from "@/types";
 
 interface Props {
   suggestionId: string;
   eventId: string;
+  eventName: string;
   status: "pending" | "accepted" | "rejected";
+  source: ChangeSuggestionSource;
+  body: string | null;
+  payload: ChangeSuggestionPayload | null;
+  eventSnapshot: SuggestionEventSnapshot;
 }
 
-export default function ChangeSuggestionActions({ suggestionId, eventId, status }: Props) {
+export default function ChangeSuggestionActions({
+  suggestionId,
+  eventId,
+  eventName,
+  status,
+  source,
+  body,
+  payload,
+  eventSnapshot,
+}: Props) {
   const [busy, setBusy] = useState<"accepted" | "rejected" | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [reviewOpen, setReviewOpen] = useState(false);
 
   const editHref = `${ADMIN_PATH}/events/${eventId}/edit`;
 
@@ -52,6 +70,42 @@ export default function ChangeSuggestionActions({ suggestionId, eventId, status 
       setError("Nie udało się zmienić statusu sugestii. Spróbuj ponownie.");
       setBusy(null);
     }
+  }
+
+  if (source === "event_page") {
+    return (
+      <>
+        <div className="flex flex-col items-end gap-1">
+          {error ? <span className="text-xs text-red-300">{error}</span> : null}
+          <div className="flex flex-wrap justify-end gap-2">
+            <Button asChild variant="outline" size="sm" className={shellBtnOutline}>
+              <a href={editHref}>Edytuj wydarzenie</a>
+            </Button>
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className={cn(shellBtnOutline, "border-primary/40 bg-primary/10 hover:bg-primary/20")}
+              onClick={() => {
+                setReviewOpen(true);
+              }}
+            >
+              Otwórz sugestię
+            </Button>
+          </div>
+        </div>
+
+        <ChangeSuggestionReviewDialog
+          open={reviewOpen}
+          onOpenChange={setReviewOpen}
+          suggestionId={suggestionId}
+          eventName={eventName}
+          body={body}
+          payload={payload}
+          eventSnapshot={eventSnapshot}
+        />
+      </>
+    );
   }
 
   return (

@@ -1,6 +1,6 @@
 ---
 project: BassMap PL
-checked_at: 2026-06-18T09:30:00Z
+checked_at: 2026-06-18T12:27:00Z
 health_status: healthy
 context_type: brownfield
 language_family: js
@@ -66,7 +66,7 @@ Optional housekeeping when convenient: `npm update wrangler astro vite`. Do not 
 ```
 Test runner: Vitest 3.2.6
 Tests found: 28 files, 147 tests
-Test execution: passing (verified locally 2026-06-18)
+Test execution: passing (verified locally 2026-06-18, two consecutive runs – no flakiness)
 ```
 
 ```
@@ -159,16 +159,18 @@ Agent readiness (from stack-assess): ready
 | Test runner pass | 147 tests passing, CI wired                 | Confirmed |
 | CI documented    | Full pipeline green on main                  | Confirmed |
 
-## Local Verification (2026-06-18)
+## Local Verification (2026-06-18, afternoon re-run)
 
 | Check              | Result | Notes                                              |
 | ------------------ | ------ | -------------------------------------------------- |
-| `npm test`         | ✓      | 28 files, 147 tests, ~106s                         |
+| `npm test` (run 1) | ✓      | 28 files, 147 tests, 47s – full integration (Supabase Docker up, `.env.test` present) |
+| `npm test` (run 2) | ✓      | Same 147/147, 28s – stable, no flaky failures      |
 | `npm run lint:all` | ✓      | ESLint + em-dash docs                              |
-| `npm run build`    | ✓      | SSR Cloudflare bundle                              |
-| `npx astro check`  | ✗ local only | EADDRINUSE port 9230 – dev server already running; not a code defect |
-| GitHub CI          | ✓      | Latest main push green                             |
-| GitHub Deploy      | ✓      | Latest main push green                             |
+| `npm run test:ci`  | ⚠ Windows | Bash not available in this shell – use `npm test` locally or Git Bash/WSL for the CI script |
+| GitHub CI          | ✓      | Latest main push green (2026-06-18)                |
+| GitHub Deploy      | ✓      | Latest main push green (2026-06-18)                |
+
+**Integration skip guard:** All 10 integration suites use `describe.skipIf(!isSupabaseConfigured())`. Without Docker + `.env.test`, `npm test` exits 0 but prints `Integration tests skipped` – CI fails on that via `scripts/ci-supabase-test.sh`. Locally today: integration ran fully (no skip warning).
 
 ## Recommended Fixes
 
@@ -194,6 +196,6 @@ No Category B gaps – CI, deploy, AGENTS.md, and test infrastructure are alread
 
 BassMap PL is in good operational shape at this checkpoint. The test suite is well configured (Vitest + local Supabase integration), all 147 tests pass locally, and GitHub Actions CI + Deploy are green on the latest `main` commit. Lint, type-check, build, and security audit gates are wired correctly. Recent CI failures were legitimate code issues (em-dash lint rule, incomplete test mock) and were fixed promptly – not infrastructure flakiness.
 
-Remaining items are housekeeping: optional doc refresh, deciding what to do with the untracked legal markdown file, and remembering that pre-commit hooks run lint only (not the full test suite).
+Tests are healthy: 147/147 green twice in a row, integration against local Supabase works, GitHub CI/Deploy green. Past CI failures (2026-06-17) were real code issues (em-dash lint, incomplete test mock) – not random infrastructure glitches.
 
-**Next step:** Safe to continue Partia II feature work. Before each push to `main`, run `npm run lint:all` and `npm run test:ci` locally when Supabase is up.
+**Next step:** Safe to continue feature work. Before push to `main`: `npm run lint:all` + `npm test` (with Supabase running). On Windows use `npm test` directly; `npm run test:ci` needs Git Bash or WSL.

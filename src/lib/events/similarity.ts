@@ -78,10 +78,12 @@ function mapCandidateRow(row: SimilarEventCandidateRow): SimilarEventCandidate {
 /** Post-filter: same location by address, coordinates, or venue name (mixed modes). */
 export function locationMatches(input: ParsedEventCreate, candidate: SimilarEventCandidate): boolean {
   if (input.locationMode === "address" && candidateHasAddress(candidate)) {
-    return (
+    const addressMatch =
       normalizeAddressParts(input.addressStreet, input.addressNumber) ===
-      normalizeAddressParts(candidate.addressStreet ?? "", candidate.addressNumber ?? "")
-    );
+      normalizeAddressParts(candidate.addressStreet ?? "", candidate.addressNumber ?? "");
+    if (addressMatch) {
+      return true;
+    }
   }
 
   if (input.locationMode === "coordinates" && candidateHasCoordinates(candidate)) {

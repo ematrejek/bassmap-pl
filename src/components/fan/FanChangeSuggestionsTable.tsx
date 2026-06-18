@@ -9,7 +9,7 @@ export interface FanChangeSuggestionRow {
   id: string;
   eventId: string;
   eventName: string;
-  body: string;
+  summary: string;
   status: ChangeSuggestionStatus;
   createdAt: string;
 }
@@ -67,8 +67,8 @@ export default function FanChangeSuggestionsTable({ suggestions }: Props) {
                   {suggestion.eventName || "Wydarzenie"}
                 </a>
               </TableCell>
-              <TableCell className={cn("max-w-xs text-sm", shellTextMuted)} title={suggestion.body}>
-                {truncateBody(suggestion.body)}
+              <TableCell className={cn("max-w-xs text-sm", shellTextMuted)} title={suggestion.summary}>
+                {truncateBody(suggestion.summary)}
               </TableCell>
               <TableCell>
                 <Badge variant="outline" className={cn("border", suggestionBadgeClass(suggestion.status))}>
