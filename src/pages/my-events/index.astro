@@ -5,6 +5,7 @@ import Layout from "@/layouts/Layout.astro";
 import type { Event } from "@/types";
 import { listEventsByCreator } from "@/lib/services/events";
 import { listChangeSuggestionsForFan } from "@/lib/services/change-suggestions";
+import { formatSuggestionSummary } from "@/lib/events/suggestion-format";
 import { shellHeading, shellTextMuted } from "@/lib/shell-styles";
 import { createClient } from "@/lib/supabase";
 
@@ -24,7 +25,10 @@ const changeSuggestions =
         id: suggestion.id,
         eventId: suggestion.eventId,
         eventName: suggestion.eventName,
-        body: suggestion.body ?? "",
+        summary: formatSuggestionSummary({
+          body: suggestion.body,
+          payload: suggestion.payload,
+        }),
         status: suggestion.status,
         createdAt: suggestion.createdAt,
       }))

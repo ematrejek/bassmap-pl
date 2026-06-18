@@ -434,8 +434,8 @@ RLS event_page, dokumenty prawne, homepage roadmap.
 
 #### Automated
 
-- [ ] 4.1 `npm run lint` przechodzi
-- [ ] 4.2 `npm run build` przechodzi
+- [x] 4.1 `npm run lint` przechodzi
+- [x] 4.2 `npm run build` przechodzi
 
 #### Manual
 
