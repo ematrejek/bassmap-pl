@@ -16,4 +16,9 @@ export interface PublicRoadmapItem {
   label: string;
 }
 
-export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [];
+export const PUBLIC_ROADMAP_ITEMS: PublicRoadmapItem[] = [
+  {
+    id: "S-14",
+    label: "Suggest changes on event pages",
+  },
+];

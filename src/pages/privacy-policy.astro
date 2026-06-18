@@ -124,16 +124,28 @@ export const prerender = false;
 
   <h3>2.7 Sugestie zmian w katalogu wydarzeń</h3>
   <p>
-    Zalogowany użytkownik może zamiast duplikować wpis wysłać <strong>tekstową sugestię zmian</strong> dotyczącą istniejącego
-    wydarzenia (opublikowanego lub oczekującego na moderację). Przetwarzamy treść sugestii (od 10 do 2000 znaków) oraz identyfikator
-    konta autora i powiązanie z danym wydarzeniem – w celu moderacji katalogu i uniknięcia zbędnych duplikatów. Treść sugestii
-    jest <strong>obowiązkowa</strong> do wysłania formularza.
+    Zalogowany użytkownik może zgłaszać <strong>sugestie zmian</strong> dotyczące istniejących wydarzeń – w celu moderacji
+    katalogu i uniknięcia zbędnych duplikatów. Przetwarzamy identyfikator konta autora, powiązanie z danym wydarzeniem oraz
+    treść sugestii w jednej z dwóch form:
   </p>
+  <ul>
+    <li>
+      <strong>Sugestia tekstowa przy wykryciu duplikatu</strong> – gdy przy dodawaniu wydarzenia Serwis wykryje podobny wpis,
+      użytkownik może zamiast tworzyć duplikat wysłać krótki opis zmian (od 10 do 2000 znaków) dotyczący wydarzenia opublikowanego
+      lub oczekującego na moderację.
+    </li>
+    <li>
+      <strong>Sugestia ze strony wydarzenia</strong> – na stronie opublikowanego, nadchodzącego wydarzenia użytkownik może
+      wypełnić formularz z proponowanymi wartościami wybranych pól (m.in. data i godzina, miasto, miejsce, adres lub współrzędne,
+      opis, line-up, link do biletów, cena) oraz opcjonalny komentarz dla Administratora (do 2000 znaków). Wysyłane są wyłącznie
+      pola, które użytkownik faktycznie zmienił.
+    </li>
+  </ul>
   <p>
-    Przy dodawaniu wydarzenia Serwis może porównać nazwę, datę i lokalizację z istniejącymi wpisami, aby zaproponować
-    wysłanie sugestii zamiast tworzenia duplikatu. W tym celu przetwarzamy dane podane w formularzu (nazwa, miasto,
-    data, adres lub współrzędne) – wyłącznie w zakresie niezbędnym do wykrycia podobieństwa; nie prowadzimy profilowania
-    ani zautomatyzowanej decyzji blokującej zgłoszenie.
+    Przy dodawaniu wydarzenia Serwis może porównać nazwę i lokalizację z istniejącymi wpisami, aby zaproponować wysłanie
+    sugestii zamiast tworzenia duplikatu. W tym celu przetwarzamy dane podane w formularzu (nazwa, miasto, data, adres
+    lub współrzędne) – wyłącznie w zakresie niezbędnym do wykrycia podobieństwa; nie prowadzimy profilowania ani
+    zautomatyzowanej decyzji blokującej zgłoszenie.
   </p>
   <p>
     Podstawa prawna: art. 6 ust. 1 pkt b RODO (świadczenie usługi – obsługa konta i zgłoszeń użytkownika) oraz art. 6

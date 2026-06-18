@@ -81,6 +81,11 @@ export function getStartOfTodayWarsawUtcIso(): string {
   return parseDatetimeLocalWarsaw(`${datePart}T00:00`) ?? new Date().toISOString();
 }
 
+/** Czy wydarzenie jest nadchodzące (data >= dziś w Europe/Warsaw) – spójne z `is_upcoming()` w DB. */
+export function isUpcomingEvent(startsAt: string): boolean {
+  return startsAt >= getStartOfTodayWarsawUtcIso();
+}
+
 /** Wartość z `<input type="datetime-local">` (czas warszawski) → ISO UTC. */
 export function parseDatetimeLocalWarsaw(value: string): string | null {
   const match = DATETIME_LOCAL_PATTERN.exec(value.trim());

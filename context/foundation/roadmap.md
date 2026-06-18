@@ -374,7 +374,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** \u2013
 - **Unknowns:** \u2013
 - **Risk:** Nakłada się z flow duplikatów (S-13) \u2013 jeden model danych „zgłoszenie użytkownika” może obsłużyć oba przypadki; **nie** nakłada się z moderacją nowych eventów (S-12).
-- **Status:** planned \u2013 `context/changes/change-suggestions/plan.md` (2026-06-18)
+- **Status:** in progress – `context/changes/change-suggestions/plan.md` (2026-06-18, phases 1–6)
 
 **FR (w PRD v2):**
 
@@ -441,7 +441,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-12       | fan-account-zone          | #24    | Strefa zalogowanego fana + nawigacja           | \u2013                     | Done \u2013 archived 2026-06-15; PR #29                 |
 | S-17       | event-content-copyright   | #30    | Prawa autorskie: źródło okładki + oświadczenia | \u2013                     | Done \u2013 archived 2026-06-16                         |
 | S-13       | duplicate-event-detection | #25    | Wykrywanie duplikatów wydarzeń                 | \u2013                     | Done \u2013 archived 2026-06-18                         |
-| S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                        | in progress           | Partia II · plan `context/changes/change-suggestions/` · phase 1 done |
+| S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                        | in progress           | Partia II · plan `context/changes/change-suggestions/` · phases 1–6 done |
 | S-15       | event-comments            | #27    | Komentarze pod wydarzeniami                    | no                    | Partia II                                          |
 | S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                     | no                    | Partia II \u2013 po S-15 (anonimizacja komentarzy)      |
 

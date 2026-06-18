@@ -229,13 +229,15 @@ React island na stronie szczegółów z formularzem pól core i obsługą gości
 
 **Contract**: Props: `event: Event` (published), `isLoggedIn: boolean`, `isAdmin: boolean`. Gdy `!isLoggedIn` – render sekcji z tekstem + link `SIGN_IN_PATH` z `redirect` na bieżący URL. Gdy `isAdmin` – nie renderuj formularza (admin edytuje w panelu). Submit: POST z `source: "event_page"`. Sukces: `window.location.href = "/my-events?suggestionSubmitted=1"`. Reuse stylów pól z `EventForm` / shadcn (Input, Textarea, select ceny) – bez copyright/okładki.
 
+**Addendum (impl-review 2026-06-18):** Formularz startuje zwinięty – przycisk „Sugeruj zmiany” rozwija panel (`panelOpen`). Cel: mniej wizualnego szumu na stronie szczegółów; gość i fan po rozwinięciu widzą link logowania / pola jak w planie.
+
 #### 2. Strona eventu
 
 **File**: `src/pages/events/[id].astro`
 
 **Intent**: Osadzić formularz pod sekcją lineup / przed biletem.
 
-**Contract**: SSR: `locals.user`, `locals.isAdmin`; przekaż do island. `client:load` lub `client:visible`. Sekcja `<h2>Sugeruj zmiany</h2>`.
+**Contract**: SSR: `locals.user`, `locals.isAdmin`; przekaż do island. `client:load` lub `client:visible`. Sekcja `<h2>Sugeruj zmiany</h2>`. **Tylko nadchodzące** published (`isUpcomingEvent(startsAt)`); przeszłe eventy – brak sekcji (spójne z RLS `event_page`).
 
 #### 3. Fan lista sugestii
 
@@ -396,7 +398,7 @@ RLS event_page, dokumenty prawne, homepage roadmap.
 
 ## Progress
 
-> Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands.
+> Convention: `- [ ]` pending, `- [x]` done. Append ` – <commit sha>` when a step lands.
 
 ### Phase 1: Schema – payload + RLS event_page
 
@@ -456,9 +458,9 @@ RLS event_page, dokumenty prawne, homepage roadmap.
 
 #### Automated
 
-- [ ] 6.1 `npm run test:ci` przechodzi
-- [ ] 6.2 `npm run lint:all` przechodzi
-- [ ] 6.3 `npm run build` przechodzi
+- [x] 6.1 `npm run test:ci` przechodzi
+- [x] 6.2 `npm run lint:all` przechodzi
+- [x] 6.3 `npm run build` przechodzi
 
 #### Manual
 

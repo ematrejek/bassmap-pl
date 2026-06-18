@@ -1,7 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { mapChangeSuggestionRow, type ChangeSuggestionRow } from "@/lib/events/suggestion-mapper";
 import { parseSuggestionPayload } from "@/lib/events/suggestion-schema";
-import { parseEventUpdate } from "@/lib/events/schema";
 import { getEventById, updateEvent } from "@/lib/services/events";
 import type { ChangeSuggestion, ChangeSuggestionSource, ChangeSuggestionStatus, Event } from "@/types";
 
@@ -254,31 +253,48 @@ export async function applyChangeSuggestionToEvent(
     return { error: "Brak danych do zastosowania w sugestii" };
   }
 
-  const parsedUpdate = parseEventUpdate(existing.payload);
-  if (!parsedUpdate.success) {
-    return { error: parsedUpdate.error };
+  const parsedPayload = parseSuggestionPayload(existing.payload);
+  if (!parsedPayload.success) {
+    return { error: parsedPayload.error };
   }
 
-  const updateResult = await updateEvent(supabase, existing.eventId, parsedUpdate.data);
-  if ("error" in updateResult) {
-    return { error: updateResult.error };
-  }
-
-  const statusResponse = await supabase
+  const claimResponse = await supabase
     .from("change_suggestions")
     .update({ status: "accepted" })
     .eq("id", suggestionId)
+    .eq("status", "pending")
     .select(CHANGE_SUGGESTION_SELECT)
-    .single();
+    .maybeSingle();
 
-  if (statusResponse.error) {
-    return { error: statusResponse.error.message };
+  if (claimResponse.error) {
+    return { error: claimResponse.error.message };
+  }
+
+  if (!claimResponse.data) {
+    return { error: "Można zastosować tylko oczekującą sugestię" };
+  }
+
+  const updateResult = await updateEvent(supabase, existing.eventId, parsedPayload.data);
+  if ("error" in updateResult) {
+    const rollbackResponse = await supabase
+      .from("change_suggestions")
+      .update({ status: "pending" })
+      .eq("id", suggestionId)
+      .eq("status", "accepted");
+
+    if (rollbackResponse.error) {
+      return {
+        error: `${updateResult.error} (nie udało się przywrócić statusu sugestii – skontaktuj się z administratorem)`,
+      };
+    }
+
+    return { error: updateResult.error };
   }
 
   return {
     data: {
       event: updateResult.data,
-      suggestion: mapChangeSuggestionRow(statusResponse.data),
+      suggestion: mapChangeSuggestionRow(claimResponse.data),
     },
   };
 }

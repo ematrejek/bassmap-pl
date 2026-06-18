@@ -9,7 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { readApiError } from "@/lib/api/json";
 import { formatEventAddress, formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
 import { MY_EVENTS_PATH, SIGN_IN_PATH } from "@/lib/routes";
-import { shellBtnPrimary } from "@/lib/shell-styles";
+import { shellBtnPrimary, shellBtnOutline } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import type { Event, EventCurrency, EventPriceMode } from "@/types";
 
@@ -75,11 +75,27 @@ export default function EventSuggestChangesForm({ event, isLoggedIn, isAdmin, re
   const [comment, setComment] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+  const [panelOpen, setPanelOpen] = useState(false);
 
   const signInHref = `${SIGN_IN_PATH}?redirect=${encodeURIComponent(redirectPath)}`;
 
   if (isAdmin) {
     return null;
+  }
+
+  if (!panelOpen) {
+    return (
+      <Button
+        type="button"
+        variant="outline"
+        className={shellBtnOutline}
+        onClick={() => {
+          setPanelOpen(true);
+        }}
+      >
+        Sugeruj zmiany
+      </Button>
+    );
   }
 
   function buildPayload(): Record<string, unknown> | null {
@@ -187,9 +203,20 @@ export default function EventSuggestChangesForm({ event, isLoggedIn, isAdmin, re
         <p className="text-muted-foreground text-sm">
           Zaloguj się, aby zasugerować zmiany w tym wydarzeniu (data, lokalizacja, opis, cena itd.).
         </p>
-        <Button asChild className={shellBtnPrimary}>
-          <a href={signInHref}>Zaloguj się, aby zasugerować zmiany</a>
-        </Button>
+        <div className="flex flex-wrap gap-2">
+          <Button asChild className={shellBtnPrimary}>
+            <a href={signInHref}>Zaloguj się, aby zasugerować zmiany</a>
+          </Button>
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={() => {
+              setPanelOpen(false);
+            }}
+          >
+            Zwiń
+          </Button>
+        </div>
       </div>
     );
   }
@@ -564,9 +591,20 @@ export default function EventSuggestChangesForm({ event, isLoggedIn, isAdmin, re
         />
       </div>
 
-      <Button type="submit" className={shellBtnPrimary} disabled={submitting}>
-        {submitting ? "Wysyłanie…" : "Wyślij sugestię"}
-      </Button>
+      <div className="flex flex-wrap gap-2">
+        <Button type="submit" className={shellBtnPrimary} disabled={submitting}>
+          {submitting ? "Wysyłanie…" : "Wyślij sugestię"}
+        </Button>
+        <Button
+          type="button"
+          variant="ghost"
+          onClick={() => {
+            setPanelOpen(false);
+          }}
+        >
+          Zwiń
+        </Button>
+      </div>
     </form>
   );
 }

@@ -115,11 +115,22 @@ describe("locationMatches", () => {
     expect(locationMatches(input, candidate)).toBe(true);
   });
 
-  it("rejects different streets in address mode", () => {
+  it("matches same venue when streets differ in address mode", () => {
     const input = BASE_ADDRESS_INPUT;
     const candidate = buildCandidate({
       addressStreet: "Marszałkowska",
       addressNumber: "1",
+    });
+
+    expect(locationMatches(input, candidate)).toBe(true);
+  });
+
+  it("rejects different venues in address mode", () => {
+    const input = BASE_ADDRESS_INPUT;
+    const candidate = buildCandidate({
+      addressStreet: "Marszałkowska",
+      addressNumber: "1",
+      venueName: "Inny klub",
     });
 
     expect(locationMatches(input, candidate)).toBe(false);

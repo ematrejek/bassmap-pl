@@ -2,7 +2,7 @@
 id: change-suggestions
 roadmap: S-14
 title: Sugestie zmian wydarzeń
-status: in_progress
+status: impl_reviewed
 created: 2026-06-18
 updated: 2026-06-18
 github_issue: 26

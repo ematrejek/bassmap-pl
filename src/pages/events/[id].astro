@@ -2,7 +2,7 @@
 import EventCoverImage from "@/components/discovery/EventCoverImage";
 import EventSuggestChangesForm from "@/components/fan/EventSuggestChangesForm";
 import AppShell from "@/components/shell/AppShell.astro";
-import { formatEventAddress, formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
+import { formatEventAddress, formatEventDate, formatEventPrice, formatEventVenueLine, isUpcomingEvent } from "@/lib/events/format";
 import { DISCOVERY_PATH } from "@/lib/routes";
 import { getPublishedEventById } from "@/lib/services/events";
 import { getEventCoverUrl } from "@/lib/storage/event-covers";
@@ -27,6 +27,7 @@ if (!event) {
 
 const coverUrl = event && SUPABASE_URL ? getEventCoverUrl(event.coverPath, SUPABASE_URL) : null;
 const eventDescription = event?.description?.trim() ?? "";
+const showSuggestionForm = Boolean(event && isUpcomingEvent(event.startsAt));
 ---
 
 <Layout title={event ? `${event.name} – BassMap PL` : "Nie znaleziono – BassMap PL"} ogImage={coverUrl ?? undefined}>
@@ -107,7 +108,7 @@ const eventDescription = event?.description?.trim() ?? "";
               )}
             </section>
 
-            {!isAdmin ? (
+            {showSuggestionForm && !isAdmin ? (
               <section class="space-y-4">
                 <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Sugeruj zmiany</h2>
                 <EventSuggestChangesForm
