@@ -2,7 +2,13 @@
 import EventCoverImage from "@/components/discovery/EventCoverImage";
 import EventSuggestChangesForm from "@/components/fan/EventSuggestChangesForm";
 import AppShell from "@/components/shell/AppShell.astro";
-import { formatEventAddress, formatEventDate, formatEventPrice, formatEventVenueLine, isUpcomingEvent } from "@/lib/events/format";
+import {
+  formatEventAddress,
+  formatEventDate,
+  formatEventPrice,
+  formatEventVenueLine,
+  isUpcomingEvent,
+} from "@/lib/events/format";
 import { DISCOVERY_PATH } from "@/lib/routes";
 import { getPublishedEventById } from "@/lib/services/events";
 import { getEventCoverUrl } from "@/lib/storage/event-covers";

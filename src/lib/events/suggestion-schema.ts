@@ -1,4 +1,4 @@
-import { parseEventUpdate } from "@/lib/events/schema";
+import { parseEventUpdate, type ParsedEventUpdate } from "@/lib/events/schema";
 import type { ChangeSuggestionPayload } from "@/types";
 
 const SUGGESTION_PAYLOAD_KEYS = [
@@ -22,7 +22,7 @@ const SUGGESTION_PAYLOAD_KEYS = [
 
 const suggestionPayloadKeySet = new Set<string>(SUGGESTION_PAYLOAD_KEYS);
 
-export type ParsedSuggestionPayload = ChangeSuggestionPayload;
+export type ParsedSuggestionPayload = ParsedEventUpdate;
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === "object" && value !== null && !Array.isArray(value);

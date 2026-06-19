@@ -55,7 +55,7 @@ function mapAdminListRow(row: ChangeSuggestionWithEventRow): AdminChangeSuggesti
   };
 }
 
-function validateDuplicateFlowBody(body: string): ServiceResult<null> | null {
+function validateDuplicateFlowBody(body: string): { error: string } | null {
   if (body.length < 10) {
     return { error: "Sugestia musi mieć co najmniej 10 znaków" };
   }
@@ -65,7 +65,7 @@ function validateDuplicateFlowBody(body: string): ServiceResult<null> | null {
   return null;
 }
 
-function validateEventPageBody(body: string | null | undefined): ServiceResult<null> | null {
+function validateEventPageBody(body: string | null | undefined): { error: string } | null {
   if (body == null || body === "") {
     return null;
   }
@@ -144,9 +144,7 @@ export async function createFanChangeSuggestion(
   userId: string,
   input: CreateFanChangeSuggestionInput,
 ): Promise<ServiceResult<ChangeSuggestion>> {
-  const source: ChangeSuggestionSource = input.source;
-
-  if (source === "duplicate_flow") {
+  if (input.source === "duplicate_flow") {
     const bodyError = validateDuplicateFlowBody(input.body);
     if (bodyError) {
       return bodyError;
@@ -157,6 +155,8 @@ export async function createFanChangeSuggestion(
       return bodyError;
     }
   }
+
+  const source = input.source;
 
   const eligibleResponse = await supabase.rpc("event_eligible_for_suggestion", {
     p_event_id: input.eventId,
@@ -180,14 +180,14 @@ export async function createFanChangeSuggestion(
     payload: Record<string, unknown> | null;
   };
 
-  if (source === "duplicate_flow") {
+  if (input.source === "duplicate_flow") {
     insertRow = {
       event_id: input.eventId,
       submitted_by: userId,
       body: input.body,
       payload: null,
       status: "pending",
-      source,
+      source: input.source,
     };
   } else {
     const parsedPayload = parseSuggestionPayload(input.payload);
@@ -203,7 +203,7 @@ export async function createFanChangeSuggestion(
       body: normalizedBody,
       payload: parsedPayload.data,
       status: "pending",
-      source,
+      source: input.source,
     };
   }
 

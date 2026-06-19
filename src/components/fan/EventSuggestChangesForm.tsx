@@ -157,7 +157,7 @@ export default function EventSuggestChangesForm({ event, isLoggedIn, isAdmin, re
     return Object.keys(payload).length > 0 ? payload : null;
   }
 
-  async function handleSubmit(submitEvent: SubmitEvent) {
+  async function handleSubmit(submitEvent: React.SubmitEvent<HTMLFormElement>) {
     submitEvent.preventDefault();
     setError(null);
 
