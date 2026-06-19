@@ -24,9 +24,9 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 
 ## North star
 
-**S-15: Komentarze pod wydarzeniami** – zalogowany fan publikuje komentarz pod opublikowanym wydarzeniem; wszyscy czytają; admin usuwa. Odblokowuje S-16 (anonimizacja autora przy usuwaniu konta).
+**S-16: Usuwanie konta użytkownika** – zalogowany użytkownik usuwa konto; komentarze zostają z etykietą „Usunięty użytkownik”. Odblokowane po S-15.
 
-> Poprzednia north star: **S-13** (duplikaty) i **S-14** (sugestie zmian) – **done** 2026-06-18 / 2026-06-19.
+> Poprzednia north star: **S-15** (komentarze) – **done** 2026-06-19. Wcześniej: **S-13** (duplikaty) i **S-14** (sugestie zmian).
 
 ## At a glance
 
@@ -51,7 +51,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-17 | event-content-copyright   | zgłaszający wybiera źródło okładki i składa wymagane oświadczenie praw autorskich           | S-12          | FR-025, notes 2026-06-15         | done        |
 | S-13 | duplicate-event-detection | system wykrywa podobne wydarzenie (nazwa/adres/data) i pokazuje właściwy komunikat          | S-12, S-17    | notes 2026-06-13                 | done        |
 | S-14 | change-suggestions        | fan/admin zgłasza sugestię zmian; admin ocenia w panelu „Sugestie zmian”                    | S-12, S-13    | notes 2026-06-13                 | done        |
-| S-15 | event-comments            | zalogowany fan komentuje wydarzenie; wszyscy czytają; autor usuwa własny komentarz; admin usuwa dowolny | S-12          | notes 2026-06-13                 | in progress |
+| S-15 | event-comments            | zalogowany fan komentuje wydarzenie; wszyscy czytają; autor usuwa własny komentarz; admin usuwa dowolny | S-12          | notes 2026-06-13                 | done        |
 | S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto; komentarze zostają jako „Usunięty użytkownik”      | S-12, S-15    | FR-022, NFR Privacy              | proposed    |
 
 ## Streams
@@ -63,7 +63,7 @@ Nawigacja \u2013 grupy elementów współdzielących łańcuch zależności. Kan
 | A      | MVP (zamknięte)         | `F-01` → `S-01` → `S-02` → `S-03`                                          | Done \u2013 odkrywanie i okładki na produkcji.                                                                                                        |
 | B      | Partia I \u2013 odkrywanie   | `S-04` / `S-05` / `S-06` / `S-11` / `S-07` / `S-08` (równolegle po `S-02`) | Must-have przed Partią II; `S-11` podniesione z Partii II (RODO + gotowe dokumenty).                                                             |
 | C      | Partia II \u2013 layout      | `F-04` → `S-09` → `S-10`                                                   | **Done** (2026-06-14) \u2013 jeden slice `app-shell-navigation`.                                                                                      |
-| D      | Partia II \u2013 konta i UGC | `S-12` → `S-17` → `S-13` → `S-14` / **`S-15`** → `S-16`                    | **S-12–S-14 done**. **S-15** (komentarze) – north star, plan 2026-06-19. **S-16** po **S-15**. |
+| D      | Partia II \u2013 konta i UGC | `S-12` → `S-17` → `S-13` → `S-14` → `S-15` / **`S-16`**                    | **S-12–S-15 done**. **S-16** (usuwanie konta) – north star. |
 
 ## Baseline
 
@@ -71,8 +71,8 @@ What's already in place in the codebase as of `2026-06-15` (auto-researched + us
 Foundations below assume these are present and do NOT re-scaffold them.
 
 - **Frontend:** present \u2013 Astro 6 SSR + React 19 + Tailwind 4; AppShell + Sheet menu; `/` marketing homepage; `/events` discovery; `/archive`, `/report-issue`; strefa fana: `/profile`, `/my-events`, `/my-events/new`, `/team`, `/forum`
-- **Backend / API:** partial \u2013 Astro SSR na Cloudflare; trasy auth + admin events + fan event submit/moderation + contact report-issue + change suggestions + duplicate check; brak API komentarzy
-- **Data:** partial \u2013 tabela `events` z opisem, ustrukturyzowaną ceną, `created_by` (fan submit), audytem okładki S-17; tabela `change_suggestions` (S-13/S-14); RLS archiwum; brak tabeli komentarzy
+- **Backend / API:** partial \u2013 Astro SSR na Cloudflare; trasy auth + admin events + fan event submit/moderation + contact report-issue + change suggestions + duplicate check + event comments; brak API usuwania konta
+- **Data:** partial \u2013 tabela `events` z opisem, ustrukturyzowaną ceną, `created_by` (fan submit), audytem okładki S-17; tabele `change_suggestions`, `event_comments` (S-15); RLS archiwum
 - **Auth:** present \u2013 Supabase Auth, sesje cookie SSR, middleware, rola admin; strefa fana (profil, zgłoszenia, moderacja); brak usuwania konta
 - **Deploy / infra:** present \u2013 https://bassmap.pl na Cloudflare Workers; CI lint/build/deploy
 - **Observability:** partial \u2013 `observability.enabled` w Wrangler; brak logowania i error trackingu w aplikacji
@@ -391,7 +391,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Moderacja treści (słowa wulgarne, spam) \u2013 Owner: user. Block: no (MVP: author delete + admin delete).
 - **Risk:** UGC wymaga RLS, rate limitu i polityki prywatności (S-11).
-- **Status:** in progress – plan `context/changes/event-comments/plan.md` (2026-06-19); issue [#27](https://github.com/ematrejek/bassmap-pl/issues/27)
+- **Status:** done – archived `context/archive/2026-06-19-event-comments/`; issue [#27](https://github.com/ematrejek/bassmap-pl/issues/27) zamknięte 2026-06-19
 
 **FR (propozycja do PRD):**
 
@@ -407,7 +407,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** \u2013
 - **Unknowns:** \u2013
 - **Risk:** Wymaga integracji z Supabase Auth (delete user) i kaskady w bazie (anonimizacja autora na komentarzach).
-- **Status:** proposed
+- **Status:** proposed – north star Partii II; prerequisites S-15 **done** (2026-06-19)
 
 **FR (w PRD v2):**
 
@@ -442,8 +442,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-17       | event-content-copyright   | #30    | Prawa autorskie: źródło okładki + oświadczenia | \u2013                     | Done \u2013 archived 2026-06-16                         |
 | S-13       | duplicate-event-detection | #25    | Wykrywanie duplikatów wydarzeń                 | \u2013                     | Done \u2013 archived 2026-06-18                         |
 | S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                        | \u2013                     | Done \u2013 archived 2026-06-19                         |
-| S-15       | event-comments            | #27    | Komentarze pod wydarzeniami                    | yes (plan ready)      | In Progress – `context/changes/event-comments/`    |
-| S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                     | no                    | Partia II \u2013 po S-15 (anonimizacja komentarzy)      |
+| S-15       | event-comments            | #27    | Komentarze pod wydarzeniami                    | \u2013                     | Done \u2013 archived 2026-06-19                         |
+| S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                     | yes (S-15 done)       | Partia II \u2013 north star (anonimizacja komentarzy)      |
 
 ## Open Roadmap Questions
 
@@ -453,6 +453,13 @@ Foundations below assume these are present and do NOT re-scaffold them.
 4. **Formularz admina \u2013 te same oświadczenia co fan?** \u2013 Owner: user. Block: no \u2013 **resolved 2026-06-16:** fan + admin (decyzja planowania S-17).
 
 ## Resolved (history)
+
+### 2026-06-19 \u2013 archiwum S-15 (event-comments)
+
+- **S-15 done** \u2013 archived `context/archive/2026-06-19-event-comments/`; issue #27 zamknięte.
+- **North star** przeniesiona z **S-15** na **S-16** (usuwanie konta + anonimizacja komentarzy).
+- **Legal sync S-15:** §2.8 polityki, §5.13–5.14 regulaminu, `LEGAL_UPDATED_AT` 2026-06-19 (wdrożone w implementacji).
+- **Lesson:** `npm run verify` przed pushem \u2013 CI uruchamia `astro check`, którego lokalny `npm test` nie obejmuje.
 
 ### 2026-06-16 \u2013 archiwum S-17 (event-content-copyright)
 
@@ -545,3 +552,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-17: zgłaszający wybiera źródło okładki i składa wymagane oświadczenie praw autorskich.** \u2013 Archived 2026-06-16 → `context/archive/2026-06-15-event-content-copyright/`. Lesson: fan + admin ten sam wzorzec okładki; manual QA w przeglądarce odłożone po archive.
 - **S-13: przy dodawaniu wydarzenia system sprawdza podobieństwo po nazwie (fuzzy match), adresie i dacie; admin widzi komunikat „Podobne wydarzenie już istnieje: [nazwa], kliknij aby wprowadzić zmiany”; użytkownik widzy „Podobne wydarzenie już istnieje: [nazwa], czy chcesz zasugerować zmiany?” i może wysłać sugestię do admina zamiast duplikować.** \u2013 Archived 2026-06-18 → `context/archive/2026-06-16-duplicate-event-detection/`. Lesson: \u2013.
 - **S-14: fan na stronie opublikowanego nadchodzącego wydarzenia wypełnia formularz z proponowanymi zmianami pól; admin w panelu otwiera sugestię, porównuje pola i po „Przyjmij” zapisuje zmiany w wydarzeniu (flow duplikatu z S-13 pozostaje tekstowy).** \u2013 Archived 2026-06-19 → `context/archive/2026-06-19-change-suggestions/`. Lesson: \u2013.
+- **S-15: pod szczegółami opublikowanego wydarzenia każdy czyta komentarze; zalogowany użytkownik dodaje komentarz i może usunąć własny; administrator usuwa dowolny komentarz.** \u2013 Archived 2026-06-19 → `context/archive/2026-06-19-event-comments/`. Lesson: przed pushem na `main` uruchom `npm run verify` (`astro check` łapie błędy typów w testach API).
