@@ -52,7 +52,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-13 | duplicate-event-detection | system wykrywa podobne wydarzenie (nazwa/adres/data) i pokazuje właściwy komunikat          | S-12, S-17    | notes 2026-06-13                 | done        |
 | S-14 | change-suggestions        | fan/admin zgłasza sugestię zmian; admin ocenia w panelu „Sugestie zmian”                    | S-12, S-13    | notes 2026-06-13                 | done        |
 | S-15 | event-comments            | zalogowany fan komentuje wydarzenie; wszyscy czytają; autor usuwa własny komentarz; admin usuwa dowolny | S-12          | notes 2026-06-13                 | done        |
-| S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto; komentarze zostają jako „Usunięty użytkownik”      | S-12, S-15    | FR-022, NFR Privacy              | proposed    |
+| S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto; komentarze zostają jako „Usunięty użytkownik”      | S-12, S-15    | FR-022, NFR Privacy              | in progress |
 
 ## Streams
 
@@ -407,7 +407,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** \u2013
 - **Unknowns:** \u2013
 - **Risk:** Wymaga integracji z Supabase Auth (delete user) i kaskady w bazie (anonimizacja autora na komentarzach).
-- **Status:** proposed – north star Partii II; prerequisites S-15 **done** (2026-06-19)
+- **Status:** in progress – plan w `context/changes/account-deletion/plan.md`; implementacja S-16
 
 **FR (w PRD v2):**
 

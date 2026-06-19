@@ -1,3 +1,6 @@
+/** Public author label after account deletion (FR-022). */
+export const DELETED_USER_AUTHOR_LABEL = "Usunięty użytkownik";
+
 /** Public display label derived from account email (same heuristic as fan profile). */
 export function authorLabelFromEmail(email: string): string {
   const local = email.split("@")[0] ?? email;

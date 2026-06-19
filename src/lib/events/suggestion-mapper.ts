@@ -8,7 +8,7 @@ import type {
 export interface ChangeSuggestionRow {
   id: string;
   event_id: string;
-  submitted_by: string;
+  submitted_by: string | null;
   body: string | null;
   payload: ChangeSuggestionPayload | null;
   status: ChangeSuggestionStatus;

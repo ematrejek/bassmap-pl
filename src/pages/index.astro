@@ -8,10 +8,21 @@ import AppShell from "@/components/shell/AppShell.astro";
 import Layout from "@/layouts/Layout.astro";
 
 export const prerender = false;
+
+const accountDeleted = Astro.url.searchParams.get("accountDeleted") === "1";
 ---
 
 <Layout title="BassMap PL – Find the place, drop the bass!">
   <AppShell showFooter={false} immersive>
+    {
+      accountDeleted ? (
+        <div class="border-primary/30 bg-primary/10 text-foreground mx-auto max-w-6xl px-4 pt-6" role="status">
+          <p class="rounded-lg border border-green-400/30 bg-green-500/10 px-4 py-3 text-sm text-green-100">
+            Twoje konto zostało trwale usunięte.
+          </p>
+        </div>
+      ) : null
+    }
     <HomeFluidScroll client:only="react" />
     <main class="home-scroll-main">
       <HomeHero />

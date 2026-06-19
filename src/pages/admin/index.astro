@@ -29,7 +29,7 @@ const suggestionsError = "error" in suggestionsResult ? suggestionsResult.error 
 const supabaseUrl = SUPABASE_URL ?? "";
 
 function isFanSubmission(event: Event): boolean {
-  return event.status === "pending" && event.createdBy !== null;
+  return event.status === "pending";
 }
 
 const fanPending = rawEvents
@@ -40,7 +40,7 @@ const otherEvents = rawEvents.filter((event) => !isFanSubmission(event));
 const submitterIds = fanPending.map((event) => event.createdBy).filter((id): id is string => id !== null);
 const submitterProfiles = await resolveSubmitterProfiles(submitterIds);
 
-const suggestionSubmitterIds = rawSuggestions.map((item) => item.submittedBy);
+const suggestionSubmitterIds = rawSuggestions.map((item) => item.submittedBy).filter((id): id is string => id !== null);
 const suggestionSubmitterProfiles = await resolveSubmitterProfiles(suggestionSubmitterIds);
 const eventById = new Map(rawEvents.map((event) => [event.id, event]));
 
@@ -63,7 +63,7 @@ const emptyEventSnapshot: SuggestionEventSnapshot = {
 };
 
 function toSuggestionRow(suggestion: AdminChangeSuggestionListItem): ChangeSuggestionTableRow {
-  const profile = suggestionSubmitterProfiles.get(suggestion.submittedBy);
+  const profile = suggestion.submittedBy ? suggestionSubmitterProfiles.get(suggestion.submittedBy) : undefined;
   const event = eventById.get(suggestion.eventId);
   return {
     id: suggestion.id,

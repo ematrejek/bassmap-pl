@@ -1,6 +1,7 @@
 import ChangeSuggestionActions from "@/components/admin/ChangeSuggestionActions";
 import { Badge } from "@/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { DELETED_USER_AUTHOR_LABEL } from "@/lib/auth/display-name";
 import { CHANGE_SUGGESTION_SOURCE_LABELS, type SuggestionEventSnapshot } from "@/lib/events/suggestion-format";
 import { formatEventDate } from "@/lib/events/format";
 import { ADMIN_PATH } from "@/lib/routes";
@@ -98,7 +99,7 @@ export default function ChangeSuggestionsTable({ suggestions, emptyMessage = "Br
                     ) : null}
                   </div>
                 ) : (
-                  <span className={shellTextMuted}>–</span>
+                  <span className={shellTextMuted}>{DELETED_USER_AUTHOR_LABEL}</span>
                 )}
               </TableCell>
               <TableCell>

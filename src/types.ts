@@ -201,7 +201,7 @@ export type ChangeSuggestionPayload = Partial<
 export interface ChangeSuggestion {
   id: string;
   eventId: string;
-  submittedBy: string;
+  submittedBy: string | null;
   /** Text comment; required for duplicate_flow, optional for event_page. */
   body: string | null;
   payload: ChangeSuggestionPayload | null;
