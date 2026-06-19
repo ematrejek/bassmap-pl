@@ -1,5 +1,6 @@
 ---
 import EventCoverImage from "@/components/discovery/EventCoverImage";
+import EventCommentsSection from "@/components/events/EventCommentsSection";
 import EventSuggestChangesForm from "@/components/fan/EventSuggestChangesForm";
 import AppShell from "@/components/shell/AppShell.astro";
 import {
@@ -11,6 +12,7 @@ import {
 } from "@/lib/events/format";
 import { DISCOVERY_PATH } from "@/lib/routes";
 import { getPublishedEventById } from "@/lib/services/events";
+import { listEventComments } from "@/lib/services/event-comments";
 import { getEventCoverUrl } from "@/lib/storage/event-covers";
 import { createClient } from "@/lib/supabase";
 import Layout from "@/layouts/Layout.astro";
@@ -34,6 +36,8 @@ if (!event) {
 const coverUrl = event && SUPABASE_URL ? getEventCoverUrl(event.coverPath, SUPABASE_URL) : null;
 const eventDescription = event?.description?.trim() ?? "";
 const showSuggestionForm = Boolean(event && isUpcomingEvent(event.startsAt));
+const commentsResult = event && supabase ? await listEventComments(supabase, event.id) : null;
+const initialComments = commentsResult && "data" in commentsResult ? commentsResult.data : [];
 ---
 
 <Layout title={event ? `${event.name} – BassMap PL` : "Nie znaleziono – BassMap PL"} ogImage={coverUrl ?? undefined}>
@@ -137,6 +141,16 @@ const showSuggestionForm = Boolean(event && isUpcomingEvent(event.startsAt));
                 Kup bilet
               </a>
             )}
+
+            <EventCommentsSection
+              client:visible
+              eventId={event.id}
+              initialComments={initialComments}
+              isLoggedIn={isLoggedIn}
+              isAdmin={isAdmin}
+              currentUserId={user?.id ?? null}
+              redirectPath={eventPagePath}
+            />
           </article>
         )
       }

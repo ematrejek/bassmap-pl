@@ -1,4 +1,5 @@
 import GenreBadge from "@/components/fan/GenreBadge";
+import { authorLabelFromEmail, loginFromEmailLocalPart } from "@/lib/auth/display-name";
 import ProfileEventCard from "@/components/fan/ProfileEventCard";
 import { Equalizer } from "@/components/shell/Equalizer";
 import { Button } from "@/components/ui/button";
@@ -15,16 +16,10 @@ const PLACEHOLDER_SOCIALS = [
 ] as const;
 
 function profileFromEmail(email: string): { displayName: string; login: string } {
-  const local = email.split("@")[0] ?? email;
-  const login = local.replace(/[^a-zA-Z0-9._-]/g, "_").toLowerCase();
-  const displayName =
-    local
-      .split(/[._-]+/)
-      .filter(Boolean)
-      .map((part) => part.charAt(0).toUpperCase() + part.slice(1).toLowerCase())
-      .join(" ") || "Fan";
-
-  return { displayName, login };
+  return {
+    displayName: authorLabelFromEmail(email),
+    login: loginFromEmailLocalPart(email),
+  };
 }
 
 function pluralGoing(count: number): string {

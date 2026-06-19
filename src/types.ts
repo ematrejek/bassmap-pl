@@ -210,3 +210,21 @@ export interface ChangeSuggestion {
   createdAt: string;
   updatedAt: string;
 }
+
+export interface EventCommentRow {
+  id: string;
+  event_id: string;
+  author_id: string | null;
+  author_label: string;
+  body: string;
+  created_at: string;
+}
+
+export interface EventComment {
+  id: string;
+  eventId: string;
+  authorId: string | null;
+  authorLabel: string;
+  body: string;
+  createdAt: string;
+}
