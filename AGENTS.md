@@ -31,11 +31,13 @@ Node.js v22.14.0 (@.nvmrc).
 - `npm run preview` – preview production build
 - `npm run lint` / `npm run lint:fix` – ESLint strict type-checked (@eslint.config.js)
 - `npm run lint:all` – ESLint + em-dash check on docs (`scripts/check-no-em-dash.mjs`)
+- `npm run check` – `astro sync` + `astro check` (TypeScript over `src/` and `tests/`; **runs in CI before lint**)
+- `npm run verify` – `check` + `lint:all` + `npm test` (minimum gate before `git push`; wired in `.husky/pre-push`)
 - `npm run format` – Prettier with Astro + Tailwind plugins
 - `npm test` – Vitest (unit + integration when local Supabase is up; see @tests/README.md)
 - `npm run test:ci` – same entry point as CI (`scripts/ci-supabase-test.sh`; requires `.env.test` + `supabase start`)
 
-Pre-commit: husky + lint-staged (@package.json) – ESLint on `*.{ts,tsx,astro}`, Prettier on `*.{json,css,md}`. Pre-push: full test gate when `.env.test` exists (`.husky/pre-push`).
+Pre-commit: husky + lint-staged (@package.json) – ESLint on `*.{ts,tsx,astro}`, Prettier on `*.{json,css,md}`. Pre-push: **`npm run verify`** always; full Supabase integration when `.env.test` exists (`.husky/pre-push`).
 
 ## Coding Style
 
@@ -43,7 +45,7 @@ TypeScript strict (Astro config). ESLint: `@typescript-eslint/strictTypeChecked`
 
 ## Commit & Pull Request Guidelines
 
-Commits use descriptive sentences (e.g. `Initial scaffold: BassMap PL from 10x-astro-starter.`). Before PR to `main`, run `npm run lint:all`, `npm run test:ci` (Docker + local Supabase), and `npm run build`. CI: `.github/workflows/ci.yml` – needs `SUPABASE_URL` and `SUPABASE_KEY` as GitHub secrets.
+Commits use descriptive sentences (e.g. `Initial scaffold: BassMap PL from 10x-astro-starter.`). Before PR to `main`, run **`npm run verify`** (or full `npm run test:ci` with Docker). CI: `.github/workflows/ci.yml` – needs `SUPABASE_URL` and `SUPABASE_KEY` as GitHub secrets.
 
 ## Architecture
 
@@ -62,5 +64,3 @@ Canonical roadmap: @context/foundation/roadmap.md. Public backlog (issues + boar
 5. **Legal pages (UGC slices):** when archiving a slice that collects or publishes user content, update legal copy in the **same session** – @src/pages/privacy-policy.astro, @src/pages/terms.astro, and `LEGAL_UPDATED_AT` in @src/lib/legal/paths.ts. Applies at minimum to: `fan-account-zone` (S-12), `event-content-copyright` (S-17), `change-suggestions` (S-14), `event-comments` (S-15), `account-deletion` (S-16). Add or adjust sections for new processing purposes (what data, why, retention, user rights). S-11 already shipped base documents; Partia II extends them per feature.
 
 Use `gh` (needs `project` scope): `gh project item-edit`, `gh issue close`, `gh issue comment`. Match tickets by **Change ID** or Roadmap ID table in `## Backlog Handoff`.
-
-**Public homepage roadmap:** fan-facing “On the roadmap” list lives in @src/data/public-roadmap.ts. When adding, starting, or finishing a user-visible slice, update that file in the **same session** (add upcoming items; remove shipped ones). Keep copy short and in English.

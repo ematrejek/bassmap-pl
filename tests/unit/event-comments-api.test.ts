@@ -72,9 +72,16 @@ const mockDeleteEventComment = vi.mocked(deleteEventComment);
 
 function mockContext(
   locals: Partial<App.Locals>,
-  options?: { method?: string; body?: unknown; params?: Record<string, string | undefined> },
+  options?: {
+    method?: string;
+    body?: unknown;
+    params?: Record<string, string | undefined>;
+    url?: string;
+  },
 ): APIContext {
   const method = options?.method ?? "GET";
+  const url = options?.url ?? `http://localhost/api/events/${eventId}/comments`;
+
   return {
     locals: {
       user: null,
@@ -82,12 +89,20 @@ function mockContext(
       ...locals,
     } as App.Locals,
     params: options?.params ?? { id: eventId },
-    request: new Request(`http://localhost/api/events/${eventId}/comments`, {
+    request: new Request(url, {
       method,
       headers: { "Content-Type": "application/json" },
       body: options?.body !== undefined ? JSON.stringify(options.body) : undefined,
     }),
-  } as APIContext;
+    cookies: {
+      get: () => undefined,
+      set: () => undefined,
+      delete: () => undefined,
+      has: () => false,
+      merge: () => undefined,
+      headers: () => new Headers(),
+    },
+  } as unknown as APIContext;
 }
 
 describe("GET /api/events/[id]/comments", () => {
@@ -140,21 +155,31 @@ describe("POST /api/events/[id]/comments", () => {
 
 describe("DELETE /api/admin/event-comments/[id]", () => {
   it("returns 403 for non-admin", async () => {
-    const response = await DELETEAdminComment({
-      locals: { user: mockUser, isAdmin: false } as App.Locals,
-      params: { id: commentId },
-      request: new Request(`http://localhost/api/admin/event-comments/${commentId}`, { method: "DELETE" }),
-    } as APIContext);
+    const response = await DELETEAdminComment(
+      mockContext(
+        { user: mockUser, isAdmin: false },
+        {
+          method: "DELETE",
+          params: { id: commentId },
+          url: `http://localhost/api/admin/event-comments/${commentId}`,
+        },
+      ),
+    );
 
     expect(response.status).toBe(403);
   });
 
   it("deletes comment for admin", async () => {
-    const response = await DELETEAdminComment({
-      locals: { user: mockUser, isAdmin: true } as App.Locals,
-      params: { id: commentId },
-      request: new Request(`http://localhost/api/admin/event-comments/${commentId}`, { method: "DELETE" }),
-    } as APIContext);
+    const response = await DELETEAdminComment(
+      mockContext(
+        { user: mockUser, isAdmin: true },
+        {
+          method: "DELETE",
+          params: { id: commentId },
+          url: `http://localhost/api/admin/event-comments/${commentId}`,
+        },
+      ),
+    );
 
     expect(response.status).toBe(200);
     expect(mockDeleteEventComment).toHaveBeenCalled();
@@ -163,31 +188,46 @@ describe("DELETE /api/admin/event-comments/[id]", () => {
 
 describe("DELETE /api/fan/event-comments/[id]", () => {
   it("returns 401 when not logged in", async () => {
-    const response = await DELETEFanComment({
-      locals: { user: null, isAdmin: false } as App.Locals,
-      params: { id: commentId },
-      request: new Request(`http://localhost/api/fan/event-comments/${commentId}`, { method: "DELETE" }),
-    } as APIContext);
+    const response = await DELETEFanComment(
+      mockContext(
+        { user: null, isAdmin: false },
+        {
+          method: "DELETE",
+          params: { id: commentId },
+          url: `http://localhost/api/fan/event-comments/${commentId}`,
+        },
+      ),
+    );
 
     expect(response.status).toBe(401);
   });
 
   it("returns 403 for admin", async () => {
-    const response = await DELETEFanComment({
-      locals: { user: mockUser, isAdmin: true } as App.Locals,
-      params: { id: commentId },
-      request: new Request(`http://localhost/api/fan/event-comments/${commentId}`, { method: "DELETE" }),
-    } as APIContext);
+    const response = await DELETEFanComment(
+      mockContext(
+        { user: mockUser, isAdmin: true },
+        {
+          method: "DELETE",
+          params: { id: commentId },
+          url: `http://localhost/api/fan/event-comments/${commentId}`,
+        },
+      ),
+    );
 
     expect(response.status).toBe(403);
   });
 
   it("deletes own comment for logged-in fan", async () => {
-    const response = await DELETEFanComment({
-      locals: { user: mockUser, isAdmin: false } as App.Locals,
-      params: { id: commentId },
-      request: new Request(`http://localhost/api/fan/event-comments/${commentId}`, { method: "DELETE" }),
-    } as APIContext);
+    const response = await DELETEFanComment(
+      mockContext(
+        { user: mockUser, isAdmin: false },
+        {
+          method: "DELETE",
+          params: { id: commentId },
+          url: `http://localhost/api/fan/event-comments/${commentId}`,
+        },
+      ),
+    );
 
     expect(response.status).toBe(200);
     expect(mockDeleteEventComment).toHaveBeenCalled();

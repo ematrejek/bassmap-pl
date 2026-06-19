@@ -10,8 +10,10 @@ This file provides guidance to AI Agent when working with code in this repositor
 - `npm run lint` – ESLint with type-checked rules
 - `npm run lint:fix` – auto-fix lint issues
 - `npm run format` – Prettier (includes prettier-plugin-astro + prettier-plugin-tailwindcss)
+- `npm run check` – `astro sync` + `astro check` (required in CI; use `npm run verify` before push)
+- `npm run verify` – `check` + `lint:all` + `npm test` (pre-push hook)
 
-Pre-commit hooks: husky + lint-staged runs `eslint --fix` on `*.{ts,tsx,astro}` and `prettier --write` on `*.{json,css,md}`.
+Pre-commit hooks: husky + lint-staged runs `eslint --fix` on `*.{ts,tsx,astro}` and `prettier --write` on `*.{json,css,md}`. Pre-push runs `npm run verify` (and `test:ci` when `.env.test` exists).
 
 ## Architecture
 

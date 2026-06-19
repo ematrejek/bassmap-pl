@@ -25,9 +25,10 @@ Supabase and call `scripts/ci-supabase-test.sh` – integration must run; a
 missing-env skip fails the job.
 
 Locally without Docker, `npm test` still passes (unit + smoke only; integration
-skipped with a warning). Use `npm run test:ci` to match the CI entry point when
-`.env.test` is configured. With `.env.test` present, `git push` runs the same
-gate via `.husky/pre-push`.
+skipped with a warning). Use `npm run verify` before every push (astro check +
+lint + unit tests). Use `npm run test:ci` to match the full CI integration gate
+when `.env.test` is configured. With `.env.test` present, `git push` also runs
+`scripts/ci-supabase-test.sh` via `.husky/pre-push`.
 
 Workflows: `.github/workflows/ci.yml`, `.github/workflows/deploy.yml`.
 

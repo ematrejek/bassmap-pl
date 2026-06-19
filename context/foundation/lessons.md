@@ -31,3 +31,13 @@
 **Rule:** Używaj wyłącznie **en dash** (U+2013, `–`, w JS/CSS `\u2013`). Nie używaj em dash w nowym kodzie ani copy. Przy edycji istniejących plików w `src/` zamieniaj `\u2013` na `–`.
 
 **Applies to:** `src/**`, `context/changes/**` (aktywne zmiany), teksty widoczne dla użytkownika.
+
+## CI – `astro check` przed pushem
+
+**Context:** `tests/unit/event-comments-api.test.ts` (S-15, 2026-06-19); workflow `.github/workflows/ci.yml` i `deploy.yml`
+
+**Problem:** Lokalnie przechodziły `npm test`, `npm run lint` i `npm run build`, ale CI i Deploy padały na `npx astro check`. Hook `pre-push` uruchamiał tylko testy Supabase (gdy jest `.env.test`), a `pre-commit` tylko ESLint – **bez** `astro check`. W testach API route mocki używały `as APIContext` zamiast `as unknown as APIContext`; Vitest to akceptuje, `astro check` nie.
+
+**Rule:** Przed `git push` na `main` uruchom **`npm run verify`** (`astro sync` + `astro check` + `lint:all` + `npm test`). Z Dockerem i `.env.test` dodatkowo **`npm run test:ci`**. W testach handlerów API zawsze mockuj `APIContext` przez **`as unknown as APIContext`** (wzorzec: `tests/unit/fan-change-suggestions-api.test.ts`).
+
+**Applies to:** `tests/unit/*-api.test.ts`, każdy commit na `main`, AGENTS.md §Build.

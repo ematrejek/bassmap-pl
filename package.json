@@ -11,6 +11,8 @@
     "lint:fix": "eslint src tests --fix --cache",
     "lint:docs": "node scripts/check-no-em-dash.mjs",
     "lint:all": "npm run lint && npm run lint:docs",
+    "check": "astro sync && astro check",
+    "verify": "npm run check && npm run lint:all && npm test",
     "format": "prettier --write .",
     "test": "vitest run",
     "test:ci": "bash scripts/ci-supabase-test.sh",
