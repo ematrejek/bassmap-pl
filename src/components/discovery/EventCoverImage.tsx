@@ -12,9 +12,21 @@ const VARIANT_CLASSES: Record<Variant, string> = {
 
 const FALLBACK_TEXT: Record<Variant, string> = {
   thumb: "text-xs",
-  preview: "text-lg",
-  hero: "text-2xl",
+  preview: "text-base",
+  hero: "text-lg",
 };
+
+/** Placeholder bez pliku – kompaktowy landscape (nie pełna szerokość jak prawdziwy hero). */
+function getPlaceholderLayoutClass(variant: Variant): string {
+  switch (variant) {
+    case "thumb":
+      return "";
+    case "hero":
+      return "aspect-video w-full";
+    case "preview":
+      return "aspect-video w-full max-w-md";
+  }
+}
 
 interface Props {
   coverUrl: string | null;
@@ -26,7 +38,11 @@ interface Props {
 
 export default function EventCoverImage({ coverUrl, alt, className, variant = "thumb", coverAspect = null }: Props) {
   const baseClass = cn(VARIANT_CLASSES[variant], className);
-  const aspectClass = variant === "thumb" ? "" : getCoverAspectClassName(coverAspect);
+  const aspectClass = coverUrl
+    ? variant === "thumb"
+      ? ""
+      : getCoverAspectClassName(coverAspect)
+    : getPlaceholderLayoutClass(variant);
 
   if (!coverUrl) {
     return (

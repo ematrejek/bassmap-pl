@@ -25,6 +25,7 @@ export default defineConfig({
         "react-leaflet",
         "lucide-react",
       ],
+      exclude: ["@radix-ui/react-alert-dialog"],
     },
     ssr: {
       // Bundle these with the SSR graph so dev/prod share one React instance (avoids invalid hook call).
