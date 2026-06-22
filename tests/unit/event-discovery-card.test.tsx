@@ -1,8 +1,8 @@
 import EventDiscoveryCard from "@/components/discovery/EventDiscoveryCard";
 import { formatEventPrice } from "@/lib/events/format";
 import type { EventWithCoverUrl } from "@/types";
-import { SUBGENRE_LABELS } from "@/types";
-import { render, screen } from "@testing-library/react";
+import { SUBGENRE_LABELS, SUBGENRES } from "@/types";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 
 function buildDiscoveryEvent(overrides: Partial<EventWithCoverUrl> = {}): EventWithCoverUrl {
@@ -74,5 +74,24 @@ describe("EventDiscoveryCard", () => {
     const detailLinks = screen.getAllByRole("link", { name: /Zobacz|Neuro Night Warsaw/ });
     const zobaczLink = detailLinks.find((link) => link.textContent === "Zobacz");
     expect(zobaczLink).toHaveAttribute("href", `/events/${event.id}`);
+  });
+
+  it("shows first two subgenres and collapses the rest behind +N until hover", () => {
+    const subgenres = SUBGENRES.slice(0, 10);
+    const event = buildDiscoveryEvent({ subgenres });
+    const [first, second, third, last] = subgenres;
+
+    render(<EventDiscoveryCard event={event} />);
+
+    expect(screen.getByText(SUBGENRE_LABELS[first])).toBeInTheDocument();
+    expect(screen.getByText(SUBGENRE_LABELS[second])).toBeInTheDocument();
+    expect(screen.getByText("+8")).toBeInTheDocument();
+    expect(screen.getByText(SUBGENRE_LABELS[third])).toHaveClass("hidden");
+
+    const moreGroup = screen.getByRole("group", { name: /\+8 podgatunków/i });
+    fireEvent.mouseEnter(moreGroup);
+
+    expect(screen.getByText(SUBGENRE_LABELS[third])).not.toHaveClass("hidden");
+    expect(screen.getByText(SUBGENRE_LABELS[last])).not.toHaveClass("hidden");
   });
 });

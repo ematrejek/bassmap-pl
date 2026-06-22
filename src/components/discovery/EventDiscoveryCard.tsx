@@ -1,13 +1,10 @@
-import GenreBadge, { type NeonColor } from "@/components/fan/GenreBadge";
+import EventCardSubgenreBadges from "@/components/discovery/EventCardSubgenreBadges";
 import { Button } from "@/components/ui/button";
 import { formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
 import { GOING_COUNT_PLACEHOLDER } from "@/lib/events/rsvp-placeholder";
 import { cn } from "@/lib/utils";
 import type { EventWithCoverUrl } from "@/types";
-import { SUBGENRE_LABELS } from "@/types";
 import { Calendar, Clock, MapPin, Users } from "lucide-react";
-
-const NEON_CYCLE: NeonColor[] = ["violet", "green", "cyan", "orange"];
 
 interface Props {
   event: EventWithCoverUrl;
@@ -38,13 +35,7 @@ export default function EventDiscoveryCard({
       onMouseLeave={onMouseLeave}
     >
       <div className="flex flex-1 flex-col p-5">
-        <div className="flex flex-wrap gap-1.5">
-          {event.subgenres.map((subgenre, index) => (
-            <GenreBadge key={subgenre} color={NEON_CYCLE[index % NEON_CYCLE.length]}>
-              {SUBGENRE_LABELS[subgenre]}
-            </GenreBadge>
-          ))}
-        </div>
+        <EventCardSubgenreBadges subgenres={event.subgenres} />
 
         <h3 className="font-heading text-foreground group-hover:text-glow-violet mt-4 text-xl leading-tight font-bold tracking-tight uppercase transition-colors">
           <a href={detailHref} className="hover:underline">
