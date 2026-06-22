@@ -4,17 +4,6 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    groups:
-      production:
-        dependency-type: production
-      development:
-        dependency-type: development
-    ignore:
-      # ESLint 10 is not yet supported by eslint-plugin-jsx-a11y.
-      - dependency-name: eslint
-        update-types: [version-update:semver-major]
-      - dependency-name: "@eslint/js"
-        update-types: [version-update:semver-major]
-      # Zod 4 needs a dedicated migration before we can adopt it.
-      - dependency-name: zod
-        update-types: [version-update:semver-major]
+    # Version-update PRs kept failing CI (Astro 7, Zod 4, ESLint 10, etc.).
+    # Security advisories still surface via GitHub Dependabot alerts.
+    open-pull-requests-limit: 0
