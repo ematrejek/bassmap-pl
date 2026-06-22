@@ -42,7 +42,7 @@ export default function EventCardSubgenreBadges({ subgenres, className }: Props)
             setExpanded(true);
           }}
           onBlur={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget as Node | null)) {
+            if (!event.currentTarget.contains(event.relatedTarget)) {
               setExpanded(false);
             }
           }}
