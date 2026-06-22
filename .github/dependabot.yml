@@ -9,3 +9,12 @@ updates:
         dependency-type: production
       development:
         dependency-type: development
+    ignore:
+      # ESLint 10 is not yet supported by eslint-plugin-jsx-a11y.
+      - dependency-name: eslint
+        update-types: [version-update:semver-major]
+      - dependency-name: "@eslint/js"
+        update-types: [version-update:semver-major]
+      # Zod 4 needs a dedicated migration before we can adopt it.
+      - dependency-name: zod
+        update-types: [version-update:semver-major]
