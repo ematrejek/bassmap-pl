@@ -2,7 +2,7 @@
 change_id: account-deletion
 reviewed_at: 2026-06-19
 reviewer: Cursor Agent
-plan: context/changes/account-deletion/plan.md
+plan: context/archive/2026-06-19-account-deletion/plan.md
 verdict: approved-with-amendments
 ---
 

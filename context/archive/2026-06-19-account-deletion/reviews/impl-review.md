@@ -1,7 +1,7 @@
 <!-- IMPL-REVIEW-REPORT -->
 # Implementation Review: Usuwanie konta użytkownika (S-16)
 
-- **Plan**: context/changes/account-deletion/plan.md
+- **Plan**: context/archive/2026-06-19-account-deletion/plan.md
 - **Scope**: All 5 phases (uncommitted working tree)
 - **Date**: 2026-06-19
 - **Verdict**: PASS (z drobnymi uwagami przed archive)
@@ -45,7 +45,7 @@
 - **Severity**: 👁️ OBSERVATION (było)
 - **Impact**: 🏃 LOW
 - **Dimension**: Success Criteria
-- **Location**: context/changes/account-deletion/plan.md (Progress manual)
+- **Location**: context/archive/2026-06-19-account-deletion/plan.md (Progress manual)
 - **Detail**: Checklista manualna w przeglądarce.
 - **Fix**: Potwierdzone przez użytkownika; Progress odhaczony.
 - **Decision**: FIXED – 2026-06-19.

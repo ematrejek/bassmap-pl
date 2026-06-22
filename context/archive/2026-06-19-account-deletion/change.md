@@ -2,11 +2,11 @@
 id: account-deletion
 roadmap: S-16
 title: Usuwanie konta użytkownika
-status: in_progress
-updated: 2026-06-19
+status: archived
 plan_review: reviews/plan-review.md
 created: 2026-06-19
 updated: 2026-06-19
+archived_at: 2026-06-19T18:00:00Z
 github_issue: 28
 prd_refs:
   - FR-022

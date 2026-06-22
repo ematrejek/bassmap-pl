@@ -1,6 +1,6 @@
 # Usuwanie konta użytkownika (S-16) – Plan Brief
 
-> Full plan: `context/changes/account-deletion/plan.md`
+> Full plan: `context/archive/2026-06-19-account-deletion/plan.md`
 
 ## What & Why
 
