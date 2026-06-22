@@ -20,7 +20,7 @@
 
 ## Findings
 
-### F1 — Układ desktop DiscoveryShell niezgodny z planem
+### F1 – Układ desktop DiscoveryShell niezgodny z planem
 
 - **Severity**: ⚠️ WARNING
 - **Impact**: 🔬 HIGH
@@ -30,7 +30,7 @@
 - **Fix B**: Zaktualizować plan jako addendum.
 - **Decision**: FIXED via Fix B – addendum w plan.md
 
-### F2 — Zmiany poza scope S-18 w tym samym diffie
+### F2 – Zmiany poza scope S-18 w tym samym diffie
 
 - **Severity**: ⚠️ WARNING
 - **Impact**: 🔬 HIGH
@@ -40,7 +40,7 @@
 - **Fix B**: Udokumentować w planie jako addendum.
 - **Decision**: FIXED via Fix B – addendum w plan.md
 
-### F3 — Regresja dostępności w EventCommentsSection
+### F3 – Regresja dostępności w EventCommentsSection
 
 - **Severity**: ⚠️ WARNING
 - **Impact**: 🔎 MEDIUM
@@ -49,7 +49,7 @@
 - **Detail**: Radix AlertDialog → inline alertdialog bez focus trap.
 - **Decision**: ACCEPTED – inline dialog wymagany aby działało (bundling Radix)
 
-### F4 — change.md status
+### F4 – change.md status
 
 - **Severity**: OBSERVATION
 - **Impact**: 🏃 LOW
@@ -58,7 +58,7 @@
 - **Detail**: Manual checks wykonane przez użytkownika.
 - **Decision**: FIXED – status impl_reviewed, manual [x] w Progress
 
-### F5 — hoveredEventId nieużywany w EventList
+### F5 – hoveredEventId nieużywany w EventList
 
 - **Severity**: OBSERVATION
 - **Impact**: 🏃 LOW
@@ -66,7 +66,7 @@
 - **Location**: src/components/discovery/EventList.tsx
 - **Decision**: FIXED – isHighlighted na EventDiscoveryCard, handlery na karcie
 
-### F6 — EventsMap rozszerzenia poza planem
+### F6 – EventsMap rozszerzenia poza planem
 
 - **Severity**: OBSERVATION
 - **Impact**: 🏃 LOW
@@ -74,7 +74,7 @@
 - **Location**: EventsMap.tsx, global.css
 - **Decision**: FIXED – udokumentowane w addendum plan.md
 
-### F7 — Kruchy selektor w teście
+### F7 – Kruchy selektor w teście
 
 - **Severity**: OBSERVATION
 - **Impact**: 🏃 LOW
