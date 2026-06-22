@@ -2,10 +2,10 @@
 change_id: event-card-redesign
 title: Kafelki wydarzeń (bassmap-pl-ui)
 roadmap_ref: S-18
-status: impl_reviewed
+status: archived
 created: 2026-06-22
 updated: 2026-06-22
-archived_at: null
+archived_at: 2026-06-22T21:20:00Z
 github-issue: 38
 ---
 

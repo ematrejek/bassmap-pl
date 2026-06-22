@@ -24,9 +24,9 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 
 ## North star
 
-**S-18** (kafelki wydarzeń zgodne z bassmap-pl-ui) – pierwszy slice Partii III; odblokowuje spójny UI przed **S-19** (Idę / Interesuję się).
+**S-19** («Idę» / «Interesuję się») – north star Partii III po zamknięciu S-18; wymaga gotowych kafelków z placeholderem licznika.
 
-> Poprzednia north star: **Partia II zamknięta** – S-12…S-16 done (2026-06-19). Wcześniej: **S-16** (usuwanie konta), **S-15** (komentarze).
+> Poprzednia north star: **S-18** (kafelki wydarzeń) – **done** 2026-06-22. Wcześniej: Partia II zamknięta – S-12…S-16 done (2026-06-19).
 
 ## At a glance
 
@@ -53,7 +53,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-14 | change-suggestions        | fan/admin zgłasza sugestię zmian; admin ocenia w panelu „Sugestie zmian”                    | S-12, S-13    | notes 2026-06-13                 | done        |
 | S-15 | event-comments            | zalogowany fan komentuje wydarzenie; wszyscy czytają; autor usuwa własny komentarz; admin usuwa dowolny | S-12          | notes 2026-06-13                 | done        |
 | S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto; komentarze zostają jako „Usunięty użytkownik”      | S-12, S-15    | FR-022, NFR Privacy              | done        |
-| S-18 | event-card-redesign       | fan widzi kwadratowe kafelki eventów (nazwa, podgatunki, miejsce, czas, cena) na liście     | S-16          | notes 2026-06-22                 | proposed    |
+| S-18 | event-card-redesign       | fan widzi kwadratowe kafelki eventów (nazwa, podgatunki, miejsce, czas, cena) na liście     | S-16          | notes 2026-06-22                 | done        |
 | S-19 | event-attendance          | fan klika «Idę» lub «Interesuję się»; liczniki; sekcje w Moje eventy i profilu              | S-18          | notes 2026-06-22                 | proposed    |
 | S-20 | fan-profile-edit          | fan edytuje login, bio, miasto, ulubione podgatunki, linki social                          | S-19          | notes 2026-06-22                 | proposed    |
 | S-21 | profile-spotify-embed     | fan dodaje link Spotify (utwór/playlista); embed odtwarzacza na profilu                     | S-20          | notes 2026-06-22                 | proposed    |
@@ -454,7 +454,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Lokalizacja design systemu bassmap-pl-ui (repo / Figma) \u2013 Owner: user. Block: planowanie S-18.
 - **Risk:** Refactor UI listy – nie dotyka schematu bazy; warto przed S-19 żeby przyciski RSVP weszły w gotowy layout.
-- **Status:** proposed
+- **Status:** done
 
 ### S-19: «Idę» i «Interesuję się» (RSVP)
 
@@ -768,3 +768,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-14: fan na stronie opublikowanego nadchodzącego wydarzenia wypełnia formularz z proponowanymi zmianami pól; admin w panelu otwiera sugestię, porównuje pola i po „Przyjmij” zapisuje zmiany w wydarzeniu (flow duplikatu z S-13 pozostaje tekstowy).** \u2013 Archived 2026-06-19 → `context/archive/2026-06-19-change-suggestions/`. Lesson: \u2013.
 - **S-15: pod szczegółami opublikowanego wydarzenia każdy czyta komentarze; zalogowany użytkownik dodaje komentarz i może usunąć własny; administrator usuwa dowolny komentarz.** \u2013 Archived 2026-06-19 → `context/archive/2026-06-19-event-comments/`. Lesson: przed pushem na `main` uruchom `npm run verify` (`astro check` łapie błędy typów w testach API).
 - **S-16: zalogowany fan trwale usuwa konto z profilu po potwierdzeniu hasłem; komentarze zostają z etykietą „Usunięty użytkownik”; zgłoszenia i sugestie tracą powiązanie z kontem.** \u2013 Archived 2026-06-19 → `context/archive/2026-06-19-account-deletion/`. Lesson: jawny UPDATE `author_label` przed `deleteUser`; migracja FK sugestii przed deployem.
+- **S-18: fan na liście `/events` widzi kwadratowe kafelki zgodne z designem bassmap-pl-ui: nazwa, podgatunki, miejsce, czas, cena.** \u2013 Archived 2026-06-22 → `context/archive/2026-06-22-event-card-redesign/`. Lesson: \u2013.
