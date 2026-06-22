@@ -1,7 +1,6 @@
 import { ServerError } from "@/components/auth/ServerError";
 import EventFilters from "@/components/discovery/EventFilters";
 import EventList from "@/components/discovery/EventList";
-import EventPreviewCard from "@/components/discovery/EventPreviewCard";
 import type { FanEventFilters } from "@/lib/events/fan-schema";
 import { shellHeading, shellPanelFlat, shellTabActive, shellTabInactive, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
@@ -66,23 +65,18 @@ interface Props {
 type MobileTab = "list" | "map";
 
 export default function DiscoveryShell({ events, cities, currentFilters, listError }: Props) {
-  const [selectedEventId, setSelectedEventId] = useState<string | null>(null);
+  const [hoveredEventId, setHoveredEventId] = useState<string | null>(null);
   const [mobileTab, setMobileTab] = useState<MobileTab>("list");
   const isClient = useIsClient();
 
-  const selectedEvent = selectedEventId ? (events.find((e) => e.id === selectedEventId) ?? null) : null;
   const hasActiveFilters =
     currentFilters.city !== null ||
     currentFilters.subgenres.length > 0 ||
     currentFilters.dateFrom !== null ||
     currentFilters.freeOnly;
 
-  const handleSelectEvent = (id: string) => {
-    setSelectedEventId(id);
-  };
-
-  const handleClosePreview = () => {
-    setSelectedEventId(null);
+  const handleEventNavigate = (id: string) => {
+    window.location.assign(`/events/${id}`);
   };
 
   return (
@@ -125,34 +119,36 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
         </button>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 md:items-start">
-        <div className={cn("space-y-4", mobileTab !== "list" && "hidden md:block")}>
+      <div className="grid gap-6 md:grid-cols-2 md:items-stretch">
+        <div className={cn(mobileTab !== "list" && "hidden md:block")}>
           <EventFilters cities={cities} currentFilters={currentFilters} />
-          <EventList
-            events={events}
-            selectedEventId={selectedEventId}
-            onSelectEvent={handleSelectEvent}
-            hasActiveFilters={hasActiveFilters}
-          />
         </div>
 
         <div className={cn("min-h-[320px]", mobileTab !== "map" && "hidden md:block")}>
           {isClient ? (
-            <Suspense fallback={<MapPlaceholder className="h-[min(60vh,520px)]" />}>
+            <Suspense fallback={<MapPlaceholder className="h-full min-h-[320px]" />}>
               <EventsMap
                 events={events}
-                selectedEventId={selectedEventId}
-                onSelectEvent={handleSelectEvent}
-                className="h-[min(60vh,520px)]"
+                highlightedEventId={hoveredEventId}
+                onEventNavigate={handleEventNavigate}
+                onHighlightEvent={setHoveredEventId}
+                className="h-full min-h-[320px] md:min-h-[min(60vh,520px)]"
               />
             </Suspense>
           ) : (
-            <MapPlaceholder className="h-[min(60vh,520px)]" />
+            <MapPlaceholder className="h-full min-h-[320px] md:min-h-[min(60vh,520px)]" />
           )}
         </div>
       </div>
 
-      {selectedEvent && <EventPreviewCard event={selectedEvent} onClose={handleClosePreview} />}
+      <div className={cn(mobileTab !== "list" && "hidden md:block")}>
+        <EventList
+          events={events}
+          hasActiveFilters={hasActiveFilters}
+          hoveredEventId={hoveredEventId}
+          onHoverEvent={setHoveredEventId}
+        />
+      </div>
     </div>
   );
 }

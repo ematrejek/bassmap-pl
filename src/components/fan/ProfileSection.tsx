@@ -1,6 +1,6 @@
+import EventDiscoveryGrid from "@/components/discovery/EventDiscoveryGrid";
 import GenreBadge from "@/components/fan/GenreBadge";
 import { authorLabelFromEmail, loginFromEmailLocalPart } from "@/lib/auth/display-name";
-import ProfileEventCard from "@/components/fan/ProfileEventCard";
 import { Equalizer } from "@/components/shell/Equalizer";
 import { Button } from "@/components/ui/button";
 import { DISCOVERY_PATH, MY_EVENTS_PATH } from "@/lib/routes";
@@ -155,10 +155,8 @@ export default function ProfileSection({ email, goingEvents = [] }: Props) {
             </div>
           ) : (
             <>
-              <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {goingEvents.slice(0, 6).map((event) => (
-                  <ProfileEventCard key={event.id} event={event} />
-                ))}
+              <div className="mt-6">
+                <EventDiscoveryGrid events={goingEvents.slice(0, 6)} />
               </div>
               {goingEvents.length > 6 ? (
                 <div className="mt-6 text-center">

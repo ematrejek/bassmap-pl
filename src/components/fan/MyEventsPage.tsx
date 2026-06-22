@@ -1,7 +1,7 @@
 import FanEventsTable from "@/components/fan/FanEventsTable";
 import type { FanChangeSuggestionRow } from "@/components/fan/FanChangeSuggestionsTable";
 import MyEventsSectionHeader from "@/components/fan/MyEventsSectionHeader";
-import ProfileEventCard from "@/components/fan/ProfileEventCard";
+import EventDiscoveryGrid from "@/components/discovery/EventDiscoveryGrid";
 import { Button } from "@/components/ui/button";
 import { DISCOVERY_PATH, MY_EVENTS_NEW_PATH } from "@/lib/routes";
 import { shellBtnPrimary, shellPanelFlat, shellTextMuted } from "@/lib/shell-styles";
@@ -102,11 +102,7 @@ export default function MyEventsPage({
         {goingEvents.length === 0 ? (
           <EmptyAttendingPanel message="Nie masz jeszcze wydarzeń z «Idę». Otwórz stronę imprezy i zaznacz, że idziesz – pojawi się tutaj." />
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {goingEvents.map((event) => (
-              <ProfileEventCard key={event.id} event={event} />
-            ))}
-          </div>
+          <EventDiscoveryGrid events={goingEvents} />
         )}
       </MyEventsSectionHeader>
 
@@ -119,11 +115,7 @@ export default function MyEventsPage({
         {watchingEvents.length === 0 ? (
           <EmptyAttendingPanel message="Nie obserwujesz jeszcze żadnych wydarzeń. Kliknij «Obserwuję» na stronie imprezy – zobaczysz ją tutaj." />
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {watchingEvents.map((event) => (
-              <ProfileEventCard key={event.id} event={event} />
-            ))}
-          </div>
+          <EventDiscoveryGrid events={watchingEvents} />
         )}
       </MyEventsSectionHeader>
 

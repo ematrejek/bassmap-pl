@@ -1,22 +1,67 @@
 ---
-import SignInForm from "@/components/auth/SignInForm";
 import AppShell from "@/components/shell/AppShell.astro";
 import Layout from "@/layouts/Layout.astro";
-import { shellLink } from "@/lib/shell-styles";
+import { shellBtnPrimary, shellLink } from "@/lib/shell-styles";
 
 export const prerender = false;
 
 const error = Astro.url.searchParams.get("error");
+
+const inputClass =
+  "border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/70 focus-visible:ring-ring/30 w-full rounded-lg border px-3 py-2 focus-visible:ring-2 focus-visible:outline-none";
 ---
 
-<Layout title="Sign in">
+<Layout title="Zaloguj się – BassMap PL">
   <AppShell showFooter={true}>
     <div class="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center px-4 py-8">
       <div class="surface-panel p-8">
         <h1 class="font-heading text-foreground mb-6 text-center text-2xl font-black tracking-tight uppercase">
           Zaloguj się
         </h1>
-        <SignInForm serverError={error} client:only="react" />
+
+        <form method="POST" action="/api/auth/signin" class="space-y-4">
+          {
+            error ? (
+              <p class="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+                {error}
+              </p>
+            ) : null
+          }
+
+          <div>
+            <label for="email" class="text-foreground/90 mb-1 block text-sm">Email</label>
+            <input
+              id="email"
+              name="email"
+              type="email"
+              autocomplete="email"
+              required
+              class:list={inputClass}
+              placeholder="twoj@email.pl"
+            />
+          </div>
+
+          <div>
+            <label for="password" class="text-foreground/90 mb-1 block text-sm">Hasło</label>
+            <input
+              id="password"
+              name="password"
+              type="password"
+              autocomplete="current-password"
+              required
+              class:list={inputClass}
+              placeholder="Twoje hasło"
+            />
+          </div>
+
+          <button
+            type="submit"
+            class:list={[shellBtnPrimary, "w-full rounded-lg px-4 py-2 text-sm font-semibold tracking-wider uppercase"]}
+          >
+            Zaloguj się
+          </button>
+        </form>
+
         <p class="text-muted-foreground mt-4 text-center text-sm">
           Nie masz konta? <a href="/auth/signup" class:list={shellLink}>Zarejestruj się</a>
         </p>

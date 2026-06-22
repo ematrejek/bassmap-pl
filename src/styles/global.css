@@ -207,6 +207,26 @@
   border: none !important;
 }
 
+.leaflet-tooltip.discovery-map-tooltip {
+  background: oklch(0.17 0.02 280 / 0.95);
+  border: 1px solid oklch(0.62 0.25 300 / 0.45);
+  border-radius: 0.75rem;
+  box-shadow: 0 0 18px oklch(0.62 0.25 300 / 0.22);
+  color: oklch(0.97 0.005 280);
+  padding: 0;
+  backdrop-filter: blur(8px);
+}
+
+.leaflet-tooltip.discovery-map-tooltip::before {
+  border-top-color: oklch(0.17 0.02 280 / 0.95);
+}
+
+.discovery-map-tooltip__inner {
+  min-width: 11rem;
+  max-width: 15rem;
+  padding: 0.75rem;
+}
+
 /* Marketing homepage: Lenis fluid scroll */
 html.home-fluid {
   scroll-behavior: auto;

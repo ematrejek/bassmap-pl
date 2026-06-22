@@ -1,9 +1,9 @@
 ---
 project: BassMap PL
-version: 2
+version: 3
 status: active
 created: 2026-06-10
-updated: 2026-06-19
+updated: 2026-06-22
 subgenre_catalog_version: 1
 prd_version: 2
 main_goal: market-feedback
@@ -12,7 +12,7 @@ top_blocker: decisions
 
 # Roadmap: BassMap PL
 
-> Derived from `context/foundation/prd.md` (v2) + auto-researched codebase baseline + user notes 2026-06-13 (Partia I / Partia II).
+> Derived from `context/foundation/prd.md` (v2) + auto-researched codebase baseline + user notes 2026-06-13 (Partia I / Partia II) + shaping Partia III 2026-06-22 (`partia-iii-shaping.md`).
 > Edit-in-place; archive when superseded.
 > Slices below are listed in dependency order. The "At a glance" table is the index.
 
@@ -20,13 +20,13 @@ top_blocker: decisions
 
 BassMap PL to pierwsza scentralizowana wyszukiwarka wydarzeń drum'n'bass w Polsce. Fani DnB nie mają jednego źródła prawdy o nadchodzących eventach \u2013 muszą ręcznie sprawdzać Facebooka, Instagram, znajomych i fragmentaryczne portale biletowe. Produkt wypełnia tę lukę: jedno miejsce, po polsku, z filtrowaniem po mieście i podgatunku oraz pełnymi szczegółami wydarzenia.
 
-MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Kolejne prace dzielą się na **Partię I** (must-have ulepszenia odkrywania i danych) oraz **Partię II** (własny layout, konta fanów, społeczność i moderacja).
+MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **Partia I** (odkrywanie) i **Partia II** (layout, konta, UGC) są **done**. Kolejne prace to **Partia III** (zaangażowanie fanów, profil, społeczność, organizatorzy, analityka, mobile) – szczegóły w `partia-iii-shaping.md`.
 
 ## North star
 
-**Partia II (konta i UGC) – zamknięta** – łańcuch S-12…S-16 done (2026-06-19). Następny krok produktowy: shaping z parked items (pełne team/forum, portal organizatora) lub utrzymanie operacyjne.
+**S-18** (kafelki wydarzeń zgodne z bassmap-pl-ui) – pierwszy slice Partii III; odblokowuje spójny UI przed **S-19** (Idę / Interesuję się).
 
-> Poprzednia north star: **S-16** (usuwanie konta) – **done** 2026-06-19. Wcześniej: **S-15** (komentarze), **S-13** (duplikaty), **S-14** (sugestie zmian).
+> Poprzednia north star: **Partia II zamknięta** – S-12…S-16 done (2026-06-19). Wcześniej: **S-16** (usuwanie konta), **S-15** (komentarze).
 
 ## At a glance
 
@@ -53,6 +53,17 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. Ko
 | S-14 | change-suggestions        | fan/admin zgłasza sugestię zmian; admin ocenia w panelu „Sugestie zmian”                    | S-12, S-13    | notes 2026-06-13                 | done        |
 | S-15 | event-comments            | zalogowany fan komentuje wydarzenie; wszyscy czytają; autor usuwa własny komentarz; admin usuwa dowolny | S-12          | notes 2026-06-13                 | done        |
 | S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto; komentarze zostają jako „Usunięty użytkownik”      | S-12, S-15    | FR-022, NFR Privacy              | done        |
+| S-18 | event-card-redesign       | fan widzi kwadratowe kafelki eventów (nazwa, podgatunki, miejsce, czas, cena) na liście     | S-16          | notes 2026-06-22                 | proposed    |
+| S-19 | event-attendance          | fan klika «Idę» lub «Interesuję się»; liczniki; sekcje w Moje eventy i profilu              | S-18          | notes 2026-06-22                 | proposed    |
+| S-20 | fan-profile-edit          | fan edytuje login, bio, miasto, ulubione podgatunki, linki social                          | S-19          | notes 2026-06-22                 | proposed    |
+| S-21 | profile-spotify-embed     | fan dodaje link Spotify (utwór/playlista); embed odtwarzacza na profilu                     | S-20          | notes 2026-06-22                 | proposed    |
+| S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | proposed    |
+| S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | proposed    |
+| S-24 | crew-teams                | ekipa (nazwa, miasto, podgatunki, opis), rekrutacja przez forum, akceptacja + kontakt        | S-22, S-23    | notes 2026-06-22                 | proposed    |
+| F-05 | organizer-role-foundation | (foundation) rola organizatora + wniosek i ręczna weryfikacja admina                        | S-16          | notes 2026-06-22                 | proposed    |
+| S-25 | organizer-self-service    | zweryfikowany organizator publikuje eventy bez moderacji; ogłoszenia na forum                 | F-05, S-22    | notes 2026-06-22                 | proposed    |
+| S-26 | analytics-consent         | GA4 + baner zgody cookies + aktualizacja dokumentów prawnych                                | S-19          | NFR Privacy, notes 2026-06-22    | proposed    |
+| S-27 | mobile-app                | PWA lub aplikacja mobilna (Android/iOS) – po stabilnym web i pomiarze ruchu                 | S-26          | notes 2026-06-22                 | proposed    |
 
 ## Streams
 
@@ -64,6 +75,11 @@ Nawigacja \u2013 grupy elementów współdzielących łańcuch zależności. Kan
 | B      | Partia I \u2013 odkrywanie   | `S-04` / `S-05` / `S-06` / `S-11` / `S-07` / `S-08` (równolegle po `S-02`) | Must-have przed Partią II; `S-11` podniesione z Partii II (RODO + gotowe dokumenty).                                                             |
 | C      | Partia II \u2013 layout      | `F-04` → `S-09` → `S-10`                                                   | **Done** (2026-06-14) \u2013 jeden slice `app-shell-navigation`.                                                                                      |
 | D      | Partia II \u2013 konta i UGC | `S-12` → `S-17` → `S-13` → `S-14` → `S-15` → `S-16`                         | **Done** (2026-06-19) \u2013 pełny łańcuch konta fana + UGC + usuwanie konta. |
+| E      | Partia III \u2013 odkrywanie UI + RSVP | `S-18` → `S-19`                                                    | Kafelki bassmap-pl-ui, potem «Idę» / «Interesuję się». |
+| F      | Partia III \u2013 profil   | `S-20` → `S-21`                                                             | Edycja profilu, potem Spotify embed (bez API na start). |
+| G      | Partia III \u2013 społeczność | `S-22` → `S-23` → `S-24`                                                 | Forum MVP → znajomi i polecenia → pełna Moja ekipa. |
+| H      | Partia III \u2013 organizator | `F-05` → `S-25`                                                           | Rola + ręczna weryfikacja → self-service eventów i ogłoszeń. |
+| I      | Partia III \u2013 pomiar i mobile | `S-26` → `S-27`                                                       | GA4 + RODO, potem PWA / native. |
 
 ## Baseline
 
@@ -413,13 +429,178 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **FR-022:** Użytkownik może trwale usunąć konto; komentarze zostają z etykietą „Usunięty użytkownik”. Priority: must-have (Partia II).
 
+---
+
+## Partia III \u2013 zaangażowanie, społeczność, organizatorzy
+
+> Ustalone 2026-06-22 z notatek właścicielki + sesja shaping. Pełny zapis decyzji: `context/foundation/partia-iii-shaping.md`.
+
+**Ustalenia cross-cutting (Partia III):**
+
+- Copy RSVP: **«Interesuję się»** (nie «Obserwuję» – do zmiany w kodzie przy S-19).
+- Spotify «Moja muzyka»: **embed z URL**, bez Spotify API w pierwszej wersji (S-21).
+- Weryfikacja organizatora MVP: **wniosek + ręczna akceptacja admina** (F-05).
+- GA4 (S-26): wymaga **baneru cookies** i aktualizacji polityki prywatności (konflikt z PRD „brak tracking cookies” – rozwiązać przy implementacji).
+- Mobile (S-27): preferować **PWA → Capacitor → native** w tej kolejności kosztowej.
+
+### S-18: Kafelki wydarzeń (bassmap-pl-ui)
+
+- **Outcome:** fan na liście `/events` widzi kwadratowe kafelki zgodne z designem bassmap-pl-ui: nazwa, podgatunki, miejsce (miasto/venue), czas, cena. Strona szczegółów `/events/[id]` pokazuje pełne informacje (lineup, opis, komentarze – pola już istnieją).
+- **Change ID:** event-card-redesign
+- **PRD refs:** FR-001, FR-004, notes 2026-06-22
+- **Prerequisites:** S-16
+- **Parallel with:** \u2013
+- **Blockers:** \u2013
+- **Unknowns:**
+  - Lokalizacja design systemu bassmap-pl-ui (repo / Figma) \u2013 Owner: user. Block: planowanie S-18.
+- **Risk:** Refactor UI listy – nie dotyka schematu bazy; warto przed S-19 żeby przyciski RSVP weszły w gotowy layout.
+- **Status:** proposed
+
+### S-19: «Idę» i «Interesuję się» (RSVP)
+
+- **Outcome:** zalogowany fan na stronie wydarzenia klika **«Idę»** lub **«Interesuję się»**; wszyscy widzą **liczniki**; wydarzenia trafiają do sekcji **Moje eventy** (`#ide`, `#interesuje-sie`) i skrótu na **profilu** (UI-placeholder już w kodzie).
+- **Change ID:** event-attendance
+- **PRD refs:** notes 2026-06-22
+- **Prerequisites:** S-18 (zalecane)
+- **Parallel with:** \u2013
+- **Blockers:** \u2013
+- **Unknowns:**
+  - Dokładna liczba vs zaokrąglenie liczników przy małej skali \u2013 Owner: user. Block: no.
+- **Risk:** Nowa tabela + RLS; rename «Obserwuję» → «Interesuję się» w całym UI.
+- **Status:** proposed
+
+**FR (propozycja do PRD v3):**
+
+- **FR-026:** Zalogowany fan oznacza udział w wydarzeniu («Idę» / «Interesuję się»); liczniki publiczne; lista w Moje eventy. Priority: must-have (Partia III).
+
+### S-20: Edycja profilu fana
+
+- **Outcome:** fan w «Edytuj profil» ustawia **login** (publiczny), **opis**, **miasto**, **ulubione podgatunki** (katalog 25 wartości), **linki**: Instagram, SoundCloud, Facebook, Spotify (profil). Placeholdery w `ProfileSection` zastąpione działającym formularzem.
+- **Change ID:** fan-profile-edit
+- **PRD refs:** FR-017, notes 2026-06-22
+- **Prerequisites:** S-19 (zalecane; można równolegle)
+- **Parallel with:** \u2013
+- **Blockers:** \u2013
+- **Unknowns:**
+  - Unikalność loginu, widoczność profilu dla gości, dozwolone znaki \u2013 Owner: user. Block: planowanie S-20.
+- **Risk:** Dane profilu publiczne \u2013 legal sync polityki prywatności.
+- **Status:** proposed
+
+**FR (propozycja do PRD v3):**
+
+- **FR-027:** Fan edytuje publiczny profil (login, bio, miasto, podgatunki, linki social). Priority: must-have (Partia III).
+
+### S-21: Moja muzyka (Spotify embed)
+
+- **Outcome:** fan dodaje link do **utworu** lub **playlisty** Spotify; na profilu widać osadzony odtwarzacz (iframe embed). Bez logowania Spotify i bez API.
+- **Change ID:** profile-spotify-embed
+- **PRD refs:** notes 2026-06-22
+- **Prerequisites:** S-20
+- **Parallel with:** \u2013
+- **Blockers:** \u2013
+- **Unknowns:** \u2013
+- **Risk:** Niski – walidacja URL `open.spotify.com` + embed.
+- **Status:** proposed
+
+### S-22: Forum MVP
+
+- **Outcome:** zalogowany fan tworzy **wątek** w kategorii: «Szukam ekipy», «Mamy ekipę – szukamy ludzi», «Ogólne»; czyta listę, wchodzi w wątek, **komentuje**; admin usuwa wątki/komentarze. Placeholder `/forum` zastąpiony działającym forum.
+- **Change ID:** forum-threads
+- **PRD refs:** notes 2026-06-22
+- **Prerequisites:** S-20
+- **Parallel with:** S-21
+- **Blockers:** \u2013
+- **Unknowns:**
+  - Kategorie na start vs pełna taksonomia \u2013 Owner: user. Block: no (3 kategorie + Ogólne).
+- **Risk:** UGC – legal sync regulamin + polityka; moderacja admin.
+- **Status:** proposed
+
+**Świadomie poza S-22:** szablony ekip, prośby o dołączenie (S-24); kategoria «Ogłoszenie wydarzenia» dla organizatorów (S-25).
+
+### S-23: Znajomi, polecenia eventów, powiadomienia
+
+- **Outcome:** fan wysyła/akceptuje **zaproszenie do znajomych**; **poleca wydarzenie** znajomemu; widzi **panel powiadomień** in-app (np. „anna.nowak poleciła Ci wydarzenie X»); opcjonalnie **e-mail** (Resend – wzorzec jak `/report-issue`).
+- **Change ID:** friends-and-recommendations
+- **PRD refs:** notes 2026-06-22
+- **Prerequisites:** S-20, S-19
+- **Parallel with:** \u2013
+- **Blockers:** \u2013
+- **Unknowns:**
+  - Które zdarzenia wysyłają e-mail \u2013 Owner: user. Block: no (MVP: in-app; e-mail jako faza 2 w slice).
+- **Risk:** Średni zakres – rozważyć podział na PR: znajomi → polecenia → e-mail.
+- **Status:** proposed
+
+### S-24: Moja ekipa (pełna funkcja)
+
+- **Outcome:** fan tworzy **ekipę** (nazwa, opcjonalnie miasto, podgatunki, opis); widzi członków; publikuje wątek forum z szablonem **«Szukam ludzi do ekipy»** (wybór ekipy); kandydat składa **prośbę** → właściciel **akceptuje/odrzuca** → udostępnienie **danych kontaktowych**. Placeholder `/team` zastąpiony.
+- **Change ID:** crew-teams
+- **PRD refs:** notes 2026-06-22
+- **Prerequisites:** S-22, S-23
+- **Parallel with:** \u2013
+- **Blockers:** \u2013
+- **Unknowns:**
+  - Jakie dane kontaktowe po akceptacji (e-mail, social z profilu) \u2013 Owner: user. Block: planowanie S-24.
+- **Risk:** Największy slice społecznościowy Partii III – nie łączyć z S-22.
+- **Status:** proposed
+
+### F-05: Rola organizatora i weryfikacja
+
+- **Outcome:** (foundation) nowa rola `organizer`; formularz **wniosku** o status organizatora; kolejka **Zatwierdź / Odrzuć** w panelu admina; guardy API i middleware.
+- **Change ID:** organizer-role-foundation
+- **PRD refs:** Access Control, notes 2026-06-22
+- **Unlocks:** S-25
+- **Prerequisites:** S-16
+- **Parallel with:** S-22 (po S-20)
+- **Blockers:** \u2013
+- **Unknowns:**
+  - Czy fan i organizator na jednym koncie \u2013 Owner: user. Block: no (domyślnie: tak, rola dodatkowa).
+- **Risk:** Zaufanie – MVP = ręczna weryfikacja; bez automatyzacji KRS/NIP.
+- **Status:** proposed
+
+### S-25: Panel organizatora (self-service)
+
+- **Outcome:** zweryfikowany organizator **dodaje wydarzenia od razu opublikowane** (bez `pending`); tworzy wątek forum **«Ogłoszenie wydarzenia»** powiązany z eventem. **Promowanie płatne** – parked.
+- **Change ID:** organizer-self-service
+- **PRD refs:** notes 2026-06-22
+- **Prerequisites:** F-05, S-22
+- **Parallel with:** \u2013
+- **Blockers:** \u2013
+- **Unknowns:** \u2013
+- **Risk:** Jakość danych bez moderacji – mitigacja: tylko zweryfikowani organizatorzy.
+- **Status:** proposed
+
+### S-26: Google Analytics i zgoda na cookies
+
+- **Outcome:** integracja **GA4**; **baner RODO** na cookies śledzące; aktualizacja polityki prywatności (i ewentualnie regulaminu); `LEGAL_UPDATED_AT`.
+- **Change ID:** analytics-consent
+- **PRD refs:** NFR Privacy, notes 2026-06-22
+- **Prerequisites:** stabilny feature set web (min. S-19)
+- **Parallel with:** \u2013
+- **Blockers:** \u2013
+- **Unknowns:** \u2013
+- **Risk:** PRD v2 mówi o braku tracking cookies – wymaga świadomej zmiany NFR przy wdrożeniu.
+- **Status:** proposed
+
+### S-27: Aplikacja mobilna
+
+- **Outcome:** użytkownik korzysta z BassMap na telefonie jako **PWA** (minimum) lub aplikacja w sklepach (**Capacitor** / native – decyzja przy planowaniu). Po S-26 (pomiar czy mobile jest potrzebne).
+- **Change ID:** mobile-app
+- **PRD refs:** NFR Device, notes 2026-06-22
+- **Prerequisites:** S-26 (zalecane)
+- **Parallel with:** \u2013
+- **Blockers:** \u2013
+- **Unknowns:**
+  - PWA vs Capacitor vs React Native \u2013 Owner: user + dane z GA. Block: planowanie S-27.
+- **Risk:** Native od zera = wielokrotność kosztu utrzymania vs SSR web.
+- **Status:** proposed
+
 ## Backlog Handoff
 
 **External backlog (public):** [GitHub Project \u2013 Bassmap PL Roadmap](https://github.com/users/ematrejek/projects/2) · [Issues `label:roadmap`](https://github.com/ematrejek/bassmap-pl/issues?q=label%3Aroadmap) · [Indeks #6](https://github.com/ematrejek/bassmap-pl/issues/6)
 
 **Sync rule (agents):** `roadmap.md` and the GitHub board stay aligned throughout work \u2013 not only at generation or archive. When picking up, blocking, or finishing a slice/foundation: update `Status` here, the matching issue, and the project column in the **same session** (`Todo` / `In Progress` / `Done`; close issue on `done`). See @AGENTS.md §Roadmap & external backlog.
 
-**Legal sync (UGC):** slice’y z treścią od użytkowników (`S-12`, **`S-17`**, `S-14`, `S-15`, `S-16`) \u2013 przy `/10x-archive` zaktualizuj w tej samej sesji @src/pages/privacy-policy.astro, @src/pages/terms.astro oraz `LEGAL_UPDATED_AT` w @src/lib/legal/paths.ts (nowe cele przetwarzania, retencja, prawa użytkownika). S-11 dostarczył dokumenty bazowe; Partia II rozszerza je per funkcja. **S-17** = oświadczenia praw autorskich okładki + zapis o cytacie opisów (art. 29).
+**Legal sync (UGC):** slice'y z treścią od użytkowników (`S-12`, **`S-17`**, `S-14`, `S-15`, `S-16`, **`S-20`**, **`S-22`**, **`S-23`**, **`S-24`**) oraz **`S-26`** (analytics/cookies) – przy `/10x-archive` zaktualizuj w tej samej sesji @src/pages/privacy-policy.astro, @src/pages/terms.astro oraz `LEGAL_UPDATED_AT` w @src/lib/legal/paths.ts.
 
 | Roadmap ID | Change ID                 | GitHub | Suggested issue title                          | Ready for `/10x-plan` | Notes                                              |
 | ---------- | ------------------------- | ------ | ---------------------------------------------- | --------------------- | -------------------------------------------------- |
@@ -444,6 +625,17 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                        | \u2013                     | Done \u2013 archived 2026-06-19                         |
 | S-15       | event-comments            | #27    | Komentarze pod wydarzeniami                    | \u2013                     | Done \u2013 archived 2026-06-19                         |
 | S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                     | \u2013                     | Done \u2013 archived 2026-06-19                         |
+| S-18       | event-card-redesign       | #38    | Kafelki wydarzeń (bassmap-pl-ui)              | yes                   | Partia III – pierwszy slice                        |
+| S-19       | event-attendance          | #39    | Idę / Interesuję się + liczniki               | po S-18               | Rename «Obserwuję» → «Interesuję się»              |
+| S-20       | fan-profile-edit          | #40    | Edycja profilu fana                           | po S-19               | Legal sync profil publiczny                        |
+| S-21       | profile-spotify-embed     | #41    | Moja muzyka: Spotify embed                    | po S-20               | Bez Spotify API v1                                 |
+| S-22       | forum-threads             | #42    | Forum: wątki i komentarze                     | po S-20               | Legal sync UGC forum                               |
+| S-23       | friends-and-recommendations | #43  | Znajomi, polecenia, powiadomienia             | po S-20, S-19         | E-mail opcjonalnie w slice                         |
+| S-24       | crew-teams                | #44    | Moja ekipa: pełna funkcja                     | po S-22, S-23         | Szablony forum + akceptacja                        |
+| F-05       | organizer-role-foundation | #45    | Rola organizatora + weryfikacja               | po S-16               | Ręczna akceptacja admina                           |
+| S-25       | organizer-self-service    | #46    | Panel organizatora                            | po F-05, S-22         | Promowanie – parked                                |
+| S-26       | analytics-consent         | #47    | GA4 + baner cookies RODO                      | po S-19+              | Aktualizacja NFR Privacy                           |
+| S-27       | mobile-app                | #48    | Aplikacja mobilna / PWA                       | po S-26               | PWA → Capacitor → native                           |
 
 ## Open Roadmap Questions
 
@@ -451,8 +643,22 @@ Foundations below assume these are present and do NOT re-scaffold them.
 2. **Próg fuzzy match duplikatów** \u2013 Owner: team. Block: S-13 planning only.
 3. **Treść Polityki prywatności / Regulaminu** \u2013 Owner: user. Block: no \u2013 **resolved:** gotowe dokumenty w `BassMap_PL_dokumenty_prawne.docx` (13.06.2026); archived `context/archive/2026-06-13-legal-pages/`. Aktualizacja §2.2 (zgłoszenia eventów) + §2.1/§2.6 \u2013 2026-06-15 (S-12 archive). **S-17 done:** dropdown źródła okładki + art. 29 dla opisów + audyt w DB \u2013 archived 2026-06-16.
 4. **Formularz admina \u2013 te same oświadczenia co fan?** \u2013 Owner: user. Block: no \u2013 **resolved 2026-06-16:** fan + admin (decyzja planowania S-17).
+5. **Login publiczny (unikalność, znaki, widoczność profilu)** \u2013 Owner: user. Block: planowanie S-20.
+6. **Liczniki RSVP – dokładna liczba vs zaokrąglenie** \u2013 Owner: user. Block: no.
+7. **Dane kontaktowe po akceptacji do ekipy** \u2013 Owner: user. Block: planowanie S-24.
+8. **Fan + organizator na jednym koncie?** \u2013 Owner: user. Block: no (domyślnie: tak).
+9. **Lokalizacja design systemu bassmap-pl-ui** \u2013 Owner: user. Block: planowanie S-18.
+10. **PWA vs Capacitor vs native (S-27)** \u2013 Owner: user + dane GA. Block: planowanie S-27.
 
 ## Resolved (history)
+
+### 2026-06-22 \u2013 shaping Partia III
+
+- **Partia III** zdefiniowana: slice'y **S-18…S-27** + fundament **F-05**; pełny zapis w `context/foundation/partia-iii-shaping.md`.
+- **North star** przeniesiona na **S-18** (kafelki UI).
+- **Decyzje:** «Interesuję się» (nie «Obserwuję»); Spotify embed bez API; weryfikacja organizatora ręczna; GA wymaga cookies RODO; mobile na końcu (PWA first).
+- **Parked items** forum/ekipa/organizer przeniesione z `## Parked` do proponowanych slice'ów Partii III.
+- **GitHub issues** Partia III: **#38–#48** (S-18…S-27, F-05); indeks [#6](https://github.com/ematrejek/bassmap-pl/issues/6). Duplikat #37 zamknięty.
 
 ### 2026-06-19 \u2013 archiwum S-16 (account-deletion)
 
@@ -535,13 +741,14 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Parked
 
-- **Portal organizatora (self-service pełny)** \u2013 Why parked: Partia II daje fanom „Dodaj wydarzenie” z moderacją, ale nie pełny portal organizatora z brandingiem i statystykami \u2013 to nadal v2+.
-- **Moja ekipa (pełna funkcja)** \u2013 Why parked: Partia II = placeholder w nawigacji; carpooling/crew-finding pozostaje PRD §Non-Goals v3.
-- **Forum (pełna funkcja)** \u2013 Why parked: Partia II = placeholder; pełne forum to osobny duży slice po walidacji potrzeby.
+- **Promowanie wydarzeń (płatne)** \u2013 Why parked: właścicielka – na razie bez monetyzacji; wraca po S-25 i walidacji organizatorów.
+- **Spotify API (pełna integracja)** \u2013 Why parked: S-21 wystarczy embed z URL; API tylko jeśli embed nie wystarczy.
+- **Automatyczna weryfikacja organizatora (KRS/NIP)** \u2013 Why parked: F-05 = ręczna akceptacja admina na start.
 - **Podgląd audio artystów** \u2013 Why parked: PRD §Non-Goals v2.
 - **Monetyzacja / linki afiliacyjne** \u2013 Why parked: PRD §Non-Goals post-launch.
 - **Wydarzenia poza Polską** \u2013 Why parked: PRD §Non-Goals v2+.
-- **Subdomena www** \u2013 Why parked: mały nakład DNS; nie blokuje Partii I/II \u2013 można dorzucić ad hoc.
+- **Subdomena www** \u2013 Why parked: mały nakład DNS; nie blokuje Partii III \u2013 można dorzucić ad hoc.
+- **Portal organizatora (branding, statystyki, bulk)** \u2013 Why parked: S-25 = self-service eventów + ogłoszenia; pełny portal to v2+ poza S-25.
 
 ## Done
 

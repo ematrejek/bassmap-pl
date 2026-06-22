@@ -1,12 +1,14 @@
 import { Equalizer } from "@/components/shell/Equalizer";
+import { formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
 import { resolveMapCoordinates } from "@/lib/geocoding/city-centers";
 import { shellPanelFlat } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import type { Event } from "@/types";
+import { SUBGENRE_LABELS } from "@/types";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { useEffect, useMemo } from "react";
-import { MapContainer, Marker, TileLayer, useMap } from "react-leaflet";
+import { useMemo } from "react";
+import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
 
 const MAP_TILES_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
 const MAP_ATTRIBUTION =
@@ -34,35 +36,35 @@ function createNeonMarkerIcon(color: string, active: boolean): L.DivIcon {
   });
 }
 
-interface MapControllerProps {
-  selectedEventId: string | null;
-  eventCoordinates: Map<string, { latitude: number; longitude: number }>;
-}
+function EventMapTooltip({ event }: { event: Event }) {
+  const subgenreLabels = event.subgenres.slice(0, 2).map((subgenre) => SUBGENRE_LABELS[subgenre]);
+  const extraSubgenres = event.subgenres.length > 2 ? ` +${String(event.subgenres.length - 2)}` : "";
 
-function MapController({ selectedEventId, eventCoordinates }: MapControllerProps) {
-  const map = useMap();
-
-  useEffect(() => {
-    if (!selectedEventId) {
-      return;
-    }
-    const coords = eventCoordinates.get(selectedEventId);
-    if (coords) {
-      map.panTo([coords.latitude, coords.longitude], { animate: true });
-    }
-  }, [selectedEventId, eventCoordinates, map]);
-
-  return null;
+  return (
+    <div className="discovery-map-tooltip__inner space-y-1">
+      <p className="font-heading text-foreground text-sm leading-tight font-bold uppercase">{event.name}</p>
+      <p className="text-muted-foreground text-xs">{formatEventDate(event.startsAt)}</p>
+      <p className="text-foreground text-xs">{formatEventVenueLine(event)}</p>
+      <p className="text-accent text-xs font-semibold">{formatEventPrice(event)}</p>
+      {subgenreLabels.length > 0 ? (
+        <p className="text-muted-foreground text-[0.65rem] tracking-wide uppercase">
+          {subgenreLabels.join(" · ")}
+          {extraSubgenres}
+        </p>
+      ) : null}
+    </div>
+  );
 }
 
 interface Props {
   events: Event[];
-  selectedEventId: string | null;
-  onSelectEvent: (id: string) => void;
+  highlightedEventId: string | null;
+  onEventNavigate: (id: string) => void;
+  onHighlightEvent?: (id: string | null) => void;
   className?: string;
 }
 
-export default function EventsMap({ events, selectedEventId, onSelectEvent, className }: Props) {
+export default function EventsMap({ events, highlightedEventId, onEventNavigate, onHighlightEvent, className }: Props) {
   const eventCoordinates = useMemo(() => {
     const map = new Map<string, { latitude: number; longitude: number }>();
     for (const event of events) {
@@ -88,24 +90,33 @@ export default function EventsMap({ events, selectedEventId, onSelectEvent, clas
 
       <MapContainer center={[52.0, 19.0]} zoom={6} className="relative z-0 h-full min-h-[320px] w-full" scrollWheelZoom>
         <TileLayer attribution={MAP_ATTRIBUTION} url={MAP_TILES_URL} />
-        <MapController selectedEventId={selectedEventId} eventCoordinates={eventCoordinates} />
         {events.map((event) => {
           const coords = eventCoordinates.get(event.id);
           if (!coords) {
             return null;
           }
-          const isSelected = selectedEventId === event.id;
+          const isHighlighted = highlightedEventId === event.id;
           return (
             <Marker
               key={event.id}
               position={[coords.latitude, coords.longitude]}
-              icon={createNeonMarkerIcon(isSelected ? NEON_ACCENT : NEON_PRIMARY, isSelected)}
+              icon={createNeonMarkerIcon(isHighlighted ? NEON_ACCENT : NEON_PRIMARY, isHighlighted)}
               eventHandlers={{
                 click: () => {
-                  onSelectEvent(event.id);
+                  onEventNavigate(event.id);
+                },
+                mouseover: () => {
+                  onHighlightEvent?.(event.id);
+                },
+                mouseout: () => {
+                  onHighlightEvent?.(null);
                 },
               }}
-            />
+            >
+              <Tooltip direction="top" offset={[0, -10]} opacity={1} interactive className="discovery-map-tooltip">
+                <EventMapTooltip event={event} />
+              </Tooltip>
+            </Marker>
           );
         })}
       </MapContainer>

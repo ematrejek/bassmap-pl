@@ -1,15 +1,5 @@
 import { useState, type SubmitEvent } from "react";
 import { ServerError } from "@/components/auth/ServerError";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -193,40 +183,48 @@ export default function EventCommentsSection({
         </p>
       )}
 
-      <AlertDialog
-        open={pendingDeleteId !== null}
-        onOpenChange={(open) => {
-          if (!open) {
-            setPendingDeleteId(null);
-          }
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Usunąć komentarz?</AlertDialogTitle>
-            <AlertDialogDescription asChild>
-              <div className="space-y-2">
-                <p>Ta operacja jest trwała. Komentarz zniknie ze strony wydarzenia.</p>
-                {pendingDeleteComment ? (
-                  <p className={cn("text-sm whitespace-pre-wrap", shellTextMuted)}>{pendingDeleteComment.body}</p>
-                ) : null}
-              </div>
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Anuluj</AlertDialogCancel>
-            <AlertDialogAction
+      {pendingDeleteId !== null ? (
+        <div
+          className="border-destructive/40 bg-destructive/5 space-y-3 rounded-lg border p-4"
+          role="alertdialog"
+          aria-labelledby="delete-comment-title"
+          aria-describedby="delete-comment-description"
+        >
+          <div className="space-y-2">
+            <p id="delete-comment-title" className="text-foreground font-medium">
+              Usunąć komentarz?
+            </p>
+            <p id="delete-comment-description" className={cn("text-sm", shellTextMuted)}>
+              Ta operacja jest trwała. Komentarz zniknie ze strony wydarzenia.
+            </p>
+            {pendingDeleteComment ? (
+              <p className={cn("text-sm whitespace-pre-wrap", shellTextMuted)}>{pendingDeleteComment.body}</p>
+            ) : null}
+          </div>
+          <div className="flex flex-wrap gap-2">
+            <Button
+              type="button"
+              variant="outline"
+              className={shellBtnOutline}
+              onClick={() => {
+                setPendingDeleteId(null);
+              }}
+            >
+              Anuluj
+            </Button>
+            <Button
+              type="button"
               className={shellBtnPrimary}
-              onClick={(event) => {
-                event.preventDefault();
+              disabled={deletingId === pendingDeleteId}
+              onClick={() => {
                 void handleDeleteConfirm();
               }}
             >
-              Usuń
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
+              {deletingId === pendingDeleteId ? "Usuwanie…" : "Usuń"}
+            </Button>
+          </div>
+        </div>
+      ) : null}
     </section>
   );
 }

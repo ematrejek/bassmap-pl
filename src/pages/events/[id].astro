@@ -87,12 +87,14 @@ const initialComments = commentsResult && "data" in commentsResult ? commentsRes
               <p class="text-accent text-lg font-medium">{formatEventPrice(event)}</p>
             </header>
 
-            {eventDescription ? (
-              <section class="space-y-2">
-                <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Opis</h2>
+            <section class="space-y-2">
+              <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Opis</h2>
+              {eventDescription ? (
                 <p class="text-muted-foreground whitespace-pre-wrap">{eventDescription}</p>
-              </section>
-            ) : null}
+              ) : (
+                <p class="text-muted-foreground text-sm italic">Brak opisu wydarzenia.</p>
+              )}
+            </section>
 
             <section class="space-y-2">
               <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Podgatunki</h2>
@@ -143,7 +145,7 @@ const initialComments = commentsResult && "data" in commentsResult ? commentsRes
             )}
 
             <EventCommentsSection
-              client:visible
+              client:load
               eventId={event.id}
               initialComments={initialComments}
               isLoggedIn={isLoggedIn}
