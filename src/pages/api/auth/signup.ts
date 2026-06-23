@@ -8,7 +8,12 @@ export const POST: APIRoute = async (context) => {
   const form = await context.request.formData();
   const email = form.get("email") as string;
   const password = form.get("password") as string;
+  const confirmPassword = form.get("confirmPassword") as string;
   const acceptTerms = form.get("acceptTerms");
+
+  if (password !== confirmPassword) {
+    return context.redirect(`/auth/signup?error=${encodeURIComponent("Hasła nie są identyczne")}`);
+  }
 
   if (acceptTerms !== "on") {
     return context.redirect(

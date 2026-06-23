@@ -166,3 +166,30 @@ export async function getGoingCountsByEventIds(
 
   return { data: counts };
 }
+
+export async function getUserAttendanceByEventIds(
+  supabase: SupabaseClient,
+  userId: string,
+  eventIds: string[],
+): Promise<ServiceResult<Record<string, AttendanceStatus>>> {
+  if (eventIds.length === 0) {
+    return { data: {} };
+  }
+
+  const response = await supabase
+    .from("event_attendance")
+    .select("event_id, status")
+    .eq("user_id", userId)
+    .in("event_id", eventIds);
+
+  if (response.error) {
+    return { error: response.error.message };
+  }
+
+  const statuses: Record<string, AttendanceStatus> = {};
+  for (const row of (response.data as Pick<EventAttendanceRow, "event_id" | "status">[] | null) ?? []) {
+    statuses[row.event_id] = row.status;
+  }
+
+  return { data: statuses };
+}

@@ -6,11 +6,18 @@ import type { EventWithCoverUrl } from "@/types";
 interface Props {
   events: EventWithCoverUrl[];
   hasActiveFilters: boolean;
+  isLoggedIn?: boolean;
   hoveredEventId?: string | null;
   onHoverEvent?: (id: string | null) => void;
 }
 
-export default function EventList({ events, hasActiveFilters, hoveredEventId, onHoverEvent }: Props) {
+export default function EventList({
+  events,
+  hasActiveFilters,
+  isLoggedIn = false,
+  hoveredEventId,
+  onHoverEvent,
+}: Props) {
   if (events.length === 0) {
     return (
       <div className={cn("p-8 text-center", shellPanelFlat, shellTextMuted)}>
@@ -27,6 +34,7 @@ export default function EventList({ events, hasActiveFilters, hoveredEventId, on
         <EventDiscoveryCard
           key={event.id}
           event={event}
+          isLoggedIn={isLoggedIn}
           isHighlighted={hoveredEventId === event.id}
           onMouseEnter={() => {
             onHoverEvent?.(event.id);

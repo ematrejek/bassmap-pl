@@ -1,5 +1,6 @@
 ---
 import EventCoverImage from "@/components/discovery/EventCoverImage";
+import EventAttendanceSection from "@/components/events/EventAttendanceSection";
 import EventCommentsSection from "@/components/events/EventCommentsSection";
 import EventSuggestChangesForm from "@/components/fan/EventSuggestChangesForm";
 import AppShell from "@/components/shell/AppShell.astro";
@@ -12,6 +13,7 @@ import {
 } from "@/lib/events/format";
 import { DISCOVERY_PATH } from "@/lib/routes";
 import { getPublishedEventById } from "@/lib/services/events";
+import { getAttendanceSummary } from "@/lib/services/event-attendance";
 import { listEventComments } from "@/lib/services/event-comments";
 import { getEventCoverUrl } from "@/lib/storage/event-covers";
 import { createClient } from "@/lib/supabase";
@@ -38,6 +40,11 @@ const eventDescription = event?.description?.trim() ?? "";
 const showSuggestionForm = Boolean(event && isUpcomingEvent(event.startsAt));
 const commentsResult = event && supabase ? await listEventComments(supabase, event.id) : null;
 const initialComments = commentsResult && "data" in commentsResult ? commentsResult.data : [];
+const attendanceResult = event && supabase ? await getAttendanceSummary(supabase, event.id, user?.id ?? null) : null;
+const attendanceSummary =
+  attendanceResult && "data" in attendanceResult
+    ? attendanceResult.data
+    : { goingCount: 0, interestedCount: 0, userStatus: null };
 ---
 
 <Layout title={event ? `${event.name} – BassMap PL` : "Nie znaleziono – BassMap PL"} ogImage={coverUrl ?? undefined}>
@@ -84,6 +91,18 @@ const initialComments = commentsResult && "data" in commentsResult ? commentsRes
                   Dokładny adres zostanie podany na miejscu wydarzenia.
                 </p>
               )}
+
+              <EventAttendanceSection
+                client:load
+                eventId={event.id}
+                isUpcoming={showSuggestionForm}
+                initialGoingCount={attendanceSummary.goingCount}
+                initialInterestedCount={attendanceSummary.interestedCount}
+                initialUserStatus={attendanceSummary.userStatus}
+                isLoggedIn={isLoggedIn}
+                redirectPath={eventPagePath}
+              />
+
               <p class="text-accent text-lg font-medium">{formatEventPrice(event)}</p>
             </header>
 

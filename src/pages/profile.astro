@@ -4,17 +4,30 @@ import DeleteAccountSection from "@/components/fan/DeleteAccountSection";
 import ProfileSection from "@/components/fan/ProfileSection";
 import Layout from "@/layouts/Layout.astro";
 import { PRIVACY_POLICY_PATH } from "@/lib/legal/paths";
+import { listEventsForUserAttendance } from "@/lib/services/event-attendance";
+import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
 import { shellLink, shellTextMuted } from "@/lib/shell-styles";
+import { createClient } from "@/lib/supabase";
+import type { Event, EventWithCoverUrl } from "@/types";
+import { SUPABASE_URL } from "astro:env/server";
 
 export const prerender = false;
 
 const { user, isAdmin } = Astro.locals;
 const email = user?.email ?? "";
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const goingResult = supabase && user ? await listEventsForUserAttendance(supabase, user.id, "going") : { data: [] };
+const goingEventsRaw: Event[] = "data" in goingResult ? goingResult.data : [];
+const supabaseUrl = SUPABASE_URL ?? "";
+const goingEvents: EventWithCoverUrl[] = supabaseUrl
+  ? goingEventsRaw.map((event) => enrichEventWithCoverUrl(event, supabaseUrl))
+  : goingEventsRaw.map((event) => ({ ...event, coverUrl: null }));
 ---
 
 <Layout title="Mój profil">
   <AppShell showFooter={true}>
-    {email ? <ProfileSection email={email} client:load /> : null}
+    {email ? <ProfileSection email={email} goingEvents={goingEvents} client:load /> : null}
     {
       email && !isAdmin ? (
         <DeleteAccountSection client:load />

@@ -1,15 +1,12 @@
 ---
 import AppShell from "@/components/shell/AppShell.astro";
+import SignUpForm from "@/components/auth/SignUpForm";
 import Layout from "@/layouts/Layout.astro";
-import { PRIVACY_POLICY_PATH, TERMS_PATH } from "@/lib/legal/paths";
-import { shellBtnPrimary, shellLink } from "@/lib/shell-styles";
+import { shellLink } from "@/lib/shell-styles";
 
 export const prerender = false;
 
 const error = Astro.url.searchParams.get("error");
-
-const inputClass =
-  "border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/70 focus-visible:ring-ring/30 w-full rounded-lg border px-3 py-2 focus-visible:ring-2 focus-visible:outline-none";
 ---
 
 <Layout title="Rejestracja – BassMap PL">
@@ -20,81 +17,7 @@ const inputClass =
           Zarejestruj się
         </h1>
 
-        <form method="POST" action="/api/auth/signup" class="space-y-4">
-          {
-            error ? (
-              <p class="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
-                {error}
-              </p>
-            ) : null
-          }
-
-          <div>
-            <label for="email" class="text-foreground/90 mb-1 block text-sm">Email</label>
-            <input
-              id="email"
-              name="email"
-              type="email"
-              autocomplete="email"
-              required
-              class:list={inputClass}
-              placeholder="twoj@email.pl"
-            />
-          </div>
-
-          <div>
-            <label for="password" class="text-foreground/90 mb-1 block text-sm">Hasło</label>
-            <input
-              id="password"
-              name="password"
-              type="password"
-              autocomplete="new-password"
-              minlength={6}
-              required
-              class:list={inputClass}
-              placeholder="Min. 6 znaków"
-            />
-          </div>
-
-          <div class="flex items-start gap-2">
-            <input
-              type="checkbox"
-              id="acceptTerms"
-              name="acceptTerms"
-              value="on"
-              required
-              class="border-border bg-card/60 text-primary mt-0.5 size-4 shrink-0 cursor-pointer rounded-[4px] border accent-[var(--primary)]"
-            />
-            <label for="acceptTerms" class="text-muted-foreground text-xs leading-relaxed">
-              <span class="text-red-400" aria-hidden="true">* </span>
-              Akceptuję{" "}
-              <a
-                href={TERMS_PATH}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-primary hover:text-accent hover:underline"
-              >
-                Regulamin
-              </a>{" "}
-              i{" "}
-              <a
-                href={PRIVACY_POLICY_PATH}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="text-primary hover:text-accent hover:underline"
-              >
-                Politykę Prywatności
-              </a>
-            </label>
-          </div>
-
-          <button
-            type="submit"
-            class:list={[shellBtnPrimary, "w-full rounded-lg px-4 py-2 text-sm font-semibold tracking-wider uppercase"]}
-          >
-            Utwórz konto
-          </button>
-        </form>
+        <SignUpForm serverError={error} client:load />
 
         <p class="text-muted-foreground mt-4 text-center text-sm">
           Masz już konto? <a href="/auth/signin" class:list={shellLink}>Zaloguj się</a>

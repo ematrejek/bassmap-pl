@@ -2,8 +2,12 @@ import EventDiscoveryCard from "@/components/discovery/EventDiscoveryCard";
 import { formatEventPrice } from "@/lib/events/format";
 import type { EventWithCoverUrl } from "@/types";
 import { SUBGENRE_LABELS, SUBGENRES } from "@/types";
-import { fireEvent, render, screen } from "@testing-library/react";
-import { describe, expect, it } from "vitest";
+import { cleanup, fireEvent, render, screen } from "@testing-library/react";
+import { afterEach, describe, expect, it } from "vitest";
+
+afterEach(() => {
+  cleanup();
+});
 
 function buildDiscoveryEvent(overrides: Partial<EventWithCoverUrl> = {}): EventWithCoverUrl {
   return {
@@ -41,15 +45,33 @@ function buildDiscoveryEvent(overrides: Partial<EventWithCoverUrl> = {}): EventW
 }
 
 describe("EventDiscoveryCard", () => {
-  it("renders name, price, going placeholder, and subgenre badges", () => {
-    const event = buildDiscoveryEvent();
+  it("renders RSVP buttons when user is logged in", () => {
+    const event = buildDiscoveryEvent({ goingCount: 3, userAttendanceStatus: "going" });
+
+    render(<EventDiscoveryCard event={event} isLoggedIn />);
+
+    expect(screen.getByRole("button", { name: /Idę/i })).toHaveAttribute("aria-pressed", "true");
+    expect(screen.getByRole("button", { name: /Interesuję się/i })).toBeInTheDocument();
+  });
+
+  it("hides RSVP buttons for guests", () => {
+    const event = buildDiscoveryEvent({ goingCount: 3 });
+
+    render(<EventDiscoveryCard event={event} isLoggedIn={false} />);
+
+    expect(screen.queryByRole("button", { name: /Idę/i })).not.toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Interesuję się/i })).not.toBeInTheDocument();
+  });
+
+  it("renders name, price, going count from props, and subgenre badges", () => {
+    const event = buildDiscoveryEvent({ goingCount: 12 });
 
     render(<EventDiscoveryCard event={event} />);
 
     expect(screen.getByRole("heading", { name: event.name })).toBeInTheDocument();
     expect(screen.getByText(formatEventPrice(event))).toBeInTheDocument();
     const goingCounter = screen.getByText("Idzie").closest("span");
-    expect(goingCounter).toHaveTextContent("0");
+    expect(goingCounter).toHaveTextContent("12");
     expect(goingCounter).toHaveTextContent("Idzie");
     expect(screen.getByText(SUBGENRE_LABELS.neurofunk)).toBeInTheDocument();
     expect(screen.getByText(SUBGENRE_LABELS.jump_up)).toBeInTheDocument();

@@ -11,6 +11,8 @@ import type { Event } from "@/types";
 interface Props {
   submittedEvents: Event[];
   changeSuggestions: FanChangeSuggestionRow[];
+  goingEvents: Event[];
+  interestedEvents: Event[];
   submitted?: boolean;
   suggestionSubmitted?: boolean;
 }
@@ -84,13 +86,11 @@ function EmptyAttendingPanel({ message }: { message: string }) {
 export default function MyEventsPage({
   submittedEvents,
   changeSuggestions,
+  goingEvents,
+  interestedEvents,
   submitted = false,
   suggestionSubmitted = false,
 }: Props) {
-  // Placeholder – slice «Idę» / «Obserwuję» (RSVP) w przyszłości.
-  const goingEvents: Event[] = [];
-  const watchingEvents: Event[] = [];
-
   return (
     <div className="space-y-14">
       <MyEventsSectionHeader
@@ -107,15 +107,15 @@ export default function MyEventsPage({
       </MyEventsSectionHeader>
 
       <MyEventsSectionHeader
-        title="Obserwuję"
-        count={watchingEvents.length}
-        countLabel={pluralEvents(watchingEvents.length)}
-        id="obserwuje"
+        title="Interesuję się"
+        count={interestedEvents.length}
+        countLabel={pluralEvents(interestedEvents.length)}
+        id="interesuje-sie"
       >
-        {watchingEvents.length === 0 ? (
-          <EmptyAttendingPanel message="Nie obserwujesz jeszcze żadnych wydarzeń. Kliknij «Obserwuję» na stronie imprezy – zobaczysz ją tutaj." />
+        {interestedEvents.length === 0 ? (
+          <EmptyAttendingPanel message="Nie masz jeszcze wydarzeń z «Interesuję się». Otwórz stronę imprezy i zaznacz zainteresowanie – pojawi się tutaj." />
         ) : (
-          <EventDiscoveryGrid events={watchingEvents} />
+          <EventDiscoveryGrid events={interestedEvents} />
         )}
       </MyEventsSectionHeader>
 

@@ -2,12 +2,15 @@
 import AppShell from "@/components/shell/AppShell.astro";
 import MyEventsPage from "@/components/fan/MyEventsPage";
 import Layout from "@/layouts/Layout.astro";
-import type { Event } from "@/types";
+import type { Event, EventWithCoverUrl } from "@/types";
 import { listEventsByCreator } from "@/lib/services/events";
+import { listEventsForUserAttendance } from "@/lib/services/event-attendance";
 import { listChangeSuggestionsForFan } from "@/lib/services/change-suggestions";
 import { formatSuggestionSummary } from "@/lib/events/suggestion-format";
+import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
 import { shellHeading, shellTextMuted } from "@/lib/shell-styles";
 import { createClient } from "@/lib/supabase";
+import { SUPABASE_URL } from "astro:env/server";
 
 export const prerender = false;
 
@@ -35,6 +38,26 @@ const changeSuggestions =
     : [];
 const listError = "error" in listResult ? listResult.error : null;
 const suggestionsError = "error" in suggestionsResult ? suggestionsResult.error : null;
+
+const goingResult = supabase && user ? await listEventsForUserAttendance(supabase, user.id, "going") : { data: [] };
+const interestedResult =
+  supabase && user ? await listEventsForUserAttendance(supabase, user.id, "interested") : { data: [] };
+const goingEventsRaw: Event[] = "data" in goingResult ? goingResult.data : [];
+const interestedEventsRaw: Event[] = "data" in interestedResult ? interestedResult.data : [];
+const attendanceError =
+  ["error" in goingResult ? goingResult.error : null, "error" in interestedResult ? interestedResult.error : null]
+    .filter(Boolean)
+    .join(" ") || null;
+
+const supabaseUrl = SUPABASE_URL ?? "";
+function enrichEvents(events: Event[]): EventWithCoverUrl[] {
+  return supabaseUrl
+    ? events.map((event) => enrichEventWithCoverUrl(event, supabaseUrl))
+    : events.map((event) => ({ ...event, coverUrl: null }));
+}
+
+const goingEvents = enrichEvents(goingEventsRaw);
+const interestedEvents = enrichEvents(interestedEventsRaw);
 ---
 
 <Layout title="Moje eventy">
@@ -56,16 +79,26 @@ const suggestionsError = "error" in suggestionsResult ? suggestionsResult.error 
         ) : null
       }
 
+      {
+        attendanceError ? (
+          <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+            {attendanceError}
+          </p>
+        ) : null
+      }
+
       <div class="mb-10">
         <h1 class:list={shellHeading}>Moje eventy</h1>
         <p class:list={["mt-1 text-sm", shellTextMuted]}>
-          Na które idziesz, które obserwujesz i które zgłaszasz do moderacji.
+          Na które idziesz, które Cię interesują i które zgłaszasz do moderacji.
         </p>
       </div>
 
       <MyEventsPage
         submittedEvents={submittedEvents}
         changeSuggestions={changeSuggestions}
+        goingEvents={goingEvents}
+        interestedEvents={interestedEvents}
         submitted={submitted}
         suggestionSubmitted={suggestionSubmitted}
         client:load

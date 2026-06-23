@@ -60,11 +60,12 @@ interface Props {
   cities: string[];
   currentFilters: FanEventFilters;
   listError?: string | null;
+  isLoggedIn?: boolean;
 }
 
 type MobileTab = "list" | "map";
 
-export default function DiscoveryShell({ events, cities, currentFilters, listError }: Props) {
+export default function DiscoveryShell({ events, cities, currentFilters, listError, isLoggedIn = false }: Props) {
   const [hoveredEventId, setHoveredEventId] = useState<string | null>(null);
   const [mobileTab, setMobileTab] = useState<MobileTab>("list");
   const isClient = useIsClient();
@@ -145,6 +146,7 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
         <EventList
           events={events}
           hasActiveFilters={hasActiveFilters}
+          isLoggedIn={isLoggedIn}
           hoveredEventId={hoveredEventId}
           onHoverEvent={setHoveredEventId}
         />

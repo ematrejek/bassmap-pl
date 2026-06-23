@@ -1,13 +1,15 @@
 import EventCardSubgenreBadges from "@/components/discovery/EventCardSubgenreBadges";
+import EventRsvpButtons from "@/components/events/EventRsvpButtons";
+import { useEventAttendance } from "@/components/hooks/useEventAttendance";
 import { Button } from "@/components/ui/button";
 import { formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
-import { GOING_COUNT_PLACEHOLDER } from "@/lib/events/rsvp-placeholder";
 import { cn } from "@/lib/utils";
 import type { EventWithCoverUrl } from "@/types";
 import { Calendar, Clock, MapPin, Users } from "lucide-react";
 
 interface Props {
   event: EventWithCoverUrl;
+  isLoggedIn?: boolean;
   className?: string;
   isHighlighted?: boolean;
   onMouseEnter?: () => void;
@@ -16,12 +18,22 @@ interface Props {
 
 export default function EventDiscoveryCard({
   event,
+  isLoggedIn = false,
   className,
   isHighlighted = false,
   onMouseEnter,
   onMouseLeave,
 }: Props) {
   const detailHref = `/events/${event.id}`;
+  const initialGoingCount = event.goingCount ?? 0;
+  const initialUserStatus = event.userAttendanceStatus ?? null;
+
+  const { goingCount, userStatus, pendingStatus, handleStatusClick } = useEventAttendance({
+    eventId: event.id,
+    initialGoingCount,
+    initialInterestedCount: 0,
+    initialUserStatus,
+  });
 
   return (
     <article
@@ -55,12 +67,41 @@ export default function EventDiscoveryCard({
           </div>
         </dl>
 
-        <div className="border-border/70 mt-5 flex flex-wrap items-center justify-between gap-2 border-t pt-4">
+        {isLoggedIn ? (
+          <div
+            className="mt-5"
+            onClick={(mouseEvent) => {
+              mouseEvent.stopPropagation();
+            }}
+            onKeyDown={(keyboardEvent) => {
+              keyboardEvent.stopPropagation();
+            }}
+            role="presentation"
+          >
+            <EventRsvpButtons
+              userStatus={userStatus}
+              pendingStatus={pendingStatus}
+              onGoingClick={() => {
+                void handleStatusClick("going");
+              }}
+              onInterestedClick={() => {
+                void handleStatusClick("interested");
+              }}
+            />
+          </div>
+        ) : null}
+
+        <div
+          className={cn(
+            "flex flex-wrap items-center justify-between gap-2",
+            isLoggedIn ? "mt-3" : "border-border/70 mt-5 border-t pt-4",
+          )}
+        >
           <span className="text-accent text-sm font-semibold">{formatEventPrice(event)}</span>
 
           <span className="text-muted-foreground flex items-center gap-1.5 text-sm">
             <Users className="h-4 w-4" aria-hidden />
-            <span className="text-foreground font-semibold">{GOING_COUNT_PLACEHOLDER}</span>
+            <span className="text-foreground font-semibold">{goingCount}</span>
             Idzie
           </span>
 

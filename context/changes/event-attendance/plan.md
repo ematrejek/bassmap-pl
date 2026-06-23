@@ -391,14 +391,14 @@ Aktualizacja polityki prywatności o przetwarzanie RSVP; sync roadmap/issue.
 
 #### Automated
 
-- [ ] 3.1 `npm run verify`
-- [ ] 3.2 `event-discovery-card.test.tsx` zaktualizowany
+- [x] 3.1 `npm run verify`
+- [x] 3.2 `event-discovery-card.test.tsx` zaktualizowany
 
 #### Manual
 
-- [ ] 3.3 Pełna ścieżka fan: RSVP → Moje eventy → profil → licznik na liście
-- [ ] 3.4 Gość i archiwalny event – zachowanie zgodne z planem
-- [ ] 3.5 Anchor `#interesuje-sie` i copy «Interesuję się»
+- [x] 3.3 Pełna ścieżka fan: RSVP → Moje eventy → profil → licznik na liście
+- [x] 3.4 Gość i archiwalny event – zachowanie zgodne z planem
+- [x] 3.5 Anchor `#interesuje-sie` i copy «Interesuję się»
 
 ### Phase 4: Dokumenty prawne i domknięcie
 

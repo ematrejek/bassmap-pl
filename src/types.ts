@@ -148,7 +148,11 @@ export interface EventAttendanceSummary {
 }
 
 /** Event z gotowym publicznym URL okładki (dodawany na SSR przed przekazaniem do UI). */
-export type EventWithCoverUrl = Event & { coverUrl: string | null; goingCount?: number };
+export type EventWithCoverUrl = Event & {
+  coverUrl: string | null;
+  goingCount?: number;
+  userAttendanceStatus?: AttendanceStatus | null;
+};
 
 /** Wiersz w panelu admina – opcjonalnie z danymi zgłaszającego fana. */
 export type AdminEventRow = EventWithCoverUrl & {

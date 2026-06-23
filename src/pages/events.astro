@@ -2,28 +2,55 @@
 import DiscoveryShell from "@/components/discovery/DiscoveryShell";
 import AppShell from "@/components/shell/AppShell.astro";
 import { parseFanFilters } from "@/lib/events/fan-schema";
+import { getGoingCountsByEventIds, getUserAttendanceByEventIds } from "@/lib/services/event-attendance";
 import { listDistinctCities, listPublishedEvents } from "@/lib/services/events";
 import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
 import { createClient } from "@/lib/supabase";
 import Layout from "@/layouts/Layout.astro";
+import { shellHeading, shellPanelFlat, shellTextMuted } from "@/lib/shell-styles";
 import { SUPABASE_URL } from "astro:env/server";
 
 export const prerender = false;
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
+const { user } = Astro.locals;
+const isLoggedIn = Boolean(user);
 const currentFilters = parseFanFilters(Astro.url.searchParams);
 
 const listResult = supabase ? await listPublishedEvents(supabase, currentFilters) : { data: [] };
 const citiesResult = supabase ? await listDistinctCities(supabase) : { data: [] };
 
 const rawEvents = "data" in listResult ? listResult.data : [];
+const eventIds = rawEvents.map((event) => event.id);
+const goingCountsResult =
+  supabase && eventIds.length > 0 ? await getGoingCountsByEventIds(supabase, eventIds) : { data: {} };
+const goingCounts = "data" in goingCountsResult ? goingCountsResult.data : {};
+const goingCountsError = "error" in goingCountsResult ? goingCountsResult.error : null;
+const userAttendanceResult =
+  supabase && user && eventIds.length > 0
+    ? await getUserAttendanceByEventIds(supabase, user.id, eventIds)
+    : { data: {} };
+const userAttendance = "data" in userAttendanceResult ? userAttendanceResult.data : {};
 const supabaseUrl = SUPABASE_URL ?? "";
 const events = supabaseUrl
-  ? rawEvents.map((event) => enrichEventWithCoverUrl(event, supabaseUrl))
-  : rawEvents.map((event) => ({ ...event, coverUrl: null as string | null }));
+  ? rawEvents.map((event) => ({
+      ...enrichEventWithCoverUrl(event, supabaseUrl),
+      goingCount: goingCounts[event.id] ?? 0,
+      userAttendanceStatus: userAttendance[event.id] ?? null,
+    }))
+  : rawEvents.map((event) => ({
+      ...event,
+      coverUrl: null as string | null,
+      goingCount: goingCounts[event.id] ?? 0,
+      userAttendanceStatus: userAttendance[event.id] ?? null,
+    }));
 const cities = "data" in citiesResult ? citiesResult.data : [];
 const listError =
-  ["error" in listResult ? listResult.error : null, "error" in citiesResult ? citiesResult.error : null]
+  [
+    "error" in listResult ? listResult.error : null,
+    "error" in citiesResult ? citiesResult.error : null,
+    goingCountsError,
+  ]
     .filter(Boolean)
     .join(" ") || null;
 ---
@@ -36,8 +63,16 @@ const listError =
         cities={cities}
         currentFilters={currentFilters}
         listError={listError}
-        client:load
-      />
+        isLoggedIn={isLoggedIn}
+        client:only="react"
+      >
+        <div slot="fallback" class:list={["space-y-6 p-8 text-center", shellPanelFlat, shellTextMuted]}>
+          <h1 class:list={shellHeading}>
+            MAP THE <span class="text-primary text-glow-violet">BASS</span>!
+          </h1>
+          <p class="text-sm">Ładowanie listy wydarzeń…</p>
+        </div>
+      </DiscoveryShell>
     </div>
   </AppShell>
 </Layout>
