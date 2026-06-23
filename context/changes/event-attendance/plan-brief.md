@@ -1,4 +1,4 @@
-# «Idę» i «Interesuję się» (S-19) — Plan Brief
+# «Idę» i «Interesuję się» (S-19) – Plan Brief
 
 > Full plan: `context/changes/event-attendance/plan.md`
 > Research: `context/changes/event-attendance/research.md`

@@ -361,31 +361,31 @@ Aktualizacja polityki prywatności o przetwarzanie RSVP; sync roadmap/issue.
 
 ## Progress
 
-> Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands.
+> Convention: `- [ ]` pending, `- [x]` done. Append ` – <commit sha>` when a step lands.
 
 ### Phase 1: Schema, typy i serwis
 
 #### Automated
 
-- [x] 1.1 Migracja `event_attendance` stosuje się lokalnie (`npx supabase db reset`) — 0438d4e
-- [x] 1.2 `npm run check` przechodzi — 0438d4e
-- [x] 1.3 `npm run lint` przechodzi — 0438d4e
+- [x] 1.1 Migracja `event_attendance` stosuje się lokalnie (`npx supabase db reset`) – 0438d4e
+- [x] 1.2 `npm run check` przechodzi – 0438d4e
+- [x] 1.3 `npm run lint` przechodzi – 0438d4e
 
 #### Manual
 
-- [x] 1.4 Tabela i polityki RLS widoczne w Supabase Studio — 0438d4e
+- [x] 1.4 Tabela i polityki RLS widoczne w Supabase Studio – 0438d4e
 
 ### Phase 2: API i testy automatyczne
 
 #### Automated
 
-- [ ] 2.1 `npm test` – unit `event-attendance-api.test.ts`
-- [ ] 2.2 `npm test` – integration `event-attendance-rls.test.ts` (gdy Supabase lokalna)
-- [ ] 2.3 `npm run verify`
+- [x] 2.1 `npm test` – unit `event-attendance-api.test.ts`
+- [x] 2.2 `npm test` – integration `event-attendance-rls.test.ts` (gdy Supabase lokalna)
+- [x] 2.3 `npm run verify`
 
 #### Manual
 
-- [ ] 2.4 GET `/api/events/{id}/attendance` zwraca poprawny JSON
+- [x] 2.4 GET `/api/events/{id}/attendance` zwraca poprawny JSON
 
 ### Phase 3: UI – strona eventu, lista, Moje eventy, profil
 
