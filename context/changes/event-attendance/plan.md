@@ -404,8 +404,8 @@ Aktualizacja polityki prywatności o przetwarzanie RSVP; sync roadmap/issue.
 
 #### Automated
 
-- [x] 4.1 `npm run lint:all`
-- [x] 4.2 `npm run verify`
+- [x] 4.1 `npm run lint:all` – a1a87ae
+- [x] 4.2 `npm run verify` – a1a87ae
 
 #### Manual
 
