@@ -379,13 +379,13 @@ Aktualizacja polityki prywatności o przetwarzanie RSVP; sync roadmap/issue.
 
 #### Automated
 
-- [x] 2.1 `npm test` – unit `event-attendance-api.test.ts`
-- [x] 2.2 `npm test` – integration `event-attendance-rls.test.ts` (gdy Supabase lokalna)
-- [x] 2.3 `npm run verify`
+- [x] 2.1 `npm test` – unit `event-attendance-api.test.ts` – c9df77a
+- [x] 2.2 `npm test` – integration `event-attendance-rls.test.ts` (gdy Supabase lokalna) – c9df77a
+- [x] 2.3 `npm run verify` – c9df77a
 
 #### Manual
 
-- [x] 2.4 GET `/api/events/{id}/attendance` zwraca poprawny JSON
+- [x] 2.4 GET `/api/events/{id}/attendance` zwraca poprawny JSON – c9df77a
 
 ### Phase 3: UI – strona eventu, lista, Moje eventy, profil
 
