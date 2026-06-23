@@ -367,13 +367,13 @@ Aktualizacja polityki prywatności o przetwarzanie RSVP; sync roadmap/issue.
 
 #### Automated
 
-- [x] 1.1 Migracja `event_attendance` stosuje się lokalnie (`npx supabase db reset`)
-- [x] 1.2 `npm run check` przechodzi
-- [x] 1.3 `npm run lint` przechodzi
+- [x] 1.1 Migracja `event_attendance` stosuje się lokalnie (`npx supabase db reset`) — 0438d4e
+- [x] 1.2 `npm run check` przechodzi — 0438d4e
+- [x] 1.3 `npm run lint` przechodzi — 0438d4e
 
 #### Manual
 
-- [x] 1.4 Tabela i polityki RLS widoczne w Supabase Studio
+- [x] 1.4 Tabela i polityki RLS widoczne w Supabase Studio — 0438d4e
 
 ### Phase 2: API i testy automatyczne
 
