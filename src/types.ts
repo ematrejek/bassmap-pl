@@ -130,8 +130,25 @@ export interface Event {
   updatedAt: string;
 }
 
+export type AttendanceStatus = "going" | "interested";
+
+export interface EventAttendanceRow {
+  id: string;
+  user_id: string;
+  event_id: string;
+  status: AttendanceStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface EventAttendanceSummary {
+  goingCount: number;
+  interestedCount: number;
+  userStatus: AttendanceStatus | null;
+}
+
 /** Event z gotowym publicznym URL okładki (dodawany na SSR przed przekazaniem do UI). */
-export type EventWithCoverUrl = Event & { coverUrl: string | null };
+export type EventWithCoverUrl = Event & { coverUrl: string | null; goingCount?: number };
 
 /** Wiersz w panelu admina – opcjonalnie z danymi zgłaszającego fana. */
 export type AdminEventRow = EventWithCoverUrl & {
