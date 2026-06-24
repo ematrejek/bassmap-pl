@@ -1,6 +1,6 @@
 import type { User } from "@supabase/supabase-js";
 import type { APIContext } from "astro";
-import { describe, expect, it, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import {
   FAN_PROFILE_LOGIN_TAKEN_ERROR,
   ensureFanProfile,
@@ -10,6 +10,8 @@ import {
 import { GET, PATCH } from "@/pages/api/fan/profile";
 
 const mockUser = { id: "11111111-1111-1111-1111-111111111111", email: "fan@example.com" } as User;
+
+const spotifyTrackUrl = "https://open.spotify.com/track/4uLU6hMCjMI75M1A2tKUQC";
 
 const mockProfile = {
   userId: mockUser.id,
@@ -33,6 +35,10 @@ vi.mock("@/lib/supabase", () => ({
   createClient: vi.fn(() => ({})),
 }));
 
+vi.mock("@/lib/fan/track-oembed", () => ({
+  fetchTrackTitle: vi.fn(() => Promise.resolve("Test Track Title")),
+}));
+
 vi.mock("@/lib/services/fan-profile", () => ({
   ensureFanProfile: vi.fn(() => Promise.resolve({ data: mockProfile })),
   getFanProfileByUserId: vi.fn(() => Promise.resolve({ data: mockProfile })),
@@ -43,6 +49,13 @@ vi.mock("@/lib/services/fan-profile", () => ({
 const mockEnsureFanProfile = vi.mocked(ensureFanProfile);
 const mockGetFanProfileByUserId = vi.mocked(getFanProfileByUserId);
 const mockUpdateFanProfile = vi.mocked(updateFanProfile);
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  mockEnsureFanProfile.mockResolvedValue({ data: mockProfile });
+  mockGetFanProfileByUserId.mockResolvedValue({ data: mockProfile });
+  mockUpdateFanProfile.mockResolvedValue({ data: mockProfile });
+});
 
 function mockContext(
   locals: Partial<App.Locals>,
@@ -165,5 +178,98 @@ describe("PATCH /api/fan/profile", () => {
 
     expect(patchResponse.status).toBe(403);
     await expect(patchResponse.json()).resolves.toEqual({ error: "Admin dodaje wydarzenia w panelu admina" });
+  });
+
+  it("saves favourite track with oEmbed title", async () => {
+    const { fetchTrackTitle } = await import("@/lib/fan/track-oembed");
+    vi.mocked(fetchTrackTitle).mockResolvedValueOnce("Neurofunk Anthem");
+
+    const response = await PATCH(
+      mockContext(
+        { user: mockUser },
+        {
+          method: "PATCH",
+          body: {
+            favouriteTrackPlatform: "spotify",
+            favouriteTrackUrl: spotifyTrackUrl,
+          },
+        },
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    expect(fetchTrackTitle).toHaveBeenCalledWith("spotify", spotifyTrackUrl);
+    expect(mockUpdateFanProfile).toHaveBeenCalledWith(expect.anything(), mockUser.id, {
+      favouriteTrackPlatform: "spotify",
+      favouriteTrackUrl: spotifyTrackUrl,
+      favouriteTrackTitle: "Neurofunk Anthem",
+    });
+  });
+
+  it("returns 400 when favourite track URL is invalid", async () => {
+    const response = await PATCH(
+      mockContext(
+        { user: mockUser },
+        {
+          method: "PATCH",
+          body: {
+            favouriteTrackPlatform: "spotify",
+            favouriteTrackUrl: "https://open.spotify.com/playlist/abc",
+          },
+        },
+      ),
+    );
+
+    expect(response.status).toBe(400);
+    const json: unknown = await response.json();
+    expect(json).toEqual({
+      error: "Podaj link do utworu Spotify (open.spotify.com/track/...)",
+    });
+    expect(mockUpdateFanProfile).not.toHaveBeenCalled();
+  });
+
+  it("returns 400 when oEmbed does not return a title", async () => {
+    const { fetchTrackTitle } = await import("@/lib/fan/track-oembed");
+    vi.mocked(fetchTrackTitle).mockResolvedValueOnce(null);
+
+    const response = await PATCH(
+      mockContext(
+        { user: mockUser },
+        {
+          method: "PATCH",
+          body: {
+            favouriteTrackPlatform: "spotify",
+            favouriteTrackUrl: spotifyTrackUrl,
+          },
+        },
+      ),
+    );
+
+    expect(response.status).toBe(400);
+    await expect(response.json()).resolves.toEqual({
+      error: "Nie udało się pobrać tytułu utworu. Sprawdź, czy link jest publiczny i poprawny.",
+    });
+    expect(mockUpdateFanProfile).not.toHaveBeenCalled();
+  });
+
+  it("clears favourite track when URL is null", async () => {
+    const response = await PATCH(
+      mockContext(
+        { user: mockUser },
+        {
+          method: "PATCH",
+          body: {
+            favouriteTrackUrl: null,
+          },
+        },
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    expect(mockUpdateFanProfile).toHaveBeenCalledWith(expect.anything(), mockUser.id, {
+      favouriteTrackPlatform: null,
+      favouriteTrackUrl: null,
+      favouriteTrackTitle: null,
+    });
   });
 });

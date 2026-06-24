@@ -2,7 +2,7 @@
 change_id: profile-spotify-embed
 title: My vibes (Spotify + SoundCloud embed)
 roadmap_ref: S-21
-status: implementing
+status: impl_reviewed
 created: 2026-06-24
 updated: 2026-06-24
 archived_at: null

@@ -15,6 +15,10 @@ describe("parseSpotifyTrackUrl", () => {
     expect(parseSpotifyTrackUrl(SPOTIFY_TRACK)).toBe(SPOTIFY_TRACK);
   });
 
+  it("rejects evil spotify host", () => {
+    expect(parseSpotifyTrackUrl("https://open.spotify.com.evil.com/track/4uLU6hMCjMI75M1A2tKUQC")).toBeNull();
+  });
+
   it("accepts embed path and normalizes", () => {
     expect(parseSpotifyTrackUrl("https://open.spotify.com/embed/track/4uLU6hMCjMI75M1A2tKUQC")).toBe(SPOTIFY_TRACK);
   });
@@ -39,6 +43,10 @@ describe("parseSoundCloudTrackUrl", () => {
 
   it("rejects profile-only URL", () => {
     expect(parseSoundCloudTrackUrl("https://soundcloud.com/artist-name")).toBeNull();
+  });
+
+  it("rejects evil soundcloud host", () => {
+    expect(parseSoundCloudTrackUrl("https://soundcloud.com.evil.com/artist/track")).toBeNull();
   });
 });
 

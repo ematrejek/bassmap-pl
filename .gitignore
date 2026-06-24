@@ -54,3 +54,4 @@ scripts/partia-iii-issue-numbers.txt
 scripts/create-partia-iii-github-issues.ps1
 scripts/add-partia-iii-to-project.ps1
 scripts/sync-partia-iii-issue-numbers-to-roadmap.ps1
+certyfikat/
