@@ -9,6 +9,8 @@ const FAN_PROFILE_SELECT =
 
 const LOGIN_TAKEN_ERROR = "Ten login jest już zajęty";
 
+export { LOGIN_TAKEN_ERROR as FAN_PROFILE_LOGIN_TAKEN_ERROR };
+
 function mapFanProfileRow(row: FanProfileRow): FanProfile {
   return {
     userId: row.user_id,
@@ -186,6 +188,15 @@ export async function updateFanProfile(
   userId: string,
   patch: FanProfileUpdate,
 ): Promise<ServiceResult<FanProfile>> {
+  const existing = await getFanProfileByUserId(supabase, userId);
+  if ("error" in existing) {
+    return existing;
+  }
+
+  if (!existing.data) {
+    return insertFanProfile(supabase, userId, patch);
+  }
+
   if (patch.login !== undefined) {
     const available = await isLoginAvailable(supabase, patch.login, userId);
     if (!available) {
@@ -197,6 +208,50 @@ export async function updateFanProfile(
     .from("fan_profiles")
     .update(mapUpdateToRow(patch))
     .eq("user_id", userId)
+    .select(FAN_PROFILE_SELECT)
+    .single();
+
+  if (response.error) {
+    if (isUniqueViolation(response.error)) {
+      return { error: LOGIN_TAKEN_ERROR };
+    }
+    if (response.error.code === "42501") {
+      return { error: "Brak uprawnień do edycji profilu" };
+    }
+    return { error: response.error.message };
+  }
+
+  return { data: mapFanProfileRow(response.data) };
+}
+
+async function insertFanProfile(
+  supabase: SupabaseClient,
+  userId: string,
+  patch: FanProfileUpdate,
+): Promise<ServiceResult<FanProfile>> {
+  if (!patch.login) {
+    return { error: "Ustaw login, aby utworzyć profil" };
+  }
+
+  const available = await isLoginAvailable(supabase, patch.login);
+  if (!available) {
+    return { error: LOGIN_TAKEN_ERROR };
+  }
+
+  const response = await supabase
+    .from("fan_profiles")
+    .insert({
+      user_id: userId,
+      login: patch.login,
+      bio: patch.bio ?? null,
+      city: patch.city ?? null,
+      favorite_subgenres: patch.favoriteSubgenres ?? [],
+      instagram_url: patch.instagramUrl ?? null,
+      soundcloud_url: patch.soundcloudUrl ?? null,
+      facebook_url: patch.facebookUrl ?? null,
+      spotify_url: patch.spotifyUrl ?? null,
+      twitch_url: patch.twitchUrl ?? null,
+    })
     .select(FAN_PROFILE_SELECT)
     .single();
 

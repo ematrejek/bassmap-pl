@@ -416,31 +416,31 @@ Rozwinięcie polityki prywatności; sync roadmap/issue.
 
 ## Progress
 
-> Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands.
+> Convention: `- [ ]` pending, `- [x]` done. Append ` – <commit sha>` when a step lands.
 
 ### Phase 1: Schema, typy i serwis
 
 #### Automated
 
-- [x] 1.1 Migracja `fan_profiles` stosuje się lokalnie (`npx supabase db reset`)
-- [x] 1.2 `npm run check` przechodzi
-- [x] 1.3 `npm run lint` przechodzi
+- [x] 1.1 Migracja `fan_profiles` stosuje się lokalnie (`npx supabase db reset`) – d258756
+- [x] 1.2 `npm run check` przechodzi – d258756
+- [x] 1.3 `npm run lint` przechodzi – d258756
 
 #### Manual
 
-- [x] 1.4 Tabela i polityki RLS widoczne w Supabase Studio
+- [x] 1.4 Tabela i polityki RLS widoczne w Supabase Studio – d258756
 
 ### Phase 2: API i testy automatyczne
 
 #### Automated
 
-- [ ] 2.1 `npm test` – unit `fan-profile-api.test.ts`
-- [ ] 2.2 `npm test` – integration `fan-profile-rls.test.ts` (gdy Supabase lokalna)
-- [ ] 2.3 `npm run verify`
+- [x] 2.1 `npm test` – unit `fan-profile-api.test.ts`
+- [x] 2.2 `npm test` – integration `fan-profile-rls.test.ts` (gdy Supabase lokalna)
+- [x] 2.3 `npm run verify`
 
 #### Manual
 
-- [ ] 2.4 GET/PATCH `/api/fan/profile` zwraca poprawny JSON
+- [x] 2.4 GET/PATCH `/api/fan/profile` zwraca poprawny JSON
 
 ### Phase 3: UI własnego profilu (`/profile`)
 
