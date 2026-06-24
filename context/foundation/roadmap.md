@@ -24,9 +24,9 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 
 ## North star
 
-**S-21** (Moja muzyka – Spotify embed) – north star Partii III po zamknięciu S-28.
+**S-22** (Forum MVP) – north star Partii III po zamknięciu S-21.
 
-> Poprzednia north star: **S-28** (udostępnianie profilu) – **done** 2026-06-24. Wcześniej: **S-20** (edycja profilu fana) – **done** 2026-06-24.
+> Poprzednia north star: **S-21** (My vibes – Spotify + SoundCloud embed) – **done** 2026-06-24. Wcześniej: **S-28** (udostępnianie profilu) – **done** 2026-06-24.
 
 ## At a glance
 
@@ -57,7 +57,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-19 | event-attendance          | fan klika «Idę» lub «Interesuję się»; liczniki; sekcje w Moje eventy i profilu              | S-18          | notes 2026-06-22                 | done        |
 | S-20 | fan-profile-edit          | fan edytuje login, bio, miasto, ulubione podgatunki, linki social; publiczny profil `/u/login` | S-19          | notes 2026-06-22                 | done        |
 | S-28 | profile-share             | fan udostępnia profil: przycisk «Udostępnij», kopiowanie linku (później FB/IG)              | S-20          | notes 2026-06-24                 | done        |
-| S-21 | profile-spotify-embed     | fan dodaje link Spotify (utwór/playlista); embed odtwarzacza na profilu                     | S-20          | notes 2026-06-22                 | proposed    |
+| S-21 | profile-spotify-embed     | fan dodaje link do utworu (Spotify/SoundCloud); sekcja My vibes z embedem i tytułem z oEmbed | S-20          | notes 2026-06-22                 | done        |
 | S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | proposed    |
 | S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | proposed    |
 | S-24 | crew-teams                | ekipa (nazwa, miasto, podgatunki, opis), rekrutacja przez forum, akceptacja + kontakt        | S-22, S-23    | notes 2026-06-22                 | proposed    |
@@ -77,7 +77,7 @@ Nawigacja \u2013 grupy elementów współdzielących łańcuch zależności. Kan
 | C      | Partia II \u2013 layout      | `F-04` → `S-09` → `S-10`                                                   | **Done** (2026-06-14) \u2013 jeden slice `app-shell-navigation`.                                                                                      |
 | D      | Partia II \u2013 konta i UGC | `S-12` → `S-17` → `S-13` → `S-14` → `S-15` → `S-16`                         | **Done** (2026-06-19) \u2013 pełny łańcuch konta fana + UGC + usuwanie konta. |
 | E      | Partia III \u2013 odkrywanie UI + RSVP | `S-18` → `S-19`                                                    | Kafelki bassmap-pl-ui, potem «Idę» / «Interesuję się». |
-| F      | Partia III \u2013 profil   | `S-20` → `S-28` / `S-21` (równolegle po S-20)                               | Edycja + profil publiczny; udostępnianie linku; Spotify embed (bez API na start). |
+| F      | Partia III \u2013 profil   | `S-20` → `S-28` / `S-21` (równolegle po S-20)                               | Edycja + profil publiczny; udostępnianie linku; My vibes (Spotify + SoundCloud embed, bez API). |
 | G      | Partia III \u2013 społeczność | `S-22` → `S-23` → `S-24`                                                 | Forum MVP → znajomi i polecenia → pełna Moja ekipa. |
 | H      | Partia III \u2013 organizator | `F-05` → `S-25`                                                           | Rola + ręczna weryfikacja → self-service eventów i ogłoszeń. |
 | I      | Partia III \u2013 pomiar i mobile | `S-26` → `S-27`                                                       | GA4 + RODO, potem PWA / native. |
@@ -439,7 +439,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 **Ustalenia cross-cutting (Partia III):**
 
 - Copy RSVP: **«Interesuję się»** (nie «Obserwuję») – wdrożone w S-19 (2026-06-23).
-- Spotify «Moja muzyka»: **embed z URL**, bez Spotify API w pierwszej wersji (S-21).
+- My vibes (S-21): **embed z URL** Spotify lub SoundCloud (tylko utwór), tytuł przez oEmbed, bez logowania do platform i bez pełnego API.
 - Weryfikacja organizatora MVP: **wniosek + ręczna akceptacja admina** (F-05).
 - GA4 (S-26): wymaga **baneru cookies** i aktualizacji polityki prywatności (konflikt z PRD „brak tracking cookies” – rozwiązać przy implementacji).
 - Mobile (S-27): preferować **PWA → Capacitor → native** w tej kolejności kosztowej.
@@ -513,17 +513,18 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **FR-028:** Fan udostępnia publiczny profil kopiując link (i opcjonalnie przez Web Share API). Priority: nice-to-have (Partia III, zaraz po S-20).
 
-### S-21: Moja muzyka (Spotify embed)
+### S-21: My vibes (Spotify + SoundCloud embed)
 
-- **Outcome:** fan dodaje link do **utworu** lub **playlisty** Spotify; na profilu widać osadzony odtwarzacz (iframe embed). Bez logowania Spotify i bez API.
+- **Outcome:** fan wybiera **Spotify** lub **SoundCloud**, wkleja link do **pojedynczego utworu**; na profilu w sekcji **My vibes** widać tytuł (pobrany automatycznie przez oEmbed) i osadzony odtwarzacz (iframe). Bez logowania do platform i bez pełnego Spotify API.
 - **Change ID:** profile-spotify-embed
 - **PRD refs:** notes 2026-06-22
 - **Prerequisites:** S-20
 - **Parallel with:** \u2013
 - **Blockers:** \u2013
 - **Unknowns:** \u2013
-- **Risk:** Niski – walidacja URL `open.spotify.com` + embed.
-- **Status:** proposed
+- **Risk:** Niski – walidacja URL track + oEmbed + embed iframe.
+- **Status:** done (2026-06-24)
+- **Legal:** polityka prywatności §2.1 (My vibes, cookies embedów)
 
 ### S-22: Forum MVP
 
@@ -652,7 +653,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-19       | event-attendance          | #39    | Idę / Interesuję się + liczniki               | po S-18               | Done – archived 2026-06-23                         |
 | S-20       | fan-profile-edit          | #40    | Edycja profilu fana                           | po S-19               | Legal sync profil publiczny                        |
 | S-28       | profile-share             | #50    | Udostępnianie profilu: copy link (+ Web Share) | po S-20               | FB/IG share – iteracja 2; OG meta opcjonalnie      |
-| S-21       | profile-spotify-embed     | #41    | Moja muzyka: Spotify embed                    | po S-20               | Bez Spotify API v1                                 |
+| S-21       | profile-spotify-embed     | #41    | My vibes: Spotify + SoundCloud embed           | po S-20               | Done 2026-06-24; tylko track; oEmbed tytuł        |
 | S-22       | forum-threads             | #42    | Forum: wątki i komentarze                     | po S-20               | Legal sync UGC forum                               |
 | S-23       | friends-and-recommendations | #43  | Znajomi, polecenia, powiadomienia             | po S-20, S-19         | E-mail opcjonalnie w slice                         |
 | S-24       | crew-teams                | #44    | Moja ekipa: pełna funkcja                     | po S-22, S-23         | Szablony forum + akceptacja                        |

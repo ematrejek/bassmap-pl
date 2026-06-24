@@ -5,7 +5,7 @@ import type { FanProfile, FanProfileRow, FanProfileUpdate, PublicFanProfile, Sub
 type ServiceResult<T> = { data: T } | { error: string };
 
 const FAN_PROFILE_SELECT =
-  "user_id, login, bio, city, favorite_subgenres, instagram_url, soundcloud_url, facebook_url, spotify_url, twitch_url, created_at, updated_at";
+  "user_id, login, bio, city, favorite_subgenres, instagram_url, soundcloud_url, facebook_url, spotify_url, twitch_url, favourite_track_platform, favourite_track_url, favourite_track_title, created_at, updated_at";
 
 const LOGIN_TAKEN_ERROR = "Ten login jest już zajęty";
 
@@ -23,6 +23,9 @@ function mapFanProfileRow(row: FanProfileRow): FanProfile {
     facebookUrl: row.facebook_url,
     spotifyUrl: row.spotify_url,
     twitchUrl: row.twitch_url,
+    favouriteTrackPlatform: row.favourite_track_platform,
+    favouriteTrackUrl: row.favourite_track_url,
+    favouriteTrackTitle: row.favourite_track_title,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -59,6 +62,15 @@ function mapUpdateToRow(patch: FanProfileUpdate): Partial<FanProfileRow> {
   }
   if (patch.twitchUrl !== undefined) {
     row.twitch_url = patch.twitchUrl;
+  }
+  if (patch.favouriteTrackPlatform !== undefined) {
+    row.favourite_track_platform = patch.favouriteTrackPlatform;
+  }
+  if (patch.favouriteTrackUrl !== undefined) {
+    row.favourite_track_url = patch.favouriteTrackUrl;
+  }
+  if (patch.favouriteTrackTitle !== undefined) {
+    row.favourite_track_title = patch.favouriteTrackTitle;
   }
 
   return row;
@@ -269,6 +281,9 @@ async function insertFanProfile(
       facebook_url: patch.facebookUrl ?? null,
       spotify_url: patch.spotifyUrl ?? null,
       twitch_url: patch.twitchUrl ?? null,
+      favourite_track_platform: patch.favouriteTrackPlatform ?? null,
+      favourite_track_url: patch.favouriteTrackUrl ?? null,
+      favourite_track_title: patch.favouriteTrackTitle ?? null,
     })
     .select(FAN_PROFILE_SELECT)
     .single();

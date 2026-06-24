@@ -43,23 +43,41 @@ function createDraftProfile(userId: string, email: string, profile: FanProfile |
     facebookUrl: null,
     spotifyUrl: null,
     twitchUrl: null,
+    favouriteTrackPlatform: null,
+    favouriteTrackUrl: null,
+    favouriteTrackTitle: null,
     createdAt: now,
     updatedAt: now,
   };
 }
 
-function profileToPatchBody(profile: FanProfile) {
-  return {
-    login: profile.login,
-    bio: profile.bio,
-    city: profile.city,
-    favoriteSubgenres: profile.favoriteSubgenres,
-    instagramUrl: profile.instagramUrl,
-    soundcloudUrl: profile.soundcloudUrl,
-    facebookUrl: profile.facebookUrl,
-    spotifyUrl: profile.spotifyUrl,
-    twitchUrl: profile.twitchUrl,
+function profileToPatchBody(nextProfile: FanProfile, previousProfile: FanProfile | null) {
+  const body = {
+    login: nextProfile.login,
+    bio: nextProfile.bio,
+    city: nextProfile.city,
+    favoriteSubgenres: nextProfile.favoriteSubgenres,
+    instagramUrl: nextProfile.instagramUrl,
+    soundcloudUrl: nextProfile.soundcloudUrl,
+    facebookUrl: nextProfile.facebookUrl,
+    spotifyUrl: nextProfile.spotifyUrl,
+    twitchUrl: nextProfile.twitchUrl,
   };
+
+  const previousUrl = previousProfile?.favouriteTrackUrl ?? null;
+  const previousPlatform = previousProfile?.favouriteTrackPlatform ?? null;
+  const trackChanged =
+    nextProfile.favouriteTrackUrl !== previousUrl || nextProfile.favouriteTrackPlatform !== previousPlatform;
+
+  if (trackChanged) {
+    return {
+      ...body,
+      favouriteTrackUrl: nextProfile.favouriteTrackUrl,
+      favouriteTrackPlatform: nextProfile.favouriteTrackUrl ? nextProfile.favouriteTrackPlatform : null,
+    };
+  }
+
+  return body;
 }
 
 interface Props {
@@ -84,7 +102,7 @@ export default function ProfileSection({ email, userId, initialProfile, goingEve
         method: "PATCH",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(profileToPatchBody(nextProfile)),
+        body: JSON.stringify(profileToPatchBody(nextProfile, profile)),
       });
 
       const data: unknown = await response.json();
@@ -136,7 +154,7 @@ export default function ProfileSection({ email, userId, initialProfile, goingEve
         </div>
         {editing ? (
           <p className="text-muted-foreground mt-3 max-w-xl text-pretty">
-            Zaktualizuj login, miasto, opis, ulubione podgatunki i linki do social mediów.
+            Zaktualizuj login, miasto, opis, ulubione podgatunki, linki do social mediów i sekcję My vibes.
           </p>
         ) : null}
 

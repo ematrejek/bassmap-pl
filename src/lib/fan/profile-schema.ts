@@ -1,5 +1,10 @@
 import { z } from "zod";
 import {
+  favouriteTrackErrorLabel,
+  validateFavouriteTrackUrl,
+  type FavouriteTrackPlatform,
+} from "@/lib/fan/favourite-track";
+import {
   normalizeSocialField,
   socialFieldErrorLabel,
   validateSocialField,
@@ -39,17 +44,49 @@ function socialFieldSchema(platform: SocialPlatform) {
   );
 }
 
-export const fanProfileUpdateSchema = z.object({
-  login: fanLoginSchema.optional(),
-  bio: z.preprocess(emptyToNull, z.string().max(200, "Opis może mieć maksymalnie 200 znaków").nullable().optional()),
-  city: z.preprocess(emptyToNull, z.string().max(100, "Miasto może mieć maksymalnie 100 znaków").nullable().optional()),
-  favoriteSubgenres: favoriteSubgenresSchema.optional(),
-  instagramUrl: socialFieldSchema("instagram"),
-  soundcloudUrl: socialFieldSchema("soundcloud"),
-  facebookUrl: socialFieldSchema("facebook"),
-  spotifyUrl: socialFieldSchema("spotify"),
-  twitchUrl: socialFieldSchema("twitch"),
-});
+export const fanProfileUpdateSchema = z
+  .object({
+    login: fanLoginSchema.optional(),
+    bio: z.preprocess(emptyToNull, z.string().max(200, "Opis może mieć maksymalnie 200 znaków").nullable().optional()),
+    city: z.preprocess(
+      emptyToNull,
+      z.string().max(100, "Miasto może mieć maksymalnie 100 znaków").nullable().optional(),
+    ),
+    favoriteSubgenres: favoriteSubgenresSchema.optional(),
+    instagramUrl: socialFieldSchema("instagram"),
+    soundcloudUrl: socialFieldSchema("soundcloud"),
+    facebookUrl: socialFieldSchema("facebook"),
+    spotifyUrl: socialFieldSchema("spotify"),
+    twitchUrl: socialFieldSchema("twitch"),
+    favouriteTrackPlatform: z.preprocess(
+      emptyToNull,
+      z
+        .enum(["spotify", "soundcloud"] satisfies [FavouriteTrackPlatform, FavouriteTrackPlatform])
+        .nullable()
+        .optional(),
+    ),
+    favouriteTrackUrl: z.preprocess(emptyToNull, z.string().trim().nullable().optional()),
+  })
+  .superRefine((data, ctx) => {
+    if (data.favouriteTrackUrl && !data.favouriteTrackPlatform) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Wybierz platformę: Spotify lub SoundCloud",
+        path: ["favouriteTrackPlatform"],
+      });
+      return;
+    }
+
+    if (data.favouriteTrackPlatform && data.favouriteTrackUrl) {
+      if (!validateFavouriteTrackUrl(data.favouriteTrackPlatform, data.favouriteTrackUrl)) {
+        ctx.addIssue({
+          code: z.ZodIssueCode.custom,
+          message: favouriteTrackErrorLabel(data.favouriteTrackPlatform),
+          path: ["favouriteTrackUrl"],
+        });
+      }
+    }
+  });
 
 export type ParsedFanProfileUpdate = z.infer<typeof fanProfileUpdateSchema>;
 

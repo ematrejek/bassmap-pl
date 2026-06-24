@@ -250,6 +250,8 @@ export interface EventComment {
   createdAt: string;
 }
 
+export type FavouriteTrackPlatform = "spotify" | "soundcloud";
+
 export interface FanProfileRow {
   user_id: string;
   login: string;
@@ -261,6 +263,9 @@ export interface FanProfileRow {
   facebook_url: string | null;
   spotify_url: string | null;
   twitch_url: string | null;
+  favourite_track_platform: FavouriteTrackPlatform | null;
+  favourite_track_url: string | null;
+  favourite_track_title: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -276,6 +281,9 @@ export interface FanProfile {
   facebookUrl: string | null;
   spotifyUrl: string | null;
   twitchUrl: string | null;
+  favouriteTrackPlatform: FavouriteTrackPlatform | null;
+  favouriteTrackUrl: string | null;
+  favouriteTrackTitle: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -293,4 +301,7 @@ export interface FanProfileUpdate {
   facebookUrl?: string | null;
   spotifyUrl?: string | null;
   twitchUrl?: string | null;
+  favouriteTrackPlatform?: FavouriteTrackPlatform | null;
+  favouriteTrackUrl?: string | null;
+  favouriteTrackTitle?: string | null;
 }

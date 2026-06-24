@@ -1,6 +1,8 @@
 import GenreBadge, { type NeonColor } from "@/components/fan/GenreBadge";
+import MyVibesEmbed from "@/components/fan/MyVibesEmbed";
 import ProfileShareButton from "@/components/fan/ProfileShareButton";
 import { Button } from "@/components/ui/button";
+import { hasFavouriteTrack } from "@/lib/fan/favourite-track";
 import {
   formatSocialDisplay,
   formatSocialHref,
@@ -131,15 +133,22 @@ export default function ProfileView({ profile, showEmail = false, email, onEdit 
           )}
         </div>
 
-        <div className="border-border bg-card/50 rounded-2xl border p-6 backdrop-blur-md">
-          <h4 className="font-heading text-muted-foreground flex items-center gap-2 text-sm font-bold tracking-widest uppercase">
-            <Music className="text-accent h-4 w-4" />
-            Ulubiony kawałek / set
-          </h4>
-          <p className="text-muted-foreground mt-4 text-sm">
-            Wkrótce – osadzanie utworów z Spotify i SoundCloud (S-21).
-          </p>
-        </div>
+        {hasFavouriteTrack(profile) && profile.favouriteTrackPlatform && profile.favouriteTrackUrl ? (
+          <div className="border-border bg-card/50 rounded-2xl border p-6 backdrop-blur-md">
+            <h4 className="font-heading text-muted-foreground flex items-center gap-2 text-sm font-bold tracking-widest uppercase">
+              <Music className="text-accent h-4 w-4" />
+              My vibes
+            </h4>
+            {profile.favouriteTrackTitle ? (
+              <p className="text-foreground mt-3 text-sm font-semibold">{profile.favouriteTrackTitle}</p>
+            ) : null}
+            <MyVibesEmbed
+              platform={profile.favouriteTrackPlatform}
+              url={profile.favouriteTrackUrl}
+              title={profile.favouriteTrackTitle}
+            />
+          </div>
+        ) : null}
       </div>
     </div>
   );

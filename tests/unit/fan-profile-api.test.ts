@@ -22,6 +22,9 @@ const mockProfile = {
   facebookUrl: null,
   spotifyUrl: null,
   twitchUrl: null,
+  favouriteTrackPlatform: null,
+  favouriteTrackUrl: null,
+  favouriteTrackTitle: null,
   createdAt: "2026-06-24T10:00:00.000Z",
   updatedAt: "2026-06-24T10:00:00.000Z",
 };

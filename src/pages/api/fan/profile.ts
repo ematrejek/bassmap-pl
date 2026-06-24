@@ -2,7 +2,9 @@ import type { APIRoute } from "astro";
 import { jsonResponse } from "@/lib/api/json";
 import { loginFromEmailLocalPart } from "@/lib/auth/display-name";
 import { requireAuth } from "@/lib/auth/guards";
+import { normalizeFavouriteTrackUrl } from "@/lib/fan/favourite-track";
 import { parseFanProfileUpdate, type ParsedFanProfileUpdate } from "@/lib/fan/profile-schema";
+import { fetchTrackTitle } from "@/lib/fan/track-oembed";
 import {
   ensureFanProfile,
   FAN_PROFILE_LOGIN_TAKEN_ERROR,
@@ -48,6 +50,51 @@ function toFanProfileUpdate(body: Record<string, unknown>, data: ParsedFanProfil
   }
 
   return patch;
+}
+
+async function applyFavouriteTrackPatch(
+  body: Record<string, unknown>,
+  data: ParsedFanProfileUpdate,
+  patch: FanProfileUpdate,
+): Promise<Response | null> {
+  if (!("favouriteTrackUrl" in body)) {
+    return null;
+  }
+
+  const url = data.favouriteTrackUrl ?? null;
+
+  if (url === null) {
+    patch.favouriteTrackPlatform = null;
+    patch.favouriteTrackUrl = null;
+    patch.favouriteTrackTitle = null;
+    return null;
+  }
+
+  const platform = data.favouriteTrackPlatform;
+  if (!platform) {
+    return jsonResponse({ error: "Wybierz platformę: Spotify lub SoundCloud" }, 400);
+  }
+
+  const normalizedUrl = normalizeFavouriteTrackUrl(platform, url);
+  if (!normalizedUrl) {
+    return jsonResponse({ error: "Nieprawidłowy link do utworu" }, 400);
+  }
+
+  const title = await fetchTrackTitle(platform, normalizedUrl);
+  if (!title) {
+    return jsonResponse(
+      {
+        error: "Nie udało się pobrać tytułu utworu. Sprawdź, czy link jest publiczny i poprawny.",
+      },
+      400,
+    );
+  }
+
+  patch.favouriteTrackPlatform = platform;
+  patch.favouriteTrackUrl = normalizedUrl;
+  patch.favouriteTrackTitle = title;
+
+  return null;
 }
 
 async function readJsonBody(request: Request): Promise<{ body?: unknown; error?: Response }> {
@@ -130,6 +177,11 @@ export const PATCH: APIRoute = async (context) => {
   }
 
   const patch = toFanProfileUpdate(recordBody, parsed.data);
+  const favouriteTrackError = await applyFavouriteTrackPatch(recordBody, parsed.data, patch);
+  if (favouriteTrackError) {
+    return favouriteTrackError;
+  }
+
   if (Object.keys(patch).length === 0) {
     return jsonResponse({ error: "Brak pól do aktualizacji" }, 400);
   }

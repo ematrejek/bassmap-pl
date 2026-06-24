@@ -1,15 +1,30 @@
 import { ServerError } from "@/components/auth/ServerError";
 import { Button } from "@/components/ui/button";
+import {
+  favouriteTrackErrorLabel,
+  validateFavouriteTrackUrl,
+  type FavouriteTrackPlatform,
+} from "@/lib/fan/favourite-track";
 import { FAN_LOGIN_REGEX } from "@/lib/fan/profile-schema";
 import { getSocialMeta, SOCIAL_PLATFORMS, type SocialPlatform } from "@/lib/fan/profile-display";
 import { cn } from "@/lib/utils";
 import type { FanProfile, Subgenre } from "@/types";
 import { SUBGENRE_LABELS, SUBGENRES } from "@/types";
-import { AtSign, Check, MapPin, Music2, Save, UserRound, X } from "lucide-react";
+import { AtSign, Check, MapPin, Music, Music2, Save, UserRound, X } from "lucide-react";
 import { useState } from "react";
 
 const BIO_MAX = 200;
 const MAX_SUBGENRES = 5;
+
+const FAVOURITE_TRACK_PLATFORMS: { id: FavouriteTrackPlatform; label: string }[] = [
+  { id: "spotify", label: "Spotify" },
+  { id: "soundcloud", label: "SoundCloud" },
+];
+
+const FAVOURITE_TRACK_PLACEHOLDERS: Record<FavouriteTrackPlatform, string> = {
+  spotify: "open.spotify.com/track/...",
+  soundcloud: "soundcloud.com/artysta/utwor",
+};
 
 const inputClass =
   "w-full rounded-xl border border-border bg-input/60 px-4 py-2.5 text-sm text-foreground placeholder:text-muted-foreground/60 outline-none transition-colors focus:border-primary/70 focus:ring-1 focus:ring-primary/40";
@@ -56,11 +71,24 @@ function validateDraft(draft: ProfileDraft): string | null {
   if (draft.favoriteSubgenres.length > MAX_SUBGENRES) {
     return `Możesz wybrać maksymalnie ${MAX_SUBGENRES} podgatunków`;
   }
+  const trackUrl = draft.favouriteTrackUrl?.trim() ?? "";
+  if (trackUrl) {
+    const platform = draft.favouriteTrackPlatform;
+    if (!platform) {
+      return "Wybierz platformę: Spotify lub SoundCloud";
+    }
+    if (!validateFavouriteTrackUrl(platform, trackUrl)) {
+      return favouriteTrackErrorLabel(platform);
+    }
+  }
   return null;
 }
 
 export default function ProfileEditor({ initialProfile, onSave, onCancel, isSaving = false, error }: Props) {
-  const [draft, setDraft] = useState<ProfileDraft>(initialProfile);
+  const [draft, setDraft] = useState<ProfileDraft>({
+    ...initialProfile,
+    favouriteTrackPlatform: initialProfile.favouriteTrackPlatform ?? "spotify",
+  });
   const [localError, setLocalError] = useState<string | null>(null);
 
   const setField = <K extends keyof ProfileDraft>(key: K, value: ProfileDraft[K]) => {
@@ -107,11 +135,15 @@ export default function ProfileEditor({ initialProfile, onSave, onCancel, isSavi
       login: draft.login.trim().toLowerCase(),
       bio: draft.bio?.trim() ? draft.bio.trim() : null,
       city: draft.city?.trim() ? draft.city.trim() : null,
+      favouriteTrackUrl: draft.favouriteTrackUrl?.trim() ? draft.favouriteTrackUrl.trim() : null,
+      favouriteTrackPlatform: draft.favouriteTrackUrl?.trim() ? draft.favouriteTrackPlatform : null,
+      favouriteTrackTitle: draft.favouriteTrackUrl?.trim() ? draft.favouriteTrackTitle : null,
     });
   };
 
   const displayError = error ?? localError;
   const bioLength = draft.bio?.length ?? 0;
+  const activeTrackPlatform = draft.favouriteTrackPlatform ?? "spotify";
 
   return (
     <form onSubmit={handleSubmit} className="mt-10">
@@ -230,6 +262,57 @@ export default function ProfileEditor({ initialProfile, onSave, onCancel, isSavi
                 </div>
               );
             })}
+          </div>
+        </Fieldset>
+
+        <Fieldset icon={Music} title="My vibes">
+          <p className="text-muted-foreground mb-4 text-sm">
+            Wklej link do jednego utworu z Spotify lub SoundCloud. Tytuł pobierzemy automatycznie po zapisie.
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {FAVOURITE_TRACK_PLATFORMS.map((platform) => {
+              const active = activeTrackPlatform === platform.id;
+              return (
+                <button
+                  key={platform.id}
+                  type="button"
+                  onClick={() => {
+                    setDraft((prev) => ({ ...prev, favouriteTrackPlatform: platform.id }));
+                  }}
+                  aria-pressed={active}
+                  disabled={isSaving}
+                  className={cn(
+                    "inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-[0.7rem] font-bold tracking-widest uppercase transition-all",
+                    active
+                      ? "border-primary/60 bg-primary/15 text-primary shadow-glow-violet"
+                      : "border-border bg-background/40 text-muted-foreground hover:border-primary/40 hover:text-foreground",
+                  )}
+                >
+                  {active ? <Check className="h-3 w-3" /> : null}
+                  {platform.label}
+                </button>
+              );
+            })}
+          </div>
+          <div className="mt-4">
+            <label htmlFor="profile-favourite-track-url" className={labelClass}>
+              Link do utworu
+            </label>
+            <input
+              id="profile-favourite-track-url"
+              value={draft.favouriteTrackUrl ?? ""}
+              onChange={(event) => {
+                const value = event.target.value;
+                setDraft((prev) => ({
+                  ...prev,
+                  favouriteTrackUrl: value || null,
+                  favouriteTrackTitle: value ? prev.favouriteTrackTitle : null,
+                }));
+              }}
+              className={inputClass}
+              placeholder={FAVOURITE_TRACK_PLACEHOLDERS[activeTrackPlatform]}
+              disabled={isSaving}
+            />
           </div>
         </Fieldset>
 
