@@ -250,6 +250,58 @@ export interface EventComment {
   createdAt: string;
 }
 
+export type ForumThreadCategory =
+  | "szukam_ekipy"
+  | "jestesmy_ekipa"
+  | "podziel_sie_muzyka"
+  | "sprzet_produkcja"
+  | "transport_noclegi"
+  | "pozostale";
+
+export interface ForumThreadRow {
+  id: string;
+  category: ForumThreadCategory;
+  title: string;
+  body: string;
+  city: string | null;
+  tags: string[];
+  author_id: string | null;
+  author_label: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface ForumThread {
+  id: string;
+  category: ForumThreadCategory;
+  title: string;
+  body: string;
+  city: string | null;
+  tags: string[];
+  authorId: string | null;
+  authorLabel: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface ForumCommentRow {
+  id: string;
+  thread_id: string;
+  author_id: string | null;
+  author_label: string;
+  body: string;
+  created_at: string;
+}
+
+export interface ForumComment {
+  id: string;
+  threadId: string;
+  authorId: string | null;
+  authorLabel: string;
+  body: string;
+  createdAt: string;
+}
+
 export type FavouriteTrackPlatform = "spotify" | "soundcloud";
 
 export interface FanProfileRow {
