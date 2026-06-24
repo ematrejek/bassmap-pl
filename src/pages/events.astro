@@ -31,6 +31,7 @@ const userAttendanceResult =
     ? await getUserAttendanceByEventIds(supabase, user.id, eventIds)
     : { data: {} };
 const userAttendance = "data" in userAttendanceResult ? userAttendanceResult.data : {};
+const userAttendanceError = "error" in userAttendanceResult ? userAttendanceResult.error : null;
 const supabaseUrl = SUPABASE_URL ?? "";
 const events = supabaseUrl
   ? rawEvents.map((event) => ({
@@ -50,6 +51,7 @@ const listError =
     "error" in listResult ? listResult.error : null,
     "error" in citiesResult ? citiesResult.error : null,
     goingCountsError,
+    userAttendanceError,
   ]
     .filter(Boolean)
     .join(" ") || null;

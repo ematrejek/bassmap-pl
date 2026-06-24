@@ -2,7 +2,7 @@
 change_id: event-attendance
 title: «Idę» i «Interesuję się» (RSVP)
 roadmap_ref: S-19
-status: implemented
+status: impl_reviewed
 created: 2026-06-23
 updated: 2026-06-23
 archived_at: null
@@ -19,4 +19,4 @@ Fan na stronie wydarzenia klika «Idę» lub «Interesuję się»; liczniki publ
 
 ## Notes
 
-<!-- Free-form notes for this change: links, ad-hoc context, decisions that don't belong in research/frame/plan. -->
+- **Impl-review 2026-06-23 (F2):** W tym samym branchu co RSVP wdrożono polonizację formularza rejestracji (`SignUpForm`, walidacja `confirmPassword` w API). Celowo zostawione w jednym PR – dopisane tutaj zamiast osobnego change-id.

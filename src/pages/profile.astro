@@ -19,6 +19,7 @@ const email = user?.email ?? "";
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 const goingResult = supabase && user ? await listEventsForUserAttendance(supabase, user.id, "going") : { data: [] };
 const goingEventsRaw: Event[] = "data" in goingResult ? goingResult.data : [];
+const goingError = "error" in goingResult ? goingResult.error : null;
 const supabaseUrl = SUPABASE_URL ?? "";
 const goingEvents: EventWithCoverUrl[] = supabaseUrl
   ? goingEventsRaw.map((event) => enrichEventWithCoverUrl(event, supabaseUrl))
@@ -27,6 +28,15 @@ const goingEvents: EventWithCoverUrl[] = supabaseUrl
 
 <Layout title="Mój profil">
   <AppShell showFooter={true}>
+    {
+      goingError ? (
+        <div class="mx-auto max-w-6xl px-4 pt-8">
+          <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+            {goingError}
+          </p>
+        </div>
+      ) : null
+    }
     {email ? <ProfileSection email={email} goingEvents={goingEvents} client:load /> : null}
     {
       email && !isAdmin ? (

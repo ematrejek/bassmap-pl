@@ -27,29 +27,42 @@ export async function getAttendanceSummary(
   eventId: string,
   userId?: string | null,
 ): Promise<ServiceResult<EventAttendanceSummary>> {
-  const response = await supabase.from("event_attendance").select("status, user_id").eq("event_id", eventId);
+  const [goingResponse, interestedResponse, userResponse] = await Promise.all([
+    supabase
+      .from("event_attendance")
+      .select("*", { count: "exact", head: true })
+      .eq("event_id", eventId)
+      .eq("status", "going"),
+    supabase
+      .from("event_attendance")
+      .select("*", { count: "exact", head: true })
+      .eq("event_id", eventId)
+      .eq("status", "interested"),
+    userId
+      ? supabase.from("event_attendance").select("status").eq("event_id", eventId).eq("user_id", userId).maybeSingle()
+      : Promise.resolve({ data: null, error: null }),
+  ]);
 
-  if (response.error) {
-    return { error: response.error.message };
+  if (goingResponse.error) {
+    return { error: goingResponse.error.message };
+  }
+  if (interestedResponse.error) {
+    return { error: interestedResponse.error.message };
+  }
+  if (userResponse.error) {
+    return { error: userResponse.error.message };
   }
 
-  const rows = (response.data as Pick<EventAttendanceRow, "status" | "user_id">[] | null) ?? [];
-  let goingCount = 0;
-  let interestedCount = 0;
-  let userStatus: AttendanceStatus | null = null;
+  const userStatus =
+    userResponse.data && "status" in userResponse.data ? (userResponse.data.status as AttendanceStatus) : null;
 
-  for (const row of rows) {
-    if (row.status === "going") {
-      goingCount += 1;
-    } else {
-      interestedCount += 1;
-    }
-    if (userId && row.user_id === userId) {
-      userStatus = row.status;
-    }
-  }
-
-  return { data: { goingCount, interestedCount, userStatus } };
+  return {
+    data: {
+      goingCount: goingResponse.count ?? 0,
+      interestedCount: interestedResponse.count ?? 0,
+      userStatus,
+    },
+  };
 }
 
 export async function setAttendanceStatus(

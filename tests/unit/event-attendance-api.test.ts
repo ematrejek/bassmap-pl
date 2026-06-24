@@ -131,6 +131,16 @@ describe("GET /api/events/[id]/attendance", () => {
 
     expect(response.status).toBe(404);
   });
+
+  it("returns 400 for invalid event id", async () => {
+    const response = await GET(
+      mockContext({}, { params: { id: "not-a-uuid" }, url: "http://localhost/api/events/not-a-uuid/attendance" }),
+    );
+
+    expect(response.status).toBe(400);
+    const json: unknown = await response.json();
+    expect(json).toEqual({ error: "Nieprawidłowy identyfikator wydarzenia" });
+  });
 });
 
 describe("PUT /api/events/[id]/attendance", () => {
@@ -138,6 +148,32 @@ describe("PUT /api/events/[id]/attendance", () => {
     const response = await PUT(mockContext({}, { method: "PUT", body: { status: "going" } }));
 
     expect(response.status).toBe(401);
+  });
+
+  it("returns 400 for invalid event id", async () => {
+    const response = await PUT(
+      mockContext(
+        { user: mockUser },
+        {
+          method: "PUT",
+          body: { status: "going" },
+          params: { id: "bad-id" },
+          url: "http://localhost/api/events/bad-id/attendance",
+        },
+      ),
+    );
+
+    expect(response.status).toBe(400);
+    const json: unknown = await response.json();
+    expect(json).toEqual({ error: "Nieprawidłowy identyfikator wydarzenia" });
+  });
+
+  it("returns 400 for invalid status body", async () => {
+    const response = await PUT(mockContext({ user: mockUser }, { method: "PUT", body: { status: "maybe" } }));
+
+    expect(response.status).toBe(400);
+    const json: unknown = await response.json();
+    expect(json).toEqual({ error: "Nieprawidłowe dane" });
   });
 
   it("returns 404 when event is not published", async () => {

@@ -22,6 +22,16 @@
 
 **Applies to:** `listArchivedEvents`, `/archive`, test `tests/integration/archive-list.test.ts`.
 
+## RSVP count aggregation at scale
+
+**Context:** `src/lib/services/event-attendance.ts` – `getAttendanceSummary`
+
+**Problem:** Funkcja pobiera wszystkie wiersze `event_attendance` dla eventu i liczy w JS. Przy dużej liczbie RSVP rośnie transfer i czas odpowiedzi (GET na szczególe + po każdym PUT/DELETE). Na MVP (<100 RSVP/event) akceptowalne.
+
+**Rule:** Przy skali produkcyjnej agreguj liczniki RSVP w SQL (`COUNT` + `FILTER`) lub cache – nie pobieraj wszystkich wierszy do liczenia w TS.
+
+**Applies to:** `getAttendanceSummary`, ścieżki GET/PUT/DELETE `/api/events/[id]/attendance`.
+
 ## Typografia – en dash zamiast em dash
 
 **Context:** Copy UI, tytuły stron, komentarze w `src/`, dokumenty aktywnej zmiany.

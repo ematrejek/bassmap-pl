@@ -1,4 +1,5 @@
 import EventCardSubgenreBadges from "@/components/discovery/EventCardSubgenreBadges";
+import { ServerError } from "@/components/auth/ServerError";
 import EventRsvpButtons from "@/components/events/EventRsvpButtons";
 import { useEventAttendance } from "@/components/hooks/useEventAttendance";
 import { Button } from "@/components/ui/button";
@@ -28,7 +29,7 @@ export default function EventDiscoveryCard({
   const initialGoingCount = event.goingCount ?? 0;
   const initialUserStatus = event.userAttendanceStatus ?? null;
 
-  const { goingCount, userStatus, pendingStatus, handleStatusClick } = useEventAttendance({
+  const { goingCount, userStatus, pendingStatus, error, handleStatusClick } = useEventAttendance({
     eventId: event.id,
     initialGoingCount,
     initialInterestedCount: 0,
@@ -88,6 +89,7 @@ export default function EventDiscoveryCard({
                 void handleStatusClick("interested");
               }}
             />
+            {error ? <ServerError message={error} /> : null}
           </div>
         ) : null}
 

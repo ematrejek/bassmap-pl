@@ -24,7 +24,7 @@ S-18 dostarczył kafelki z placeholderem `GOING_COUNT_PLACEHOLDER = 0` (`src/lib
 1. Na `/events/[id]` (nadchodzące, published): przyciski «Idę» / «Interesuję się», liczniki obu statusów, toggle (ponowne kliknięcie aktywnego = rezygnacja).
 2. Gość: widzi liczniki; link „Zaloguj się, aby oznaczyć udział” (`SIGN_IN_PATH?redirect=…`).
 3. Zalogowany fan/admin: klik zmienia status; drugi przycisk przełącza status; liczniki aktualizują się bez pełnego reloadu.
-4. Kafelek na `/events`: prawdziwy licznik «Idzie» (bez «Interesuję się» – decyzja S-18).
+4. Kafelek na `/events`: prawdziwy licznik «Idzie» (bez licznika «Interesuję się» – decyzja S-18); **zalogowany fan** ma też przyciski «Idę» / «Interesuję się» inline na kafelku (addendum impl-review 2026-06-23).
 5. `/my-events`: sekcje «Idę» i «Interesuję się» z kafelkami nadchodzących eventów; anchor `#interesuje-sie`.
 6. `/profile`: skrót do 6 kafelków «Idę» z SSR.
 7. Tabela `event_attendance` + RLS; testy unit API + integracja RLS.
@@ -223,13 +223,13 @@ Podłączenie placeholderów do danych; nowy island RSVP; batch countów na liś
 
 **Contract**: Wywołanie `getAttendanceSummary`; przekazanie props do `EventAttendanceSection` z `client:load`; `isUpcoming={showSuggestionForm}` lub osobny boolean.
 
-#### 3. Lista odkrywania – liczniki na kafelkach
+#### 3. Lista odkrywania – liczniki i RSVP na kafelkach
 
-**Files**: `src/pages/events.astro`, `src/components/discovery/EventDiscoveryCard.tsx`, `src/types.ts`
+**Files**: `src/pages/events.astro`, `src/components/discovery/EventDiscoveryCard.tsx`, `src/components/discovery/DiscoveryShell.tsx`, `src/components/discovery/EventList.tsx`, `src/components/events/EventRsvpButtons.tsx`, `src/components/hooks/useEventAttendance.ts`, `src/lib/services/event-attendance.ts` (`getUserAttendanceByEventIds`), `src/types.ts`
 
-**Intent**: Zastąpić `GOING_COUNT_PLACEHOLDER` prawdziwym `goingCount` z batch query.
+**Intent**: Zastąpić `GOING_COUNT_PLACEHOLDER` prawdziwym `goingCount` z batch query; zalogowany fan może oznaczać RSVP bez wchodzenia na stronę szczegółów (addendum impl-review 2026-06-23).
 
-**Contract**: Po `listPublishedEvents` – `getGoingCountsByEventIds`; mapowanie na `events` z `goingCount`; kafelek czyta `event.goingCount ?? 0`.
+**Contract**: Po `listPublishedEvents` – `getGoingCountsByEventIds` + (gdy zalogowany) `getUserAttendanceByEventIds`; mapowanie na `events` z `goingCount` i `userAttendanceStatus`; kafelek czyta `event.goingCount ?? 0`; gość widzi tylko licznik; zalogowany fan – `EventRsvpButtons` + `useEventAttendance` (bez licznika «Interesuję się» na kafelku).
 
 #### 4. Usunięcie placeholdera
 
@@ -409,4 +409,4 @@ Aktualizacja polityki prywatności o przetwarzanie RSVP; sync roadmap/issue.
 
 #### Manual
 
-- [ ] 4.3 Polityka §2.9 i `LEGAL_UPDATED_AT` poprawne
+- [x] 4.3 Polityka §2.9 i `LEGAL_UPDATED_AT` poprawne – impl-review triage
