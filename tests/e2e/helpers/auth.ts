@@ -20,5 +20,13 @@ async function signIn(page: Page, email: string, password: string): Promise<void
   await page.getByLabel("Email").fill(email);
   await page.getByLabel("Hasło").fill(password);
   await page.getByRole("button", { name: "Zaloguj się" }).click();
-  await page.waitForURL((url) => !url.pathname.startsWith("/auth/signin"), { timeout: 30_000 });
+
+  try {
+    await page.waitForURL((url) => !url.pathname.startsWith("/auth/signin"), { timeout: 30_000 });
+  } catch {
+    const errorText = (await page.locator("p.text-red-300").first().textContent())?.trim();
+    throw new Error(
+      errorText ?? "Logowanie nie powiodło się – nadal na /auth/signin (sprawdź Supabase w .dev.vars / CI)",
+    );
+  }
 }

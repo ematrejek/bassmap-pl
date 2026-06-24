@@ -37,12 +37,11 @@ jobs:
             > .env.test
       - name: Run tests
         run: bash scripts/ci-supabase-test.sh
-      - name: Build for E2E preview
-        run: |
-          set -a
-          source .env.test
-          set +a
-          npm run build
+      - name: Build (production secrets compile check)
+        run: npm run build
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
       - name: Install Playwright (Chromium)
         run: npx playwright install --with-deps chromium
       - name: E2E (browser)
@@ -50,6 +49,8 @@ jobs:
           set -a
           source .env.test
           set +a
+          printf 'SUPABASE_URL=%s\nSUPABASE_KEY=%s\nSUPABASE_SERVICE_ROLE_KEY=%s\n' \
+            "$SUPABASE_URL" "$SUPABASE_KEY" "$SUPABASE_SERVICE_ROLE_KEY" > .dev.vars
           npm run test:e2e
         env:
           CI: true

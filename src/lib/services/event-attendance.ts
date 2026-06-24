@@ -25,11 +25,7 @@ function attendanceRlsError(): string {
 /** PostgREST when a migration was not applied yet (code deployed before db push). */
 function isMissingAttendanceTableError(error: { message?: string; code?: string }): boolean {
   const message = error.message ?? "";
-  return (
-    error.code === "PGRST205" ||
-    message.includes("Could not find the table") ||
-    message.includes("schema cache")
-  );
+  return error.code === "PGRST205" || message.includes("Could not find the table") || message.includes("schema cache");
 }
 
 function emptyGoingCounts(eventIds: string[]): Record<string, number> {
