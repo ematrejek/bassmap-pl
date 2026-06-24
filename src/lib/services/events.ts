@@ -242,6 +242,32 @@ export async function listArchivedEvents(
   return { data: (response.data as EventRow[]).map(mapEventRow) };
 }
 
+const SITEMAP_EVENTS_LIMIT = 5000;
+
+/** Published event URLs for dynamic sitemap (anon RLS). */
+export async function listPublishedEventIdsForSitemap(
+  supabase: SupabaseClient,
+): Promise<ServiceResult<{ id: string; updatedAt: string }[]>> {
+  const response = await supabase
+    .from("events")
+    .select("id, updated_at")
+    .eq("status", "published")
+    .order("starts_at", { ascending: false })
+    .limit(SITEMAP_EVENTS_LIMIT);
+
+  if (response.error) {
+    return { error: "Nie udało się załadować wydarzeń do mapy strony" };
+  }
+
+  const rows = response.data as { id: string; updated_at: string }[];
+  return {
+    data: rows.map((row) => ({
+      id: row.id,
+      updatedAt: row.updated_at,
+    })),
+  };
+}
+
 /** Upcoming or archived published event visible to fans (RLS + status filter). */
 export async function getPublishedEventById(supabase: SupabaseClient, id: string): Promise<Event | null> {
   const response = await supabase.from("events").select("*").eq("id", id).eq("status", "published").maybeSingle();
