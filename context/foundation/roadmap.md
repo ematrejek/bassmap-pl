@@ -56,7 +56,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-18 | event-card-redesign       | fan widzi kwadratowe kafelki eventów (nazwa, podgatunki, miejsce, czas, cena) na liście     | S-16          | notes 2026-06-22                 | done        |
 | S-19 | event-attendance          | fan klika «Idę» lub «Interesuję się»; liczniki; sekcje w Moje eventy i profilu              | S-18          | notes 2026-06-22                 | done        |
 | S-20 | fan-profile-edit          | fan edytuje login, bio, miasto, ulubione podgatunki, linki social; publiczny profil `/u/login` | S-19          | notes 2026-06-22                 | done        |
-| S-28 | profile-share             | fan udostępnia profil: przycisk «Udostępnij», kopiowanie linku (później FB/IG)              | S-20          | notes 2026-06-24                 | proposed    |
+| S-28 | profile-share             | fan udostępnia profil: przycisk «Udostępnij», kopiowanie linku (później FB/IG)              | S-20          | notes 2026-06-24                 | done        |
 | S-21 | profile-spotify-embed     | fan dodaje link Spotify (utwór/playlista); embed odtwarzacza na profilu                     | S-20          | notes 2026-06-22                 | proposed    |
 | S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | proposed    |
 | S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | proposed    |
@@ -502,7 +502,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Czy v1 wystarczy samo kopiowanie, czy od razu Web Share API na mobile \u2013 Owner: user. Block: no (domyślnie: copy + Web Share gdy dostępne).
 - **Risk:** Niski \u2013 bez backendu; wymaga poprawnego `site` w URL (kanoniczny `https://bassmap.pl`).
-- **Status:** proposed
+- **Status:** done
 
 **Iteracje późniejsze (poza MVP slice):**
 
@@ -803,3 +803,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-18: fan na liście `/events` widzi kwadratowe kafelki zgodne z designem bassmap-pl-ui: nazwa, podgatunki, miejsce, czas, cena.** \u2013 Archived 2026-06-22 → `context/archive/2026-06-22-event-card-redesign/`. Lesson: \u2013.
 - **S-19: zalogowany fan na stronie wydarzenia klika «Idę» lub «Interesuję się»; wszyscy widzą liczniki; wydarzenia trafiają do sekcji Moje eventy (`#ide`, `#interesuje-sie`) i skrótu na profilu.** \u2013 Archived 2026-06-23 → `context/archive/2026-06-23-event-attendance/`. Lesson: \u2013.
 - **S-20: fan w «Edytuj profil» ustawia login (publiczny), opis, miasto, ulubione podgatunki i linki social; gość widzi publiczny profil pod `/u/login` (bez e-maila).** \u2013 Archived 2026-06-24 → `context/archive/2026-06-23-fan-profile-edit/`. Lesson: `db push` na produkcję przed deployem kodu wymagającego nowych tabel; E2E w CI musi budować preview z lokalnym Supabase (`.env.test`).
+- **S-28: na własnym profilu (`/profile`) i publicznym (`/u/login`) fan widzi przycisk «Udostępnij»; po kliknięciu może skopiować link do publicznego profilu (schowek) z potwierdzeniem „Skopiowano”. Na urządzeniach z Web Share API – opcjonalnie natywny panel udostępniania systemu (zamiast samego kopiowania).** \u2013 Archived 2026-06-24 → `context/archive/2026-06-24-profile-share/`. Lesson: \u2013.
