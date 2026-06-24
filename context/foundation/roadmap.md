@@ -24,9 +24,9 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 
 ## North star
 
-**S-20** (edycja profilu fana) – north star Partii III po zamknięciu S-19.
+**S-28** (udostępnianie profilu) – north star Partii III po zamknięciu S-20.
 
-> Poprzednia north star: **S-19** («Idę» / «Interesuję się») – **done** 2026-06-23. Wcześniej: **S-18** (kafelki wydarzeń) – **done** 2026-06-22. Partia II zamknięta – S-12…S-16 done (2026-06-19).
+> Poprzednia north star: **S-20** (edycja profilu fana) – **done** 2026-06-24. Wcześniej: **S-19** («Idę» / «Interesuję się») – **done** 2026-06-23.
 
 ## At a glance
 
@@ -55,7 +55,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto; komentarze zostają jako „Usunięty użytkownik”      | S-12, S-15    | FR-022, NFR Privacy              | done        |
 | S-18 | event-card-redesign       | fan widzi kwadratowe kafelki eventów (nazwa, podgatunki, miejsce, czas, cena) na liście     | S-16          | notes 2026-06-22                 | done        |
 | S-19 | event-attendance          | fan klika «Idę» lub «Interesuję się»; liczniki; sekcje w Moje eventy i profilu              | S-18          | notes 2026-06-22                 | done        |
-| S-20 | fan-profile-edit          | fan edytuje login, bio, miasto, ulubione podgatunki, linki social; publiczny profil `/u/login` | S-19          | notes 2026-06-22                 | proposed    |
+| S-20 | fan-profile-edit          | fan edytuje login, bio, miasto, ulubione podgatunki, linki social; publiczny profil `/u/login` | S-19          | notes 2026-06-22                 | done        |
 | S-28 | profile-share             | fan udostępnia profil: przycisk «Udostępnij», kopiowanie linku (później FB/IG)              | S-20          | notes 2026-06-24                 | proposed    |
 | S-21 | profile-spotify-embed     | fan dodaje link Spotify (utwór/playlista); embed odtwarzacza na profilu                     | S-20          | notes 2026-06-22                 | proposed    |
 | S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | proposed    |
@@ -485,7 +485,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Unikalność loginu, widoczność profilu dla gości, dozwolone znaki \u2013 Owner: user. Block: planowanie S-20.
 - **Risk:** Dane profilu publiczne \u2013 legal sync polityki prywatności.
-- **Status:** proposed
+- **Status:** done
 
 **FR (propozycja do PRD v3):**
 
@@ -802,3 +802,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-16: zalogowany fan trwale usuwa konto z profilu po potwierdzeniu hasłem; komentarze zostają z etykietą „Usunięty użytkownik”; zgłoszenia i sugestie tracą powiązanie z kontem.** \u2013 Archived 2026-06-19 → `context/archive/2026-06-19-account-deletion/`. Lesson: jawny UPDATE `author_label` przed `deleteUser`; migracja FK sugestii przed deployem.
 - **S-18: fan na liście `/events` widzi kwadratowe kafelki zgodne z designem bassmap-pl-ui: nazwa, podgatunki, miejsce, czas, cena.** \u2013 Archived 2026-06-22 → `context/archive/2026-06-22-event-card-redesign/`. Lesson: \u2013.
 - **S-19: zalogowany fan na stronie wydarzenia klika «Idę» lub «Interesuję się»; wszyscy widzą liczniki; wydarzenia trafiają do sekcji Moje eventy (`#ide`, `#interesuje-sie`) i skrótu na profilu.** \u2013 Archived 2026-06-23 → `context/archive/2026-06-23-event-attendance/`. Lesson: \u2013.
+- **S-20: fan w «Edytuj profil» ustawia login (publiczny), opis, miasto, ulubione podgatunki i linki social; gość widzi publiczny profil pod `/u/login` (bez e-maila).** \u2013 Archived 2026-06-24 → `context/archive/2026-06-23-fan-profile-edit/`. Lesson: `db push` na produkcję przed deployem kodu wymagającego nowych tabel; E2E w CI musi budować preview z lokalnym Supabase (`.env.test`).
