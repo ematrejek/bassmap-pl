@@ -42,9 +42,11 @@ test.describe("Ścieżki wydarzeń – fan i admin", () => {
     await submitEventForm(page, "Dodaj wydarzenie");
 
     await expect(page).toHaveURL(/\/admin/, { timeout: 30_000 });
-    await expect(page.getByText(baseEventName)).toBeVisible({ timeout: 30_000 });
 
     const catalogSection = page.locator("section").filter({ hasText: "Wszystkie wydarzenia" });
+    await expect(catalogSection.getByRole("row").filter({ hasText: baseEventName }).first()).toBeVisible({
+      timeout: 30_000,
+    });
     const editHref = await catalogSection
       .getByRole("row")
       .filter({ hasText: baseEventName })
@@ -130,9 +132,11 @@ test.describe("Ścieżki wydarzeń – fan i admin", () => {
     await page.goto("/admin/events/new");
     await fillCoordinatesEventForm(page, { name: editTargetName, city: `E2E Edit ${String(Date.now())}` });
     await submitEventForm(page, "Dodaj wydarzenie");
-    await expect(page.getByText(editTargetName)).toBeVisible({ timeout: 30_000 });
+    await expect(page).toHaveURL(/\/admin/, { timeout: 30_000 });
 
-    const row = page.getByRole("row").filter({ hasText: editTargetName }).first();
+    const catalogSection = page.locator("section").filter({ hasText: "Wszystkie wydarzenia" });
+    const row = catalogSection.getByRole("row").filter({ hasText: editTargetName }).first();
+    await expect(row).toBeVisible({ timeout: 30_000 });
     await row.getByRole("link", { name: "Edytuj" }).click();
     await expect(page.getByRole("heading", { name: "Edytuj wydarzenie" })).toBeVisible();
 
@@ -140,7 +144,7 @@ test.describe("Ścieżki wydarzeń – fan i admin", () => {
     await page.getByRole("button", { name: "Zapisz zmiany" }).click();
 
     await expect(page).toHaveURL(/\/admin/, { timeout: 30_000 });
-    await expect(page.getByText(updatedName)).toBeVisible();
+    await expect(catalogSection.getByRole("row").filter({ hasText: updatedName }).first()).toBeVisible();
     editTargetName = updatedName;
   });
 
@@ -148,13 +152,16 @@ test.describe("Ścieżki wydarzeń – fan i admin", () => {
     await signInAsAdmin(page);
     await page.goto("/admin");
 
-    const row = page.getByRole("row").filter({ hasText: editTargetName }).first();
+    const catalogSection = page.locator("section").filter({ hasText: "Wszystkie wydarzenia" });
+    const row = catalogSection.getByRole("row").filter({ hasText: editTargetName }).first();
     await row.getByRole("link", { name: "Usuń" }).click();
 
     await expect(page.getByRole("heading", { name: "Usunąć wydarzenie?" })).toBeVisible();
     await page.getByRole("button", { name: "Tak, usuń" }).click();
 
     await expect(page).toHaveURL(/\/admin/, { timeout: 30_000 });
-    await expect(page.getByText(editTargetName)).toBeHidden({ timeout: 30_000 });
+    await expect(catalogSection.getByRole("row").filter({ hasText: editTargetName })).toBeHidden({
+      timeout: 30_000,
+    });
   });
 });
