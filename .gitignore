@@ -41,3 +41,11 @@ bassmap-pl-ui (1)/
 
 # root-level legal scratch only (tracked references: context/legal/)
 /legal/
+
+# Partia III GitHub backlog automation (local one-off; issues already on GitHub)
+context/foundation/partia-iii-github-issues.md
+scripts/partia-iii-issues.json
+scripts/partia-iii-issue-numbers.txt
+scripts/create-partia-iii-github-issues.ps1
+scripts/add-partia-iii-to-project.ps1
+scripts/sync-partia-iii-issue-numbers-to-roadmap.ps1

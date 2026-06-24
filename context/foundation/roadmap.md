@@ -24,9 +24,9 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 
 ## North star
 
-**S-19** («Idę» / «Interesuję się») – north star Partii III po zamknięciu S-18; wymaga gotowych kafelków z placeholderem licznika.
+**S-20** (edycja profilu fana) – north star Partii III po zamknięciu S-19.
 
-> Poprzednia north star: **S-18** (kafelki wydarzeń) – **done** 2026-06-22. Wcześniej: Partia II zamknięta – S-12…S-16 done (2026-06-19).
+> Poprzednia north star: **S-19** («Idę» / «Interesuję się») – **done** 2026-06-23. Wcześniej: **S-18** (kafelki wydarzeń) – **done** 2026-06-22. Partia II zamknięta – S-12…S-16 done (2026-06-19).
 
 ## At a glance
 
@@ -437,7 +437,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 **Ustalenia cross-cutting (Partia III):**
 
-- Copy RSVP: **«Interesuję się»** (nie «Obserwuję» – do zmiany w kodzie przy S-19).
+- Copy RSVP: **«Interesuję się»** (nie «Obserwuję») – wdrożone w S-19 (2026-06-23).
 - Spotify «Moja muzyka»: **embed z URL**, bez Spotify API w pierwszej wersji (S-21).
 - Weryfikacja organizatora MVP: **wniosek + ręczna akceptacja admina** (F-05).
 - GA4 (S-26): wymaga **baneru cookies** i aktualizacji polityki prywatności (konflikt z PRD „brak tracking cookies” – rozwiązać przy implementacji).
@@ -625,8 +625,8 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-14       | change-suggestions        | #26    | Sugestie zmian wydarzeń                        | \u2013                     | Done \u2013 archived 2026-06-19                         |
 | S-15       | event-comments            | #27    | Komentarze pod wydarzeniami                    | \u2013                     | Done \u2013 archived 2026-06-19                         |
 | S-16       | account-deletion          | #28    | Usuwanie konta użytkownika                     | \u2013                     | Done \u2013 archived 2026-06-19                         |
-| S-18       | event-card-redesign       | #38    | Kafelki wydarzeń (bassmap-pl-ui)              | yes                   | Partia III – pierwszy slice                        |
-| S-19       | event-attendance          | #39    | Idę / Interesuję się + liczniki               | po S-18               | Rename «Obserwuję» → «Interesuję się»              |
+| S-18       | event-card-redesign       | #38    | Kafelki wydarzeń (bassmap-pl-ui)              | po S-16               | Done – archived 2026-06-22                         |
+| S-19       | event-attendance          | #39    | Idę / Interesuję się + liczniki               | po S-18               | Done – archived 2026-06-23                         |
 | S-20       | fan-profile-edit          | #40    | Edycja profilu fana                           | po S-19               | Legal sync profil publiczny                        |
 | S-21       | profile-spotify-embed     | #41    | Moja muzyka: Spotify embed                    | po S-20               | Bez Spotify API v1                                 |
 | S-22       | forum-threads             | #42    | Forum: wątki i komentarze                     | po S-20               | Legal sync UGC forum                               |
@@ -651,6 +651,13 @@ Foundations below assume these are present and do NOT re-scaffold them.
 10. **PWA vs Capacitor vs native (S-27)** \u2013 Owner: user + dane GA. Block: planowanie S-27.
 
 ## Resolved (history)
+
+### 2026-06-23 \u2013 archiwum S-19 (event-attendance)
+
+- **S-19 done** \u2013 archived `context/archive/2026-06-23-event-attendance/`; issue #39 zamknięte.
+- **North star** przeniesiona z **S-19** na **S-20** (edycja profilu fana).
+- **Legal sync S-19:** §2.9 polityki, `LEGAL_UPDATED_AT` 2026-06-23.
+- **Deploy note:** migracja `20260623100000` (`event_attendance`) przed kodem z API/UI na produkcji.
 
 ### 2026-06-22 \u2013 shaping Partia III
 
