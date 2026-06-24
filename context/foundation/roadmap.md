@@ -24,9 +24,9 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 
 ## North star
 
-**S-28** (udostępnianie profilu) – north star Partii III po zamknięciu S-20.
+**S-21** (Moja muzyka – Spotify embed) – north star Partii III po zamknięciu S-28.
 
-> Poprzednia north star: **S-20** (edycja profilu fana) – **done** 2026-06-24. Wcześniej: **S-19** («Idę» / «Interesuję się») – **done** 2026-06-23.
+> Poprzednia north star: **S-28** (udostępnianie profilu) – **done** 2026-06-24. Wcześniej: **S-20** (edycja profilu fana) – **done** 2026-06-24.
 
 ## At a glance
 
