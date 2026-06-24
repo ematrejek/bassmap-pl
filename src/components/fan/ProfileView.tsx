@@ -1,4 +1,5 @@
 import GenreBadge, { type NeonColor } from "@/components/fan/GenreBadge";
+import ProfileShareButton from "@/components/fan/ProfileShareButton";
 import { Button } from "@/components/ui/button";
 import {
   formatSocialDisplay,
@@ -62,12 +63,15 @@ export default function ProfileView({ profile, showEmail = false, email, onEdit 
           <p className="text-muted-foreground mt-5 text-center text-sm italic">Brak opisu profilu.</p>
         )}
 
-        {onEdit ? (
-          <Button type="button" onClick={onEdit} className="mt-6 w-full font-semibold tracking-wider uppercase">
-            <UserRound className="h-4 w-4" />
-            Edytuj profil
-          </Button>
-        ) : null}
+        <div className="mt-6 flex w-full flex-col gap-2">
+          <ProfileShareButton login={profile.login} />
+          {onEdit ? (
+            <Button type="button" onClick={onEdit} className="w-full font-semibold tracking-wider uppercase">
+              <UserRound className="h-4 w-4" />
+              Edytuj profil
+            </Button>
+          ) : null}
+        </div>
       </article>
 
       <div className="flex flex-col gap-6 lg:col-span-2">

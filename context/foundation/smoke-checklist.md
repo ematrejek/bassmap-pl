@@ -23,7 +23,8 @@ Stała czwórka (jeśli nie było `test:e2e` lub coś podejrzane):
 1. `/events` – lista i przycisk „Filtruj” (nie wisi „Ładowanie listy wydarzeń…”)
 2. Jeden event – strona szczegółu się otwiera
 3. `/profile` – jako fan: profil; jako gość: przekierowanie na logowanie
-4. Wyloguj / zaloguj – jeśli slice dotyka konta
+4. `/profile` lub `/u/{login}` – «Udostępnij» kopiuje kanoniczny link do profilu
+5. Wyloguj / zaloguj – jeśli slice dotyka konta
 
 ## Kiedy dopisać test E2E
 
