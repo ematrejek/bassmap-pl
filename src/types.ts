@@ -249,3 +249,45 @@ export interface EventComment {
   body: string;
   createdAt: string;
 }
+
+export interface FanProfileRow {
+  user_id: string;
+  login: string;
+  bio: string | null;
+  city: string | null;
+  favorite_subgenres: Subgenre[];
+  instagram_url: string | null;
+  soundcloud_url: string | null;
+  facebook_url: string | null;
+  spotify_url: string | null;
+  twitch_url: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FanProfile {
+  userId: string;
+  login: string;
+  bio: string | null;
+  city: string | null;
+  favoriteSubgenres: Subgenre[];
+  instagramUrl: string | null;
+  soundcloudUrl: string | null;
+  facebookUrl: string | null;
+  spotifyUrl: string | null;
+  twitchUrl: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface FanProfileUpdate {
+  login?: string;
+  bio?: string | null;
+  city?: string | null;
+  favoriteSubgenres?: Subgenre[];
+  instagramUrl?: string | null;
+  soundcloudUrl?: string | null;
+  facebookUrl?: string | null;
+  spotifyUrl?: string | null;
+  twitchUrl?: string | null;
+}
