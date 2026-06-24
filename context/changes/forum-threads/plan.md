@@ -702,27 +702,27 @@ Na produkcji migrację trzeba wykonać przed deployem kodu, który czyta nowe ta
 
 #### Automated
 
-- [x] 1.1 Migration applies cleanly with `npx supabase migration up`
-- [x] 1.2 Type checking passes with `npm run check`
-- [x] 1.3 Documentation lint passes with `npm run lint:docs`
+- [x] 1.1 Migration applies cleanly with `npx supabase migration up` – a2cd95c
+- [x] 1.2 Type checking passes with `npm run check` – a2cd95c
+- [x] 1.3 Documentation lint passes with `npm run lint:docs` – a2cd95c
 
 #### Manual
 
-- [x] 1.4 Supabase shows `forum_threads` and `forum_comments`
-- [x] 1.5 RLS is enabled on both forum tables
+- [x] 1.4 Supabase shows `forum_threads` and `forum_comments` – a2cd95c
+- [x] 1.5 RLS is enabled on both forum tables – a2cd95c
 
 ### Phase 2: Services, Validation, and Account Deletion
 
 #### Automated
 
-- [ ] 2.1 Forum schema tests pass with `npm test -- tests/unit/forum-schema.test.ts`
-- [ ] 2.2 Account deletion service tests pass with `npm test -- tests/unit/account-deletion-service.test.ts`
-- [ ] 2.3 Type checking passes with `npm run check`
+- [x] 2.1 Forum schema tests pass with `npm test -- tests/unit/forum-schema.test.ts`
+- [x] 2.2 Account deletion service tests pass with `npm test -- tests/unit/account-deletion-service.test.ts`
+- [x] 2.3 Type checking passes with `npm run check`
 
 #### Manual
 
-- [ ] 2.4 Publishing works with profile login and fallback author label
-- [ ] 2.5 Account deletion anonymizes forum authors instead of deleting content
+- [x] 2.4 Publishing works with profile login and fallback author label
+- [x] 2.5 Account deletion anonymizes forum authors instead of deleting content
 
 ### Phase 3: API Routes
 

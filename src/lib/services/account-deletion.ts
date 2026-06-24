@@ -3,12 +3,15 @@ import { DELETED_USER_AUTHOR_LABEL } from "@/lib/auth/display-name";
 
 export type DeleteAccountResult = { success: true } | { error: string };
 
-export async function anonymizeUserComments(
+type AnonymizeTable = "event_comments" | "forum_threads" | "forum_comments";
+
+async function anonymizeAuthorContentOnTable(
   serviceClient: SupabaseClient,
+  table: AnonymizeTable,
   userId: string,
 ): Promise<{ error?: string }> {
   const response = await serviceClient
-    .from("event_comments")
+    .from(table)
     .update({
       author_id: null,
       author_label: DELETED_USER_AUTHOR_LABEL,
@@ -16,7 +19,7 @@ export async function anonymizeUserComments(
     .eq("author_id", userId);
 
   if (response.error) {
-    console.error("[account-deletion] anonymizeUserComments failed", {
+    console.error(`[account-deletion] anonymize ${table} failed`, {
       userId,
       message: response.error.message,
     });
@@ -26,15 +29,39 @@ export async function anonymizeUserComments(
   return {};
 }
 
+export async function anonymizeUserComments(
+  serviceClient: SupabaseClient,
+  userId: string,
+): Promise<{ error?: string }> {
+  return anonymizeAuthorContentOnTable(serviceClient, "event_comments", userId);
+}
+
+export async function anonymizeUserForumContent(
+  serviceClient: SupabaseClient,
+  userId: string,
+): Promise<{ error?: string }> {
+  const threadsResult = await anonymizeAuthorContentOnTable(serviceClient, "forum_threads", userId);
+  if (threadsResult.error) {
+    return threadsResult;
+  }
+
+  return anonymizeAuthorContentOnTable(serviceClient, "forum_comments", userId);
+}
+
 export async function deleteUserAccount(serviceClient: SupabaseClient, userId: string): Promise<DeleteAccountResult> {
-  const anonymizeResult = await anonymizeUserComments(serviceClient, userId);
-  if (anonymizeResult.error) {
-    return { error: anonymizeResult.error };
+  const eventCommentsResult = await anonymizeUserComments(serviceClient, userId);
+  if (eventCommentsResult.error) {
+    return { error: eventCommentsResult.error };
+  }
+
+  const forumResult = await anonymizeUserForumContent(serviceClient, userId);
+  if (forumResult.error) {
+    return { error: forumResult.error };
   }
 
   const deleteResult = await serviceClient.auth.admin.deleteUser(userId);
   if (deleteResult.error) {
-    console.error("[account-deletion] deleteUser failed after comment anonymization", {
+    console.error("[account-deletion] deleteUser failed after content anonymization", {
       userId,
       message: deleteResult.error.message,
     });
