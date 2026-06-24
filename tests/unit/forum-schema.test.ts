@@ -1,9 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseForumCommentBody } from "@/lib/forum/comment-schema";
-import {
-  createForumThreadSchema,
-  parseCreateForumThreadInput,
-} from "@/lib/forum/thread-schema";
+import { createForumThreadSchema, parseCreateForumThreadInput } from "@/lib/forum/thread-schema";
 
 describe("parseForumCommentBody", () => {
   it("rejects empty string", () => {

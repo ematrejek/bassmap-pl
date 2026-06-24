@@ -64,7 +64,7 @@ export async function createForumComment(
     return { error: response.error.message };
   }
 
-  return { data: mapForumCommentRow(response.data as ForumCommentRow) };
+  return { data: mapForumCommentRow(response.data) };
 }
 
 export async function deleteForumComment(

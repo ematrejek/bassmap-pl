@@ -715,26 +715,26 @@ Na produkcji migrację trzeba wykonać przed deployem kodu, który czyta nowe ta
 
 #### Automated
 
-- [x] 2.1 Forum schema tests pass with `npm test -- tests/unit/forum-schema.test.ts`
-- [x] 2.2 Account deletion service tests pass with `npm test -- tests/unit/account-deletion-service.test.ts`
-- [x] 2.3 Type checking passes with `npm run check`
+- [x] 2.1 Forum schema tests pass with `npm test -- tests/unit/forum-schema.test.ts` – 959e7f5
+- [x] 2.2 Account deletion service tests pass with `npm test -- tests/unit/account-deletion-service.test.ts` – 959e7f5
+- [x] 2.3 Type checking passes with `npm run check` – 959e7f5
 
 #### Manual
 
-- [x] 2.4 Publishing works with profile login and fallback author label
-- [x] 2.5 Account deletion anonymizes forum authors instead of deleting content
+- [x] 2.4 Publishing works with profile login and fallback author label – 959e7f5
+- [x] 2.5 Account deletion anonymizes forum authors instead of deleting content – 959e7f5
 
 ### Phase 3: API Routes
 
 #### Automated
 
-- [ ] 3.1 Forum API tests pass with `npm test -- tests/unit/forum-api.test.ts`
-- [ ] 3.2 Type checking passes with `npm run check`
-- [ ] 3.3 Lint passes with `npm run lint`
+- [x] 3.1 Forum API tests pass with `npm test -- tests/unit/forum-api.test.ts`
+- [x] 3.2 Type checking passes with `npm run check`
+- [x] 3.3 Lint passes with `npm run lint`
 
 #### Manual
 
-- [ ] 3.4 Auth, fan delete, admin delete, and forbidden cases behave correctly through API calls
+- [x] 3.4 Auth, fan delete, admin delete, and forbidden cases behave correctly through API calls
 
 ### Phase 4: Forum UI
 

@@ -20,10 +20,7 @@ export const FORUM_THREAD_TAG_SLUGS = ["dnb", "jungle", "dubstep", "rave", "hard
 
 export type ForumThreadTagSlug = (typeof FORUM_THREAD_TAG_SLUGS)[number];
 
-export const FORUM_THREAD_TAG_META: Record<
-  ForumThreadTagSlug,
-  { label: string; color: ForumNeonColor }
-> = {
+export const FORUM_THREAD_TAG_META: Record<ForumThreadTagSlug, { label: string; color: ForumNeonColor }> = {
   dnb: { label: "DNB", color: "violet" },
   jungle: { label: "JUNGLE", color: "green" },
   dubstep: { label: "DUBSTEP", color: "cyan" },
@@ -42,15 +39,13 @@ export const FORUM_SECTIONS: ForumSectionMeta[] = [
   {
     category: "szukam_ekipy",
     label: "Szukam ekipy",
-    description:
-      "Jeździsz solo i chcesz dołączyć do crew? Zostaw ogłoszenie – bassheadzi z całej Polski czytają.",
+    description: "Jeździsz solo i chcesz dołączyć do crew? Zostaw ogłoszenie – bassheadzi z całej Polski czytają.",
     color: "violet",
   },
   {
     category: "jestesmy_ekipa",
     label: "Jesteśmy ekipą, szukamy ziomków",
-    description:
-      "Macie crew i potrzebujecie świeżej krwi – DJ-ów, promotorów, ekipy technicznej? Tu się rekrutuje.",
+    description: "Macie crew i potrzebujecie świeżej krwi – DJ-ów, promotorów, ekipy technicznej? Tu się rekrutuje.",
     color: "green",
   },
   {
@@ -63,22 +58,19 @@ export const FORUM_SECTIONS: ForumSectionMeta[] = [
   {
     category: "sprzet_produkcja",
     label: "Sprzęt i produkcja",
-    description:
-      "Gadanie o kontrolerach, monitorach, soundsystemach i pluginach. Pomoc przy miksie i masteringu.",
+    description: "Gadanie o kontrolerach, monitorach, soundsystemach i pluginach. Pomoc przy miksie i masteringu.",
     color: "orange",
   },
   {
     category: "transport_noclegi",
     label: "Transport i noclegi",
-    description:
-      "Łączcie się na wspólne dojazdy na rave'y, dzielcie kosztami paliwa i ogarniajcie kimę po imprezie.",
+    description: "Łączcie się na wspólne dojazdy na rave'y, dzielcie kosztami paliwa i ogarniajcie kimę po imprezie.",
     color: "violet",
   },
   {
     category: "pozostale",
     label: "Pozostałe wątki",
-    description:
-      "Wszystko, co nie pasuje gdzie indziej – giełda, opinie o klubach, off-topic i gadki o scenie.",
+    description: "Wszystko, co nie pasuje gdzie indziej – giełda, opinie o klubach, off-topic i gadki o scenie.",
     color: "cyan",
   },
 ];

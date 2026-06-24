@@ -4,8 +4,7 @@ import type { ForumThread, ForumThreadCategory, ForumThreadRow } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
 
-const FORUM_THREAD_SELECT =
-  "id, category, title, body, city, tags, author_id, author_label, created_at, updated_at";
+const FORUM_THREAD_SELECT = "id, category, title, body, city, tags, author_id, author_label, created_at, updated_at";
 
 export function mapForumThreadRow(row: ForumThreadRow): ForumThread {
   return {
@@ -52,10 +51,7 @@ export async function listForumThreads(
   return { data: rows.map(mapForumThreadRow) };
 }
 
-export async function getForumThreadById(
-  supabase: SupabaseClient,
-  id: string,
-): Promise<ServiceResult<ForumThread>> {
+export async function getForumThreadById(supabase: SupabaseClient, id: string): Promise<ServiceResult<ForumThread>> {
   const response = await supabase.from("forum_threads").select(FORUM_THREAD_SELECT).eq("id", id).maybeSingle();
 
   if (response.error) {
@@ -66,7 +62,7 @@ export async function getForumThreadById(
     return { error: "Nie znaleziono wątku" };
   }
 
-  return { data: mapForumThreadRow(response.data as ForumThreadRow) };
+  return { data: mapForumThreadRow(response.data) };
 }
 
 export async function createForumThread(
@@ -104,7 +100,7 @@ export async function createForumThread(
     return { error: response.error.message };
   }
 
-  return { data: mapForumThreadRow(response.data as ForumThreadRow) };
+  return { data: mapForumThreadRow(response.data) };
 }
 
 export async function deleteForumThread(
