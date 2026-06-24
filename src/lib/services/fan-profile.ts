@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { FAN_LOGIN_REGEX } from "@/lib/fan/profile-schema";
-import type { FanProfile, FanProfileRow, FanProfileUpdate, Subgenre } from "@/types";
+import type { FanProfile, FanProfileRow, FanProfileUpdate, PublicFanProfile, Subgenre } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
 
@@ -84,7 +84,16 @@ export function normalizeSuggestedLogin(raw: string): string | null {
   return normalized;
 }
 
-async function isLoginAvailable(supabase: SupabaseClient, login: string, excludeUserId?: string): Promise<boolean> {
+export function toPublicFanProfile(profile: FanProfile): PublicFanProfile {
+  const { userId: _userId, ...publicProfile } = profile;
+  return publicProfile;
+}
+
+async function isLoginAvailable(
+  supabase: SupabaseClient,
+  login: string,
+  excludeUserId?: string,
+): Promise<ServiceResult<boolean>> {
   let query = supabase.from("fan_profiles").select("user_id").eq("login", login.toLowerCase());
 
   if (excludeUserId) {
@@ -94,10 +103,10 @@ async function isLoginAvailable(supabase: SupabaseClient, login: string, exclude
   const response = await query.maybeSingle();
 
   if (response.error) {
-    return false;
+    return { error: response.error.message };
   }
 
-  return response.data === null;
+  return { data: response.data === null };
 }
 
 export async function getFanProfileByUserId(
@@ -158,8 +167,11 @@ export async function ensureFanProfile(
     return { data: null };
   }
 
-  const available = await isLoginAvailable(supabase, candidate);
-  if (!available) {
+  const availability = await isLoginAvailable(supabase, candidate);
+  if ("error" in availability) {
+    return { error: availability.error };
+  }
+  if (!availability.data) {
     return { data: null };
   }
 
@@ -198,8 +210,11 @@ export async function updateFanProfile(
   }
 
   if (patch.login !== undefined) {
-    const available = await isLoginAvailable(supabase, patch.login, userId);
-    if (!available) {
+    const availability = await isLoginAvailable(supabase, patch.login, userId);
+    if ("error" in availability) {
+      return { error: availability.error };
+    }
+    if (!availability.data) {
       return { error: LOGIN_TAKEN_ERROR };
     }
   }
@@ -233,8 +248,11 @@ async function insertFanProfile(
     return { error: "Ustaw login, aby utworzyć profil" };
   }
 
-  const available = await isLoginAvailable(supabase, patch.login);
-  if (!available) {
+  const availability = await isLoginAvailable(supabase, patch.login);
+  if ("error" in availability) {
+    return { error: availability.error };
+  }
+  if (!availability.data) {
     return { error: LOGIN_TAKEN_ERROR };
   }
 

@@ -1,9 +1,9 @@
 import ProfileView from "@/components/fan/ProfileView";
 import { PROFILE_PATH } from "@/lib/routes";
-import type { FanProfile } from "@/types";
+import type { PublicFanProfile } from "@/types";
 
 interface Props {
-  profile: FanProfile;
+  profile: PublicFanProfile;
   isOwner: boolean;
 }
 

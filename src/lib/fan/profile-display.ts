@@ -1,6 +1,6 @@
 import { Camera, Cloud, Gamepad2, Music, ThumbsUp, type LucideIcon } from "lucide-react";
 import type { SocialPlatform } from "@/lib/fan/profile-social";
-import type { FanProfile } from "@/types";
+import type { FanProfile, PublicFanProfile } from "@/types";
 
 export type { SocialPlatform } from "@/lib/fan/profile-social";
 export { formatSocialDisplay, formatSocialHref } from "@/lib/fan/profile-social";
@@ -58,6 +58,6 @@ export function getSocialMeta(platform: SocialPlatform) {
   return SOCIAL_META[platform];
 }
 
-export function getProfileSocialValue(profile: FanProfile, platform: SocialPlatform): string | null {
+export function getProfileSocialValue(profile: PublicFanProfile, platform: SocialPlatform): string | null {
   return profile[SOCIAL_META[platform].profileKey];
 }

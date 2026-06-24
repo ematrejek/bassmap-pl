@@ -280,6 +280,9 @@ export interface FanProfile {
   updatedAt: string;
 }
 
+/** Fan profile fields safe to expose on public pages (no internal user id). */
+export type PublicFanProfile = Omit<FanProfile, "userId">;
+
 export interface FanProfileUpdate {
   login?: string;
   bio?: string | null;

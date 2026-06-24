@@ -8,14 +8,14 @@ import {
   SOCIAL_PLATFORMS,
   type SocialPlatform,
 } from "@/lib/fan/profile-display";
-import type { FanProfile, Subgenre } from "@/types";
+import type { PublicFanProfile, Subgenre } from "@/types";
 import { SUBGENRE_LABELS } from "@/types";
 import { AtSign, Mail, MapPin, Music, Music2, UserRound } from "lucide-react";
 
 const NEON_CYCLE: NeonColor[] = ["violet", "green", "cyan", "orange"];
 
 interface Props {
-  profile: FanProfile;
+  profile: PublicFanProfile;
   showEmail?: boolean;
   email?: string;
   onEdit?: () => void;

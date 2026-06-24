@@ -72,4 +72,21 @@ describe("ProfileSection", () => {
     expect(screen.getByRole("heading", { name: /Edytuj profil/i })).toBeInTheDocument();
     expect(screen.getByLabelText("Login")).toBeInTheDocument();
   });
+
+  it("stays in edit mode on cancel when profile was never saved", () => {
+    render(
+      <ProfileSection
+        email="jan.kowalski@example.com"
+        userId={mockProfile.userId}
+        initialProfile={null}
+        goingEvents={[]}
+      />,
+    );
+
+    fireEvent.change(screen.getByLabelText("Login"), { target: { value: "jan_kowalski" } });
+    fireEvent.click(screen.getByRole("button", { name: /Anuluj/i }));
+
+    expect(screen.getByRole("heading", { name: /Edytuj profil/i })).toBeInTheDocument();
+    expect(screen.getByLabelText("Login")).toBeInTheDocument();
+  });
 });

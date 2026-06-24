@@ -264,7 +264,7 @@ Podłączenie danych do `ProfileSection`; **tryb edycji inline** po «Edytuj pro
 
 **Intent**: SSR `getFanProfileByUserId` + `ensureFanProfile`; przekazanie do `ProfileSection`.
 
-**Contract**: Ładowanie profilu i `goingEvents` (S-19); banner błędu przy awarii serwisu; island `ProfileSection` z `client:load` (interaktywność edycji).
+**Contract**: Ładowanie profilu i `goingEvents` (S-19); banner błędu przy awarii serwisu; island `ProfileSection` z `client:only="react"` (Radix w `DeleteAccountSection` na tej samej stronie – patrz `lessons.md`).
 
 ### Success Criteria:
 

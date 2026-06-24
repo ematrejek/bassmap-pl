@@ -54,7 +54,7 @@ export function validateSocialField(platform: SocialPlatform, value: string): bo
     case "twitch":
       return TWITCH_HANDLE_REGEX.test(trimmed);
     case "facebook":
-      return /^@?[a-zA-Z0-9.]{2,50}$/.test(trimmed) || /^facebook\.com\/.+/i.test(trimmed);
+      return /^@?[a-zA-Z0-9]{2,50}$/.test(trimmed) || /^(facebook\.com|fb\.com)\/.+/i.test(trimmed);
     case "soundcloud":
       return /^@?[a-zA-Z0-9_-]{2,50}$/.test(trimmed) || /^soundcloud\.com\/.+/i.test(trimmed);
     case "spotify":
@@ -146,8 +146,13 @@ export function formatSocialHref(platform: SocialPlatform, raw: string): string 
   switch (platform) {
     case "instagram":
       return `https://instagram.com/${value.replace(/^@/, "")}`;
-    case "facebook":
-      return value.includes(".") ? `https://${value.replace(/^https?:\/\//, "")}` : `https://facebook.com/${value}`;
+    case "facebook": {
+      const stripped = value.replace(/^https?:\/\//, "");
+      if (/^(facebook\.com|fb\.com)\//i.test(stripped)) {
+        return `https://${stripped}`;
+      }
+      return `https://facebook.com/${value.replace(/^@/, "")}`;
+    }
     case "spotify":
       return `https://${value.replace(/^https?:\/\//, "")}`;
     case "soundcloud":

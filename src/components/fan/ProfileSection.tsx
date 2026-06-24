@@ -5,6 +5,7 @@ import { Equalizer } from "@/components/shell/Equalizer";
 import { Button } from "@/components/ui/button";
 import { readApiError } from "@/lib/api/json";
 import { loginFromEmailLocalPart } from "@/lib/auth/display-name";
+import { normalizeSuggestedLogin } from "@/lib/services/fan-profile";
 import { DISCOVERY_PATH, MY_EVENTS_PATH } from "@/lib/routes";
 import { shellBtnPrimary, shellPanelFlat, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
@@ -28,7 +29,7 @@ function createDraftProfile(userId: string, email: string, profile: FanProfile |
     return profile;
   }
 
-  const suggestedLogin = loginFromEmailLocalPart(email);
+  const suggestedLogin = normalizeSuggestedLogin(loginFromEmailLocalPart(email)) ?? "";
   const now = new Date().toISOString();
 
   return {
@@ -109,7 +110,9 @@ export default function ProfileSection({ email, userId, initialProfile, goingEve
 
   function handleCancel() {
     setSaveError(null);
-    setEditing(false);
+    if (profile !== null) {
+      setEditing(false);
+    }
   }
 
   const editorProfile = createDraftProfile(userId, email, profile);

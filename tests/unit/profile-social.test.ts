@@ -24,4 +24,13 @@ describe("profile-social", () => {
     expect(validateSocialField("twitch", "@bass_fan")).toBe(true);
     expect(formatSocialHref("twitch", "@bass_fan")).toBe("https://twitch.tv/bass_fan");
   });
+
+  it("accepts facebook handle and path without arbitrary domains", () => {
+    expect(validateSocialField("facebook", "bassmappl")).toBe(true);
+    expect(validateSocialField("facebook", "facebook.com/bassmappl")).toBe(true);
+    expect(formatSocialHref("facebook", "bassmappl")).toBe("https://facebook.com/bassmappl");
+    expect(formatSocialHref("facebook", "facebook.com/bassmappl")).toBe("https://facebook.com/bassmappl");
+    expect(validateSocialField("facebook", "evil.com")).toBe(false);
+    expect(validateSocialField("facebook", "facebook.com.evil.com")).toBe(false);
+  });
 });
