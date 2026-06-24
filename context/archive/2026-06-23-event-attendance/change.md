@@ -2,10 +2,10 @@
 change_id: event-attendance
 title: «Idę» i «Interesuję się» (RSVP)
 roadmap_ref: S-19
-status: impl_reviewed
+status: archived
 created: 2026-06-23
 updated: 2026-06-23
-archived_at: null
+archived_at: 2026-06-23T08:50:00Z
 github-issue: 39
 ---
 

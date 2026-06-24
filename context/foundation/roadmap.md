@@ -3,7 +3,7 @@ project: BassMap PL
 version: 3
 status: active
 created: 2026-06-10
-updated: 2026-06-22
+updated: 2026-06-23
 subgenre_catalog_version: 1
 prd_version: 2
 main_goal: market-feedback
@@ -769,3 +769,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-15: pod szczegółami opublikowanego wydarzenia każdy czyta komentarze; zalogowany użytkownik dodaje komentarz i może usunąć własny; administrator usuwa dowolny komentarz.** \u2013 Archived 2026-06-19 → `context/archive/2026-06-19-event-comments/`. Lesson: przed pushem na `main` uruchom `npm run verify` (`astro check` łapie błędy typów w testach API).
 - **S-16: zalogowany fan trwale usuwa konto z profilu po potwierdzeniu hasłem; komentarze zostają z etykietą „Usunięty użytkownik”; zgłoszenia i sugestie tracą powiązanie z kontem.** \u2013 Archived 2026-06-19 → `context/archive/2026-06-19-account-deletion/`. Lesson: jawny UPDATE `author_label` przed `deleteUser`; migracja FK sugestii przed deployem.
 - **S-18: fan na liście `/events` widzi kwadratowe kafelki zgodne z designem bassmap-pl-ui: nazwa, podgatunki, miejsce, czas, cena.** \u2013 Archived 2026-06-22 → `context/archive/2026-06-22-event-card-redesign/`. Lesson: \u2013.
+- **S-19: zalogowany fan na stronie wydarzenia klika «Idę» lub «Interesuję się»; wszyscy widzą liczniki; wydarzenia trafiają do sekcji Moje eventy (`#ide`, `#interesuje-sie`) i skrótu na profilu.** \u2013 Archived 2026-06-23 → `context/archive/2026-06-23-event-attendance/`. Lesson: \u2013.
