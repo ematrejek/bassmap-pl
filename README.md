@@ -163,13 +163,15 @@ Produkcja: **https://bassmap.pl** (Cloudflare Worker `bassmap-pl`). Pełny plan 
 
 ### Migracje bazy produkcyjnej
 
-Przed deployem kodu wymagającego schematu `events`:
+**Przed deployem** kodu wymagającego nowych tabel (np. `event_attendance` S-19, `fan_profiles` S-20) uruchom migracje na projekcie Supabase – inaczej strona pokaże błąd „Could not find the table … in the schema cache”:
 
 ```bash
 npx supabase login
 npx supabase link --project-ref dpqndrmvrkfahzyubrns
 npx supabase db push
 ```
+
+Potwierdź: `npx supabase migration list` – wszystkie lokalne migracje powinny być oznaczone jako zastosowane na Remote.
 
 ### Deploy aplikacji
 

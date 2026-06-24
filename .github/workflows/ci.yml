@@ -37,10 +37,12 @@ jobs:
             > .env.test
       - name: Run tests
         run: bash scripts/ci-supabase-test.sh
-      - run: npm run build
-        env:
-          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
-          SUPABASE_KEY: ${{ secrets.SUPABASE_KEY }}
+      - name: Build for E2E preview
+        run: |
+          set -a
+          source .env.test
+          set +a
+          npm run build
       - name: Install Playwright (Chromium)
         run: npx playwright install --with-deps chromium
       - name: E2E (browser)

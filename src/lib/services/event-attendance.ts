@@ -22,6 +22,20 @@ function attendanceRlsError(): string {
   return "Nie można oznaczyć udziału w tym wydarzeniu";
 }
 
+/** PostgREST when a migration was not applied yet (code deployed before db push). */
+function isMissingAttendanceTableError(error: { message?: string; code?: string }): boolean {
+  const message = error.message ?? "";
+  return (
+    error.code === "PGRST205" ||
+    message.includes("Could not find the table") ||
+    message.includes("schema cache")
+  );
+}
+
+function emptyGoingCounts(eventIds: string[]): Record<string, number> {
+  return Object.fromEntries(eventIds.map((id) => [id, 0]));
+}
+
 export async function getAttendanceSummary(
   supabase: SupabaseClient,
   eventId: string,
@@ -44,12 +58,31 @@ export async function getAttendanceSummary(
   ]);
 
   if (goingResponse.error) {
+    if (isMissingAttendanceTableError(goingResponse.error)) {
+      return {
+        data: { goingCount: 0, interestedCount: 0, userStatus: null },
+      };
+    }
     return { error: goingResponse.error.message };
   }
   if (interestedResponse.error) {
+    if (isMissingAttendanceTableError(interestedResponse.error)) {
+      return {
+        data: { goingCount: 0, interestedCount: 0, userStatus: null },
+      };
+    }
     return { error: interestedResponse.error.message };
   }
   if (userResponse.error) {
+    if (isMissingAttendanceTableError(userResponse.error)) {
+      return {
+        data: {
+          goingCount: goingResponse.count ?? 0,
+          interestedCount: interestedResponse.count ?? 0,
+          userStatus: null,
+        },
+      };
+    }
     return { error: userResponse.error.message };
   }
 
@@ -130,6 +163,9 @@ export async function listEventsForUserAttendance(
     .eq("status", status);
 
   if (attendanceResponse.error) {
+    if (isMissingAttendanceTableError(attendanceResponse.error)) {
+      return { data: [] };
+    }
     return { error: attendanceResponse.error.message };
   }
 
@@ -169,10 +205,13 @@ export async function getGoingCountsByEventIds(
     .eq("status", "going");
 
   if (response.error) {
+    if (isMissingAttendanceTableError(response.error)) {
+      return { data: emptyGoingCounts(eventIds) };
+    }
     return { error: response.error.message };
   }
 
-  const counts: Record<string, number> = Object.fromEntries(eventIds.map((id) => [id, 0]));
+  const counts: Record<string, number> = emptyGoingCounts(eventIds);
   for (const row of (response.data as { event_id: string }[] | null) ?? []) {
     counts[row.event_id] = (counts[row.event_id] ?? 0) + 1;
   }
@@ -196,6 +235,9 @@ export async function getUserAttendanceByEventIds(
     .in("event_id", eventIds);
 
   if (response.error) {
+    if (isMissingAttendanceTableError(response.error)) {
+      return { data: {} };
+    }
     return { error: response.error.message };
   }
 
