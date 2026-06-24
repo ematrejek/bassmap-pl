@@ -51,3 +51,33 @@
 **Rule:** Przed `git push` na `main` uruchom **`npm run verify`** (`astro sync` + `astro check` + `lint:all` + `npm test`). Z Dockerem i `.env.test` dodatkowo **`npm run test:ci`**. W testach handlerów API zawsze mockuj `APIContext` przez **`as unknown as APIContext`** (wzorzec: `tests/unit/fan-change-suggestions-api.test.ts`).
 
 **Applies to:** `tests/unit/*-api.test.ts`, każdy commit na `main`, AGENTS.md §Build.
+
+## Radix UI – `client:only`, nie `client:load`
+
+**Context:** Komponenty z `@radix-ui/*` (AlertDialog w `DeleteAccountSection`, Checkbox w `SubgenreFilter`, Dialog) na stronach Astro z islandami React (`profile.astro`, `events.astro`).
+
+**Problem:** `client:load` próbuje renderować Radix na serwerze (SSR). Skutek: błąd `useMemo` / invalid hook, biała strona lub wieczne „Ładowanie listy wydarzeń…”. S-20 profil (`AlertDialog`); lista eventów (cache Vite + Checkbox).
+
+**Rule:** Islandy z Radix lub ciężkim stanem klienta używaj **`client:only="react"`** (wzorzec: `DiscoveryShell` na `/events`, `AppMenu`). W `astro.config.mjs` trzymaj Radix w `optimizeDeps.exclude` i `ssr.noExternal`. Nowe dialogi/checkboxy – ten sam wzorzec.
+
+**Applies to:** `src/pages/*.astro` z islandami, `src/components/ui/*`, fazy UI w `/10x-implement`.
+
+## Vite – wyczyść cache po zmianie bundlera
+
+**Context:** `astro.config.mjs` (`optimizeDeps`, `ssr.noExternal`); lokalny `npm run dev`.
+
+**Problem:** Po zmianie configu lub aktualizacji zależności Vite zgłasza brak pliku w `node_modules/.vite/deps/` (np. `@radix-ui_react-checkbox.js`). Strona zostaje na fallbacku „Ładowanie…” mimo zielonych testów Vitest.
+
+**Rule:** Po edycji `astro.config.mjs` lub po ostrzeżeniu Vite o `optimize deps` uruchom **`npm run cache:clean`** i zrestartuj dev server. Przed zamknięciem slicu odpal **`npm run test:e2e`** – łapie wiszący React w przeglądarce.
+
+**Applies to:** `/10x-implement`, debug lokalny, `context/foundation/smoke-checklist.md`.
+
+## Zamknięcie slicu – verify + build + E2E
+
+**Context:** Koniec fazy w `context/changes/<id>/plan.md`; pre-push hook.
+
+**Problem:** `npm run verify` nie uruchamia przeglądarki ani produkcyjnego buildu. Regresje UI (SSR Radix, Vite cache) przechodzą do ręcznego „wszystko się wywaliło”.
+
+**Rule:** Przed pushem na `main`: **`npm run verify`**, potem **`npm run build`**, a przy zmianach UI/configu także **`npm run test:e2e`** (lub jednym **`npm run verify:full`**). Ręcznie testuj tylko **nową funkcję slicu** – stały dymek robi Playwright (`tests/e2e/smoke.spec.ts`). Checklist: `context/foundation/smoke-checklist.md`.
+
+**Applies to:** `/10x-implement`, `/10x-archive`, PR do `main`, AGENTS.md §Build.

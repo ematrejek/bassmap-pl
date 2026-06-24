@@ -7,6 +7,14 @@ export const REPORT_ISSUE_PATH = "/report-issue";
 export const SIGN_IN_PATH = "/auth/signin";
 export const SIGN_UP_PATH = "/auth/signup";
 export const PROFILE_PATH = "/profile";
+export const FAN_PUBLIC_PROFILE_PREFIX = "/u";
+
+/** Public fan profile URL – login without leading @ (e.g. `/u/siemema`). */
+export function fanPublicProfilePath(login: string): string {
+  const normalized = login.startsWith("@") ? login.slice(1) : login;
+  return `${FAN_PUBLIC_PROFILE_PREFIX}/${normalized.toLowerCase()}`;
+}
+
 export const MY_EVENTS_PATH = "/my-events";
 export const MY_EVENTS_NEW_PATH = "/my-events/new";
 export const TEAM_PATH = "/team";

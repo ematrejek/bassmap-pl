@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   buildDiscoverySearchUrl,
   DISCOVERY_PATH,
+  fanPublicProfilePath,
   FORUM_PATH,
   MY_EVENTS_NEW_PATH,
   MY_EVENTS_PATH,
@@ -53,5 +54,12 @@ describe("fan account zone paths", () => {
     expect(MY_EVENTS_NEW_PATH).toBe("/my-events/new");
     expect(TEAM_PATH).toBe("/team");
     expect(FORUM_PATH).toBe("/forum");
+  });
+});
+
+describe("fanPublicProfilePath", () => {
+  it("builds lowercase public profile URL without @ prefix", () => {
+    expect(fanPublicProfilePath("Siemema")).toBe("/u/siemema");
+    expect(fanPublicProfilePath("@Siemema")).toBe("/u/siemema");
   });
 });

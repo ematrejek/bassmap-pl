@@ -1,0 +1,79 @@
+---
+import PublicProfileView from "@/components/fan/PublicProfileView";
+import AppShell from "@/components/shell/AppShell.astro";
+import Layout from "@/layouts/Layout.astro";
+import { FAN_LOGIN_REGEX } from "@/lib/fan/profile-schema";
+import { DISCOVERY_PATH } from "@/lib/routes";
+import { getFanProfileByLogin } from "@/lib/services/fan-profile";
+import { shellHeading, shellLink, shellTextMuted } from "@/lib/shell-styles";
+import { createClient } from "@/lib/supabase";
+import type { FanProfile } from "@/types";
+
+export const prerender = false;
+
+function normalizeRouteLogin(raw: string): string | null {
+  const stripped = raw.startsWith("@") ? raw.slice(1) : raw;
+  const login = stripped.trim().toLowerCase();
+  if (!FAN_LOGIN_REGEX.test(login)) {
+    return null;
+  }
+  return login;
+}
+
+const rawLogin = Astro.params.login ?? "";
+const login = normalizeRouteLogin(rawLogin);
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let profile: FanProfile | null = null;
+let loadError: string | null = null;
+
+if (login && supabase) {
+  const result = await getFanProfileByLogin(supabase, login);
+  if ("error" in result) {
+    loadError = result.error;
+  } else {
+    profile = result.data;
+  }
+}
+
+if (!profile) {
+  Astro.response.status = 404;
+}
+
+const { user } = Astro.locals;
+const isOwner = profile?.userId === user?.id;
+---
+
+<Layout title={profile ? `@${profile.login} – BassMap PL` : "Profil nie znaleziony"}>
+  <AppShell showFooter={true}>
+    {
+      profile ? (
+        <section class="border-border border-t py-16 md:py-24">
+          <div class="mx-auto max-w-6xl px-4">
+            <h1 class:list={[shellHeading, "text-3xl md:text-4xl"]}>
+              Profil <span class="text-primary text-glow-violet">@{profile.login}</span>
+            </h1>
+            <p class:list={["mt-3 max-w-xl text-sm", shellTextMuted]}>
+              Publiczny profil fana w społeczności BassMap PL.
+            </p>
+            <PublicProfileView profile={profile} isOwner={isOwner} client:only="react" />
+          </div>
+        </section>
+      ) : (
+        <div class="mx-auto flex max-w-lg flex-1 flex-col justify-center px-4 py-16 text-center">
+          <h1 class:list={[shellHeading, "text-2xl"]}>Nie znaleziono profilu</h1>
+          <p class:list={["mt-3 text-sm", shellTextMuted]}>
+            {loadError
+              ? "Nie udało się załadować profilu. Spróbuj ponownie później."
+              : login
+                ? `Brak profilu o loginie @${login}.`
+                : "Nieprawidłowy adres profilu."}
+          </p>
+          <a href={DISCOVERY_PATH} class:list={[shellLink, "mt-6 inline-block text-sm hover:underline"]}>
+            ← Wróć do listy eventów
+          </a>
+        </div>
+      )
+    }
+  </AppShell>
+</Layout>

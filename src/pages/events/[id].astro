@@ -143,7 +143,7 @@ const attendanceSummary =
               <section class="space-y-4">
                 <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Sugeruj zmiany</h2>
                 <EventSuggestChangesForm
-                  client:visible
+                  client:only="react"
                   event={event}
                   isLoggedIn={isLoggedIn}
                   isAdmin={isAdmin}

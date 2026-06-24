@@ -2,7 +2,7 @@
 change_id: fan-profile-edit
 title: Edycja profilu fana (S-20)
 roadmap_ref: S-20
-status: implementing
+status: implemented
 created: 2026-06-23
 updated: 2026-06-24
 archived_at: null

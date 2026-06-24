@@ -16,7 +16,10 @@
     "format": "prettier --write .",
     "test": "vitest run",
     "test:ci": "bash scripts/ci-supabase-test.sh",
+    "test:e2e": "playwright test",
     "test:watch": "vitest",
+    "cache:clean": "node scripts/clear-vite-cache.mjs",
+    "verify:full": "npm run verify && npm run build && npm run test:e2e",
     "deploy": "npm run build && wrangler deploy"
   },
   "dependencies": {
@@ -53,6 +56,7 @@
   "devDependencies": {
     "@eslint/compat": "^2.0.3",
     "@eslint/js": "^9.29.0",
+    "@playwright/test": "^1.51.1",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
     "@types/leaflet": "^1.9.21",

@@ -30,6 +30,25 @@ lint + unit tests). Use `npm run test:ci` to match the full CI integration gate
 when `.env.test` is configured. With `.env.test` present, `git push` also runs
 `scripts/ci-supabase-test.sh` via `.husky/pre-push`.
 
+## E2E smoke (Playwright)
+
+Browser smoke tests live in `tests/e2e/`. They catch „React never hydrated”
+regressions (e.g. stuck on „Ładowanie listy wydarzeń…”) that Vitest cannot see.
+
+| Command | When |
+|---------|------|
+| `npm run test:e2e` | After `npm run build` in CI; locally uses `npm run dev` if nothing is running |
+| `npm run verify:full` | `verify` + `build` + `test:e2e` – full gate before a UI-heavy PR |
+| `npm run cache:clean` | After editing `astro.config.mjs` or Vite dep warnings |
+
+First-time setup: `npx playwright install chromium`.
+
+Workflow tests (`event-workflows.spec.ts`) need **local Supabase** (same as integration tests):
+`npx supabase start`, migrations applied, `.env.test` from `supabase status -o env`.
+They are skipped automatically when `.env.test` is missing.
+
+Checklist for humans: `context/foundation/smoke-checklist.md`.
+
 Workflows: `.github/workflows/ci.yml`, `.github/workflows/deploy.yml`.
 
 Full cookbook: `context/foundation/test-plan.md` §6.1 (unit),

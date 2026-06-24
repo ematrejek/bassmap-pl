@@ -33,6 +33,9 @@ Node.js v22.14.0 (@.nvmrc).
 - `npm run lint:all` – ESLint + em-dash check on docs (`scripts/check-no-em-dash.mjs`)
 - `npm run check` – `astro sync` + `astro check` (TypeScript over `src/` and `tests/`; **runs in CI before lint**)
 - `npm run verify` – `check` + `lint:all` + `npm test` (minimum gate before `git push`; wired in `.husky/pre-push`)
+- `npm run verify:full` – `verify` + `build` + `test:e2e` (UI/config slices; see @context/foundation/smoke-checklist.md)
+- `npm run test:e2e` – Playwright smoke in `tests/e2e/` (CI runs after build)
+- `npm run cache:clean` – clear `node_modules/.vite` after `astro.config.mjs` changes
 - `npm run format` – Prettier with Astro + Tailwind plugins
 - `npm test` – Vitest (unit + integration when local Supabase is up; see @tests/README.md)
 - `npm run test:ci` – same entry point as CI (`scripts/ci-supabase-test.sh`; requires `.env.test` + `supabase start`)

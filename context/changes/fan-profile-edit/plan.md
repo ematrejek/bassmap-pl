@@ -434,46 +434,46 @@ Rozwinięcie polityki prywatności; sync roadmap/issue.
 
 #### Automated
 
-- [x] 2.1 `npm test` – unit `fan-profile-api.test.ts`
-- [x] 2.2 `npm test` – integration `fan-profile-rls.test.ts` (gdy Supabase lokalna)
-- [x] 2.3 `npm run verify`
+- [x] 2.1 `npm test` – unit `fan-profile-api.test.ts` – 54710b2
+- [x] 2.2 `npm test` – integration `fan-profile-rls.test.ts` (gdy Supabase lokalna) – 54710b2
+- [x] 2.3 `npm run verify` – 54710b2
 
 #### Manual
 
-- [x] 2.4 GET/PATCH `/api/fan/profile` zwraca poprawny JSON
+- [x] 2.4 GET/PATCH `/api/fan/profile` zwraca poprawny JSON – 54710b2
 
 ### Phase 3: UI własnego profilu (`/profile`)
 
 #### Automated
 
-- [ ] 3.1 `npm run verify`
-- [ ] 3.2 Testy unit `profile-editor.test.tsx` / `profile-section.test.tsx` (jeśli dodane)
+- [x] 3.1 `npm run verify`
+- [x] 3.2 Testy unit `profile-editor.test.tsx` / `profile-section.test.tsx` (jeśli dodane)
 
 #### Manual
 
-- [ ] 3.3 «Edytuj profil» przełącza tryb inline; Zapisz / Anuluj działają
-- [ ] 3.4 Walidacja loginu i zajęty login w formularzu
-- [ ] 3.5 E-mail widoczny tylko na własnym `/profile`; layout siatki jak `bassmap-pl-ui`
+- [x] 3.3 «Edytuj profil» przełącza tryb inline; Zapisz / Anuluj działają
+- [x] 3.4 Walidacja loginu i zajęty login w formularzu
+- [x] 3.5 E-mail widoczny tylko na własnym `/profile`; layout siatki jak `bassmap-pl-ui`
 
 ### Phase 4: Profil publiczny `/u/@login`
 
 #### Automated
 
-- [ ] 4.1 `npm run verify`
+- [x] 4.1 `npm run verify`
 
 #### Manual
 
-- [ ] 4.2 Gość widzi `/u/@login` bez e-maila
-- [ ] 4.3 Nieistniejący login → 404
-- [ ] 4.4 Fan otwiera profil innej osoby
+- [x] 4.2 Gość widzi `/u/@login` bez e-maila
+- [x] 4.3 Nieistniejący login → 404
+- [x] 4.4 Fan otwiera profil innej osoby
 
 ### Phase 5: Dokumenty prawne i domknięcie
 
 #### Automated
 
-- [ ] 5.1 `npm run lint:all`
-- [ ] 5.2 `npm run verify`
+- [x] 5.1 `npm run lint:all`
+- [x] 5.2 `npm run verify`
 
 #### Manual
 
-- [ ] 5.3 Polityka §2.1 i `LEGAL_UPDATED_AT` poprawne
+- [x] 5.3 Polityka §2.1 i `LEGAL_UPDATED_AT` poprawne

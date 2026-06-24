@@ -3,12 +3,14 @@ import AppShell from "@/components/shell/AppShell.astro";
 import DeleteAccountSection from "@/components/fan/DeleteAccountSection";
 import ProfileSection from "@/components/fan/ProfileSection";
 import Layout from "@/layouts/Layout.astro";
+import { loginFromEmailLocalPart } from "@/lib/auth/display-name";
 import { PRIVACY_POLICY_PATH } from "@/lib/legal/paths";
+import { ensureFanProfile, getFanProfileByUserId } from "@/lib/services/fan-profile";
 import { listEventsForUserAttendance } from "@/lib/services/event-attendance";
 import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
 import { shellLink, shellTextMuted } from "@/lib/shell-styles";
 import { createClient } from "@/lib/supabase";
-import type { Event, EventWithCoverUrl } from "@/types";
+import type { Event, EventWithCoverUrl, FanProfile } from "@/types";
 import { SUPABASE_URL } from "astro:env/server";
 
 export const prerender = false;
@@ -17,6 +19,25 @@ const { user, isAdmin } = Astro.locals;
 const email = user?.email ?? "";
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
+
+let profile: FanProfile | null = null;
+let profileError: string | null = null;
+
+if (supabase && user && !isAdmin) {
+  const suggestedLogin = email ? loginFromEmailLocalPart(email) : null;
+  const ensureResult = await ensureFanProfile(supabase, user.id, suggestedLogin);
+  if ("error" in ensureResult) {
+    profileError = ensureResult.error;
+  } else {
+    const profileResult = await getFanProfileByUserId(supabase, user.id);
+    if ("error" in profileResult) {
+      profileError = profileResult.error;
+    } else {
+      profile = profileResult.data;
+    }
+  }
+}
+
 const goingResult = supabase && user ? await listEventsForUserAttendance(supabase, user.id, "going") : { data: [] };
 const goingEventsRaw: Event[] = "data" in goingResult ? goingResult.data : [];
 const goingError = "error" in goingResult ? goingResult.error : null;
@@ -29,6 +50,15 @@ const goingEvents: EventWithCoverUrl[] = supabaseUrl
 <Layout title="Mój profil">
   <AppShell showFooter={true}>
     {
+      profileError ? (
+        <div class="mx-auto max-w-6xl px-4 pt-8">
+          <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+            {profileError}
+          </p>
+        </div>
+      ) : null
+    }
+    {
       goingError ? (
         <div class="mx-auto max-w-6xl px-4 pt-8">
           <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
@@ -37,10 +67,20 @@ const goingEvents: EventWithCoverUrl[] = supabaseUrl
         </div>
       ) : null
     }
-    {email ? <ProfileSection email={email} goingEvents={goingEvents} client:load /> : null}
+    {
+      email && user && !isAdmin ? (
+        <ProfileSection
+          email={email}
+          userId={user.id}
+          initialProfile={profile}
+          goingEvents={goingEvents}
+          client:only="react"
+        />
+      ) : null
+    }
     {
       email && !isAdmin ? (
-        <DeleteAccountSection client:load />
+        <DeleteAccountSection client:only="react" />
       ) : isAdmin ? (
         <section class="border-border border-t py-12">
           <div class="mx-auto max-w-6xl px-4">

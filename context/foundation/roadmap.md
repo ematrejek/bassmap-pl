@@ -3,7 +3,7 @@ project: BassMap PL
 version: 3
 status: active
 created: 2026-06-10
-updated: 2026-06-23
+updated: 2026-06-24
 subgenre_catalog_version: 1
 prd_version: 2
 main_goal: market-feedback
@@ -55,7 +55,8 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-16 | account-deletion          | zalogowany użytkownik usuwa swoje konto; komentarze zostają jako „Usunięty użytkownik”      | S-12, S-15    | FR-022, NFR Privacy              | done        |
 | S-18 | event-card-redesign       | fan widzi kwadratowe kafelki eventów (nazwa, podgatunki, miejsce, czas, cena) na liście     | S-16          | notes 2026-06-22                 | done        |
 | S-19 | event-attendance          | fan klika «Idę» lub «Interesuję się»; liczniki; sekcje w Moje eventy i profilu              | S-18          | notes 2026-06-22                 | done        |
-| S-20 | fan-profile-edit          | fan edytuje login, bio, miasto, ulubione podgatunki, linki social                          | S-19          | notes 2026-06-22                 | proposed    |
+| S-20 | fan-profile-edit          | fan edytuje login, bio, miasto, ulubione podgatunki, linki social; publiczny profil `/u/login` | S-19          | notes 2026-06-22                 | proposed    |
+| S-28 | profile-share             | fan udostępnia profil: przycisk «Udostępnij», kopiowanie linku (później FB/IG)              | S-20          | notes 2026-06-24                 | proposed    |
 | S-21 | profile-spotify-embed     | fan dodaje link Spotify (utwór/playlista); embed odtwarzacza na profilu                     | S-20          | notes 2026-06-22                 | proposed    |
 | S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | proposed    |
 | S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | proposed    |
@@ -76,7 +77,7 @@ Nawigacja \u2013 grupy elementów współdzielących łańcuch zależności. Kan
 | C      | Partia II \u2013 layout      | `F-04` → `S-09` → `S-10`                                                   | **Done** (2026-06-14) \u2013 jeden slice `app-shell-navigation`.                                                                                      |
 | D      | Partia II \u2013 konta i UGC | `S-12` → `S-17` → `S-13` → `S-14` → `S-15` → `S-16`                         | **Done** (2026-06-19) \u2013 pełny łańcuch konta fana + UGC + usuwanie konta. |
 | E      | Partia III \u2013 odkrywanie UI + RSVP | `S-18` → `S-19`                                                    | Kafelki bassmap-pl-ui, potem «Idę» / «Interesuję się». |
-| F      | Partia III \u2013 profil   | `S-20` → `S-21`                                                             | Edycja profilu, potem Spotify embed (bez API na start). |
+| F      | Partia III \u2013 profil   | `S-20` → `S-28` / `S-21` (równolegle po S-20)                               | Edycja + profil publiczny; udostępnianie linku; Spotify embed (bez API na start). |
 | G      | Partia III \u2013 społeczność | `S-22` → `S-23` → `S-24`                                                 | Forum MVP → znajomi i polecenia → pełna Moja ekipa. |
 | H      | Partia III \u2013 organizator | `F-05` → `S-25`                                                           | Rola + ręczna weryfikacja → self-service eventów i ogłoszeń. |
 | I      | Partia III \u2013 pomiar i mobile | `S-26` → `S-27`                                                       | GA4 + RODO, potem PWA / native. |
@@ -475,7 +476,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-20: Edycja profilu fana
 
-- **Outcome:** fan w «Edytuj profil» ustawia **login** (publiczny), **opis**, **miasto**, **ulubione podgatunki** (katalog 25 wartości), **linki**: Instagram, SoundCloud, Facebook, Spotify (profil). Placeholdery w `ProfileSection` zastąpione działającym formularzem.
+- **Outcome:** fan w «Edytuj profil» ustawia **login** (publiczny), **opis**, **miasto**, **ulubione podgatunki** (katalog 25 wartości), **linki**: Instagram, SoundCloud, Facebook, Spotify (profil). Placeholdery w `ProfileSection` zastąpione działającym formularzem. Gość widzi **publiczny profil** pod `/u/login` (bez e-maila). Udostępnianie linku – slice **S-28**.
 - **Change ID:** fan-profile-edit
 - **PRD refs:** FR-017, notes 2026-06-22
 - **Prerequisites:** S-19 (zalecane; można równolegle)
@@ -489,6 +490,28 @@ Foundations below assume these are present and do NOT re-scaffold them.
 **FR (propozycja do PRD v3):**
 
 - **FR-027:** Fan edytuje publiczny profil (login, bio, miasto, podgatunki, linki social). Priority: must-have (Partia III).
+
+### S-28: Udostępnianie profilu
+
+- **Outcome:** na własnym profilu (`/profile`) i publicznym (`/u/login`) fan widzi przycisk **«Udostępnij»**; po kliknięciu może **skopiować link** do publicznego profilu (schowek) z potwierdzeniem „Skopiowano”. Na urządzeniach z Web Share API – opcjonalnie natywny panel udostępniania systemu (zamiast samego kopiowania).
+- **Change ID:** profile-share
+- **PRD refs:** FR-027, notes 2026-06-24
+- **Prerequisites:** S-20 (publiczny URL `fanPublicProfilePath(login)`)
+- **Parallel with:** S-21
+- **Blockers:** \u2013
+- **Unknowns:**
+  - Czy v1 wystarczy samo kopiowanie, czy od razu Web Share API na mobile \u2013 Owner: user. Block: no (domyślnie: copy + Web Share gdy dostępne).
+- **Risk:** Niski \u2013 bez backendu; wymaga poprawnego `site` w URL (kanoniczny `https://bassmap.pl`).
+- **Status:** proposed
+
+**Iteracje późniejsze (poza MVP slice):**
+
+- Przyciski **Facebook / Instagram** (share URL platformy lub deep link) \u2013 po meta **Open Graph** na stronie profilu (podgląd linku w social).
+- Ewentualnie QR kod profilu \u2013 parked.
+
+**FR (propozycja do PRD v3):**
+
+- **FR-028:** Fan udostępnia publiczny profil kopiując link (i opcjonalnie przez Web Share API). Priority: nice-to-have (Partia III, zaraz po S-20).
 
 ### S-21: Moja muzyka (Spotify embed)
 
@@ -628,6 +651,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | S-18       | event-card-redesign       | #38    | Kafelki wydarzeń (bassmap-pl-ui)              | po S-16               | Done – archived 2026-06-22                         |
 | S-19       | event-attendance          | #39    | Idę / Interesuję się + liczniki               | po S-18               | Done – archived 2026-06-23                         |
 | S-20       | fan-profile-edit          | #40    | Edycja profilu fana                           | po S-19               | Legal sync profil publiczny                        |
+| S-28       | profile-share             | #50    | Udostępnianie profilu: copy link (+ Web Share) | po S-20               | FB/IG share – iteracja 2; OG meta opcjonalnie      |
 | S-21       | profile-spotify-embed     | #41    | Moja muzyka: Spotify embed                    | po S-20               | Bez Spotify API v1                                 |
 | S-22       | forum-threads             | #42    | Forum: wątki i komentarze                     | po S-20               | Legal sync UGC forum                               |
 | S-23       | friends-and-recommendations | #43  | Znajomi, polecenia, powiadomienia             | po S-20, S-19         | E-mail opcjonalnie w slice                         |
@@ -750,6 +774,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **Promowanie wydarzeń (płatne)** \u2013 Why parked: właścicielka – na razie bez monetyzacji; wraca po S-25 i walidacji organizatorów.
 - **Spotify API (pełna integracja)** \u2013 Why parked: S-21 wystarczy embed z URL; API tylko jeśli embed nie wystarczy.
+- **Udostępnianie profilu na Facebook / Instagram (dedykowane przyciski)** \u2013 Why parked: S-28 v1 = kopiowanie linku + Web Share API; przyciski FB/IG wymagają share URL platform i sensownych tagów Open Graph na `/u/login`.
 - **Automatyczna weryfikacja organizatora (KRS/NIP)** \u2013 Why parked: F-05 = ręczna akceptacja admina na start.
 - **Podgląd audio artystów** \u2013 Why parked: PRD §Non-Goals v2.
 - **Monetyzacja / linki afiliacyjne** \u2013 Why parked: PRD §Non-Goals post-launch.

@@ -23,6 +23,13 @@ const INTEGRATION_ADMIN_PASSWORD = "IntegrationFanReadAdmin!2026";
 const INTEGRATION_NON_ADMIN_EMAIL = "integration-auth-nonadmin@example.com";
 const INTEGRATION_NON_ADMIN_PASSWORD = "IntegrationAuthNonAdmin!2026";
 
+export {
+  INTEGRATION_ADMIN_EMAIL,
+  INTEGRATION_ADMIN_PASSWORD,
+  INTEGRATION_NON_ADMIN_EMAIL,
+  INTEGRATION_NON_ADMIN_PASSWORD,
+};
+
 let skipWarningLogged = false;
 
 function getEnv(name: string): string | undefined {

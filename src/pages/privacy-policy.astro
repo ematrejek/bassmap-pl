@@ -36,17 +36,48 @@ export const prerender = false;
       Administrator nie ma dostępu do hasła w postaci jawnej.
     </li>
   </ul>
-  <p>
-    Wyświetlana na stronie profilu nazwa lub nick wynikająca z części adresu e-mail przed znakiem „@” jest generowana
-    wyłącznie w interfejsie Serwisu i <strong>nie jest osobno zapisywana</strong> w bazie danych.
-  </p>
-  <p>
-    W miarę rozwoju Serwisu konto może obejmować także <strong>dobrowolnie</strong> uzupełniany profil (np. pseudonim wyświetlany
-    w Serwisie, miasto, ulubione podgatunki, linki do profili społecznościowych). Funkcje te mogą być udostępniane stopniowo
-    – po ich włączeniu niniejsza polityka zostanie zaktualizowana. Dane profilowe będą przetwarzane wyłącznie po ich dobrowolnym
-    podaniu.
-  </p>
   <p>Podstawa prawna: art. 6 ust. 1 pkt b RODO (wykonanie umowy / świadczenie usługi).</p>
+  <p>
+    <strong>Profil publiczny (dobrowolny):</strong> zalogowany użytkownik może w sekcji <strong
+      >Mój profil → Edytuj profil</strong
+    >
+    uzupełnić lub zmienić dane wyświetlane w Serwisie jako profil społecznościowy fanów DnB. Przetwarzamy wówczas:
+  </p>
+  <ul>
+    <li>
+      <strong>login</strong> (pseudonim publiczny, 3–30 znaków: małe litery, cyfry, podkreślenia) – <strong
+        >obowiązkowy</strong
+      >, aby utworzyć lub zachować profil; wyświetlany publicznie z prefiksem „@”; musi być unikalny w Serwisie,
+    </li>
+    <li><strong>opis profilu</strong> (bio) – <strong>opcjonalny</strong>, do 200 znaków,</li>
+    <li><strong>miasto</strong> – <strong>opcjonalne</strong>, do 100 znaków,</li>
+    <li>
+      <strong>ulubione podgatunki</strong> – <strong>opcjonalnie</strong> do pięciu wartości z katalogu Serwisu (np. neurofunk,
+      jump-up),
+    </li>
+    <li>
+      <strong>linki do profili społecznościowych</strong> – <strong>opcjonalnie</strong>: Instagram, SoundCloud,
+      Facebook, Spotify, Twitch (adres URL lub – tam, gdzie Serwis na to pozwala – nick/handle).
+    </li>
+  </ul>
+  <p>
+    Profil jest widoczny <strong>publicznie</strong> dla każdego odwiedzającego Serwis pod adresem <strong
+      >/u/login</strong
+    > (bez znaku „@” w adresie URL). Na publicznym profilu <strong>nie publikujemy adresu e-mail</strong> konta – e-mail widoczny
+    jest wyłącznie dla zalogowanego właściciela konta na stronie <strong>Mój profil</strong>. Inni użytkownicy nie widzą
+    Twojego e-maila na profilu publicznym.
+  </p>
+  <p>
+    Uzupełnienie i edycja profilu są <strong>dobrowolne</strong> poza loginem wymaganym do utworzenia wpisu profilowego. Przy
+    pierwszym wejściu na «Mój profil» Serwis może zaproponować login wyliczony z części adresu e-mail przed znakiem „@” –
+    możesz go zmienić w edytorze, o ile wybrany login nie jest już zajęty przez innego użytkownika.
+  </p>
+  <p>
+    Celem przetwarzania jest umożliwienie korzystania z funkcji konta (w tym publicznego profilu społecznościowego) oraz
+    prezentacja dobrowolnie podanych informacji innym użytkownikom Serwisu. Podstawa prawna: art. 6 ust. 1 pkt b RODO
+    (świadczenie usługi – funkcje konta użytkownika). Po <strong>usunięciu konta</strong> dane profilu są usuwane z bazy danych
+    Serwisu razem z kontem (szczegóły w punkcie 4).
+  </p>
 
   <h3>2.2 Zgłoszenia wydarzeń</h3>
   <p>
@@ -241,6 +272,9 @@ export const prerender = false;
     powiązanego wydarzenia; po trwałym usunięciu komentarza treść nie podlega odzyskowi.
     <strong>Oznaczenia udziału</strong> («Idę» / «Interesuję się») przechowywane są do czasu wycofania przez użytkownika,
     zakończenia wydarzenia lub usunięcia konta – wówczas powiązane wpisy są usuwane z bazy danych.
+    <strong>Profil publiczny</strong> (login, opis, miasto, ulubione podgatunki, linki społecznościowe) przechowywany jest
+    do czasu usunięcia konta lub zmiany/usunięcia poszczególnych pól przez użytkownika w «Edytuj profil». Po usunięciu konta
+    wpis profilu jest trwale usuwany z bazy danych Serwisu.
   </p>
   <p>
     Po usunięciu konta na Twoje żądanie lub przez Administratora dane osobowe konta (e-mail, hasło) są usuwane z systemu

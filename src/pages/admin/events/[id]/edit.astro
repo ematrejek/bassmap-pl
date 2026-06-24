@@ -68,7 +68,7 @@ const initialCoverUrl = event && SUPABASE_URL ? getEventCoverUrl(event.coverPath
                 initialEvent={event ?? undefined}
                 initialCoverUrl={initialCoverUrl}
                 serverError={coverUploadError}
-                client:load
+                client:only="react"
               />
             </div>
           </>

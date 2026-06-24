@@ -1,4 +1,10 @@
 import { z } from "zod";
+import {
+  normalizeSocialField,
+  socialFieldErrorLabel,
+  validateSocialField,
+  type SocialPlatform,
+} from "@/lib/fan/profile-social";
 import { SUBGENRES, type Subgenre } from "@/types";
 
 export const FAN_LOGIN_REGEX = /^[a-z0-9_]{3,30}$/;
@@ -20,20 +26,14 @@ const emptyToNull = (value: unknown) => {
   return value;
 };
 
-function socialUrlSchema(allowedHosts: readonly string[], label: string) {
+function socialFieldSchema(platform: SocialPlatform) {
   return z.preprocess(
     emptyToNull,
     z
       .string()
-      .url(`Podaj prawidłowy adres URL dla ${label}`)
-      .refine((url) => {
-        try {
-          const host = new URL(url).hostname.replace(/^www\./, "");
-          return allowedHosts.some((allowed) => host === allowed || host.endsWith(`.${allowed}`));
-        } catch {
-          return false;
-        }
-      }, `Adres musi prowadzić do ${label}`)
+      .trim()
+      .refine((value) => validateSocialField(platform, value), socialFieldErrorLabel(platform))
+      .transform((value) => normalizeSocialField(platform, value))
       .nullable()
       .optional(),
   );
@@ -44,11 +44,11 @@ export const fanProfileUpdateSchema = z.object({
   bio: z.preprocess(emptyToNull, z.string().max(200, "Opis może mieć maksymalnie 200 znaków").nullable().optional()),
   city: z.preprocess(emptyToNull, z.string().max(100, "Miasto może mieć maksymalnie 100 znaków").nullable().optional()),
   favoriteSubgenres: favoriteSubgenresSchema.optional(),
-  instagramUrl: socialUrlSchema(["instagram.com"], "Instagram"),
-  soundcloudUrl: socialUrlSchema(["soundcloud.com"], "SoundCloud"),
-  facebookUrl: socialUrlSchema(["facebook.com", "fb.com"], "Facebook"),
-  spotifyUrl: socialUrlSchema(["open.spotify.com"], "Spotify"),
-  twitchUrl: socialUrlSchema(["twitch.tv"], "Twitch"),
+  instagramUrl: socialFieldSchema("instagram"),
+  soundcloudUrl: socialFieldSchema("soundcloud"),
+  facebookUrl: socialFieldSchema("facebook"),
+  spotifyUrl: socialFieldSchema("spotify"),
+  twitchUrl: socialFieldSchema("twitch"),
 });
 
 export type ParsedFanProfileUpdate = z.infer<typeof fanProfileUpdateSchema>;

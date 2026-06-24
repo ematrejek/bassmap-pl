@@ -1,9 +1,9 @@
-export type SitemapUrl = {
+export interface SitemapUrl {
   loc: string;
   lastmod?: string;
   changefreq?: string;
   priority?: string;
-};
+}
 
 function escapeXml(value: string): string {
   return value

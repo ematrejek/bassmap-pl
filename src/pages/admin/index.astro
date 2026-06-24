@@ -148,7 +148,7 @@ const listError = "error" in listResult ? listResult.error : null;
             </p>
           ) : null
         }
-        <ChangeSuggestionsTable suggestions={suggestionRows} emptyMessage="Brak sugestii zmian." client:load />
+        <ChangeSuggestionsTable suggestions={suggestionRows} emptyMessage="Brak sugestii zmian." client:only="react" />
       </section>
 
       <section class="mb-12">
@@ -163,7 +163,7 @@ const listError = "error" in listResult ? listResult.error : null;
           showSubmitter={true}
           showModerationActions={true}
           emptyMessage="Brak zgłoszeń do moderacji."
-          client:load
+          client:only="react"
         />
       </section>
 
@@ -181,7 +181,7 @@ const listError = "error" in listResult ? listResult.error : null;
         <AdminEventsTable
           events={catalogEvents}
           emptyMessage="Nie ma jeszcze opublikowanych ani szkicowych wydarzeń. Kliknij „Dodaj wydarzenie”, aby utworzyć pierwsze."
-          client:load
+          client:only="react"
         />
       </section>
     </div>
