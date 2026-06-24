@@ -35,6 +35,29 @@ export async function listForumComments(
   return { data: rows.map(mapForumCommentRow) };
 }
 
+export async function getForumCommentCounts(
+  supabase: SupabaseClient,
+  threadIds: string[],
+): Promise<ServiceResult<Record<string, number>>> {
+  if (threadIds.length === 0) {
+    return { data: {} };
+  }
+
+  const response = await supabase.from("forum_comments").select("thread_id").in("thread_id", threadIds);
+
+  if (response.error) {
+    return { error: response.error.message };
+  }
+
+  const counts: Record<string, number> = {};
+  const rows = (response.data as { thread_id: string }[] | null) ?? [];
+  for (const row of rows) {
+    counts[row.thread_id] = (counts[row.thread_id] ?? 0) + 1;
+  }
+
+  return { data: counts };
+}
+
 export async function createForumComment(
   supabase: SupabaseClient,
   input: {

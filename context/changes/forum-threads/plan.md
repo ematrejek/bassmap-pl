@@ -728,21 +728,21 @@ Na produkcji migrację trzeba wykonać przed deployem kodu, który czyta nowe ta
 
 #### Automated
 
-- [x] 3.1 Forum API tests pass with `npm test -- tests/unit/forum-api.test.ts`
-- [x] 3.2 Type checking passes with `npm run check`
-- [x] 3.3 Lint passes with `npm run lint`
+- [x] 3.1 Forum API tests pass with `npm test -- tests/unit/forum-api.test.ts` – 2948607
+- [x] 3.2 Type checking passes with `npm run check` – 2948607
+- [x] 3.3 Lint passes with `npm run lint` – 2948607
 
 #### Manual
 
-- [x] 3.4 Auth, fan delete, admin delete, and forbidden cases behave correctly through API calls
+- [x] 3.4 Auth, fan delete, admin delete, and forbidden cases behave correctly through API calls – 2948607
 
 ### Phase 4: Forum UI
 
 #### Automated
 
-- [ ] 4.1 Forum component tests pass with `npm test -- tests/unit/forum-*.test.tsx`
-- [ ] 4.2 Type checking passes with `npm run check`
-- [ ] 4.3 Lint passes with `npm run lint`
+- [x] 4.1 Forum component tests pass with `npm test -- tests/unit/forum-*.test.tsx`
+- [x] 4.2 Type checking passes with `npm run check`
+- [x] 4.3 Lint passes with `npm run lint`
 
 #### Manual
 
