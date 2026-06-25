@@ -1,7 +1,7 @@
 ---
 change_id: friends-and-recommendations
 title: Friends and recommendations
-status: implementing
+status: implemented
 created: 2026-06-25
 updated: 2026-06-25
 archived_at: null

@@ -544,13 +544,13 @@ No existing data migration is needed because friends, recommendations, and notif
 
 #### Automated
 
-- [x] 5.1 Full project gate passes: `npm run verify`
-- [x] 5.2 Production build passes: `npm run build`
-- [x] 5.3 UI-heavy smoke passes: `npm run test:e2e` or full gate `npm run verify:full`
+- [x] 5.1 Full project gate passes: `npm run verify` – f72c2ce
+- [x] 5.2 Production build passes: `npm run build` – f72c2ce
+- [x] 5.3 UI-heavy smoke passes: `npm run test:e2e` or full gate `npm run verify:full` – f72c2ce
 
 #### Manual
 
-- [x] 5.4 The bell is visible in the top bar for logged-in users and hidden for guests
-- [x] 5.5 Unread count changes after a recommendation is received and after it is opened/marked read
-- [x] 5.6 A notification links to the correct event detail page
-- [x] 5.7 The menu and bell both work on desktop and mobile
+- [x] 5.4 The bell is visible in the top bar for logged-in users and hidden for guests – f72c2ce
+- [x] 5.5 Unread count changes after a recommendation is received and after it is opened/marked read – f72c2ce
+- [x] 5.6 A notification links to the correct event detail page – f72c2ce
+- [x] 5.7 The menu and bell both work on desktop and mobile – f72c2ce
