@@ -3,7 +3,7 @@ project: BassMap PL
 version: 3
 status: active
 created: 2026-06-10
-updated: 2026-06-24
+updated: 2026-06-25
 subgenre_catalog_version: 1
 prd_version: 2
 main_goal: market-feedback
@@ -58,7 +58,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-20 | fan-profile-edit          | fan edytuje login, bio, miasto, ulubione podgatunki, linki social; publiczny profil `/u/login` | S-19          | notes 2026-06-22                 | done        |
 | S-28 | profile-share             | fan udostępnia profil: przycisk «Udostępnij», kopiowanie linku (później FB/IG)              | S-20          | notes 2026-06-24                 | done        |
 | S-21 | profile-spotify-embed     | fan dodaje link do utworu (Spotify/SoundCloud); sekcja My vibes z embedem i tytułem z oEmbed | S-20          | notes 2026-06-22                 | done        |
-| S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | planned     |
+| S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | done        |
 | S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | proposed    |
 | S-24 | crew-teams                | ekipa (nazwa, miasto, podgatunki, opis), rekrutacja przez forum, akceptacja + kontakt        | S-22, S-23    | notes 2026-06-22                 | proposed    |
 | F-05 | organizer-role-foundation | (foundation) rola organizatora + wniosek i ręczna weryfikacja admina                        | S-16          | notes 2026-06-22                 | proposed    |
@@ -537,7 +537,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Kategorie na start vs pełna taksonomia \u2013 Owner: user. Block: no (3 kategorie + Ogólne).
 - **Risk:** UGC – legal sync regulamin + polityka; moderacja admin.
-- **Status:** planned (2026-06-24)
+- **Status:** done (2026-06-25)
 
 **Świadomie poza S-22:** szablony ekip, prośby o dołączenie (S-24); kategoria «Ogłoszenie wydarzenia» dla organizatorów (S-25).
 
@@ -806,3 +806,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-20: fan w «Edytuj profil» ustawia login (publiczny), opis, miasto, ulubione podgatunki i linki social; gość widzi publiczny profil pod `/u/login` (bez e-maila).** \u2013 Archived 2026-06-24 → `context/archive/2026-06-23-fan-profile-edit/`. Lesson: `db push` na produkcję przed deployem kodu wymagającego nowych tabel; E2E w CI musi budować preview z lokalnym Supabase (`.env.test`).
 - **S-28: na własnym profilu (`/profile`) i publicznym (`/u/login`) fan widzi przycisk «Udostępnij»; po kliknięciu może skopiować link do publicznego profilu (schowek) z potwierdzeniem „Skopiowano”. Na urządzeniach z Web Share API – opcjonalnie natywny panel udostępniania systemu (zamiast samego kopiowania).** \u2013 Archived 2026-06-24 → `context/archive/2026-06-24-profile-share/`. Lesson: \u2013.
 - **S-21: fan wybiera Spotify lub SoundCloud, wkleja link do pojedynczego utworu; na profilu w sekcji My vibes widać tytuł (pobrany automatycznie przez oEmbed) i osadzony odtwarzacz (iframe). Bez logowania do platform i bez pełnego Spotify API.** \u2013 Archived 2026-06-24 → `context/archive/2026-06-24-profile-spotify-embed/`. Lesson: \u2013.
+- **S-22: zalogowany fan tworzy wątek w kategorii: «Szukam ekipy», «Mamy ekipę – szukamy ludzi», «Ogólne»; czyta listę, wchodzi w wątek, komentuje; admin usuwa wątki/komentarze. Placeholder `/forum` zastąpiony działającym forum.** \u2013 Archived 2026-06-25 → `context/archive/2026-06-24-forum-threads/`. Lesson: \u2013.

@@ -1,10 +1,10 @@
 ---
 change_id: forum-threads
 title: Forum threads
-status: impl_reviewed
+status: archived
 created: 2026-06-24
-updated: 2026-06-24
-archived_at: null
+updated: 2026-06-25
+archived_at: 2026-06-25T09:35:00Z
 ---
 
 ## Notes
