@@ -59,7 +59,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-28 | profile-share             | fan udostępnia profil: przycisk «Udostępnij», kopiowanie linku (później FB/IG)              | S-20          | notes 2026-06-24                 | done        |
 | S-21 | profile-spotify-embed     | fan dodaje link do utworu (Spotify/SoundCloud); sekcja My vibes z embedem i tytułem z oEmbed | S-20          | notes 2026-06-22                 | done        |
 | S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | done        |
-| S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | proposed    |
+| S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | planned     |
 | S-24 | crew-teams                | ekipa (nazwa, miasto, podgatunki, opis), rekrutacja przez forum, akceptacja + kontakt        | S-22, S-23    | notes 2026-06-22                 | proposed    |
 | F-05 | organizer-role-foundation | (foundation) rola organizatora + wniosek i ręczna weryfikacja admina                        | S-16          | notes 2026-06-22                 | proposed    |
 | S-25 | organizer-self-service    | zweryfikowany organizator publikuje eventy bez moderacji; ogłoszenia na forum                 | F-05, S-22    | notes 2026-06-22                 | proposed    |
@@ -552,7 +552,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Które zdarzenia wysyłają e-mail \u2013 Owner: user. Block: no (MVP: in-app; e-mail jako faza 2 w slice).
 - **Risk:** Średni zakres – rozważyć podział na PR: znajomi → polecenia → e-mail.
-- **Status:** proposed
+- **Status:** planned
 
 ### S-24: Moja ekipa (pełna funkcja)
 

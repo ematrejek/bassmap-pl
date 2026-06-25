@@ -61,9 +61,12 @@ test.describe("Forum – fan i admin", () => {
     await expect(textarea).toBeVisible({ timeout: 30_000 });
 
     // Sekcja komentarzy montuje sie przez client:load (SSR + pozniejsza hydratacja
-    // React). Ponawiamy wpisanie tresci, az React przejmie wartosc i odblokuje przycisk.
+    // React). Wpisujemy tekst klawiatura, bo fill() potrafi ustawic wartosc DOM
+    // bez odblokowania kontrolowanego przycisku Reacta.
     await expect(async () => {
-      await textarea.fill("Komentarz testowy E2E.");
+      await textarea.clear();
+      await textarea.click();
+      await page.keyboard.type("Komentarz testowy E2E.");
       await expect(submit).toBeEnabled({ timeout: 1_000 });
     }).toPass({ timeout: 30_000 });
 

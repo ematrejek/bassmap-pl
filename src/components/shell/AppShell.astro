@@ -1,6 +1,7 @@
 ---
 import AppBrand from "@/components/shell/AppBrand.astro";
 import AppMenu from "@/components/shell/AppMenu";
+import NotificationBell from "@/components/notifications/NotificationBell";
 import SiteFooter from "@/components/SiteFooter.astro";
 
 interface Props {
@@ -23,7 +24,22 @@ const userEmail = user?.email ?? null;
       <div class="pointer-events-auto">
         <AppBrand />
       </div>
-      <div class="pointer-events-auto">
+      <div class="pointer-events-auto flex items-center gap-2">
+        {
+          userEmail ? (
+            <NotificationBell client:only="react">
+              <button
+                slot="fallback"
+                type="button"
+                disabled
+                aria-label="Ładowanie powiadomień"
+                class="font-heading border-border bg-card/60 text-foreground shadow-glow-violet inline-flex h-10 items-center rounded-md border px-3 uppercase opacity-80 backdrop-blur-md"
+              >
+                Powiadomienia
+              </button>
+            </NotificationBell>
+          ) : null
+        }
         <AppMenu userEmail={userEmail} isAdmin={isAdmin} client:only="react">
           <button
             slot="fallback"

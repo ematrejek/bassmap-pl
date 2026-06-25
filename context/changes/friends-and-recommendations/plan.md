@@ -480,77 +480,77 @@ No existing data migration is needed because friends, recommendations, and notif
 
 ## Progress
 
-> Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
+> Convention: `- [ ]` pending, `- [x]` done. Append ` – <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
 
 ### Phase 1: Data Model, RLS, And Shared Types
 
 #### Automated
 
-- [x] 1.1 Migration applies locally with Supabase: `npx supabase migration up` — 91658d1
-- [x] 1.2 TypeScript still passes generated app types: `npm run check` — 91658d1
-- [x] 1.3 RLS integration tests for pair privacy and notification privacy pass: `npm test` — 91658d1
+- [x] 1.1 Migration applies locally with Supabase: `npx supabase migration up` – 91658d1
+- [x] 1.2 TypeScript still passes generated app types: `npm run check` – 91658d1
+- [x] 1.3 RLS integration tests for pair privacy and notification privacy pass: `npm test` – 91658d1
 
 #### Manual
 
-- [x] 1.4 Review the migration manually and confirm no policy exposes friend lists or notifications publicly — 91658d1
-- [x] 1.5 Confirm the schema handles A -> B and B -> A as one relationship pair — 91658d1
+- [x] 1.4 Review the migration manually and confirm no policy exposes friend lists or notifications publicly – 91658d1
+- [x] 1.5 Confirm the schema handles A -> B and B -> A as one relationship pair – 91658d1
 
 ### Phase 2: Friends Services And API
 
 #### Automated
 
-- [x] 2.1 Unit tests pass: `npm test -- tests/unit/friends-api.test.ts` — 73e2505
-- [x] 2.2 Type checking passes: `npm run check` — 73e2505
-- [x] 2.3 Linting passes for changed files: `npm run lint` — 73e2505
+- [x] 2.1 Unit tests pass: `npm test -- tests/unit/friends-api.test.ts` – 73e2505
+- [x] 2.2 Type checking passes: `npm run check` – 73e2505
+- [x] 2.3 Linting passes for changed files: `npm run lint` – 73e2505
 
 #### Manual
 
-- [x] 2.4 Use two local users and confirm one can send a request to the other's login — 73e2505
-- [x] 2.5 Confirm reverse invite shows the existing pending request instead of creating a duplicate — 73e2505
-- [x] 2.6 Confirm a non-involved user cannot see or modify the request — 73e2505
+- [x] 2.4 Use two local users and confirm one can send a request to the other's login – 73e2505
+- [x] 2.5 Confirm reverse invite shows the existing pending request instead of creating a duplicate – 73e2505
+- [x] 2.6 Confirm a non-involved user cannot see or modify the request – 73e2505
 
 ### Phase 3: Friends UI On Profile And `/team`
 
 #### Automated
 
-- [x] 3.1 Component and hook tests pass if added: `npm test` — 4fd2cb9
-- [x] 3.2 Type checking passes: `npm run check` — 4fd2cb9
-- [x] 3.3 Linting passes: `npm run lint` — 4fd2cb9
+- [x] 3.1 Component and hook tests pass if added: `npm test` – 4fd2cb9
+- [x] 3.2 Type checking passes: `npm run check` – 4fd2cb9
+- [x] 3.3 Linting passes: `npm run lint` – 4fd2cb9
 
 #### Manual
 
-- [x] 3.4 On `/u/login`, a logged-in user can send a friend request to another fan — 4fd2cb9
-- [x] 3.5 On `/team`, the recipient can accept or decline the request — 4fd2cb9
-- [x] 3.6 Accepted friends appear for both users — 4fd2cb9
-- [x] 3.7 Friend list is not visible to anonymous users or unrelated users — 4fd2cb9
+- [x] 3.4 On `/u/login`, a logged-in user can send a friend request to another fan – 4fd2cb9
+- [x] 3.5 On `/team`, the recipient can accept or decline the request – 4fd2cb9
+- [x] 3.6 Accepted friends appear for both users – 4fd2cb9
+- [x] 3.7 Friend list is not visible to anonymous users or unrelated users – 4fd2cb9
 
 ### Phase 4: Event Recommendations And Notification Creation
 
 #### Automated
 
-- [x] 4.1 Unit tests pass: `npm test -- tests/unit/event-recommendations-api.test.ts`
-- [x] 4.2 RLS tests for recommendation privacy pass: `npm test`
-- [x] 4.3 Type checking passes: `npm run check`
-- [x] 4.4 Linting passes: `npm run lint`
+- [x] 4.1 Unit tests pass: `npm test -- tests/unit/event-recommendations-api.test.ts` – ea1ccc2
+- [x] 4.2 RLS tests for recommendation privacy pass: `npm test` – ea1ccc2
+- [x] 4.3 Type checking passes: `npm run check` – ea1ccc2
+- [x] 4.4 Linting passes: `npm run lint` – ea1ccc2
 
 #### Manual
 
-- [x] 4.5 User A can recommend an upcoming event to accepted friend B
-- [x] 4.6 User B receives an in-app notification for the recommendation
-- [x] 4.7 User A cannot recommend the event to a non-friend
-- [x] 4.8 Ended or unavailable events cannot be recommended
+- [x] 4.5 User A can recommend an upcoming event to accepted friend B – ea1ccc2
+- [x] 4.6 User B receives an in-app notification for the recommendation – ea1ccc2
+- [x] 4.7 User A cannot recommend the event to a non-friend – ea1ccc2
+- [x] 4.8 Ended or unavailable events cannot be recommended – ea1ccc2
 
 ### Phase 5: Top-Bar Notification Bell, Final Tests, And Roadmap Sync
 
 #### Automated
 
-- [ ] 5.1 Full project gate passes: `npm run verify`
-- [ ] 5.2 Production build passes: `npm run build`
-- [ ] 5.3 UI-heavy smoke passes: `npm run test:e2e` or full gate `npm run verify:full`
+- [x] 5.1 Full project gate passes: `npm run verify`
+- [x] 5.2 Production build passes: `npm run build`
+- [x] 5.3 UI-heavy smoke passes: `npm run test:e2e` or full gate `npm run verify:full`
 
 #### Manual
 
-- [ ] 5.4 The bell is visible in the top bar for logged-in users and hidden for guests
-- [ ] 5.5 Unread count changes after a recommendation is received and after it is opened/marked read
-- [ ] 5.6 A notification links to the correct event detail page
-- [ ] 5.7 The menu and bell both work on desktop and mobile
+- [x] 5.4 The bell is visible in the top bar for logged-in users and hidden for guests
+- [x] 5.5 Unread count changes after a recommendation is received and after it is opened/marked read
+- [x] 5.6 A notification links to the correct event detail page
+- [x] 5.7 The menu and bell both work on desktop and mobile

@@ -1,4 +1,4 @@
-# Friends and Recommendations — Plan Brief
+# Friends and Recommendations – Plan Brief
 
 > Full plan: `context/changes/friends-and-recommendations/plan.md`
 > Research: `context/changes/friends-and-recommendations/research.md`
