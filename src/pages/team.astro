@@ -1,23 +1,19 @@
 ---
+import FriendsDashboard from "@/components/fan/FriendsDashboard";
 import AppShell from "@/components/shell/AppShell.astro";
 import Layout from "@/layouts/Layout.astro";
-import { MY_EVENTS_PATH, PROFILE_PATH } from "@/lib/routes";
-import { shellHeading, shellLink, shellTextMuted } from "@/lib/shell-styles";
+import { shellHeading } from "@/lib/shell-styles";
 
 export const prerender = false;
 ---
 
-<Layout title="Moja ekipa">
+<Layout title="Znajomi i ekipa">
   <AppShell showFooter={true}>
-    <div class="mx-auto flex w-full max-w-lg flex-1 flex-col justify-center px-4 py-8">
-      <div class="surface-panel p-8 text-center">
-        <h1 class:list={[shellHeading, "mb-3"]}>Moja ekipa</h1>
-        <p class:list={["text-sm", shellTextMuted]}>Wkrótce – tutaj będziesz mógł zarządzać swoją ekipą.</p>
-        <div class="mt-6 flex flex-col gap-2 text-sm">
-          <a href={MY_EVENTS_PATH} class:list={[shellLink, "hover:underline"]}>Moje eventy</a>
-          <a href={PROFILE_PATH} class:list={[shellLink, "hover:underline"]}>Mój profil</a>
-        </div>
+    <section class="border-border border-t py-16 md:py-24">
+      <div class="mx-auto max-w-6xl px-4">
+        <h1 class:list={[shellHeading, "text-3xl md:text-4xl"]}>Znajomi i ekipa</h1>
+        <FriendsDashboard client:only="react" />
       </div>
-    </div>
+    </section>
   </AppShell>
 </Layout>

@@ -42,6 +42,7 @@ if (!profile) {
 
 const { user } = Astro.locals;
 const isOwner = profile?.userId === user?.id;
+const isLoggedIn = Boolean(user);
 ---
 
 <Layout title={profile ? `@${profile.login} – BassMap PL` : "Profil nie znaleziony"}>
@@ -56,7 +57,13 @@ const isOwner = profile?.userId === user?.id;
             <p class:list={["mt-3 max-w-xl text-sm", shellTextMuted]}>
               Publiczny profil fana w społeczności BassMap PL.
             </p>
-            <PublicProfileView profile={toPublicFanProfile(profile)} isOwner={isOwner} client:only="react" />
+            <PublicProfileView
+              profile={toPublicFanProfile(profile)}
+              profileUserId={profile.userId}
+              isOwner={isOwner}
+              isLoggedIn={isLoggedIn}
+              client:only="react"
+            />
           </div>
         </section>
       ) : (

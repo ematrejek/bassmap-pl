@@ -51,12 +51,13 @@ export default function AppMenu({ userEmail, isAdmin }: Props) {
     { label: "Mój profil", href: PROFILE_PATH },
     { label: "Moje eventy", href: MY_EVENTS_PATH },
     { label: "Dodaj wydarzenie", href: MY_EVENTS_NEW_PATH },
-    { label: "Moja ekipa", href: TEAM_PATH },
+    { label: "Znajomi i ekipa", href: TEAM_PATH },
     { label: "Forum", href: FORUM_PATH },
   ];
 
   const adminLinks: MenuLink[] = [
     { label: "Panel admina", href: ADMIN_PATH },
+    { label: "Znajomi i ekipa", href: TEAM_PATH },
     { label: "Forum", href: FORUM_PATH },
   ];
 

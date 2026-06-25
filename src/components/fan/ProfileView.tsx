@@ -14,6 +14,7 @@ import {
 import type { PublicFanProfile, Subgenre } from "@/types";
 import { SUBGENRE_LABELS } from "@/types";
 import { AtSign, Mail, MapPin, Music, Music2, UserRound } from "lucide-react";
+import type { ReactNode } from "react";
 
 const NEON_CYCLE: NeonColor[] = ["violet", "green", "cyan", "orange"];
 
@@ -22,9 +23,10 @@ interface Props {
   showEmail?: boolean;
   email?: string;
   onEdit?: () => void;
+  actionSlot?: ReactNode;
 }
 
-export default function ProfileView({ profile, showEmail = false, email, onEdit }: Props) {
+export default function ProfileView({ profile, showEmail = false, email, onEdit, actionSlot }: Props) {
   const filledSocials = SOCIAL_PLATFORMS.filter((platform) => {
     const value = getProfileSocialValue(profile, platform);
     return Boolean(value?.trim());
@@ -67,6 +69,7 @@ export default function ProfileView({ profile, showEmail = false, email, onEdit 
 
         <div className="mt-6 flex w-full flex-col gap-2">
           <ProfileShareButton login={profile.login} />
+          {actionSlot}
           {onEdit ? (
             <Button type="button" onClick={onEdit} className="w-full font-semibold tracking-wider uppercase">
               <UserRound className="h-4 w-4" />

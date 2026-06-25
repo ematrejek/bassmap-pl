@@ -499,30 +499,30 @@ No existing data migration is needed because friends, recommendations, and notif
 
 #### Automated
 
-- [x] 2.1 Unit tests pass: `npm test -- tests/unit/friends-api.test.ts`
-- [x] 2.2 Type checking passes: `npm run check`
-- [x] 2.3 Linting passes for changed files: `npm run lint`
+- [x] 2.1 Unit tests pass: `npm test -- tests/unit/friends-api.test.ts` — 73e2505
+- [x] 2.2 Type checking passes: `npm run check` — 73e2505
+- [x] 2.3 Linting passes for changed files: `npm run lint` — 73e2505
 
 #### Manual
 
-- [x] 2.4 Use two local users and confirm one can send a request to the other's login
-- [x] 2.5 Confirm reverse invite shows the existing pending request instead of creating a duplicate
-- [x] 2.6 Confirm a non-involved user cannot see or modify the request
+- [x] 2.4 Use two local users and confirm one can send a request to the other's login — 73e2505
+- [x] 2.5 Confirm reverse invite shows the existing pending request instead of creating a duplicate — 73e2505
+- [x] 2.6 Confirm a non-involved user cannot see or modify the request — 73e2505
 
 ### Phase 3: Friends UI On Profile And `/team`
 
 #### Automated
 
-- [ ] 3.1 Component and hook tests pass if added: `npm test`
-- [ ] 3.2 Type checking passes: `npm run check`
-- [ ] 3.3 Linting passes: `npm run lint`
+- [x] 3.1 Component and hook tests pass if added: `npm test`
+- [x] 3.2 Type checking passes: `npm run check`
+- [x] 3.3 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.4 On `/u/login`, a logged-in user can send a friend request to another fan
-- [ ] 3.5 On `/team`, the recipient can accept or decline the request
-- [ ] 3.6 Accepted friends appear for both users
-- [ ] 3.7 Friend list is not visible to anonymous users or unrelated users
+- [x] 3.4 On `/u/login`, a logged-in user can send a friend request to another fan
+- [x] 3.5 On `/team`, the recipient can accept or decline the request
+- [x] 3.6 Accepted friends appear for both users
+- [x] 3.7 Friend list is not visible to anonymous users or unrelated users
 
 ### Phase 4: Event Recommendations And Notification Creation
 
