@@ -74,7 +74,6 @@ export async function createForumThread(
     title: string;
     body: string;
     city?: string | null;
-    tags?: string[];
   },
 ): Promise<ServiceResult<ForumThread>> {
   const authorLabel = await resolveForumAuthorLabel(supabase, input.authorId, input.authorEmail);
@@ -86,7 +85,7 @@ export async function createForumThread(
       title: input.title,
       body: input.body,
       city: input.city ?? null,
-      tags: input.tags ?? [],
+      tags: [],
       author_id: input.authorId,
       author_label: authorLabel,
     })

@@ -16,22 +16,9 @@ export const forumThreadCategorySchema = z.enum(FORUM_THREAD_CATEGORIES, {
   errorMap: () => ({ message: "Wybierz dział forum" }),
 });
 
-export const FORUM_THREAD_TAG_SLUGS = ["dnb", "jungle", "dubstep", "rave", "hardcore"] as const;
-
-export type ForumThreadTagSlug = (typeof FORUM_THREAD_TAG_SLUGS)[number];
-
-export const FORUM_THREAD_TAG_META: Record<ForumThreadTagSlug, { label: string; color: ForumNeonColor }> = {
-  dnb: { label: "DNB", color: "violet" },
-  jungle: { label: "JUNGLE", color: "green" },
-  dubstep: { label: "DUBSTEP", color: "cyan" },
-  rave: { label: "RAVE", color: "orange" },
-  hardcore: { label: "HARDCORE", color: "violet" },
-};
-
 export interface ForumSectionMeta {
   category: ForumThreadCategory;
   label: string;
-  description: string;
   color: ForumNeonColor;
 }
 
@@ -39,38 +26,31 @@ export const FORUM_SECTIONS: ForumSectionMeta[] = [
   {
     category: "szukam_ekipy",
     label: "Szukam ekipy",
-    description: "Jeździsz solo i chcesz dołączyć do crew? Zostaw ogłoszenie – bassheadzi z całej Polski czytają.",
     color: "violet",
   },
   {
     category: "jestesmy_ekipa",
-    label: "Jesteśmy ekipą, szukamy ziomków",
-    description: "Macie crew i potrzebujecie świeżej krwi – DJ-ów, promotorów, ekipy technicznej? Tu się rekrutuje.",
+    label: "Dołącz do nas",
     color: "green",
   },
   {
     category: "podziel_sie_muzyka",
     label: "Podziel się muzyką",
-    description:
-      "Wrzuć swój set, premierę, edit albo zapomnianą perełkę. Linki do SoundCloud, Bandcamp i mixów mile widziane.",
     color: "cyan",
   },
   {
     category: "sprzet_produkcja",
     label: "Sprzęt i produkcja",
-    description: "Gadanie o kontrolerach, monitorach, soundsystemach i pluginach. Pomoc przy miksie i masteringu.",
     color: "orange",
   },
   {
     category: "transport_noclegi",
     label: "Transport i noclegi",
-    description: "Łączcie się na wspólne dojazdy na rave'y, dzielcie kosztami paliwa i ogarniajcie kimę po imprezie.",
     color: "violet",
   },
   {
     category: "pozostale",
     label: "Pozostałe wątki",
-    description: "Wszystko, co nie pasuje gdzie indziej – giełda, opinie o klubach, off-topic i gadki o scenie.",
     color: "cyan",
   },
 ];
@@ -95,18 +75,11 @@ const forumThreadCitySchema = z
   .nullable()
   .optional();
 
-const forumThreadTagsSchema = z
-  .array(z.enum(FORUM_THREAD_TAG_SLUGS))
-  .max(3, "Możesz dodać maksymalnie 3 tagi")
-  .optional()
-  .default([]);
-
 export const createForumThreadSchema = z.object({
   category: forumThreadCategorySchema,
   title: forumThreadTitleSchema,
   body: forumThreadBodySchema,
   city: forumThreadCitySchema,
-  tags: forumThreadTagsSchema,
 });
 
 export type CreateForumThreadInput = z.infer<typeof createForumThreadSchema>;

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { parseForumCommentBody } from "@/lib/forum/comment-schema";
-import { createForumThreadSchema, parseCreateForumThreadInput } from "@/lib/forum/thread-schema";
+import { parseCreateForumThreadInput } from "@/lib/forum/thread-schema";
 
 describe("parseForumCommentBody", () => {
   it("rejects empty string", () => {
@@ -43,10 +43,7 @@ describe("parseCreateForumThreadInput", () => {
 
     expect(result.success).toBe(true);
     if (result.success) {
-      expect(result.data).toEqual({
-        ...validInput,
-        tags: [],
-      });
+      expect(result.data).toEqual(validInput);
     }
   });
 
@@ -112,26 +109,15 @@ describe("parseCreateForumThreadInput", () => {
     }
   });
 
-  it("normalizes optional city and tags", () => {
+  it("normalizes optional city", () => {
     const result = parseCreateForumThreadInput({
       ...validInput,
       city: "  Kraków  ",
-      tags: ["dnb", "jungle"],
     });
 
     expect(result.success).toBe(true);
     if (result.success) {
       expect(result.data.city).toBe("Kraków");
-      expect(result.data.tags).toEqual(["dnb", "jungle"]);
     }
-  });
-
-  it("rejects more than three tags", () => {
-    const result = createForumThreadSchema.safeParse({
-      ...validInput,
-      tags: ["dnb", "jungle", "dubstep", "rave"],
-    });
-
-    expect(result.success).toBe(false);
   });
 });

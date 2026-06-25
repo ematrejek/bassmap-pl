@@ -165,7 +165,6 @@ export default function ForumView({ initialThreads, replyCounts, isLoggedIn, isA
                   <h2 className="font-heading text-foreground text-2xl font-black tracking-tight uppercase sm:text-3xl">
                     {section.label}
                   </h2>
-                  <p className="text-muted-foreground max-w-2xl text-sm leading-relaxed">{section.description}</p>
                 </div>
                 {isLoggedIn ? (
                   <Button

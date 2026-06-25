@@ -87,7 +87,6 @@ export const POST: APIRoute = async (context) => {
     title: parsed.data.title,
     body: parsed.data.body,
     city: parsed.data.city ?? null,
-    tags: parsed.data.tags,
   });
 
   if ("error" in result) {

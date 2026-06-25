@@ -5,12 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { readApiError } from "@/lib/api/json";
-import {
-  FORUM_SECTIONS,
-  FORUM_THREAD_TAG_META,
-  FORUM_THREAD_TAG_SLUGS,
-  type ForumThreadTagSlug,
-} from "@/lib/forum/thread-schema";
+import { FORUM_SECTIONS } from "@/lib/forum/thread-schema";
 import { shellBtnOutline, shellBtnPrimary } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import type { ForumThread, ForumThreadCategory } from "@/types";
@@ -29,21 +24,8 @@ export function ForumCreateThreadForm({ defaultCategory, onClose, onCreated }: P
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [city, setCity] = useState("");
-  const [tags, setTags] = useState<ForumThreadTagSlug[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-
-  function toggleTag(tag: ForumThreadTagSlug) {
-    setTags((current) => {
-      if (current.includes(tag)) {
-        return current.filter((t) => t !== tag);
-      }
-      if (current.length >= 3) {
-        return current;
-      }
-      return [...current, tag];
-    });
-  }
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -59,7 +41,6 @@ export function ForumCreateThreadForm({ defaultCategory, onClose, onCreated }: P
           title,
           body,
           city: city.trim().length > 0 ? city : null,
-          tags,
         }),
       });
 
@@ -173,35 +154,6 @@ export function ForumCreateThreadForm({ defaultCategory, onClose, onCreated }: P
               className={fieldClass}
               placeholder="np. Wrocław"
             />
-          </div>
-
-          <div className="space-y-2">
-            <span className="text-foreground/90 text-sm font-medium">
-              Tagi <span className="text-muted-foreground text-xs">(opcjonalnie, maks. 3)</span>
-            </span>
-            <div className="flex flex-wrap gap-2">
-              {FORUM_THREAD_TAG_SLUGS.map((tag) => {
-                const active = tags.includes(tag);
-                return (
-                  <button
-                    key={tag}
-                    type="button"
-                    onClick={() => {
-                      toggleTag(tag);
-                    }}
-                    disabled={submitting}
-                    className={cn(
-                      "rounded-full border px-3 py-1 text-xs font-bold tracking-widest uppercase transition-colors",
-                      active
-                        ? "border-primary/60 bg-primary/20 text-foreground"
-                        : "border-border text-muted-foreground hover:text-foreground",
-                    )}
-                  >
-                    {FORUM_THREAD_TAG_META[tag].label}
-                  </button>
-                );
-              })}
-            </div>
           </div>
 
           {error ? <ServerError message={error} /> : null}

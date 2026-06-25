@@ -15,7 +15,7 @@ function buildThread(overrides: Partial<ForumThread> = {}): ForumThread {
     title: "Szukam ekipy na Audioriver",
     body: "Jadę solo, szukam towarzystwa na festiwal.",
     city: "Płock",
-    tags: ["dnb"],
+    tags: [],
     authorId: "user-1",
     authorLabel: "basshead",
     createdAt: "2026-06-20T10:00:00.000Z",

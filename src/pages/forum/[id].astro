@@ -4,7 +4,7 @@ import ForumCommentsSection from "@/components/forum/ForumCommentsSection";
 import AppShell from "@/components/shell/AppShell.astro";
 import Layout from "@/layouts/Layout.astro";
 import { formatForumDate } from "@/lib/forum/format";
-import { FORUM_THREAD_TAG_META, getForumSectionMeta, type ForumThreadTagSlug } from "@/lib/forum/thread-schema";
+import { getForumSectionMeta } from "@/lib/forum/thread-schema";
 import { FORUM_PATH } from "@/lib/routes";
 import { shellBtnPrimary, shellLink } from "@/lib/shell-styles";
 import { listForumComments } from "@/lib/services/forum-comments";
@@ -33,12 +33,6 @@ const initialComments = commentsResult && "data" in commentsResult ? commentsRes
 
 const sectionMeta = thread ? getForumSectionMeta(thread.category) : undefined;
 const threadPath = thread ? `${FORUM_PATH}/${thread.id}` : FORUM_PATH;
-
-function isKnownTag(tag: string): tag is ForumThreadTagSlug {
-  return tag in FORUM_THREAD_TAG_META;
-}
-
-const knownTags = thread ? thread.tags.filter(isKnownTag) : [];
 ---
 
 <Layout title={thread ? `${thread.title} – Forum BassMap PL` : "Nie znaleziono – BassMap PL"}>
@@ -65,9 +59,6 @@ const knownTags = thread ? thread.tags.filter(isKnownTag) : [];
             <header class="space-y-3">
               <div class="flex flex-wrap items-center gap-2">
                 {sectionMeta ? <GenreBadge color={sectionMeta.color}>{sectionMeta.label}</GenreBadge> : null}
-                {knownTags.map((tag) => (
-                  <GenreBadge color={FORUM_THREAD_TAG_META[tag].color}>{FORUM_THREAD_TAG_META[tag].label}</GenreBadge>
-                ))}
               </div>
 
               <h1 class="font-heading text-foreground text-2xl font-black tracking-tight uppercase sm:text-3xl">

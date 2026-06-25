@@ -740,27 +740,27 @@ Na produkcji migrację trzeba wykonać przed deployem kodu, który czyta nowe ta
 
 #### Automated
 
-- [x] 4.1 Forum component tests pass with `npm test -- tests/unit/forum-*.test.tsx`
-- [x] 4.2 Type checking passes with `npm run check`
-- [x] 4.3 Lint passes with `npm run lint`
+- [x] 4.1 Forum component tests pass with `npm test -- tests/unit/forum-*.test.tsx` – 73a76a8
+- [x] 4.2 Type checking passes with `npm run check` – 73a76a8
+- [x] 4.3 Lint passes with `npm run lint` – 73a76a8
 
 #### Manual
 
-- [ ] 4.4 `/forum` matches `bassmap-pl-ui` 1:1 (hero "Share the bass!", six boards, thread cards)
-- [ ] 4.5 Thread creation and detail view work end-to-end
-- [ ] 4.6 Admin and fan delete actions show only where allowed
+- [x] 4.4 `/forum` matches `bassmap-pl-ui` 1:1 (hero "Share the bass!", six boards, thread cards) – 73a76a8 (manual)
+- [x] 4.5 Thread creation and detail view work end-to-end – 73a76a8 (manual)
+- [x] 4.6 Admin and fan delete actions show only where allowed – 73a76a8 (manual)
 
 ### Phase 5: Tests, E2E, and Legal Sync
 
 #### Automated
 
-- [ ] 5.1 Full verification passes with `npm run verify`
-- [ ] 5.2 Production build passes with `npm run build`
-- [ ] 5.3 E2E tests pass with `npm run test:e2e`
+- [x] 5.1 Full verification passes with `npm run verify` – 38654e2
+- [x] 5.2 Production build passes with `npm run build` – 38654e2
+- [ ] 5.3 E2E tests pass with `npm run test:e2e` (wymaga lokalnego Supabase + Playwright)
 - [ ] 5.4 Supabase integration tests pass with `npm run test:ci` when `.env.test` is available
 
 #### Manual
 
-- [ ] 5.5 Fan forum flow works in browser
-- [ ] 5.6 Admin moderation flow works in browser
-- [ ] 5.7 Legal documents describe forum UGC
+- [x] 5.5 Fan forum flow works in browser – manual (potwierdzone przez użytkownika)
+- [x] 5.6 Admin moderation flow works in browser – manual (potwierdzone przez użytkownika)
+- [x] 5.7 Legal documents describe forum UGC – 38654e2
