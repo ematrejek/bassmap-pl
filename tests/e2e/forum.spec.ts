@@ -56,9 +56,18 @@ test.describe("Forum – fan i admin", () => {
     await signInAsFan(page);
     await page.goto(threadUrl);
 
-    await page.getByLabel("Twój komentarz").fill("Komentarz testowy E2E.");
-    await page.getByRole("button", { name: "Wyślij" }).click();
+    const textarea = page.getByLabel("Twój komentarz");
+    const submit = page.getByRole("button", { name: "Wyślij" });
+    await expect(textarea).toBeVisible({ timeout: 30_000 });
 
+    // Sekcja komentarzy montuje sie przez client:load (SSR + pozniejsza hydratacja
+    // React). Ponawiamy wpisanie tresci, az React przejmie wartosc i odblokuje przycisk.
+    await expect(async () => {
+      await textarea.fill("Komentarz testowy E2E.");
+      await expect(submit).toBeEnabled({ timeout: 1_000 });
+    }).toPass({ timeout: 30_000 });
+
+    await submit.click();
     await expect(page.getByText("Komentarz testowy E2E.")).toBeVisible({ timeout: 30_000 });
   });
 
