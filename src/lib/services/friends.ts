@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getFanProfileByLogin } from "@/lib/services/fan-profile";
+import { createNotification } from "@/lib/services/notifications";
 import type { FriendRequestRow, FriendRequestStatus, FanProfileRow } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
@@ -56,6 +57,10 @@ function mapProfile(row: Pick<FanProfileRow, "user_id" | "login"> | undefined, u
     login,
     profileUrl: login ? `/u/${login}` : null,
   };
+}
+
+function profileLabel(profile: FriendProfileSummary): string {
+  return profile.login ? `@${profile.login}` : "Fan BassMap";
 }
 
 function mapRequestRow(
@@ -257,9 +262,23 @@ export async function createFriendRequestByLogin(
     return { error: response.error.message };
   }
 
-  const mapped = await mapSingleRequest(supabase, response.data);
+  const createdRequest = response.data;
+  const mapped = await mapSingleRequest(supabase, createdRequest);
   if ("error" in mapped) {
     return mapped;
+  }
+
+  const requesterLabel = profileLabel(mapped.data.requester);
+  const notification = await createNotification(supabase, {
+    recipientId: addresseeId,
+    actorId: requesterId,
+    actorLabel: requesterLabel,
+    type: "friend_request",
+    friendRequestId: String(createdRequest.id),
+    body: `${requesterLabel} chce dodać Cię do znajomych.`,
+  });
+  if ("error" in notification) {
+    return notification;
   }
 
   return { data: { request: mapped.data, state: "created" } };
@@ -299,7 +318,27 @@ export async function updateFriendRequestStatus(
     return { error: response.error.message };
   }
 
-  return mapSingleRequest(supabase, response.data);
+  const mapped = await mapSingleRequest(supabase, response.data);
+  if ("error" in mapped) {
+    return mapped;
+  }
+
+  if (status === "accepted") {
+    const addresseeLabel = profileLabel(mapped.data.addressee);
+    const notification = await createNotification(supabase, {
+      recipientId: existing.data.requester_id,
+      actorId: userId,
+      actorLabel: addresseeLabel,
+      type: "friend_request_accepted",
+      friendRequestId: requestId,
+      body: `${addresseeLabel} zaakceptował(a) Twoje zaproszenie do znajomych.`,
+    });
+    if ("error" in notification) {
+      return notification;
+    }
+  }
+
+  return mapped;
 }
 
 export async function removeFriendship(

@@ -2,6 +2,7 @@ import { useNotifications } from "@/components/hooks/useNotifications";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { TEAM_PATH } from "@/lib/routes";
 import { cn } from "@/lib/utils";
 import type { Notification } from "@/types";
 import { Bell, Check, Loader2 } from "lucide-react";
@@ -19,6 +20,9 @@ function formatNotificationTime(value: string): string {
 function notificationHref(notification: Notification): string | null {
   if (notification.type === "event_recommendation" && notification.eventId) {
     return `/events/${notification.eventId}`;
+  }
+  if (notification.type === "friend_request" || notification.type === "friend_request_accepted") {
+    return TEAM_PATH;
   }
 
   return null;
