@@ -1,0 +1,67 @@
+name: AI Code Review
+
+on:
+  pull_request:
+    branches: [main]
+    types: [opened, synchronize, reopened]
+  workflow_dispatch:
+
+jobs:
+  review:
+    name: Review pull request diff
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      issues: write
+      pull-requests: write
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configure Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: packages/code-reviewer/package-lock.json
+
+      - name: Install reviewer dependencies
+        working-directory: packages/code-reviewer
+        run: npm ci
+
+      - name: Create pull request diff
+        run: |
+          git diff "origin/${BASE_REF}...HEAD" > /tmp/pr.diff
+          test -s /tmp/pr.diff
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+
+      - name: Run AI code review
+        id: review
+        working-directory: packages/code-reviewer
+        run: |
+          set +e
+          npx tsx src/review.ts < /tmp/pr.diff > /tmp/review.json
+          REVIEW_EXIT_CODE=$?
+          echo "exit_code=${REVIEW_EXIT_CODE}" >> "$GITHUB_OUTPUT"
+          exit 0
+        env:
+          OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+
+      - name: Render PR comment
+        if: github.event_name == 'pull_request'
+        working-directory: packages/code-reviewer
+        run: npx tsx src/render-comment.ts /tmp/review.json > /tmp/review-comment.md
+
+      - name: Post PR comment
+        if: github.event_name == 'pull_request'
+        run: gh pr comment "${{ github.event.pull_request.number }}" --body-file /tmp/review-comment.md
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Fail job when review fails
+        if: steps.review.outputs.exit_code != '0'
+        run: exit 1

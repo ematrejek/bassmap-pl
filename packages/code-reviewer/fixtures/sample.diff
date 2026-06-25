@@ -1,0 +1,29 @@
+diff --git a/src/pages/api/events/create.ts b/src/pages/api/events/create.ts
+new file mode 100644
+index 0000000..1111111
+--- /dev/null
++++ b/src/pages/api/events/create.ts
+@@ -0,0 +1,21 @@
++import type { APIRoute } from "astro";
++import { createClient } from "@supabase/supabase-js";
++
++const supabase = createClient(
++  import.meta.env.SUPABASE_URL,
++  import.meta.env.SUPABASE_SERVICE_ROLE_KEY,
++);
++
++export const POST: APIRoute = async ({ request }) => {
++  const body = await request.json();
++
++  const { data, error } = await supabase
++    .from("events")
++    .insert({
++      title: body.title,
++      city: body.city,
++      starts_at: body.starts_at,
++    })
++    .select()
++    .single();
++
++  return Response.json({ data, error });
++};
