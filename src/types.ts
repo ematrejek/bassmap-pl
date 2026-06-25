@@ -357,3 +357,85 @@ export interface FanProfileUpdate {
   favouriteTrackUrl?: string | null;
   favouriteTrackTitle?: string | null;
 }
+
+export type FriendRequestStatus = "pending" | "accepted" | "declined";
+
+export interface FriendRequestRow {
+  id: string;
+  requester_id: string;
+  addressee_id: string;
+  status: FriendRequestStatus;
+  pair_user_low: string;
+  pair_user_high: string;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface FriendRequest {
+  id: string;
+  requesterId: string;
+  addresseeId: string;
+  status: FriendRequestStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Accepted friendship surfaced to the UI (login resolved in services). */
+export interface Friend {
+  id: string;
+  userId: string;
+  login: string;
+  acceptedAt: string;
+}
+
+export type NotificationType = "friend_request" | "friend_request_accepted" | "event_recommendation";
+
+export interface NotificationRow {
+  id: string;
+  recipient_id: string;
+  actor_id: string | null;
+  actor_label: string;
+  type: NotificationType;
+  event_id: string | null;
+  friend_request_id: string | null;
+  body: string;
+  read_at: string | null;
+  created_at: string;
+}
+
+export interface Notification {
+  id: string;
+  recipientId: string;
+  actorId: string | null;
+  actorLabel: string;
+  type: NotificationType;
+  eventId: string | null;
+  friendRequestId: string | null;
+  body: string;
+  readAt: string | null;
+  createdAt: string;
+}
+
+export interface EventRecommendationRow {
+  id: string;
+  event_id: string;
+  sender_id: string | null;
+  recipient_id: string;
+  sender_label: string;
+  message: string | null;
+  notification_id: string | null;
+  read_at: string | null;
+  created_at: string;
+}
+
+export interface EventRecommendation {
+  id: string;
+  eventId: string;
+  senderId: string | null;
+  recipientId: string;
+  senderLabel: string;
+  message: string | null;
+  notificationId: string | null;
+  readAt: string | null;
+  createdAt: string;
+}
