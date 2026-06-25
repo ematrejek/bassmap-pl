@@ -513,32 +513,32 @@ No existing data migration is needed because friends, recommendations, and notif
 
 #### Automated
 
-- [x] 3.1 Component and hook tests pass if added: `npm test`
-- [x] 3.2 Type checking passes: `npm run check`
-- [x] 3.3 Linting passes: `npm run lint`
+- [x] 3.1 Component and hook tests pass if added: `npm test` — 4fd2cb9
+- [x] 3.2 Type checking passes: `npm run check` — 4fd2cb9
+- [x] 3.3 Linting passes: `npm run lint` — 4fd2cb9
 
 #### Manual
 
-- [x] 3.4 On `/u/login`, a logged-in user can send a friend request to another fan
-- [x] 3.5 On `/team`, the recipient can accept or decline the request
-- [x] 3.6 Accepted friends appear for both users
-- [x] 3.7 Friend list is not visible to anonymous users or unrelated users
+- [x] 3.4 On `/u/login`, a logged-in user can send a friend request to another fan — 4fd2cb9
+- [x] 3.5 On `/team`, the recipient can accept or decline the request — 4fd2cb9
+- [x] 3.6 Accepted friends appear for both users — 4fd2cb9
+- [x] 3.7 Friend list is not visible to anonymous users or unrelated users — 4fd2cb9
 
 ### Phase 4: Event Recommendations And Notification Creation
 
 #### Automated
 
-- [ ] 4.1 Unit tests pass: `npm test -- tests/unit/event-recommendations-api.test.ts`
-- [ ] 4.2 RLS tests for recommendation privacy pass: `npm test`
-- [ ] 4.3 Type checking passes: `npm run check`
-- [ ] 4.4 Linting passes: `npm run lint`
+- [x] 4.1 Unit tests pass: `npm test -- tests/unit/event-recommendations-api.test.ts`
+- [x] 4.2 RLS tests for recommendation privacy pass: `npm test`
+- [x] 4.3 Type checking passes: `npm run check`
+- [x] 4.4 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 4.5 User A can recommend an upcoming event to accepted friend B
-- [ ] 4.6 User B receives an in-app notification for the recommendation
-- [ ] 4.7 User A cannot recommend the event to a non-friend
-- [ ] 4.8 Ended or unavailable events cannot be recommended
+- [x] 4.5 User A can recommend an upcoming event to accepted friend B
+- [x] 4.6 User B receives an in-app notification for the recommendation
+- [x] 4.7 User A cannot recommend the event to a non-friend
+- [x] 4.8 Ended or unavailable events cannot be recommended
 
 ### Phase 5: Top-Bar Notification Bell, Final Tests, And Roadmap Sync
 

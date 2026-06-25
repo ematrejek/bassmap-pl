@@ -2,6 +2,7 @@
 import EventCoverImage from "@/components/discovery/EventCoverImage";
 import EventAttendanceSection from "@/components/events/EventAttendanceSection";
 import EventCommentsSection from "@/components/events/EventCommentsSection";
+import EventRecommendationPanel from "@/components/events/EventRecommendationPanel";
 import EventSuggestChangesForm from "@/components/fan/EventSuggestChangesForm";
 import AppShell from "@/components/shell/AppShell.astro";
 import {
@@ -105,6 +106,18 @@ const attendanceSummary =
 
               <p class="text-accent text-lg font-medium">{formatEventPrice(event)}</p>
             </header>
+
+            {showSuggestionForm ? (
+              <section class="space-y-4">
+                <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Poleć znajomemu</h2>
+                <EventRecommendationPanel
+                  client:only="react"
+                  eventId={event.id}
+                  isLoggedIn={isLoggedIn}
+                  redirectPath={eventPagePath}
+                />
+              </section>
+            ) : null}
 
             <section class="space-y-2">
               <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Opis</h2>
