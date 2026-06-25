@@ -58,7 +58,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-20 | fan-profile-edit          | fan edytuje login, bio, miasto, ulubione podgatunki, linki social; publiczny profil `/u/login` | S-19          | notes 2026-06-22                 | done        |
 | S-28 | profile-share             | fan udostępnia profil: przycisk «Udostępnij», kopiowanie linku (później FB/IG)              | S-20          | notes 2026-06-24                 | done        |
 | S-21 | profile-spotify-embed     | fan dodaje link do utworu (Spotify/SoundCloud); sekcja My vibes z embedem i tytułem z oEmbed | S-20          | notes 2026-06-22                 | done        |
-| S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | proposed    |
+| S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | planned     |
 | S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | proposed    |
 | S-24 | crew-teams                | ekipa (nazwa, miasto, podgatunki, opis), rekrutacja przez forum, akceptacja + kontakt        | S-22, S-23    | notes 2026-06-22                 | proposed    |
 | F-05 | organizer-role-foundation | (foundation) rola organizatora + wniosek i ręczna weryfikacja admina                        | S-16          | notes 2026-06-22                 | proposed    |
@@ -537,7 +537,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Kategorie na start vs pełna taksonomia \u2013 Owner: user. Block: no (3 kategorie + Ogólne).
 - **Risk:** UGC – legal sync regulamin + polityka; moderacja admin.
-- **Status:** proposed
+- **Status:** planned (2026-06-24)
 
 **Świadomie poza S-22:** szablony ekip, prośby o dołączenie (S-24); kategoria «Ogłoszenie wydarzenia» dla organizatorów (S-25).
 
