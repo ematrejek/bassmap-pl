@@ -59,7 +59,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-28 | profile-share             | fan udostępnia profil: przycisk «Udostępnij», kopiowanie linku (później FB/IG)              | S-20          | notes 2026-06-24                 | done        |
 | S-21 | profile-spotify-embed     | fan dodaje link do utworu (Spotify/SoundCloud); sekcja My vibes z embedem i tytułem z oEmbed | S-20          | notes 2026-06-22                 | done        |
 | S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | done        |
-| S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | planned     |
+| S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | done        |
 | S-24 | crew-teams                | ekipa (nazwa, miasto, podgatunki, opis), rekrutacja przez forum, akceptacja + kontakt        | S-22, S-23    | notes 2026-06-22                 | proposed    |
 | F-05 | organizer-role-foundation | (foundation) rola organizatora + wniosek i ręczna weryfikacja admina                        | S-16          | notes 2026-06-22                 | proposed    |
 | S-25 | organizer-self-service    | zweryfikowany organizator publikuje eventy bez moderacji; ogłoszenia na forum                 | F-05, S-22    | notes 2026-06-22                 | proposed    |
@@ -552,7 +552,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Które zdarzenia wysyłają e-mail \u2013 Owner: user. Block: no (MVP: in-app; e-mail jako faza 2 w slice).
 - **Risk:** Średni zakres – rozważyć podział na PR: znajomi → polecenia → e-mail.
-- **Status:** planned
+- **Status:** done
 
 ### S-24: Moja ekipa (pełna funkcja)
 
@@ -807,3 +807,4 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **S-28: na własnym profilu (`/profile`) i publicznym (`/u/login`) fan widzi przycisk «Udostępnij»; po kliknięciu może skopiować link do publicznego profilu (schowek) z potwierdzeniem „Skopiowano”. Na urządzeniach z Web Share API – opcjonalnie natywny panel udostępniania systemu (zamiast samego kopiowania).** \u2013 Archived 2026-06-24 → `context/archive/2026-06-24-profile-share/`. Lesson: \u2013.
 - **S-21: fan wybiera Spotify lub SoundCloud, wkleja link do pojedynczego utworu; na profilu w sekcji My vibes widać tytuł (pobrany automatycznie przez oEmbed) i osadzony odtwarzacz (iframe). Bez logowania do platform i bez pełnego Spotify API.** \u2013 Archived 2026-06-24 → `context/archive/2026-06-24-profile-spotify-embed/`. Lesson: \u2013.
 - **S-22: zalogowany fan tworzy wątek w kategorii: «Szukam ekipy», «Mamy ekipę – szukamy ludzi», «Ogólne»; czyta listę, wchodzi w wątek, komentuje; admin usuwa wątki/komentarze. Placeholder `/forum` zastąpiony działającym forum.** \u2013 Archived 2026-06-25 → `context/archive/2026-06-24-forum-threads/`. Lesson: \u2013.
+- **S-23: znajomi, polecenia eventów i panel powiadomień in-app.** \u2013 Archived 2026-06-25 → `context/archive/2026-06-25-friends-and-recommendations/`. Lesson: \u2013.

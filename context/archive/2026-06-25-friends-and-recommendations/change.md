@@ -1,10 +1,10 @@
 ---
 change_id: friends-and-recommendations
 title: Friends and recommendations
-status: impl_reviewed
+status: archived
 created: 2026-06-25
 updated: 2026-06-25
-archived_at: null
+archived_at: 2026-06-25T19:41:02Z
 ---
 
 ## Notes
