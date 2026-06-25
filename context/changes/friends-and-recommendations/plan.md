@@ -486,28 +486,28 @@ No existing data migration is needed because friends, recommendations, and notif
 
 #### Automated
 
-- [x] 1.1 Migration applies locally with Supabase: `npx supabase migration up`
-- [x] 1.2 TypeScript still passes generated app types: `npm run check`
-- [x] 1.3 RLS integration tests for pair privacy and notification privacy pass: `npm test`
+- [x] 1.1 Migration applies locally with Supabase: `npx supabase migration up` — 91658d1
+- [x] 1.2 TypeScript still passes generated app types: `npm run check` — 91658d1
+- [x] 1.3 RLS integration tests for pair privacy and notification privacy pass: `npm test` — 91658d1
 
 #### Manual
 
-- [x] 1.4 Review the migration manually and confirm no policy exposes friend lists or notifications publicly
-- [x] 1.5 Confirm the schema handles A -> B and B -> A as one relationship pair
+- [x] 1.4 Review the migration manually and confirm no policy exposes friend lists or notifications publicly — 91658d1
+- [x] 1.5 Confirm the schema handles A -> B and B -> A as one relationship pair — 91658d1
 
 ### Phase 2: Friends Services And API
 
 #### Automated
 
-- [ ] 2.1 Unit tests pass: `npm test -- tests/unit/friends-api.test.ts`
-- [ ] 2.2 Type checking passes: `npm run check`
-- [ ] 2.3 Linting passes for changed files: `npm run lint`
+- [x] 2.1 Unit tests pass: `npm test -- tests/unit/friends-api.test.ts`
+- [x] 2.2 Type checking passes: `npm run check`
+- [x] 2.3 Linting passes for changed files: `npm run lint`
 
 #### Manual
 
-- [ ] 2.4 Use two local users and confirm one can send a request to the other's login
-- [ ] 2.5 Confirm reverse invite shows the existing pending request instead of creating a duplicate
-- [ ] 2.6 Confirm a non-involved user cannot see or modify the request
+- [x] 2.4 Use two local users and confirm one can send a request to the other's login
+- [x] 2.5 Confirm reverse invite shows the existing pending request instead of creating a duplicate
+- [x] 2.6 Confirm a non-involved user cannot see or modify the request
 
 ### Phase 3: Friends UI On Profile And `/team`
 

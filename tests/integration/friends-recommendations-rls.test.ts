@@ -88,10 +88,7 @@ describe.skipIf(!runIntegration)("friends, recommendations, notifications (RLS)"
     const serviceClient = createServiceClient();
 
     if (cleanupRecommendationIds.length > 0) {
-      const response = await serviceClient
-        .from("event_recommendations")
-        .delete()
-        .in("id", cleanupRecommendationIds);
+      const response = await serviceClient.from("event_recommendations").delete().in("id", cleanupRecommendationIds);
       if (response.error) {
         throw new Error(`Failed to delete recommendation fixtures: ${response.error.message}`);
       }
@@ -121,31 +118,24 @@ describe.skipIf(!runIntegration)("friends, recommendations, notifications (RLS)"
 
   it("enforces pair uniqueness for A -> B and B -> A", async () => {
     const serviceClient = createServiceClient();
-    const userAId = await ensureAuthUser(
-      serviceClient,
-      INTEGRATION_SECOND_FAN_EMAIL,
-      INTEGRATION_SECOND_FAN_PASSWORD,
-    );
-    const userBId = await ensureAuthUser(
-      serviceClient,
-      INTEGRATION_THIRD_FAN_EMAIL,
-      INTEGRATION_THIRD_FAN_PASSWORD,
-    );
+    const userAId = await ensureAuthUser(serviceClient, INTEGRATION_SECOND_FAN_EMAIL, INTEGRATION_SECOND_FAN_PASSWORD);
+    const userBId = await ensureAuthUser(serviceClient, INTEGRATION_THIRD_FAN_EMAIL, INTEGRATION_THIRD_FAN_PASSWORD);
 
-    await serviceClient
-      .from("friend_requests")
-      .delete()
-      .or(`pair_user_low.eq.${userAId},pair_user_high.eq.${userAId}`);
+    await serviceClient.from("friend_requests").delete().or(`pair_user_low.eq.${userAId},pair_user_high.eq.${userAId}`);
 
     const clientA = await createAuthenticatedClient(INTEGRATION_SECOND_FAN_EMAIL, INTEGRATION_SECOND_FAN_PASSWORD);
 
-    const firstInsert = await clientA.from("friend_requests").insert({
-      requester_id: userAId,
-      addressee_id: userBId,
-      status: "pending",
-      pair_user_low: userAId,
-      pair_user_high: userBId,
-    }).select("id").single();
+    const firstInsert = await clientA
+      .from("friend_requests")
+      .insert({
+        requester_id: userAId,
+        addressee_id: userBId,
+        status: "pending",
+        pair_user_low: userAId,
+        pair_user_high: userBId,
+      })
+      .select("id")
+      .single();
 
     expect(firstInsert.error).toBeNull();
     if (!firstInsert.data) {
@@ -207,8 +197,8 @@ describe.skipIf(!runIntegration)("friends, recommendations, notifications (RLS)"
       .select("id")
       .single();
 
-    if (insertResponse.error || !insertResponse.data) {
-      throw new Error(`Service insert failed: ${insertResponse.error?.message}`);
+    if (insertResponse.error) {
+      throw new Error(`Service insert failed: ${insertResponse.error.message}`);
     }
 
     const requestId = insertResponse.data.id as string;
@@ -279,8 +269,8 @@ describe.skipIf(!runIntegration)("friends, recommendations, notifications (RLS)"
       .select("id")
       .single();
 
-    if (insertResponse.error || !insertResponse.data) {
-      throw new Error(`Service insert failed: ${insertResponse.error?.message}`);
+    if (insertResponse.error) {
+      throw new Error(`Service insert failed: ${insertResponse.error.message}`);
     }
 
     const requestId = insertResponse.data.id as string;
@@ -294,11 +284,7 @@ describe.skipIf(!runIntegration)("friends, recommendations, notifications (RLS)"
     expect(requesterAccept.error).toBeNull();
     expect(requesterAccept.data ?? []).toHaveLength(0);
 
-    const stillPending = await serviceClient
-      .from("friend_requests")
-      .select("status")
-      .eq("id", requestId)
-      .single();
+    const stillPending = await serviceClient.from("friend_requests").select("status").eq("id", requestId).single();
     expect(stillPending.data?.status).toBe("pending");
 
     const addresseeClient = await createAuthenticatedClient(
@@ -424,16 +410,20 @@ describe.skipIf(!runIntegration)("friends, recommendations, notifications (RLS)"
     const pairLow = sender.id < recipientId ? sender.id : recipientId;
     const pairHigh = sender.id < recipientId ? recipientId : sender.id;
 
-    const friendshipInsert = await serviceClient.from("friend_requests").insert({
-      requester_id: sender.id,
-      addressee_id: recipientId,
-      status: "accepted",
-      pair_user_low: pairLow,
-      pair_user_high: pairHigh,
-    }).select("id").single();
+    const friendshipInsert = await serviceClient
+      .from("friend_requests")
+      .insert({
+        requester_id: sender.id,
+        addressee_id: recipientId,
+        status: "accepted",
+        pair_user_low: pairLow,
+        pair_user_high: pairHigh,
+      })
+      .select("id")
+      .single();
 
-    if (friendshipInsert.error || !friendshipInsert.data) {
-      throw new Error(`Friendship fixture failed: ${friendshipInsert.error?.message}`);
+    if (friendshipInsert.error) {
+      throw new Error(`Friendship fixture failed: ${friendshipInsert.error.message}`);
     }
     cleanupFriendRequestIds.push(friendshipInsert.data.id as string);
 
