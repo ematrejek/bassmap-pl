@@ -13,5 +13,9 @@ export const updateFriendRequestStatusSchema = z.object({
 
 export const friendRelationshipIdSchema = z.string().uuid("Nieprawidłowy identyfikator relacji znajomych");
 
+export const friendRelationshipStatusQuerySchema = z.object({
+  userId: z.string().uuid("Nieprawidłowy identyfikator użytkownika"),
+});
+
 export type SendFriendRequestInput = z.infer<typeof sendFriendRequestSchema>;
 export type UpdateFriendRequestStatusInput = z.infer<typeof updateFriendRequestStatusSchema>;

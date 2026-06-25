@@ -2,7 +2,6 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { authorLabelFromEmail } from "@/lib/auth/display-name";
 import { isUpcomingEvent } from "@/lib/events/format";
 import type { CreateEventRecommendationInput } from "@/lib/events/recommendation-schema";
-import { createNotification } from "@/lib/services/notifications";
 import { getFanProfileByUserId } from "@/lib/services/fan-profile";
 import { getPublishedEventById } from "@/lib/services/events";
 import type { EventRecommendation, EventRecommendationRow } from "@/types";
@@ -84,43 +83,30 @@ export async function createEventRecommendation(
   }
 
   const senderLabel = await resolveSenderLabel(supabase, sender.id, sender.email);
-  const body = input.message
+  const rawBody = input.message
     ? `${senderLabel} poleca Ci event: ${event.name}. ${input.message}`
     : `${senderLabel} poleca Ci event: ${event.name}.`;
+  const body = rawBody.length > 500 ? `${rawBody.slice(0, 499)}…` : rawBody;
 
-  const notification = await createNotification(supabase, {
-    recipientId: input.recipientUserId,
-    actorId: sender.id,
-    actorLabel: senderLabel,
-    type: "event_recommendation",
-    eventId,
-    body,
+  const response = await supabase.rpc("create_event_recommendation_with_notification", {
+    p_event_id: eventId,
+    p_recipient_id: input.recipientUserId,
+    p_sender_label: senderLabel,
+    p_message: input.message ?? null,
+    p_body: body,
   });
-  if ("error" in notification) {
-    return notification;
-  }
-
-  const response = await supabase
-    .from("event_recommendations")
-    .insert({
-      event_id: eventId,
-      sender_id: sender.id,
-      recipient_id: input.recipientUserId,
-      sender_label: senderLabel,
-      message: input.message ?? null,
-      notification_id: notification.data.id,
-    })
-    .select(EVENT_RECOMMENDATION_SELECT)
-    .single();
 
   if (response.error) {
+    if (response.error.message.includes("accepted friends")) {
+      return { error: RECOMMENDATION_NOT_FRIEND_ERROR };
+    }
     if (response.error.code === "42501") {
       return { error: RECOMMENDATION_NOT_FRIEND_ERROR };
     }
     return { error: response.error.message };
   }
 
-  return { data: mapRecommendationRow(response.data) };
+  return { data: mapRecommendationRow(response.data as EventRecommendationRow) };
 }
 
 export async function listReceivedEventRecommendations(

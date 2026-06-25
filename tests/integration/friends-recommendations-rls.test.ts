@@ -324,18 +324,20 @@ describe.skipIf(!runIntegration)("friends, recommendations, notifications (RLS)"
       INTEGRATION_THIRD_FAN_PASSWORD,
     );
 
-    const createResponse = await senderClient.rpc("create_notification", {
-      p_recipient_id: recipientId,
-      p_actor_id: sender.id,
-      p_actor_label: "fan_a",
-      p_type: "event_recommendation",
-      p_body: "Sprawdź ten event",
-      p_event_id: null,
-      p_friend_request_id: null,
-    });
+    const seedResponse = await serviceClient
+      .from("notifications")
+      .insert({
+        recipient_id: recipientId,
+        actor_id: sender.id,
+        actor_label: "fan_a",
+        type: "event_recommendation",
+        body: "Sprawdź ten event",
+      })
+      .select("id")
+      .single();
 
-    expect(createResponse.error).toBeNull();
-    const notificationId = createResponse.data as string;
+    expect(seedResponse.error).toBeNull();
+    const notificationId = seedResponse.data?.id as string;
     cleanupNotificationIds.push(notificationId);
 
     const recipientClient = await createAuthenticatedClient(
@@ -376,6 +378,36 @@ describe.skipIf(!runIntegration)("friends, recommendations, notifications (RLS)"
       body: "Bezpośredni insert",
     });
     expect(senderDirectInsert.error).not.toBeNull();
+  }, 20_000);
+
+  it("rejects create_notification RPC without valid business context", async () => {
+    const serviceClient = createServiceClient();
+    const senderClient = await createNonAdminClient();
+    const {
+      data: { user: sender },
+    } = await senderClient.auth.getUser();
+
+    if (!sender) {
+      throw new Error("Sender not signed in");
+    }
+
+    const recipientId = await ensureAuthUser(
+      serviceClient,
+      INTEGRATION_SECOND_FAN_EMAIL,
+      INTEGRATION_SECOND_FAN_PASSWORD,
+    );
+
+    const spamResponse = await senderClient.rpc("create_notification", {
+      p_recipient_id: recipientId,
+      p_actor_id: sender.id,
+      p_actor_label: "fan_a",
+      p_type: "event_recommendation",
+      p_body: "Spam bez kontekstu",
+      p_event_id: null,
+      p_friend_request_id: null,
+    });
+
+    expect(spamResponse.error).not.toBeNull();
   }, 20_000);
 
   it("allows event recommendation only between accepted friends on published upcoming events", async () => {

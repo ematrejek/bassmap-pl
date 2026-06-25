@@ -1,9 +1,8 @@
-import { useFriends } from "@/components/hooks/useFriends";
+import { useFriendRelationship } from "@/components/hooks/useFriendRelationship";
 import { Button } from "@/components/ui/button";
 import { SIGN_IN_PATH, TEAM_PATH } from "@/lib/routes";
-import type { FriendRequestSummary } from "@/lib/services/friends";
 import { Check, Loader2, UserPlus, UsersRound, X } from "lucide-react";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 
 interface Props {
   profileUserId: string;
@@ -12,23 +11,9 @@ interface Props {
 }
 
 export default function FriendActionButton({ profileUserId, profileLogin, isLoggedIn }: Props) {
-  const { overview, isLoading, error, pendingAction, sendRequest, acceptRequest, declineRequest } = useFriends();
+  const { relationship, isLoading, error, pendingAction, sendRequest, acceptRequest, declineRequest } =
+    useFriendRelationship(profileUserId);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
-
-  const friendship = useMemo(
-    () => overview.friends.find((friend) => friend.user.userId === profileUserId) ?? null,
-    [overview.friends, profileUserId],
-  );
-
-  const incomingRequest = useMemo(
-    () => overview.incomingRequests.find((request) => request.requester.userId === profileUserId) ?? null,
-    [overview.incomingRequests, profileUserId],
-  );
-
-  const outgoingRequest = useMemo(
-    () => overview.outgoingRequests.find((request) => request.addressee.userId === profileUserId) ?? null,
-    [overview.outgoingRequests, profileUserId],
-  );
 
   async function handleSend() {
     setSuccessMessage(null);
@@ -42,11 +27,27 @@ export default function FriendActionButton({ profileUserId, profileLogin, isLogg
     }
   }
 
-  async function handleUpdate(request: FriendRequestSummary, status: "accepted" | "declined") {
+  async function handleAccept() {
+    if (!relationship.requestId) {
+      return;
+    }
+
     setSuccessMessage(null);
-    const result = status === "accepted" ? await acceptRequest(request.id) : await declineRequest(request.id);
+    const result = await acceptRequest(relationship.requestId);
     if ("data" in result) {
-      setSuccessMessage(status === "accepted" ? "Zaproszenie zaakceptowane." : "Zaproszenie odrzucone.");
+      setSuccessMessage("Zaproszenie zaakceptowane.");
+    }
+  }
+
+  async function handleDecline() {
+    if (!relationship.requestId) {
+      return;
+    }
+
+    setSuccessMessage(null);
+    const result = await declineRequest(relationship.requestId);
+    if ("data" in result) {
+      setSuccessMessage("Zaproszenie odrzucone.");
     }
   }
 
@@ -67,20 +68,24 @@ export default function FriendActionButton({ profileUserId, profileLogin, isLogg
     );
   }
 
+  if (relationship.state === "self") {
+    return null;
+  }
+
   return (
     <div className="flex w-full flex-col gap-2">
-      {friendship ? (
+      {relationship.state === "friends" ? (
         <Button asChild variant="outline" className="w-full font-semibold tracking-wider uppercase">
           <a href={TEAM_PATH}>
             <UsersRound className="h-4 w-4" />
             Jesteście znajomymi
           </a>
         </Button>
-      ) : incomingRequest ? (
+      ) : relationship.state === "incoming_pending" ? (
         <div className="grid gap-2 sm:grid-cols-2">
           <Button
             type="button"
-            onClick={() => void handleUpdate(incomingRequest, "accepted")}
+            onClick={() => void handleAccept()}
             disabled={pendingAction !== null}
             className="font-semibold tracking-wider uppercase"
           >
@@ -90,7 +95,7 @@ export default function FriendActionButton({ profileUserId, profileLogin, isLogg
           <Button
             type="button"
             variant="outline"
-            onClick={() => void handleUpdate(incomingRequest, "declined")}
+            onClick={() => void handleDecline()}
             disabled={pendingAction !== null}
             className="font-semibold tracking-wider uppercase"
           >
@@ -98,7 +103,7 @@ export default function FriendActionButton({ profileUserId, profileLogin, isLogg
             Odrzuć
           </Button>
         </div>
-      ) : outgoingRequest ? (
+      ) : relationship.state === "outgoing_pending" ? (
         <Button type="button" variant="outline" disabled className="w-full font-semibold tracking-wider uppercase">
           <Loader2 className="h-4 w-4" />
           Zaproszenie oczekuje

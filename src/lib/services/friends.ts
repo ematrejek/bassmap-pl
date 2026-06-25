@@ -1,6 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { getFanProfileByLogin } from "@/lib/services/fan-profile";
-import { createNotification } from "@/lib/services/notifications";
 import type { FriendRequestRow, FriendRequestStatus, FanProfileRow } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
@@ -48,6 +47,14 @@ export interface FriendsOverview {
 export interface FriendRequestActionResult {
   request: FriendRequestSummary;
   state: "created" | "incoming_pending" | "outgoing_pending";
+}
+
+export type FriendRelationshipState = "self" | "friends" | "incoming_pending" | "outgoing_pending" | "none";
+
+export interface FriendRelationshipStatus {
+  state: FriendRelationshipState;
+  requestId: string | null;
+  acceptedAt: string | null;
 }
 
 function mapProfile(row: Pick<FanProfileRow, "user_id" | "login"> | undefined, userId: string): FriendProfileSummary {
@@ -198,6 +205,43 @@ export async function listFriendsOverview(
   };
 }
 
+export async function getFriendRelationshipStatus(
+  supabase: SupabaseClient,
+  viewerId: string,
+  targetUserId: string,
+): Promise<ServiceResult<FriendRelationshipStatus>> {
+  if (viewerId === targetUserId) {
+    return { data: { state: "self", requestId: null, acceptedAt: null } };
+  }
+
+  const existing = await getFriendRequestBetweenUsers(supabase, viewerId, targetUserId);
+  if ("error" in existing) {
+    return existing;
+  }
+
+  if (!existing.data || existing.data.status === "declined") {
+    return { data: { state: "none", requestId: null, acceptedAt: null } };
+  }
+
+  if (existing.data.status === "accepted") {
+    return {
+      data: {
+        state: "friends",
+        requestId: existing.data.id,
+        acceptedAt: existing.data.updated_at,
+      },
+    };
+  }
+
+  return {
+    data: {
+      state: existing.data.requester_id === viewerId ? "outgoing_pending" : "incoming_pending",
+      requestId: existing.data.id,
+      acceptedAt: null,
+    },
+  };
+}
+
 export async function createFriendRequestByLogin(
   supabase: SupabaseClient,
   requesterId: string,
@@ -225,32 +269,38 @@ export async function createFriendRequestByLogin(
     if (existing.data.status === "accepted") {
       return { error: FRIENDSHIP_ALREADY_EXISTS_ERROR };
     }
-    if (existing.data.status !== "pending") {
-      return { error: FRIEND_REQUEST_NOT_PENDING_ERROR };
+    if (existing.data.status === "pending") {
+      const mapped = await mapSingleRequest(supabase, existing.data);
+      if ("error" in mapped) {
+        return mapped;
+      }
+
+      return {
+        data: {
+          request: mapped.data,
+          state: existing.data.addressee_id === requesterId ? "incoming_pending" : "outgoing_pending",
+        },
+      };
     }
 
-    const mapped = await mapSingleRequest(supabase, existing.data);
-    if ("error" in mapped) {
-      return mapped;
+    const deleteDeclined = await supabase.from("friend_requests").delete().eq("id", existing.data.id);
+    if (deleteDeclined.error) {
+      return { error: deleteDeclined.error.message };
     }
-
-    return {
-      data: {
-        request: mapped.data,
-        state: existing.data.addressee_id === requesterId ? "incoming_pending" : "outgoing_pending",
-      },
-    };
   }
 
-  const response = await supabase
-    .from("friend_requests")
-    .insert({
-      requester_id: requesterId,
-      addressee_id: addresseeId,
-      status: "pending",
-    })
-    .select(FRIEND_REQUEST_SELECT)
-    .single();
+  const requesterProfiles = await getProfilesByUserIds(supabase, [requesterId]);
+  if ("error" in requesterProfiles) {
+    return requesterProfiles;
+  }
+
+  const requesterLabel = profileLabel(mapProfile(requesterProfiles.data.get(requesterId), requesterId));
+
+  const response = await supabase.rpc("create_friend_request_with_notification", {
+    p_addressee_id: addresseeId,
+    p_actor_label: requesterLabel,
+    p_body: `${requesterLabel} chce dodać Cię do znajomych.`,
+  });
 
   if (response.error) {
     if (response.error.code === "23505") {
@@ -262,23 +312,10 @@ export async function createFriendRequestByLogin(
     return { error: response.error.message };
   }
 
-  const createdRequest = response.data;
+  const createdRequest = response.data as FriendRequestRow;
   const mapped = await mapSingleRequest(supabase, createdRequest);
   if ("error" in mapped) {
     return mapped;
-  }
-
-  const requesterLabel = profileLabel(mapped.data.requester);
-  const notification = await createNotification(supabase, {
-    recipientId: addresseeId,
-    actorId: requesterId,
-    actorLabel: requesterLabel,
-    type: "friend_request",
-    friendRequestId: String(createdRequest.id),
-    body: `${requesterLabel} chce dodać Cię do znajomych.`,
-  });
-  if ("error" in notification) {
-    return notification;
   }
 
   return { data: { request: mapped.data, state: "created" } };
@@ -304,38 +341,40 @@ export async function updateFriendRequestStatus(
     return { error: FRIEND_REQUEST_NOT_PENDING_ERROR };
   }
 
-  const response = await supabase
-    .from("friend_requests")
-    .update({ status })
-    .eq("id", requestId)
-    .select(FRIEND_REQUEST_SELECT)
-    .single();
+  const addresseeProfiles = await getProfilesByUserIds(supabase, [userId]);
+  if ("error" in addresseeProfiles) {
+    return addresseeProfiles;
+  }
+
+  const addresseeLabel = profileLabel(mapProfile(addresseeProfiles.data.get(userId), userId));
+  const acceptBody = status === "accepted" ? `${addresseeLabel} zaakceptował(a) Twoje zaproszenie do znajomych.` : null;
+
+  const response = await supabase.rpc("respond_friend_request_with_notification", {
+    p_request_id: requestId,
+    p_status: status,
+    p_actor_label: addresseeLabel,
+    p_accept_body: acceptBody,
+  });
 
   if (response.error) {
+    if (response.error.message.includes("only addressee may respond")) {
+      return { error: FRIEND_REQUEST_FORBIDDEN_ERROR };
+    }
+    if (response.error.message.includes("must be pending")) {
+      return { error: FRIEND_REQUEST_NOT_PENDING_ERROR };
+    }
+    if (response.error.message.includes("not found")) {
+      return { error: FRIEND_REQUEST_NOT_FOUND_ERROR };
+    }
     if (response.error.code === "42501") {
       return { error: FRIEND_REQUEST_FORBIDDEN_ERROR };
     }
     return { error: response.error.message };
   }
 
-  const mapped = await mapSingleRequest(supabase, response.data);
+  const mapped = await mapSingleRequest(supabase, response.data as FriendRequestRow);
   if ("error" in mapped) {
     return mapped;
-  }
-
-  if (status === "accepted") {
-    const addresseeLabel = profileLabel(mapped.data.addressee);
-    const notification = await createNotification(supabase, {
-      recipientId: existing.data.requester_id,
-      actorId: userId,
-      actorLabel: addresseeLabel,
-      type: "friend_request_accepted",
-      friendRequestId: requestId,
-      body: `${addresseeLabel} zaakceptował(a) Twoje zaproszenie do znajomych.`,
-    });
-    if ("error" in notification) {
-      return notification;
-    }
   }
 
   return mapped;

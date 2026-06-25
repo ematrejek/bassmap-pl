@@ -5,12 +5,14 @@ import {
   createFriendRequestByLogin,
   FRIEND_REQUEST_SELF_ERROR,
   FRIEND_TARGET_NOT_FOUND_ERROR,
+  getFriendRelationshipStatus,
   listFriendsOverview,
   removeFriendship,
   updateFriendRequestStatus,
 } from "@/lib/services/friends";
 import { DELETE as deleteFriend } from "@/pages/api/fan/friends/[id]";
 import { GET as getFriends } from "@/pages/api/fan/friends/index";
+import { GET as getFriendStatus } from "@/pages/api/fan/friends/status";
 import { PATCH as patchFriendRequest } from "@/pages/api/fan/friends/requests/[id]";
 import { POST as postFriendRequest } from "@/pages/api/fan/friends/requests/index";
 
@@ -41,12 +43,19 @@ const mockOverview = {
   outgoingRequests: [],
 };
 
+const mockRelationship = {
+  state: "incoming_pending" as const,
+  requestId,
+  acceptedAt: null,
+};
+
 vi.mock("@/lib/supabase", () => ({
   createClient: vi.fn(() => ({})),
 }));
 
 vi.mock("@/lib/services/friends", () => ({
   listFriendsOverview: vi.fn(() => Promise.resolve({ data: mockOverview })),
+  getFriendRelationshipStatus: vi.fn(() => Promise.resolve({ data: mockRelationship })),
   createFriendRequestByLogin: vi.fn(() =>
     Promise.resolve({
       data: {
@@ -68,6 +77,7 @@ vi.mock("@/lib/services/friends", () => ({
 }));
 
 const mockListFriendsOverview = vi.mocked(listFriendsOverview);
+const mockGetFriendRelationshipStatus = vi.mocked(getFriendRelationshipStatus);
 const mockCreateFriendRequestByLogin = vi.mocked(createFriendRequestByLogin);
 const mockUpdateFriendRequestStatus = vi.mocked(updateFriendRequestStatus);
 const mockRemoveFriendship = vi.mocked(removeFriendship);
@@ -75,6 +85,7 @@ const mockRemoveFriendship = vi.mocked(removeFriendship);
 beforeEach(() => {
   vi.clearAllMocks();
   mockListFriendsOverview.mockResolvedValue({ data: mockOverview });
+  mockGetFriendRelationshipStatus.mockResolvedValue({ data: mockRelationship });
   mockCreateFriendRequestByLogin.mockResolvedValue({
     data: {
       request: mockRequest,
@@ -106,6 +117,7 @@ function mockContext(
       ...locals,
     } as App.Locals,
     params: options?.params ?? {},
+    url: new URL(url),
     request: new Request(url, {
       method,
       headers: { "Content-Type": "application/json" },
@@ -136,6 +148,33 @@ describe("GET /api/fan/friends", () => {
     expect(response.status).toBe(200);
     await expect(response.json()).resolves.toEqual(mockOverview);
     expect(mockListFriendsOverview).toHaveBeenCalledWith(expect.anything(), mockUser.id);
+  });
+});
+
+describe("GET /api/fan/friends/status", () => {
+  it("returns 401 when not logged in", async () => {
+    const response = await getFriendStatus(
+      mockContext({}, { url: `http://localhost/api/fan/friends/status?userId=${mockRequest.addressee.userId}` }),
+    );
+
+    expect(response.status).toBe(401);
+  });
+
+  it("returns relationship status for logged-in user", async () => {
+    const response = await getFriendStatus(
+      mockContext(
+        { user: mockUser },
+        { url: `http://localhost/api/fan/friends/status?userId=${mockRequest.addressee.userId}` },
+      ),
+    );
+
+    expect(response.status).toBe(200);
+    await expect(response.json()).resolves.toEqual(mockRelationship);
+    expect(mockGetFriendRelationshipStatus).toHaveBeenCalledWith(
+      expect.anything(),
+      mockUser.id,
+      mockRequest.addressee.userId,
+    );
   });
 });
 

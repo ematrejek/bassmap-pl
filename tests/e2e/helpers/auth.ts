@@ -6,6 +6,7 @@ import {
   INTEGRATION_NON_ADMIN_EMAIL,
   INTEGRATION_NON_ADMIN_PASSWORD,
 } from "../../helpers/supabase";
+import { E2E_FRIENDS_FAN_B_EMAIL, E2E_FRIENDS_FAN_B_PASSWORD } from "./friends-fixture";
 
 export async function signInAsAdmin(page: Page): Promise<void> {
   await signIn(page, INTEGRATION_ADMIN_EMAIL, INTEGRATION_ADMIN_PASSWORD);
@@ -13,6 +14,10 @@ export async function signInAsAdmin(page: Page): Promise<void> {
 
 export async function signInAsFan(page: Page): Promise<void> {
   await signIn(page, INTEGRATION_NON_ADMIN_EMAIL, INTEGRATION_NON_ADMIN_PASSWORD);
+}
+
+export async function signInAsSecondFan(page: Page): Promise<void> {
+  await signIn(page, E2E_FRIENDS_FAN_B_EMAIL, E2E_FRIENDS_FAN_B_PASSWORD);
 }
 
 async function signIn(page: Page, email: string, password: string): Promise<void> {
