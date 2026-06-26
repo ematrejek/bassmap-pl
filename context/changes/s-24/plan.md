@@ -528,32 +528,32 @@ MVP może korzystać z prostych list i limitów podobnych do forum/znajomych. Ni
 
 #### Automated
 
-- [x] 2.1 `tests/unit/crews-api.test.ts` pokrywa auth, walidację, tworzenie/edycję/usuwanie ekipy, prośby i odpowiedzi.
-- [x] 2.2 `tests/unit/crews-notifications-service.test.ts` potwierdza treści i typy powiadomień.
-- [x] 2.3 `tests/integration/crew-teams-rls.test.ts` potwierdza brak spoofingu i owner-only accept.
-- [x] 2.4 `npm run check` i `npm run lint` przechodzą.
+- [x] 2.1 `tests/unit/crews-api.test.ts` pokrywa auth, walidację, tworzenie/edycję/usuwanie ekipy, prośby i odpowiedzi. – a82d6e8
+- [x] 2.2 `tests/unit/crews-notifications-service.test.ts` potwierdza treści i typy powiadomień. – a82d6e8
+- [x] 2.3 `tests/integration/crew-teams-rls.test.ts` potwierdza brak spoofingu i owner-only accept. – a82d6e8
+- [x] 2.4 `npm run check` i `npm run lint` przechodzą. – a82d6e8
 
 #### Manual
 
-- [x] 2.5 Przez API można utworzyć ekipę, wysłać prośbę, zaakceptować ją i zobaczyć kontakt.
-- [x] 2.6 Odrzucenie prośby nie tworzy powiadomienia.
-- [x] 2.7 Kandydat może ponowić prośbę po odrzuceniu.
+- [x] 2.5 Przez API można utworzyć ekipę, wysłać prośbę, zaakceptować ją i zobaczyć kontakt. – a82d6e8
+- [x] 2.6 Odrzucenie prośby nie tworzy powiadomienia. – a82d6e8
+- [x] 2.7 Kandydat może ponowić prośbę po odrzuceniu. – a82d6e8
 
 ### Phase 3: Team Page UI
 
 #### Automated
 
-- [ ] 3.1 `npm run check` przechodzi dla nowych komponentów i hooka.
-- [ ] 3.2 `npm run lint` przechodzi bez błędów React hooks.
-- [ ] 3.3 Test jednostkowy hooka lub API mocków pokrywa podstawowe mutacje UI, jeśli istniejący setup Vitest to wspiera bez dużego narzutu.
+- [x] 3.1 `npm run check` przechodzi dla nowych komponentów i hooka.
+- [x] 3.2 `npm run lint` przechodzi bez błędów React hooks.
+- [x] 3.3 Test jednostkowy hooka lub API mocków pokrywa podstawowe mutacje UI, jeśli istniejący setup Vitest to wspiera bez dużego narzutu.
 
 #### Manual
 
-- [ ] 3.4 `/team` pokazuje zakładki „Znajomi” i „Moja ekipa”.
-- [ ] 3.5 Zakładka „Znajomi” działa jak przed S-24.
-- [ ] 3.6 Fan tworzy ekipę, edytuje ją, widzi własną rolę ownera i usuwa ekipę.
-- [ ] 3.7 Owner akceptuje prośbę i widzi nowego członka.
-- [ ] 3.8 Członek może opuścić ekipę.
+- [x] 3.4 `/team` pokazuje zakładki „Znajomi” i „Moja ekipa”.
+- [x] 3.5 Zakładka „Znajomi” działa jak przed S-24.
+- [x] 3.6 Fan tworzy ekipę, edytuje ją, widzi własną rolę ownera i usuwa ekipę.
+- [x] 3.7 Owner akceptuje prośbę i widzi nowego członka.
+- [x] 3.8 Członek może opuścić ekipę.
 
 ### Phase 4: Forum Recruitment Integration
 
