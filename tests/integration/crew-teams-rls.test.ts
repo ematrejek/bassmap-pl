@@ -77,18 +77,11 @@ describe.skipIf(!runIntegration)("crew teams (RLS)", () => {
 
   it("auto-adds owner as crew member on crew create", async () => {
     const serviceClient = createServiceClient();
-    const ownerId = await ensureAuthUser(
-      serviceClient,
-      INTEGRATION_CREW_OWNER_EMAIL,
-      INTEGRATION_CREW_OWNER_PASSWORD,
-    );
+    const ownerId = await ensureAuthUser(serviceClient, INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
 
     await serviceClient.from("crews").delete().eq("owner_id", ownerId);
 
-    const ownerClient = await createAuthenticatedClient(
-      INTEGRATION_CREW_OWNER_EMAIL,
-      INTEGRATION_CREW_OWNER_PASSWORD,
-    );
+    const ownerClient = await createAuthenticatedClient(INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
 
     const crewInsert = await ownerClient
       .from("crews")
@@ -121,11 +114,7 @@ describe.skipIf(!runIntegration)("crew teams (RLS)", () => {
 
   it("allows authenticated users to read crews but hides members from non-members", async () => {
     const serviceClient = createServiceClient();
-    const ownerId = await ensureAuthUser(
-      serviceClient,
-      INTEGRATION_CREW_OWNER_EMAIL,
-      INTEGRATION_CREW_OWNER_PASSWORD,
-    );
+    const ownerId = await ensureAuthUser(serviceClient, INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
     const unrelatedId = await ensureAuthUser(
       serviceClient,
       INTEGRATION_CREW_UNRELATED_EMAIL,
@@ -157,11 +146,7 @@ describe.skipIf(!runIntegration)("crew teams (RLS)", () => {
     );
     const anonClient = createAnonClient();
 
-    const unrelatedCrewRead = await unrelatedClient
-      .from("crews")
-      .select("id")
-      .eq("id", crewId)
-      .maybeSingle();
+    const unrelatedCrewRead = await unrelatedClient.from("crews").select("id").eq("id", crewId).maybeSingle();
     expect(unrelatedCrewRead.error).toBeNull();
     expect(unrelatedCrewRead.data?.id).toBe(crewId);
 
@@ -169,17 +154,11 @@ describe.skipIf(!runIntegration)("crew teams (RLS)", () => {
     expect(anonCrewRead.error).toBeNull();
     expect(anonCrewRead.data).toBeNull();
 
-    const unrelatedMembersRead = await unrelatedClient
-      .from("crew_members")
-      .select("user_id")
-      .eq("crew_id", crewId);
+    const unrelatedMembersRead = await unrelatedClient.from("crew_members").select("user_id").eq("crew_id", crewId);
     expect(unrelatedMembersRead.error).toBeNull();
     expect(unrelatedMembersRead.data ?? []).toHaveLength(0);
 
-    const ownerClient = await createAuthenticatedClient(
-      INTEGRATION_CREW_OWNER_EMAIL,
-      INTEGRATION_CREW_OWNER_PASSWORD,
-    );
+    const ownerClient = await createAuthenticatedClient(INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
     const ownerMembersRead = await ownerClient.from("crew_members").select("user_id").eq("crew_id", crewId);
     expect(ownerMembersRead.error).toBeNull();
     expect(ownerMembersRead.data ?? []).toHaveLength(1);
@@ -189,11 +168,7 @@ describe.skipIf(!runIntegration)("crew teams (RLS)", () => {
 
   it("allows requester and owner to read join requests; denies unrelated user", async () => {
     const serviceClient = createServiceClient();
-    const ownerId = await ensureAuthUser(
-      serviceClient,
-      INTEGRATION_CREW_OWNER_EMAIL,
-      INTEGRATION_CREW_OWNER_PASSWORD,
-    );
+    const ownerId = await ensureAuthUser(serviceClient, INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
     const candidateId = await ensureAuthUser(
       serviceClient,
       INTEGRATION_CREW_CANDIDATE_EMAIL,
@@ -237,10 +212,7 @@ describe.skipIf(!runIntegration)("crew teams (RLS)", () => {
     const requestId = requestInsert.data.id as string;
     cleanupRequestIds.push(requestId);
 
-    const ownerClient = await createAuthenticatedClient(
-      INTEGRATION_CREW_OWNER_EMAIL,
-      INTEGRATION_CREW_OWNER_PASSWORD,
-    );
+    const ownerClient = await createAuthenticatedClient(INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
     const candidateClient = await createAuthenticatedClient(
       INTEGRATION_CREW_CANDIDATE_EMAIL,
       INTEGRATION_CREW_CANDIDATE_PASSWORD,
@@ -273,11 +245,7 @@ describe.skipIf(!runIntegration)("crew teams (RLS)", () => {
 
   it("prevents spoofing requester_id on join request insert", async () => {
     const serviceClient = createServiceClient();
-    const ownerId = await ensureAuthUser(
-      serviceClient,
-      INTEGRATION_CREW_OWNER_EMAIL,
-      INTEGRATION_CREW_OWNER_PASSWORD,
-    );
+    const ownerId = await ensureAuthUser(serviceClient, INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
     const candidateId = await ensureAuthUser(
       serviceClient,
       INTEGRATION_CREW_CANDIDATE_EMAIL,
@@ -320,11 +288,7 @@ describe.skipIf(!runIntegration)("crew teams (RLS)", () => {
 
   it("allows only crew owner to accept a pending join request via update", async () => {
     const serviceClient = createServiceClient();
-    const ownerId = await ensureAuthUser(
-      serviceClient,
-      INTEGRATION_CREW_OWNER_EMAIL,
-      INTEGRATION_CREW_OWNER_PASSWORD,
-    );
+    const ownerId = await ensureAuthUser(serviceClient, INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
     const candidateId = await ensureAuthUser(
       serviceClient,
       INTEGRATION_CREW_CANDIDATE_EMAIL,
@@ -381,17 +345,10 @@ describe.skipIf(!runIntegration)("crew teams (RLS)", () => {
     expect(candidateAccept.error).toBeNull();
     expect(candidateAccept.data ?? []).toHaveLength(0);
 
-    const stillPending = await serviceClient
-      .from("crew_join_requests")
-      .select("status")
-      .eq("id", requestId)
-      .single();
+    const stillPending = await serviceClient.from("crew_join_requests").select("status").eq("id", requestId).single();
     expect(stillPending.data?.status).toBe("pending");
 
-    const ownerClient = await createAuthenticatedClient(
-      INTEGRATION_CREW_OWNER_EMAIL,
-      INTEGRATION_CREW_OWNER_PASSWORD,
-    );
+    const ownerClient = await createAuthenticatedClient(INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
 
     const ownerAccept = await ownerClient
       .from("crew_join_requests")
@@ -402,6 +359,93 @@ describe.skipIf(!runIntegration)("crew teams (RLS)", () => {
 
     expect(ownerAccept.error).toBeNull();
     expect(ownerAccept.data?.status).toBe("accepted");
+  }, 25_000);
+
+  it("allows only crew owner to accept a join request via RPC and creates membership notification", async () => {
+    const serviceClient = createServiceClient();
+    const ownerId = await ensureAuthUser(serviceClient, INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
+    const candidateId = await ensureAuthUser(
+      serviceClient,
+      INTEGRATION_CREW_CANDIDATE_EMAIL,
+      INTEGRATION_CREW_CANDIDATE_PASSWORD,
+    );
+
+    await serviceClient.from("crews").delete().eq("owner_id", ownerId);
+    await serviceClient.from("crew_join_requests").delete().eq("requester_id", candidateId);
+
+    const crewInsert = await serviceClient
+      .from("crews")
+      .insert({
+        owner_id: ownerId,
+        name: "Integration Crew RPC",
+        subgenres: ["jungle"],
+      })
+      .select("id")
+      .single();
+
+    if (crewInsert.error) {
+      throw new Error(`Crew fixture failed: ${crewInsert.error.message}`);
+    }
+
+    const crewId = crewInsert.data.id as string;
+    cleanupCrewIds.push(crewId);
+
+    const candidateClient = await createAuthenticatedClient(
+      INTEGRATION_CREW_CANDIDATE_EMAIL,
+      INTEGRATION_CREW_CANDIDATE_PASSWORD,
+    );
+
+    const createRequest = await candidateClient.rpc("create_crew_join_request_with_notification", {
+      p_crew_id: crewId,
+      p_actor_label: "@candidate",
+      p_body: "@candidate prosi o dołączenie do ekipy.",
+    });
+
+    expect(createRequest.error).toBeNull();
+    const requestId = (createRequest.data as { id: string }).id;
+    cleanupRequestIds.push(requestId);
+
+    const unrelatedClient = await createAuthenticatedClient(
+      INTEGRATION_CREW_UNRELATED_EMAIL,
+      INTEGRATION_CREW_UNRELATED_PASSWORD,
+    );
+    const unrelatedAccept = await unrelatedClient.rpc("respond_crew_join_request_with_notification", {
+      p_request_id: requestId,
+      p_status: "accepted",
+      p_actor_label: "@unrelated",
+      p_accept_body: "@unrelated akceptuje prośbę.",
+    });
+    expect(unrelatedAccept.error).not.toBeNull();
+
+    const ownerClient = await createAuthenticatedClient(INTEGRATION_CREW_OWNER_EMAIL, INTEGRATION_CREW_OWNER_PASSWORD);
+    const ownerAccept = await ownerClient.rpc("respond_crew_join_request_with_notification", {
+      p_request_id: requestId,
+      p_status: "accepted",
+      p_actor_label: "@owner",
+      p_accept_body: "@owner zaakceptował(a) Twoją prośbę do ekipy.",
+    });
+
+    expect(ownerAccept.error).toBeNull();
+    expect((ownerAccept.data as { status: string }).status).toBe("accepted");
+
+    const memberRead = await serviceClient
+      .from("crew_members")
+      .select("role")
+      .eq("crew_id", crewId)
+      .eq("user_id", candidateId)
+      .single();
+    expect(memberRead.error).toBeNull();
+    expect(memberRead.data?.role).toBe("member");
+
+    const notificationRead = await serviceClient
+      .from("notifications")
+      .select("id, type")
+      .eq("crew_join_request_id", requestId)
+      .eq("type", "crew_join_accepted")
+      .single();
+    expect(notificationRead.error).toBeNull();
+    expect(notificationRead.data?.type).toBe("crew_join_accepted");
+    cleanupNotificationIds.push(notificationRead.data?.id as string);
   }, 25_000);
 
   it("keeps legacy notification types working after crew extension", async () => {

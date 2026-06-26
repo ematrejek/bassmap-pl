@@ -514,30 +514,30 @@ MVP może korzystać z prostych list i limitów podobnych do forum/znajomych. Ni
 
 #### Automated
 
-- [x] 1.1 Migracje Supabase stosują się lokalnie bez błędów.
-- [x] 1.2 `npm run check` przechodzi po aktualizacji typów.
-- [x] 1.3 Test integracyjny RLS potwierdza podstawowe reguły widoczności ekip, członków i próśb.
+- [x] 1.1 Migracje Supabase stosują się lokalnie bez błędów. – eecaa75
+- [x] 1.2 `npm run check` przechodzi po aktualizacji typów. – eecaa75
+- [x] 1.3 Test integracyjny RLS potwierdza podstawowe reguły widoczności ekip, członków i próśb. – eecaa75
 
 #### Manual
 
-- [x] 1.4 W lokalnej bazie można utworzyć ekipę i ownera jako członka.
-- [x] 1.5 Stare wątki forum bez `crew_id` nadal są czytelne.
-- [x] 1.6 Powiadomienia istniejących typów nadal działają.
+- [x] 1.4 W lokalnej bazie można utworzyć ekipę i ownera jako członka. – eecaa75
+- [x] 1.5 Stare wątki forum bez `crew_id` nadal są czytelne. – eecaa75
+- [x] 1.6 Powiadomienia istniejących typów nadal działają. – eecaa75
 
 ### Phase 2: Services And Fan API
 
 #### Automated
 
-- [ ] 2.1 `tests/unit/crews-api.test.ts` pokrywa auth, walidację, tworzenie/edycję/usuwanie ekipy, prośby i odpowiedzi.
-- [ ] 2.2 `tests/unit/crews-notifications-service.test.ts` potwierdza treści i typy powiadomień.
-- [ ] 2.3 `tests/integration/crew-teams-rls.test.ts` potwierdza brak spoofingu i owner-only accept.
-- [ ] 2.4 `npm run check` i `npm run lint` przechodzą.
+- [x] 2.1 `tests/unit/crews-api.test.ts` pokrywa auth, walidację, tworzenie/edycję/usuwanie ekipy, prośby i odpowiedzi.
+- [x] 2.2 `tests/unit/crews-notifications-service.test.ts` potwierdza treści i typy powiadomień.
+- [x] 2.3 `tests/integration/crew-teams-rls.test.ts` potwierdza brak spoofingu i owner-only accept.
+- [x] 2.4 `npm run check` i `npm run lint` przechodzą.
 
 #### Manual
 
-- [ ] 2.5 Przez API można utworzyć ekipę, wysłać prośbę, zaakceptować ją i zobaczyć kontakt.
-- [ ] 2.6 Odrzucenie prośby nie tworzy powiadomienia.
-- [ ] 2.7 Kandydat może ponowić prośbę po odrzuceniu.
+- [x] 2.5 Przez API można utworzyć ekipę, wysłać prośbę, zaakceptować ją i zobaczyć kontakt.
+- [x] 2.6 Odrzucenie prośby nie tworzy powiadomienia.
+- [x] 2.7 Kandydat może ponowić prośbę po odrzuceniu.
 
 ### Phase 3: Team Page UI
 

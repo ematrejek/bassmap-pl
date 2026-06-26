@@ -486,7 +486,7 @@ export interface CrewMember {
   crewId: string;
   userId: string;
   role: CrewRole;
-  login: string;
+  login: string | null;
   joinedAt: string;
 }
 
@@ -503,7 +503,7 @@ export interface CrewJoinRequest {
   id: string;
   crewId: string;
   requesterId: string;
-  requesterLogin: string;
+  requesterLogin: string | null;
   status: CrewJoinRequestStatus;
   createdAt: string;
   updatedAt: string;
@@ -511,7 +511,7 @@ export interface CrewJoinRequest {
 
 /** Login and social links shared after an accepted crew join request. */
 export interface CrewContact {
-  login: string;
+  login: string | null;
   instagramUrl: string | null;
   soundcloudUrl: string | null;
   facebookUrl: string | null;
