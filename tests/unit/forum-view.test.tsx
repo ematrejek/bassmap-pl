@@ -18,6 +18,7 @@ function buildThread(overrides: Partial<ForumThread> = {}): ForumThread {
     tags: [],
     authorId: "user-1",
     authorLabel: "basshead",
+    crewId: null,
     createdAt: "2026-06-20T10:00:00.000Z",
     updatedAt: "2026-06-20T10:00:00.000Z",
     ...overrides,

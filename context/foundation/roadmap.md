@@ -562,10 +562,10 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Prerequisites:** S-22, S-23
 - **Parallel with:** \u2013
 - **Blockers:** \u2013
-- **Unknowns:**
-  - Jakie dane kontaktowe po akceptacji (e-mail, social z profilu) \u2013 Owner: user. Block: planowanie S-24.
+- **Unknowns:** \u2013
+- **Decisions:** Dane kontaktowe po akceptacji: login + linki social z profilu (bez e-maila) \u2013 resolved 2026-06-25.
 - **Risk:** Największy slice społecznościowy Partii III – nie łączyć z S-22.
-- **Status:** proposed
+- **Status:** in_progress
 
 ### F-05: Rola organizatora i weryfikacja
 
@@ -670,7 +670,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 4. **Formularz admina \u2013 te same oświadczenia co fan?** \u2013 Owner: user. Block: no \u2013 **resolved 2026-06-16:** fan + admin (decyzja planowania S-17).
 5. **Login publiczny (unikalność, znaki, widoczność profilu)** \u2013 Owner: user. Block: planowanie S-20.
 6. **Liczniki RSVP – dokładna liczba vs zaokrąglenie** \u2013 Owner: user. Block: no.
-7. **Dane kontaktowe po akceptacji do ekipy** \u2013 Owner: user. Block: planowanie S-24.
+7. **Dane kontaktowe po akceptacji do ekipy** \u2013 Owner: user. **Resolved 2026-06-25:** login + linki social z profilu (bez e-maila); decyzja w `context/changes/s-24/change.md`.
 8. **Fan + organizator na jednym koncie?** \u2013 Owner: user. Block: no (domyślnie: tak).
 9. **Lokalizacja design systemu bassmap-pl-ui** \u2013 Owner: user. Block: planowanie S-18.
 10. **PWA vs Capacitor vs native (S-27)** \u2013 Owner: user + dane GA. Block: planowanie S-27.

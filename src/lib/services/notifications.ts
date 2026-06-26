@@ -4,7 +4,7 @@ import type { Notification, NotificationRow, NotificationType } from "@/types";
 type ServiceResult<T> = { data: T } | { error: string };
 
 const NOTIFICATION_SELECT =
-  "id, recipient_id, actor_id, actor_label, type, event_id, friend_request_id, body, read_at, created_at";
+  "id, recipient_id, actor_id, actor_label, type, event_id, friend_request_id, crew_join_request_id, body, read_at, created_at";
 
 function mapNotificationRow(row: NotificationRow): Notification {
   return {
@@ -15,6 +15,7 @@ function mapNotificationRow(row: NotificationRow): Notification {
     type: row.type,
     eventId: row.event_id,
     friendRequestId: row.friend_request_id,
+    crewJoinRequestId: row.crew_join_request_id,
     body: row.body,
     readAt: row.read_at,
     createdAt: row.created_at,
@@ -31,6 +32,7 @@ export async function createNotification(
     body: string;
     eventId?: string | null;
     friendRequestId?: string | null;
+    crewJoinRequestId?: string | null;
   },
 ): Promise<ServiceResult<{ id: string }>> {
   const response = await supabase.rpc("create_notification", {
@@ -41,6 +43,7 @@ export async function createNotification(
     p_body: input.body,
     p_event_id: input.eventId ?? null,
     p_friend_request_id: input.friendRequestId ?? null,
+    p_crew_join_request_id: input.crewJoinRequestId ?? null,
   });
 
   if (response.error) {

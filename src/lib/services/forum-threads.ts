@@ -4,7 +4,8 @@ import type { ForumThread, ForumThreadCategory, ForumThreadRow } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
 
-const FORUM_THREAD_SELECT = "id, category, title, body, city, tags, author_id, author_label, created_at, updated_at";
+const FORUM_THREAD_SELECT =
+  "id, category, title, body, city, tags, author_id, author_label, crew_id, created_at, updated_at";
 
 export function mapForumThreadRow(row: ForumThreadRow): ForumThread {
   return {
@@ -16,6 +17,7 @@ export function mapForumThreadRow(row: ForumThreadRow): ForumThread {
     tags: row.tags,
     authorId: row.author_id,
     authorLabel: row.author_label,
+    crewId: row.crew_id,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };

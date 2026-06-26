@@ -267,6 +267,7 @@ export interface ForumThreadRow {
   tags: string[];
   author_id: string | null;
   author_label: string;
+  crew_id: string | null;
   created_at: string;
   updated_at: string;
 }
@@ -280,6 +281,7 @@ export interface ForumThread {
   tags: string[];
   authorId: string | null;
   authorLabel: string;
+  crewId: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -388,7 +390,12 @@ export interface Friend {
   acceptedAt: string;
 }
 
-export type NotificationType = "friend_request" | "friend_request_accepted" | "event_recommendation";
+export type NotificationType =
+  | "friend_request"
+  | "friend_request_accepted"
+  | "event_recommendation"
+  | "crew_join_request"
+  | "crew_join_accepted";
 
 export interface NotificationRow {
   id: string;
@@ -398,6 +405,7 @@ export interface NotificationRow {
   type: NotificationType;
   event_id: string | null;
   friend_request_id: string | null;
+  crew_join_request_id: string | null;
   body: string;
   read_at: string | null;
   created_at: string;
@@ -411,6 +419,7 @@ export interface Notification {
   type: NotificationType;
   eventId: string | null;
   friendRequestId: string | null;
+  crewJoinRequestId: string | null;
   body: string;
   readAt: string | null;
   createdAt: string;
@@ -438,4 +447,83 @@ export interface EventRecommendation {
   notificationId: string | null;
   readAt: string | null;
   createdAt: string;
+}
+
+export type CrewRole = "owner" | "member";
+
+export type CrewJoinRequestStatus = "pending" | "accepted" | "declined";
+
+export interface CrewRow {
+  id: string;
+  owner_id: string;
+  name: string;
+  city: string | null;
+  subgenres: Subgenre[];
+  description: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface Crew {
+  id: string;
+  ownerId: string;
+  name: string;
+  city: string | null;
+  subgenres: Subgenre[];
+  description: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface CrewMemberRow {
+  crew_id: string;
+  user_id: string;
+  role: CrewRole;
+  joined_at: string;
+}
+
+export interface CrewMember {
+  crewId: string;
+  userId: string;
+  role: CrewRole;
+  login: string;
+  joinedAt: string;
+}
+
+export interface CrewJoinRequestRow {
+  id: string;
+  crew_id: string;
+  requester_id: string;
+  status: CrewJoinRequestStatus;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface CrewJoinRequest {
+  id: string;
+  crewId: string;
+  requesterId: string;
+  requesterLogin: string;
+  status: CrewJoinRequestStatus;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Login and social links shared after an accepted crew join request. */
+export interface CrewContact {
+  login: string;
+  instagramUrl: string | null;
+  soundcloudUrl: string | null;
+  facebookUrl: string | null;
+  spotifyUrl: string | null;
+  twitchUrl: string | null;
+}
+
+/** Fan-facing snapshot for the /team crew tab. */
+export interface CrewOverview {
+  ownCrew: Crew | null;
+  membership: CrewMember | null;
+  members: CrewMember[];
+  incomingRequests: CrewJoinRequest[];
+  outgoingRequest: CrewJoinRequest | null;
 }

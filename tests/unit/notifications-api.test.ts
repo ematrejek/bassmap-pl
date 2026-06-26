@@ -17,6 +17,7 @@ const mockNotification = {
   type: "event_recommendation" as const,
   eventId,
   friendRequestId: null,
+  crewJoinRequestId: null,
   body: "amen_fan poleca Ci event: Bass Night.",
   readAt: null,
   createdAt: "2026-06-25T10:00:00.000Z",
