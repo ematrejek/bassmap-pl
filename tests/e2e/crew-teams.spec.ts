@@ -103,10 +103,27 @@ test.describe("Crew teams – S-24", () => {
     await ownerPage.getByRole("button", { name: "Załóż wątek" }).first().click();
 
     const dialog = ownerPage.getByRole("dialog");
+    await expect(dialog).toBeVisible({ timeout: 30_000 });
     await dialog.getByLabel("Dział").selectOption("szukam_ekipy");
-    await dialog.getByLabel("Tytuł").fill(`Rekrutacja ${E2E_S24_CREW_NAME}`);
-    await dialog.getByLabel("Treść").fill("Szukamy ludzi do wspólnych wyjazdów na eventy DnB.");
-    await dialog.getByRole("button", { name: "Załóż wątek" }).click();
+
+    const titleField = dialog.getByLabel("Tytuł");
+    const bodyField = dialog.getByLabel("Treść");
+    const submit = dialog.getByRole("button", { name: "Załóż wątek" });
+
+    // Formularz dociaga ekipe fana asynchronicznie, a dla dzialu ekipowego submit jest
+    // zablokowany dopoki ekipa sie nie zaladuje. Wpisujemy z klawiatury w petli, az
+    // kontrolowany przycisk submit sie odblokuje (omija race fill() vs hydratacja React).
+    await expect(async () => {
+      await titleField.clear();
+      await titleField.click();
+      await ownerPage.keyboard.type(`Rekrutacja ${E2E_S24_CREW_NAME}`);
+      await bodyField.clear();
+      await bodyField.click();
+      await ownerPage.keyboard.type("Szukamy ludzi do wspólnych wyjazdów na eventy DnB.");
+      await expect(submit).toBeEnabled({ timeout: 1_000 });
+    }).toPass({ timeout: 30_000 });
+
+    await submit.click();
 
     await expect(ownerPage).toHaveURL(/\/forum\/[0-9a-f-]+/u, { timeout: 30_000 });
     await expect(ownerPage.getByRole("heading", { name: E2E_S24_CREW_NAME })).toBeVisible({ timeout: 30_000 });

@@ -43,9 +43,26 @@ test.describe("Forum – fan i admin", () => {
     const dialog = page.getByRole("dialog");
     await expect(dialog).toBeVisible({ timeout: 30_000 });
 
-    await dialog.getByLabel("Tytuł").fill(threadTitle);
-    await dialog.getByLabel("Treść").fill("Treść testowego wątku E2E.");
-    await dialog.getByRole("button", { name: "Załóż wątek" }).click();
+    await dialog.getByLabel("Dział").selectOption("pozostale");
+
+    const titleField = dialog.getByLabel("Tytuł");
+    const bodyField = dialog.getByLabel("Treść");
+    const submit = dialog.getByRole("button", { name: "Załóż wątek" });
+
+    // Formularz montuje sie przez client:load i dociaga ekipe fana asynchronicznie,
+    // wiec fill() potrafi ustawic wartosc DOM zanim React podepnie onChange. Wpisujemy
+    // tekst klawiatura w petli, az kontrolowany przycisk submit sie odblokuje.
+    await expect(async () => {
+      await titleField.clear();
+      await titleField.click();
+      await page.keyboard.type(threadTitle);
+      await bodyField.clear();
+      await bodyField.click();
+      await page.keyboard.type("Treść testowego wątku E2E.");
+      await expect(submit).toBeEnabled({ timeout: 1_000 });
+    }).toPass({ timeout: 30_000 });
+
+    await submit.click();
 
     await expect(page).toHaveURL(/\/forum\/[0-9a-f-]+/u, { timeout: 30_000 });
     threadUrl = page.url();
