@@ -533,3 +533,9 @@ export interface CrewOverview {
   incomingRequests: CrewJoinRequest[];
   outgoingRequest: CrewJoinRequest | null;
 }
+
+/** Crew open for join requests on /team (basic profile, no member list). */
+export interface JoinableCrew {
+  crew: Crew;
+  pendingRequest: CrewJoinRequest | null;
+}

@@ -17,10 +17,16 @@ afterEach(() => {
 
 describe("useCrews", () => {
   it("loads crew overview on mount", async () => {
-    const fetchMock = vi.fn().mockResolvedValue({
-      ok: true,
-      json: () => Promise.resolve(EMPTY_OVERVIEW),
-    });
+    const fetchMock = vi
+      .fn()
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(EMPTY_OVERVIEW),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ crews: [] }),
+      });
     vi.stubGlobal("fetch", fetchMock);
 
     const { result } = renderHook(() => useCrews());
@@ -68,11 +74,19 @@ describe("useCrews", () => {
       })
       .mockResolvedValueOnce({
         ok: true,
+        json: () => Promise.resolve({ crews: [] }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
         json: () => Promise.resolve({ crew: createdCrew }),
       })
       .mockResolvedValueOnce({
         ok: true,
         json: () => Promise.resolve(overviewWithCrew),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ crews: [] }),
       });
     vi.stubGlobal("fetch", fetchMock);
 
@@ -93,7 +107,7 @@ describe("useCrews", () => {
     });
 
     expect(fetchMock).toHaveBeenNthCalledWith(
-      2,
+      3,
       "/api/fan/crews",
       expect.objectContaining({
         method: "POST",
@@ -111,8 +125,20 @@ describe("useCrews", () => {
         json: () => Promise.resolve(EMPTY_OVERVIEW),
       })
       .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ crews: [] }),
+      })
+      .mockResolvedValueOnce({
         ok: false,
         json: () => Promise.resolve({ error: "Nie masz uprawnień do tej ekipy" }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve(EMPTY_OVERVIEW),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        json: () => Promise.resolve({ crews: [] }),
       });
     vi.stubGlobal("fetch", fetchMock);
 

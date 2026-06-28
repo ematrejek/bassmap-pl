@@ -8,6 +8,7 @@ import type {
   CrewMemberRow,
   CrewOverview,
   CrewRow,
+  JoinableCrew,
   FanProfileRow,
 } from "@/types";
 import type { CreateCrewInput, UpdateCrewInput } from "@/lib/fan/crew-schema";
@@ -335,6 +336,75 @@ export async function deleteCrew(
   }
 
   return { data: { deleted: true } };
+}
+
+const JOINABLE_CREWS_LIMIT = 50;
+
+export async function listJoinableCrews(
+  supabase: SupabaseClient,
+  userId: string,
+): Promise<ServiceResult<JoinableCrew[]>> {
+  const [membershipsResponse, ownCrewResponse, pendingRequestsResponse, crewsResponse] = await Promise.all([
+    supabase.from("crew_members").select("crew_id").eq("user_id", userId),
+    supabase.from("crews").select("id").eq("owner_id", userId).maybeSingle(),
+    supabase
+      .from("crew_join_requests")
+      .select(CREW_JOIN_REQUEST_SELECT)
+      .eq("requester_id", userId)
+      .eq("status", "pending"),
+    supabase.from("crews").select(CREW_SELECT).order("created_at", { ascending: false }).limit(JOINABLE_CREWS_LIMIT),
+  ]);
+
+  if (membershipsResponse.error) {
+    return { error: membershipsResponse.error.message };
+  }
+  if (ownCrewResponse.error) {
+    return { error: ownCrewResponse.error.message };
+  }
+  if (pendingRequestsResponse.error) {
+    return { error: pendingRequestsResponse.error.message };
+  }
+  if (crewsResponse.error) {
+    return { error: crewsResponse.error.message };
+  }
+
+  const excludedCrewIds = new Set<string>();
+  for (const row of (membershipsResponse.data as { crew_id: string }[] | null) ?? []) {
+    excludedCrewIds.add(row.crew_id);
+  }
+  const ownCrewRow = ownCrewResponse.data;
+  if (
+    ownCrewRow !== null &&
+    typeof ownCrewRow === "object" &&
+    "id" in ownCrewRow &&
+    typeof ownCrewRow.id === "string"
+  ) {
+    excludedCrewIds.add(ownCrewRow.id);
+  }
+
+  const pendingRows = (pendingRequestsResponse.data as unknown as CrewJoinRequestRow[] | null) ?? [];
+  const pendingByCrewId = new Map(pendingRows.map((row) => [row.crew_id, row]));
+  const profiles = await getProfilesByUserIds(
+    supabase,
+    pendingRows.map((row) => row.requester_id),
+  );
+  if ("error" in profiles) {
+    return profiles;
+  }
+
+  const crewRows = ((crewsResponse.data as unknown as CrewRow[] | null) ?? []).filter(
+    (row) => !excludedCrewIds.has(row.id),
+  );
+
+  return {
+    data: crewRows.map((row) => {
+      const pendingRow = pendingByCrewId.get(row.id);
+      return {
+        crew: mapCrewRow(row),
+        pendingRequest: pendingRow ? mapCrewJoinRequestRow(pendingRow, profiles.data) : null,
+      };
+    }),
+  };
 }
 
 export async function getCrewByIdForViewer(

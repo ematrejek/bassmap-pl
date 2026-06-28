@@ -10,11 +10,13 @@ import {
   deleteCrew,
   getCrewContactForAcceptedPair,
   getCrewOverview,
+  listJoinableCrews,
   removeCrewMember,
   respondCrewJoinRequest,
   updateCrew,
 } from "@/lib/services/crews";
 import { DELETE as deleteCrewRoute, PATCH as patchCrewRoute } from "@/pages/api/fan/crews/[id]";
+import { GET as getJoinableCrews } from "@/pages/api/fan/crews/joinable";
 import { GET as getCrews, POST as postCrew } from "@/pages/api/fan/crews/index";
 import { POST as postCrewRequest } from "@/pages/api/fan/crews/[id]/requests";
 import { PATCH as patchCrewRequest } from "@/pages/api/fan/crews/requests/[id]";
@@ -80,6 +82,11 @@ vi.mock("@/lib/supabase", () => ({
 
 vi.mock("@/lib/services/crews", () => ({
   getCrewOverview: vi.fn(() => Promise.resolve({ data: mockOverview })),
+  listJoinableCrews: vi.fn(() =>
+    Promise.resolve({
+      data: [{ crew: mockCrew, pendingRequest: null }],
+    }),
+  ),
   createCrew: vi.fn(() => Promise.resolve({ data: mockCrew })),
   updateCrew: vi.fn(() => Promise.resolve({ data: mockCrew })),
   deleteCrew: vi.fn(() => Promise.resolve({ data: { deleted: true } })),
@@ -105,6 +112,7 @@ vi.mock("@/lib/services/crews", () => ({
 }));
 
 const mockGetCrewOverview = vi.mocked(getCrewOverview);
+const mockListJoinableCrews = vi.mocked(listJoinableCrews);
 const mockCreateCrew = vi.mocked(createCrew);
 const mockUpdateCrew = vi.mocked(updateCrew);
 const mockDeleteCrew = vi.mocked(deleteCrew);
@@ -116,6 +124,7 @@ const mockGetCrewContactForAcceptedPair = vi.mocked(getCrewContactForAcceptedPai
 beforeEach(() => {
   vi.clearAllMocks();
   mockGetCrewOverview.mockResolvedValue({ data: mockOverview });
+  mockListJoinableCrews.mockResolvedValue({ data: [{ crew: mockCrew, pendingRequest: null }] });
   mockCreateCrew.mockResolvedValue({ data: mockCrew });
   mockUpdateCrew.mockResolvedValue({ data: mockCrew });
   mockDeleteCrew.mockResolvedValue({ data: { deleted: true } });
@@ -162,6 +171,24 @@ function mockContext(
     },
   } as unknown as APIContext;
 }
+
+describe("GET /api/fan/crews/joinable", () => {
+  it("returns 401 when not logged in", async () => {
+    const response = await getJoinableCrews(mockContext({}));
+
+    expect(response.status).toBe(401);
+  });
+
+  it("returns joinable crews for logged-in user", async () => {
+    const response = await getJoinableCrews(mockContext({ user: mockUser }));
+
+    expect(response.status).toBe(200);
+    expect(mockListJoinableCrews).toHaveBeenCalledWith(expect.anything(), mockUser.id);
+    await expect(response.json()).resolves.toEqual({
+      crews: [{ crew: mockCrew, pendingRequest: null }],
+    });
+  });
+});
 
 describe("GET /api/fan/crews", () => {
   it("returns 401 when not logged in", async () => {

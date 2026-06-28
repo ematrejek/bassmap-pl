@@ -1,4 +1,5 @@
 import { useCrews } from "@/components/hooks/useCrews";
+import CrewJoinableList from "@/components/fan/CrewJoinableList";
 import CrewForm from "@/components/fan/CrewForm";
 import CrewMembersList from "@/components/fan/CrewMembersList";
 import CrewRequestsList from "@/components/fan/CrewRequestsList";
@@ -15,7 +16,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
-import type { Crew } from "@/types";
+import type { Crew, JoinableCrew } from "@/types";
 import { Loader2, Shield, Users } from "lucide-react";
 import { useState } from "react";
 
@@ -38,6 +39,38 @@ function CrewSummary({ crew }: { crew: Crew }) {
   );
 }
 
+function BrowseCrewsSection({
+  joinableLoading,
+  joinableCrews,
+  pendingAction,
+  onRequestJoin,
+}: {
+  joinableLoading: boolean;
+  joinableCrews: JoinableCrew[];
+  pendingAction: string | null;
+  onRequestJoin: (crewId: string) => void;
+}) {
+  return (
+    <div className="surface-panel p-6">
+      <h2 className="font-heading text-foreground text-xl font-bold tracking-tight uppercase">Dołącz do ekipy</h2>
+      <p className="text-muted-foreground mt-2 text-sm">
+        Przeglądaj ekipy innych fanów i wyślij prośbę o dołączenie. Lista członków będzie widoczna dopiero po
+        akceptacji.
+      </p>
+      <div className="mt-5">
+        {joinableLoading ? (
+          <p className="text-muted-foreground flex items-center gap-2 text-sm">
+            <Loader2 className="h-4 w-4 animate-spin" />
+            Ładowanie ekip...
+          </p>
+        ) : (
+          <CrewJoinableList crews={joinableCrews} pendingAction={pendingAction} onRequestJoin={onRequestJoin} />
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function CrewDashboard() {
   const {
     overview,
@@ -53,6 +86,9 @@ export default function CrewDashboard() {
     leaveCrew,
     removeMember,
     fetchContact,
+    requestJoin,
+    joinableCrews,
+    joinableLoading,
   } = useCrews();
 
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
@@ -136,6 +172,14 @@ export default function CrewDashboard() {
     }
   }
 
+  async function handleRequestJoin(targetCrewId: string) {
+    setSuccessMessage(null);
+    const result = await requestJoin(targetCrewId);
+    if ("data" in result) {
+      setSuccessMessage("Prośba o dołączenie wysłana – czekaj na odpowiedź właściciela.");
+    }
+  }
+
   if (isLoading) {
     return (
       <p className="text-muted-foreground mt-8 flex items-center gap-2 text-sm">
@@ -152,6 +196,15 @@ export default function CrewDashboard() {
           Prośba o dołączenie została wysłana – czekaj na odpowiedź właściciela ekipy. Możesz też utworzyć własną ekipę
           poniżej, jeśli jeszcze jej nie masz.
         </EmptyState>
+
+        <BrowseCrewsSection
+          joinableLoading={joinableLoading}
+          joinableCrews={joinableCrews}
+          pendingAction={pendingAction}
+          onRequestJoin={(targetCrewId) => {
+            void handleRequestJoin(targetCrewId);
+          }}
+        />
 
         <div className="surface-panel p-6">
           <div className="flex items-center gap-2">
@@ -181,6 +234,15 @@ export default function CrewDashboard() {
   if (!hasCrewContext) {
     return (
       <div className="mt-8 space-y-4">
+        <BrowseCrewsSection
+          joinableLoading={joinableLoading}
+          joinableCrews={joinableCrews}
+          pendingAction={pendingAction}
+          onRequestJoin={(targetCrewId) => {
+            void handleRequestJoin(targetCrewId);
+          }}
+        />
+
         <div className="surface-panel p-6">
           <div className="flex items-center gap-2">
             <Shield className="text-primary h-5 w-5" />

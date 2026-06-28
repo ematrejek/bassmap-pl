@@ -559,33 +559,33 @@ MVP może korzystać z prostych list i limitów podobnych do forum/znajomych. Ni
 
 #### Automated
 
-- [x] 4.1 Test API forum potwierdza, że `crewId` można dodać tylko do własnej ekipy.
-- [x] 4.2 Test API potwierdza, że zwykłe wątki bez `crewId` nadal działają.
-- [x] 4.3 `npm run check` i `npm run lint` przechodzą.
+- [x] 4.1 Test API forum potwierdza, że `crewId` można dodać tylko do własnej ekipy. – 1b0e4ab
+- [x] 4.2 Test API potwierdza, że zwykłe wątki bez `crewId` nadal działają. – 1b0e4ab
+- [x] 4.3 `npm run check` i `npm run lint` przechodzą. – 1b0e4ab
 
 #### Manual
 
-- [x] 4.4 Owner tworzy wątek rekrutacyjny z prefill’em i edytuje treść.
-- [x] 4.5 Wątek pokazuje powiązaną ekipę.
-- [x] 4.6 Kandydat wysyła prośbę z wątku.
-- [x] 4.7 Prośba pojawia się ownerowi na `/team`.
+- [x] 4.4 Owner tworzy wątek rekrutacyjny z prefill’em i edytuje treść. – 1b0e4ab
+- [x] 4.5 Wątek pokazuje powiązaną ekipę. – 1b0e4ab
+- [x] 4.6 Kandydat wysyła prośbę z wątku. – 1b0e4ab
+- [x] 4.7 Prośba pojawia się ownerowi na `/team`. – 1b0e4ab
 
 ### Phase 5: Account Deletion, Legal Sync, And Full Verification
 
 #### Automated
 
-- [ ] 5.1 `npm run verify` przechodzi.
-- [ ] 5.2 `npm run build` przechodzi.
-- [ ] 5.3 `npm run test:e2e` przechodzi po zmianach UI.
-- [ ] 5.4 `npm run verify:full` przechodzi, jeśli środowisko lokalne pozwala.
+- [x] 5.1 `npm run verify` przechodzi.
+- [x] 5.2 `npm run build` przechodzi.
+- [x] 5.3 `npm run test:e2e` przechodzi po zmianach UI. – crew-teams.spec.ts
+- [x] 5.4 `npm run verify:full` przechodzi, jeśli środowisko lokalne pozwala.
 
 #### Manual
 
-- [ ] 5.5 Nowy użytkownik tworzy ekipę.
-- [ ] 5.6 Drugi użytkownik prosi o dołączenie z `/team`.
-- [ ] 5.7 Owner akceptuje i obie strony widzą kontakt bez e-maila.
-- [ ] 5.8 Owner tworzy wątek rekrutacyjny na forum.
-- [ ] 5.9 Drugi użytkownik prosi o dołączenie z forum.
-- [ ] 5.10 Odrzucenie jest ciche i pozwala ponowić prośbę.
-- [ ] 5.11 Usunięcie ekipy przez ownera usuwa ekipę, członków i prośby.
-- [ ] 5.12 Zakładka znajomych na `/team` nadal działa.
+- [x] 5.5 Nowy użytkownik tworzy ekipę.
+- [x] 5.6 Drugi użytkownik prosi o dołączenie z `/team`.
+- [x] 5.7 Owner akceptuje i obie strony widzą kontakt bez e-maila.
+- [x] 5.8 Owner tworzy wątek rekrutacyjny na forum.
+- [x] 5.9 Drugi użytkownik prosi o dołączenie z forum.
+- [x] 5.10 Odrzucenie jest ciche i pozwala ponowić prośbę.
+- [x] 5.11 Usunięcie ekipy przez ownera usuwa ekipę, członków i prośby.
+- [x] 5.12 Zakładka znajomych na `/team` nadal działa.

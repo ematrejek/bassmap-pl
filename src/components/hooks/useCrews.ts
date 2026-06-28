@@ -1,6 +1,6 @@
 import { readApiError } from "@/lib/api/json";
 import type { CreateCrewInput, UpdateCrewInput } from "@/lib/fan/crew-schema";
-import type { Crew, CrewContact, CrewJoinRequest, CrewOverview } from "@/types";
+import type { Crew, CrewContact, CrewJoinRequest, CrewOverview, JoinableCrew } from "@/types";
 import { useCallback, useEffect, useState } from "react";
 
 const EMPTY_OVERVIEW: CrewOverview = {
@@ -25,37 +25,70 @@ export function useCrews() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [pendingAction, setPendingAction] = useState<string | null>(null);
+  const [joinableCrews, setJoinableCrews] = useState<JoinableCrew[]>([]);
+  const [joinableLoading, setJoinableLoading] = useState(false);
 
-  const applyOverview = useCallback(async (data: CrewOverview) => {
-    setOverview(data);
-
-    if (data.ownCrew) {
-      setViewedCrew(null);
+  const loadJoinableCrews = useCallback(async (data: CrewOverview) => {
+    const canBrowse = data.ownCrew === null && data.membership === null;
+    if (!canBrowse) {
+      setJoinableCrews([]);
       return;
     }
 
-    const memberCrewId = data.membership?.crewId;
-    if (!memberCrewId) {
-      setViewedCrew(null);
-      return;
-    }
-
+    setJoinableLoading(true);
     try {
-      const response = await fetch(`/api/fan/crews/${memberCrewId}`, {
+      const response = await fetch("/api/fan/crews/joinable", {
         credentials: "include",
       });
-      const crewData = await parseJson(response);
+      const joinableData = await parseJson(response);
 
       if (!response.ok) {
+        setJoinableCrews([]);
+        return;
+      }
+
+      setJoinableCrews((joinableData as { crews: JoinableCrew[] }).crews);
+    } catch {
+      setJoinableCrews([]);
+    } finally {
+      setJoinableLoading(false);
+    }
+  }, []);
+
+  const applyOverview = useCallback(
+    async (data: CrewOverview) => {
+      setOverview(data);
+      await loadJoinableCrews(data);
+
+      if (data.ownCrew) {
         setViewedCrew(null);
         return;
       }
 
-      setViewedCrew((crewData as { crew: Crew }).crew);
-    } catch {
-      setViewedCrew(null);
-    }
-  }, []);
+      const memberCrewId = data.membership?.crewId;
+      if (!memberCrewId) {
+        setViewedCrew(null);
+        return;
+      }
+
+      try {
+        const response = await fetch(`/api/fan/crews/${memberCrewId}`, {
+          credentials: "include",
+        });
+        const crewData = await parseJson(response);
+
+        if (!response.ok) {
+          setViewedCrew(null);
+          return;
+        }
+
+        setViewedCrew((crewData as { crew: Crew }).crew);
+      } catch {
+        setViewedCrew(null);
+      }
+    },
+    [loadJoinableCrews],
+  );
 
   const loadOverview = useCallback(async () => {
     try {
@@ -316,5 +349,7 @@ export function useCrews() {
     leaveCrew,
     removeMember,
     fetchContact,
+    joinableCrews,
+    joinableLoading,
   };
 }
