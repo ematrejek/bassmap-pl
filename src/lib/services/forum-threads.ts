@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { isCrewForumCategory } from "@/lib/forum/thread-schema";
 import { resolveForumAuthorLabel } from "@/lib/services/forum-authors";
-import type { ForumThread, ForumThreadCategory, ForumThreadRow } from "@/types";
+import type { Crew, CrewRow, ForumThread, ForumThreadCategory, ForumThreadDetail, ForumThreadRow } from "@/types";
 
 type ServiceResult<T> = { data: T } | { error: string };
 
@@ -53,6 +54,50 @@ export async function listForumThreads(
   return { data: rows.map(mapForumThreadRow) };
 }
 
+function mapCrewRow(row: CrewRow): Crew {
+  return {
+    id: row.id,
+    ownerId: row.owner_id,
+    name: row.name,
+    city: row.city,
+    subgenres: row.subgenres,
+    description: row.description,
+    createdAt: row.created_at,
+    updatedAt: row.updated_at,
+  };
+}
+
+async function resolveThreadCrewId(
+  supabase: SupabaseClient,
+  authorId: string,
+  category: ForumThreadCategory,
+  crewId?: string,
+): Promise<ServiceResult<string | null>> {
+  if (!crewId) {
+    return { data: null };
+  }
+
+  if (!isCrewForumCategory(category)) {
+    return { error: "Ekipę można powiązać tylko z działem ekipowym" };
+  }
+
+  const response = await supabase.from("crews").select("id, owner_id").eq("id", crewId).maybeSingle();
+
+  if (response.error) {
+    return { error: response.error.message };
+  }
+
+  if (!response.data) {
+    return { error: "Nie znaleziono ekipy" };
+  }
+
+  if (response.data.owner_id !== authorId) {
+    return { error: "Możesz powiązać wątek tylko ze swoją ekipą" };
+  }
+
+  return { data: crewId };
+}
+
 export async function getForumThreadById(supabase: SupabaseClient, id: string): Promise<ServiceResult<ForumThread>> {
   const response = await supabase.from("forum_threads").select(FORUM_THREAD_SELECT).eq("id", id).maybeSingle();
 
@@ -67,6 +112,42 @@ export async function getForumThreadById(supabase: SupabaseClient, id: string): 
   return { data: mapForumThreadRow(response.data) };
 }
 
+export async function getForumThreadDetailForViewer(
+  supabase: SupabaseClient,
+  id: string,
+  viewerId: string | null,
+): Promise<ServiceResult<ForumThreadDetail>> {
+  const threadResult = await getForumThreadById(supabase, id);
+  if ("error" in threadResult) {
+    return threadResult;
+  }
+
+  if (!threadResult.data.crewId || !viewerId) {
+    return { data: { thread: threadResult.data, crew: null } };
+  }
+
+  const crewResponse = await supabase
+    .from("crews")
+    .select("id, owner_id, name, city, subgenres, description, created_at, updated_at")
+    .eq("id", threadResult.data.crewId)
+    .maybeSingle();
+
+  if (crewResponse.error) {
+    return { error: crewResponse.error.message };
+  }
+
+  if (!crewResponse.data) {
+    return { data: { thread: threadResult.data, crew: null } };
+  }
+
+  return {
+    data: {
+      thread: threadResult.data,
+      crew: mapCrewRow(crewResponse.data),
+    },
+  };
+}
+
 export async function createForumThread(
   supabase: SupabaseClient,
   input: {
@@ -76,8 +157,14 @@ export async function createForumThread(
     title: string;
     body: string;
     city?: string | null;
+    crewId?: string;
   },
 ): Promise<ServiceResult<ForumThread>> {
+  const crewIdResult = await resolveThreadCrewId(supabase, input.authorId, input.category, input.crewId);
+  if ("error" in crewIdResult) {
+    return crewIdResult;
+  }
+
   const authorLabel = await resolveForumAuthorLabel(supabase, input.authorId, input.authorEmail);
 
   const response = await supabase
@@ -90,6 +177,7 @@ export async function createForumThread(
       tags: [],
       author_id: input.authorId,
       author_label: authorLabel,
+      crew_id: crewIdResult.data,
     })
     .select(FORUM_THREAD_SELECT)
     .single();

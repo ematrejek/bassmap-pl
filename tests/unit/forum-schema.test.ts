@@ -120,4 +120,30 @@ describe("parseCreateForumThreadInput", () => {
       expect(result.data.city).toBe("Kraków");
     }
   });
+
+  it("accepts optional crewId for crew forum categories", () => {
+    const result = parseCreateForumThreadInput({
+      ...validInput,
+      crewId: "11111111-1111-1111-1111-111111111111",
+    });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.crewId).toBe("11111111-1111-1111-1111-111111111111");
+    }
+  });
+
+  it("rejects crewId on non-crew categories", () => {
+    const result = parseCreateForumThreadInput({
+      category: "pozostale",
+      title: "Ogłoszenie",
+      body: "Treść wątku.",
+      crewId: "11111111-1111-1111-1111-111111111111",
+    });
+
+    expect(result.success).toBe(false);
+    if (!result.success) {
+      expect(result.error).toBe("Ekipę można powiązać tylko z działem ekipowym");
+    }
+  });
 });

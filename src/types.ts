@@ -286,6 +286,12 @@ export interface ForumThread {
   updatedAt: string;
 }
 
+/** Thread detail with optional linked crew for logged-in viewers. */
+export interface ForumThreadDetail {
+  thread: ForumThread;
+  crew: Crew | null;
+}
+
 export interface ForumCommentRow {
   id: string;
   thread_id: string;

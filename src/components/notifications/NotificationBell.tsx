@@ -24,6 +24,9 @@ function notificationHref(notification: Notification): string | null {
   if (notification.type === "friend_request" || notification.type === "friend_request_accepted") {
     return TEAM_PATH;
   }
+  if (notification.type === "crew_join_request" || notification.type === "crew_join_accepted") {
+    return `${TEAM_PATH}#crew`;
+  }
 
   return null;
 }

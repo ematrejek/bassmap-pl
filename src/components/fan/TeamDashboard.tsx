@@ -1,7 +1,7 @@
 import FriendsDashboard from "@/components/fan/FriendsDashboard";
 import CrewDashboard from "@/components/fan/CrewDashboard";
 import { cn } from "@/lib/utils";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 type TeamTab = "friends" | "crew";
 
@@ -10,8 +10,28 @@ const TABS: { id: TeamTab; label: string }[] = [
   { id: "crew", label: "Moja ekipa" },
 ];
 
+function getInitialTab(): TeamTab {
+  if (typeof window !== "undefined" && window.location.hash === "#crew") {
+    return "crew";
+  }
+  return "friends";
+}
+
 export default function TeamDashboard() {
-  const [activeTab, setActiveTab] = useState<TeamTab>("friends");
+  const [activeTab, setActiveTab] = useState<TeamTab>(getInitialTab);
+
+  useEffect(() => {
+    function handleHashChange() {
+      if (window.location.hash === "#crew") {
+        setActiveTab("crew");
+      }
+    }
+
+    window.addEventListener("hashchange", handleHashChange);
+    return () => {
+      window.removeEventListener("hashchange", handleHashChange);
+    };
+  }, []);
 
   return (
     <div>

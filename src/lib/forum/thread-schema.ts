@@ -3,6 +3,15 @@ import type { ForumThreadCategory } from "@/types";
 
 export type ForumNeonColor = "violet" | "cyan" | "green" | "orange";
 
+export const CREW_FORUM_CATEGORIES = [
+  "szukam_ekipy",
+  "jestesmy_ekipa",
+] as const satisfies readonly ForumThreadCategory[];
+
+export function isCrewForumCategory(category: ForumThreadCategory): boolean {
+  return (CREW_FORUM_CATEGORIES as readonly string[]).includes(category);
+}
+
 export const FORUM_THREAD_CATEGORIES = [
   "szukam_ekipy",
   "jestesmy_ekipa",
@@ -75,12 +84,30 @@ const forumThreadCitySchema = z
   .nullable()
   .optional();
 
-export const createForumThreadSchema = z.object({
-  category: forumThreadCategorySchema,
-  title: forumThreadTitleSchema,
-  body: forumThreadBodySchema,
-  city: forumThreadCitySchema,
-});
+const forumThreadCrewIdSchema = z
+  .string()
+  .uuid("Nieprawidłowy identyfikator ekipy")
+  .optional()
+  .nullable()
+  .transform((value) => value ?? undefined);
+
+export const createForumThreadSchema = z
+  .object({
+    category: forumThreadCategorySchema,
+    title: forumThreadTitleSchema,
+    body: forumThreadBodySchema,
+    city: forumThreadCitySchema,
+    crewId: forumThreadCrewIdSchema,
+  })
+  .superRefine((data, ctx) => {
+    if (data.crewId && !isCrewForumCategory(data.category)) {
+      ctx.addIssue({
+        code: z.ZodIssueCode.custom,
+        message: "Ekipę można powiązać tylko z działem ekipowym",
+        path: ["crewId"],
+      });
+    }
+  });
 
 export type CreateForumThreadInput = z.infer<typeof createForumThreadSchema>;
 

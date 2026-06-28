@@ -27,9 +27,12 @@ const mockThread = {
   tags: [] as string[],
   authorId: mockUser.id,
   authorLabel: "fan",
+  crewId: null,
   createdAt: "2026-06-24T10:00:00.000Z",
   updatedAt: "2026-06-24T10:00:00.000Z",
 };
+
+const crewId = "44444444-4444-4444-4444-444444444444";
 
 const mockComment = {
   id: commentId,
@@ -144,6 +147,75 @@ describe("POST /api/forum/threads", () => {
 
     expect(response.status).toBe(201);
     expect(mockCreateForumThread).toHaveBeenCalled();
+  });
+
+  it("creates a crew-linked thread when crewId belongs to the author", async () => {
+    const response = await POSTThread(
+      mockContext(
+        { user: mockUser },
+        {
+          method: "POST",
+          body: {
+            category: "szukam_ekipy",
+            title: "Szukam ludzi",
+            body: "Szukam ludzi do ekipy.",
+            crewId,
+          },
+        },
+      ),
+    );
+
+    expect(response.status).toBe(201);
+    expect(mockCreateForumThread).toHaveBeenCalledWith(
+      expect.anything(),
+      expect.objectContaining({
+        authorId: mockUser.id,
+        crewId,
+      }),
+    );
+  });
+
+  it("rejects crewId on a non-crew forum category", async () => {
+    mockCreateForumThread.mockClear();
+
+    const response = await POSTThread(
+      mockContext(
+        { user: mockUser },
+        {
+          method: "POST",
+          body: {
+            category: "pozostale",
+            title: "Ogłoszenie",
+            body: "Treść.",
+            crewId,
+          },
+        },
+      ),
+    );
+
+    expect(response.status).toBe(400);
+    expect(mockCreateForumThread).not.toHaveBeenCalled();
+  });
+
+  it("returns 400 when createForumThread rejects foreign crew ownership", async () => {
+    mockCreateForumThread.mockResolvedValueOnce({ error: "Możesz powiązać wątek tylko ze swoją ekipą" });
+
+    const response = await POSTThread(
+      mockContext(
+        { user: mockUser },
+        {
+          method: "POST",
+          body: {
+            category: "szukam_ekipy",
+            title: "Szukam ludzi",
+            body: "Treść.",
+            crewId,
+          },
+        },
+      ),
+    );
+
+    expect(response.status).toBe(400);
   });
 });
 

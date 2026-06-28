@@ -1,14 +1,15 @@
-import { useState, type SubmitEvent } from "react";
+import { useEffect, useState, type SubmitEvent } from "react";
 import { ServerError } from "@/components/auth/ServerError";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { readApiError } from "@/lib/api/json";
-import { FORUM_SECTIONS } from "@/lib/forum/thread-schema";
+import { FORUM_SECTIONS, isCrewForumCategory } from "@/lib/forum/thread-schema";
+import { TEAM_PATH } from "@/lib/routes";
 import { shellBtnOutline, shellBtnPrimary } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
-import type { ForumThread, ForumThreadCategory } from "@/types";
+import type { Crew, CrewOverview, ForumThread, ForumThreadCategory } from "@/types";
 
 const fieldClass =
   "border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/70 focus-visible:ring-ring/30";
@@ -24,8 +25,54 @@ export function ForumCreateThreadForm({ defaultCategory, onClose, onCreated }: P
   const [title, setTitle] = useState("");
   const [body, setBody] = useState("");
   const [city, setCity] = useState("");
+  const [ownCrew, setOwnCrew] = useState<Crew | null>(null);
+  const [selectedCrewId, setSelectedCrewId] = useState<string | null>(null);
+  const [crewLoading, setCrewLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    async function loadOwnCrew() {
+      try {
+        const response = await fetch("/api/fan/crews", {
+          credentials: "include",
+        });
+        const data: unknown = await response.json();
+
+        if (!isMounted) {
+          return;
+        }
+
+        if (!response.ok) {
+          return;
+        }
+
+        const overview = data as CrewOverview;
+        const crew = overview.ownCrew;
+        setOwnCrew(crew);
+        if (crew) {
+          setSelectedCrewId(crew.id);
+        }
+      } catch {
+        // Brak ekipy – formularz pokaże link do /team
+      } finally {
+        if (isMounted) {
+          setCrewLoading(false);
+        }
+      }
+    }
+
+    void loadOwnCrew();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const isCrewCategory = isCrewForumCategory(category);
+  const canSubmitCrewThread = !isCrewCategory || ownCrew !== null;
 
   async function handleSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -33,15 +80,21 @@ export function ForumCreateThreadForm({ defaultCategory, onClose, onCreated }: P
     setSubmitting(true);
 
     try {
+      const payload: Record<string, unknown> = {
+        category,
+        title,
+        body,
+        city: city.trim().length > 0 ? city : null,
+      };
+
+      if (isCrewCategory && selectedCrewId) {
+        payload.crewId = selectedCrewId;
+      }
+
       const response = await fetch("/api/forum/threads", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          category,
-          title,
-          body,
-          city: city.trim().length > 0 ? city : null,
-        }),
+        body: JSON.stringify(payload),
       });
 
       const data: unknown = await response.json();
@@ -104,6 +157,42 @@ export function ForumCreateThreadForm({ defaultCategory, onClose, onCreated }: P
             </select>
           </div>
 
+          {isCrewCategory ? (
+            <div className="space-y-2">
+              <Label htmlFor="forum-thread-crew" className="text-foreground/90">
+                Ekipa
+              </Label>
+              {crewLoading ? (
+                <p className="text-muted-foreground text-sm">Ładowanie ekipy…</p>
+              ) : ownCrew ? (
+                <select
+                  id="forum-thread-crew"
+                  value={selectedCrewId ?? ""}
+                  onChange={(e) => {
+                    setSelectedCrewId(e.target.value.length > 0 ? e.target.value : null);
+                  }}
+                  disabled={submitting}
+                  className={cn(
+                    "border-input h-9 w-full rounded-md border bg-transparent px-3 text-sm outline-none",
+                    fieldClass,
+                  )}
+                >
+                  <option value={ownCrew.id} className="bg-card text-foreground">
+                    {ownCrew.name}
+                  </option>
+                </select>
+              ) : (
+                <p className="text-muted-foreground text-sm">
+                  Najpierw utwórz ekipę na stronie{" "}
+                  <a href={TEAM_PATH} className="text-primary hover:underline">
+                    Moja ekipa
+                  </a>
+                  .
+                </p>
+              )}
+            </div>
+          ) : null}
+
           <div className="space-y-2">
             <Label htmlFor="forum-thread-title" className="text-foreground/90">
               Tytuł
@@ -117,7 +206,7 @@ export function ForumCreateThreadForm({ defaultCategory, onClose, onCreated }: P
               maxLength={120}
               disabled={submitting}
               className={fieldClass}
-              placeholder="Krótki, konkretny tytuł"
+              placeholder="Tytuł"
             />
           </div>
 
@@ -152,7 +241,7 @@ export function ForumCreateThreadForm({ defaultCategory, onClose, onCreated }: P
               maxLength={80}
               disabled={submitting}
               className={fieldClass}
-              placeholder="np. Wrocław"
+              placeholder="Miasto"
             />
           </div>
 
@@ -165,7 +254,7 @@ export function ForumCreateThreadForm({ defaultCategory, onClose, onCreated }: P
             <Button
               type="submit"
               className={shellBtnPrimary}
-              disabled={submitting || title.trim().length === 0 || body.trim().length === 0}
+              disabled={submitting || title.trim().length === 0 || body.trim().length === 0 || !canSubmitCrewThread}
             >
               {submitting ? "Tworzenie…" : "Załóż wątek"}
             </Button>

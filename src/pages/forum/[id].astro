@@ -8,8 +8,9 @@ import { getForumSectionMeta } from "@/lib/forum/thread-schema";
 import { FORUM_PATH } from "@/lib/routes";
 import { shellBtnPrimary, shellLink } from "@/lib/shell-styles";
 import { listForumComments } from "@/lib/services/forum-comments";
-import { getForumThreadById } from "@/lib/services/forum-threads";
+import { getForumThreadDetailForViewer } from "@/lib/services/forum-threads";
 import { createClient } from "@/lib/supabase";
+import { ThreadCrewJoinPanel } from "@/components/forum/ThreadCrewJoinPanel";
 
 export const prerender = false;
 
@@ -21,8 +22,11 @@ const isLoggedIn = Boolean(user);
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 
 const isValidId = typeof id === "string" && UUID_PATTERN.test(id);
-const threadResult = supabase && isValidId ? await getForumThreadById(supabase, id) : null;
-const thread = threadResult && "data" in threadResult ? threadResult.data : null;
+const threadDetailResult =
+  supabase && isValidId ? await getForumThreadDetailForViewer(supabase, id, user?.id ?? null) : null;
+const threadDetail = threadDetailResult && "data" in threadDetailResult ? threadDetailResult.data : null;
+const thread = threadDetail?.thread ?? null;
+const linkedCrew = threadDetail?.crew ?? null;
 
 if (!thread) {
   Astro.response.status = 404;
@@ -75,6 +79,10 @@ const threadPath = thread ? `${FORUM_PATH}/${thread.id}` : FORUM_PATH;
             <div class="surface-panel-flat p-5">
               <p class="text-foreground text-sm leading-relaxed whitespace-pre-wrap">{thread.body}</p>
             </div>
+
+            {thread.crewId && isLoggedIn ? (
+              <ThreadCrewJoinPanel client:only="react" crewId={thread.crewId} initialCrew={linkedCrew} />
+            ) : null}
 
             <ForumCommentsSection
               client:load

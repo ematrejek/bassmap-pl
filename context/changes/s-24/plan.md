@@ -543,32 +543,32 @@ MVP może korzystać z prostych list i limitów podobnych do forum/znajomych. Ni
 
 #### Automated
 
-- [x] 3.1 `npm run check` przechodzi dla nowych komponentów i hooka.
-- [x] 3.2 `npm run lint` przechodzi bez błędów React hooks.
-- [x] 3.3 Test jednostkowy hooka lub API mocków pokrywa podstawowe mutacje UI, jeśli istniejący setup Vitest to wspiera bez dużego narzutu.
+- [x] 3.1 `npm run check` przechodzi dla nowych komponentów i hooka. – 24fd80f
+- [x] 3.2 `npm run lint` przechodzi bez błędów React hooks. – 24fd80f
+- [x] 3.3 Test jednostkowy hooka lub API mocków pokrywa podstawowe mutacje UI, jeśli istniejący setup Vitest to wspiera bez dużego narzutu. – 24fd80f
 
 #### Manual
 
-- [x] 3.4 `/team` pokazuje zakładki „Znajomi” i „Moja ekipa”.
-- [x] 3.5 Zakładka „Znajomi” działa jak przed S-24.
-- [x] 3.6 Fan tworzy ekipę, edytuje ją, widzi własną rolę ownera i usuwa ekipę.
-- [x] 3.7 Owner akceptuje prośbę i widzi nowego członka.
-- [x] 3.8 Członek może opuścić ekipę.
+- [x] 3.4 `/team` pokazuje zakładki „Znajomi” i „Moja ekipa”. – 24fd80f
+- [x] 3.5 Zakładka „Znajomi” działa jak przed S-24. – 24fd80f
+- [x] 3.6 Fan tworzy ekipę, edytuje ją, widzi własną rolę ownera i usuwa ekipę. – 24fd80f
+- [x] 3.7 Owner akceptuje prośbę i widzi nowego członka. – 24fd80f
+- [x] 3.8 Członek może opuścić ekipę. – 24fd80f
 
 ### Phase 4: Forum Recruitment Integration
 
 #### Automated
 
-- [ ] 4.1 Test API forum potwierdza, że `crewId` można dodać tylko do własnej ekipy.
-- [ ] 4.2 Test API potwierdza, że zwykłe wątki bez `crewId` nadal działają.
-- [ ] 4.3 `npm run check` i `npm run lint` przechodzą.
+- [x] 4.1 Test API forum potwierdza, że `crewId` można dodać tylko do własnej ekipy.
+- [x] 4.2 Test API potwierdza, że zwykłe wątki bez `crewId` nadal działają.
+- [x] 4.3 `npm run check` i `npm run lint` przechodzą.
 
 #### Manual
 
-- [ ] 4.4 Owner tworzy wątek rekrutacyjny z prefill’em i edytuje treść.
-- [ ] 4.5 Wątek pokazuje powiązaną ekipę.
-- [ ] 4.6 Kandydat wysyła prośbę z wątku.
-- [ ] 4.7 Prośba pojawia się ownerowi na `/team`.
+- [x] 4.4 Owner tworzy wątek rekrutacyjny z prefill’em i edytuje treść.
+- [x] 4.5 Wątek pokazuje powiązaną ekipę.
+- [x] 4.6 Kandydat wysyła prośbę z wątku.
+- [x] 4.7 Prośba pojawia się ownerowi na `/team`.
 
 ### Phase 5: Account Deletion, Legal Sync, And Full Verification
 
