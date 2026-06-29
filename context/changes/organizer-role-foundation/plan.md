@@ -70,13 +70,13 @@ flowchart TD
 
 **Statusy wniosku** (`organizer_application_status` enum):
 
-| Status | Znaczenie |
-| ------ | --------- |
-| `pending` | Wniosek złożony; admin może wygenerować kod |
-| `code_issued` | Kod wygenerowany (hash w DB); użytkownik musi go wpisać |
-| `code_verified` | Kod poprawny; czeka na finalną decyzję admina |
-| `approved` | Rola przyznana (terminalny) |
-| `rejected` | Odrzucony; opcjonalny `decision_reason` (terminalny) |
+| Status          | Znaczenie                                               |
+| --------------- | ------------------------------------------------------- |
+| `pending`       | Wniosek złożony; admin może wygenerować kod             |
+| `code_issued`   | Kod wygenerowany (hash w DB); użytkownik musi go wpisać |
+| `code_verified` | Kod poprawny; czeka na finalną decyzję admina           |
+| `approved`      | Rola przyznana (terminalny)                             |
+| `rejected`      | Odrzucony; opcjonalny `decision_reason` (terminalny)    |
 
 **Kod weryfikacyjny:** 6–8 znaków alfanumerycznych (bez mylących znaków); generowany w RPC admina; w DB tylko `verification_code_hash` (np. `crypt()` / `digest` + salt w wierszu). API nigdy nie zwraca kodu po wygenerowaniu – admin widzi go **jednorazowo** w odpowiedzi RPC/UI przy generowaniu. Ponowne generowanie unieważnia poprzedni hash.
 
@@ -433,8 +433,8 @@ Aktualizacja dokumentów prawnych, testy RLS, zamknięcie slice'a.
 
 #### Automated
 
-- [ ] 4.1 `tests/integration/organizer-applications-rls.test.ts` przechodzi (z Supabase)
-- [ ] 4.2 `npm run verify` przechodzi
+- [x] 4.1 `tests/integration/organizer-applications-rls.test.ts` przechodzi (z Supabase) – 446fbde
+- [x] 4.2 `npm run verify` przechodzi
 
 #### Manual
 

@@ -28,7 +28,14 @@ interface Props {
   actionSlot?: ReactNode;
 }
 
-export default function ProfileView({ profile, showEmail = false, email, isOrganizer = false, onEdit, actionSlot }: Props) {
+export default function ProfileView({
+  profile,
+  showEmail = false,
+  email,
+  isOrganizer = false,
+  onEdit,
+  actionSlot,
+}: Props) {
   const activeFavoriteSubgenres = filterActiveSubgenres(profile.favoriteSubgenres);
   const filledSocials = SOCIAL_PLATFORMS.filter((platform) => {
     const value = getProfileSocialValue(profile, platform);

@@ -264,6 +264,29 @@ export const prerender = false;
     akceptacji. Podstawa prawna: art. 6 ust. 1 pkt b RODO (świadczenie usługi – funkcje konta użytkownika).
   </p>
 
+  <h3>2.13 Wniosek o status organizatora i weryfikacja</h3>
+  <p>
+    Zalogowany użytkownik może złożyć <strong>wniosek o status organizatora</strong>, aby w przyszłości publikować
+    wydarzenia w Serwisie. W tym celu przetwarzamy: identyfikator konta wnioskodawcy, nazwę organizatora, wybraną
+    platformę społecznościową (Facebook albo Instagram), adres (link) do oficjalnego profilu organizatora na tej
+    platformie, opcjonalny opis działalności (do 1000 znaków), status wniosku, daty zdarzeń (złożenie, wygenerowanie i
+    weryfikacja kodu, decyzja), identyfikator Administratora podejmującego decyzję oraz opcjonalny powód odrzucenia.
+  </p>
+  <p>
+    Weryfikacja polega na tym, że Administrator generuje jednorazowy <strong>kod weryfikacyjny</strong> i wysyła go ręcznie
+    z oficjalnych kont BassMap PL na wskazany przez wnioskodawcę profil społecznościowy. Wnioskodawca wpisuje kod w Serwisie,
+    aby potwierdzić, że ma dostęp do tego profilu (zabezpieczenie przed podszywaniem się). W bazie danych przechowujemy wyłącznie
+    <strong>skrót (hash) kodu</strong>, a nie sam kod; kod nie jest udostępniany przez Serwis po jego wygenerowaniu.
+    Status wniosku oraz ewentualny powód odrzucenia są widoczne wyłącznie dla wnioskodawcy na jego koncie oraz dla
+    Administratora.
+  </p>
+  <p>
+    Po pozytywnej weryfikacji i akceptacji wniosku konto otrzymuje dodatkową rolę organizatora (oznaczenie roli
+    powiązane z identyfikatorem konta). Złożenie wniosku jest dobrowolne. Podstawa prawna: art. 6 ust. 1 pkt b RODO
+    (świadczenie usługi – obsługa konta i wniosku użytkownika) oraz art. 6 ust. 1 pkt f RODO (uzasadniony interes –
+    weryfikacja tożsamości organizatora i bezpieczeństwo Serwisu).
+  </p>
+
   <h2>3. Podmioty przetwarzające dane</h2>
   <p>
     W celu świadczenia usługi korzystam z zewnętrznych dostawców technologicznych (tzw. podmiotów przetwarzających),
@@ -337,6 +360,10 @@ export const prerender = false;
     funkcji „Moja ekipa”: ekipa do czasu usunięcia jej przez właściciela albo usunięcia konta właściciela, członkostwo do
     czasu opuszczenia ekipy, usunięcia członka albo usunięcia konta, a prośba do czasu akceptacji, odrzucenia lub usunięcia
     konta.
+    <strong>Wnioski o status organizatora</strong> (wraz ze skrótem kodu weryfikacyjnego) przechowywane są do czasu rozpatrzenia,
+    a po decyzji – przez okres niezbędny do dokumentacji weryfikacji i obrony przed roszczeniami, nie dłużej niż przedawnienie
+    roszczeń cywilnych, o ile dalsze przechowywanie nie wynika z obowiązku prawnego; po usunięciu konta wniosek i rola organizatora
+    są usuwane z bazy danych.
   </p>
   <p>
     Po usunięciu konta na Twoje żądanie lub przez Administratora dane osobowe konta (e-mail, hasło) są usuwane z systemu

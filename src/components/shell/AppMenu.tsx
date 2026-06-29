@@ -111,7 +111,10 @@ export default function AppMenu({ userEmail, isAdmin, isOrganizer }: Props) {
             <div className="space-y-2">
               {isOrganizer ? (
                 <SheetClose asChild>
-                  <a href={PROFILE_ORGANIZER_PATH} className="text-muted-foreground block truncate px-3 text-xs hover:underline">
+                  <a
+                    href={PROFILE_ORGANIZER_PATH}
+                    className="text-muted-foreground block truncate px-3 text-xs hover:underline"
+                  >
                     {userEmail} – Profil organizatora
                   </a>
                 </SheetClose>
