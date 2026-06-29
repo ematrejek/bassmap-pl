@@ -3,7 +3,7 @@ project: BassMap PL
 version: 3
 status: active
 created: 2026-06-10
-updated: 2026-06-28
+updated: 2026-06-29
 subgenre_catalog_version: 2
 prd_version: 2
 main_goal: market-feedback
@@ -65,7 +65,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-25 | organizer-self-service    | zweryfikowany organizator publikuje eventy bez moderacji; ogłoszenia na forum                 | F-05, S-22    | notes 2026-06-22                 | proposed    |
 | S-26 | analytics-consent         | GA4 + baner zgody cookies + aktualizacja dokumentów prawnych                                | S-19          | NFR Privacy, notes 2026-06-22    | proposed    |
 | S-27 | mobile-app                | PWA lub aplikacja mobilna (Android/iOS) – po stabilnym web i pomiarze ruchu                 | S-26          | notes 2026-06-22                 | proposed    |
-| S-29 | subgenre-catalog-v2       | fan/admin wybiera 13 podgatunków z uproszczonego katalogu; legacy tagi ukryte w UI           | S-02          | FR-003, notes 2026-06-28         | implementing |
+| S-29 | subgenre-catalog-v2       | fan/admin wybiera 13 podgatunków z uproszczonego katalogu; legacy tagi ukryte w UI           | S-02          | FR-003, notes 2026-06-28         | done        |
 
 ## Streams
 
@@ -786,6 +786,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ## Done
 
+- **S-29: fan/admin wybiera 13 podgatunków z uproszczonego katalogu; legacy tagi ukryte w UI** – Archived 2026-06-29 → `context/archive/2026-06-28-subgenre-catalog-v2/`. Lesson: –.
 - **F-01: (foundation) tabela wydarzeń z migracjami, politykami RLS i regułami biznesowymi.** \u2013 Archived 2026-06-11 → `context/archive/2026-06-10-event-data-foundation/`. Lesson: \u2013.
 - **F-02: (foundation) tylko użytkownicy z rolą admina mogą dodawać, edytować i usuwać wydarzenia.** \u2013 Archived 2026-06-10 → `context/archive/2026-06-10-admin-role-guard/`. Lesson: allowlist e-mail musi dokładnie pasować do konta Auth.
 - **S-01: admin dodaje, edytuje i usuwa wydarzenia DnB.** \u2013 Archived 2026-06-11 → `context/archive/2026-06-10-admin-event-management/`. Lesson: \u2013.

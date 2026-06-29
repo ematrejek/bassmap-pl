@@ -2,10 +2,10 @@
 change_id: subgenre-catalog-v2
 title: Katalog podgatunków v2 (13 pozycji, bez migracji danych)
 roadmap_ref: S-29
-status: implementing
+status: archived
 created: 2026-06-28
-updated: 2026-06-28
-archived_at: null
+updated: 2026-06-29
+archived_at: 2026-06-29T18:47:06Z
 ---
 
 # Change: subgenre-catalog-v2
