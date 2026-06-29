@@ -1,5 +1,6 @@
 import { defineMiddleware } from "astro:middleware";
 import { resolveIsAdmin } from "@/lib/auth/admin";
+import { resolveIsOrganizer } from "@/lib/auth/organizer";
 import { LEGACY_LEGAL_REDIRECTS } from "@/lib/legal/paths";
 import { DISCOVERY_PATH, FORUM_PATH, HOME_PATH, MY_EVENTS_PATH, PROFILE_PATH, TEAM_PATH } from "@/lib/routes";
 import { createClient } from "@/lib/supabase";
@@ -19,9 +20,11 @@ export const onRequest = defineMiddleware(async (context, next) => {
     } = await supabase.auth.getUser();
     context.locals.user = user ?? null;
     context.locals.isAdmin = await resolveIsAdmin(supabase, user ?? null);
+    context.locals.isOrganizer = await resolveIsOrganizer(supabase, user ?? null);
   } else {
     context.locals.user = null;
     context.locals.isAdmin = false;
+    context.locals.isOrganizer = false;
   }
 
   const { pathname } = context.url;

@@ -27,3 +27,16 @@ export function requireAdmin(locals: APIContext["locals"]): Response | null {
 
   return null;
 }
+
+export function requireOrganizer(locals: APIContext["locals"]): Response | null {
+  const authError = requireAuth(locals);
+  if (authError) {
+    return authError;
+  }
+
+  if (!locals.isOrganizer) {
+    return jsonError("Brak uprawnień organizatora", 403);
+  }
+
+  return null;
+}
