@@ -7,6 +7,7 @@ export const REPORT_ISSUE_PATH = "/report-issue";
 export const SIGN_IN_PATH = "/auth/signin";
 export const SIGN_UP_PATH = "/auth/signup";
 export const PROFILE_PATH = "/profile";
+export const PROFILE_ORGANIZER_PATH = `${PROFILE_PATH}#organizer`;
 export const FAN_PUBLIC_PROFILE_PREFIX = "/u";
 
 /** Public fan profile URL – login without leading @ (e.g. `/u/siemema`). */

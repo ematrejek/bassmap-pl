@@ -17,6 +17,7 @@ import {
   FORUM_PATH,
   MY_EVENTS_NEW_PATH,
   MY_EVENTS_PATH,
+  PROFILE_ORGANIZER_PATH,
   PROFILE_PATH,
   REPORT_ISSUE_PATH,
   SIGN_IN_PATH,
@@ -36,9 +37,10 @@ interface MenuLink {
 interface Props {
   userEmail: string | null;
   isAdmin: boolean;
+  isOrganizer: boolean;
 }
 
-export default function AppMenu({ userEmail, isAdmin }: Props) {
+export default function AppMenu({ userEmail, isAdmin, isOrganizer }: Props) {
   const isLoggedIn = userEmail !== null;
 
   const navLinks: MenuLink[] = [
@@ -107,7 +109,15 @@ export default function AppMenu({ userEmail, isAdmin }: Props) {
         <div className="border-border mt-2 border-t pt-4">
           {isLoggedIn ? (
             <div className="space-y-2">
-              <p className="text-muted-foreground truncate px-3 text-xs">{userEmail}</p>
+              {isOrganizer ? (
+                <SheetClose asChild>
+                  <a href={PROFILE_ORGANIZER_PATH} className="text-muted-foreground block truncate px-3 text-xs hover:underline">
+                    {userEmail} – Profil organizatora
+                  </a>
+                </SheetClose>
+              ) : (
+                <p className="text-muted-foreground truncate px-3 text-xs">{userEmail}</p>
+              )}
               {!isAdmin ? (
                 <>
                   <div className="border-border my-2 border-t" aria-hidden />

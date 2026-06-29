@@ -23,11 +23,12 @@ interface Props {
   profile: PublicFanProfile;
   showEmail?: boolean;
   email?: string;
+  isOrganizer?: boolean;
   onEdit?: () => void;
   actionSlot?: ReactNode;
 }
 
-export default function ProfileView({ profile, showEmail = false, email, onEdit, actionSlot }: Props) {
+export default function ProfileView({ profile, showEmail = false, email, isOrganizer = false, onEdit, actionSlot }: Props) {
   const activeFavoriteSubgenres = filterActiveSubgenres(profile.favoriteSubgenres);
   const filledSocials = SOCIAL_PLATFORMS.filter((platform) => {
     const value = getProfileSocialValue(profile, platform);
@@ -49,6 +50,11 @@ export default function ProfileView({ profile, showEmail = false, email, onEdit,
           <h3 className="font-heading text-foreground mt-4 text-2xl font-bold tracking-tight uppercase">
             @{profile.login}
           </h3>
+          {isOrganizer ? (
+            <GenreBadge color="green" className="mt-3">
+              Organizator
+            </GenreBadge>
+          ) : null}
           {profile.city ? (
             <p className="text-muted-foreground mt-1 flex items-center gap-1.5 text-sm">
               <MapPin className="text-accent h-4 w-4" />

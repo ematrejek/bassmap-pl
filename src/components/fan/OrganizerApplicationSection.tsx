@@ -135,7 +135,7 @@ export default function OrganizerApplicationSection({ initialApplication, initia
   const canResubmit = application?.status === "rejected" && !isOrganizer;
 
   return (
-    <section className="border-border relative border-t py-16 md:py-24">
+    <section id="organizer" className="border-border relative border-t py-16 md:py-24">
       <div className="mx-auto max-w-6xl px-4">
         <div className="flex items-center gap-3">
           <Equalizer bars={4} className="text-primary h-4" />
@@ -205,9 +205,6 @@ export default function OrganizerApplicationSection({ initialApplication, initia
                 required
                 maxLength={500}
               />
-              <p className={cn("mt-1.5 text-xs", shellTextMuted)}>
-                Możesz podać skrócony adres, np. instagram.com/bassmap.pl – system uzupełni https:// automatycznie.
-              </p>
             </div>
 
             <div>

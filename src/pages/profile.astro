@@ -84,6 +84,7 @@ const goingEvents: EventWithCoverUrl[] = supabaseUrl
           email={email}
           userId={user.id}
           initialProfile={profile}
+          initialIsOrganizer={isOrganizer}
           goingEvents={goingEvents}
           client:only="react"
         />

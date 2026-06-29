@@ -91,10 +91,17 @@ interface Props {
   email: string;
   userId: string;
   initialProfile: FanProfile | null;
+  initialIsOrganizer?: boolean;
   goingEvents?: Event[];
 }
 
-export default function ProfileSection({ email, userId, initialProfile, goingEvents = [] }: Props) {
+export default function ProfileSection({
+  email,
+  userId,
+  initialProfile,
+  initialIsOrganizer = false,
+  goingEvents = [],
+}: Props) {
   const [profile, setProfile] = useState<FanProfile | null>(initialProfile);
   const [editing, setEditing] = useState(!initialProfile);
   const [isSaving, setIsSaving] = useState(false);
@@ -178,6 +185,7 @@ export default function ProfileSection({ email, userId, initialProfile, goingEve
             profile={profile}
             showEmail
             email={email}
+            isOrganizer={initialIsOrganizer}
             onEdit={() => {
               setEditing(true);
             }}

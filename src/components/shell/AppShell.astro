@@ -11,7 +11,7 @@ interface Props {
 }
 
 const { showFooter = true, immersive = false } = Astro.props;
-const { user, isAdmin } = Astro.locals;
+const { user, isAdmin, isOrganizer } = Astro.locals;
 const userEmail = user?.email ?? null;
 ---
 
@@ -40,7 +40,7 @@ const userEmail = user?.email ?? null;
             </NotificationBell>
           ) : null
         }
-        <AppMenu userEmail={userEmail} isAdmin={isAdmin} client:only="react">
+        <AppMenu userEmail={userEmail} isAdmin={isAdmin} isOrganizer={isOrganizer} client:only="react">
           <button
             slot="fallback"
             type="button"
