@@ -1,10 +1,10 @@
 ---
 change_id: s-24
 title: Moja ekipa (pełna funkcja)
-status: implementing
+status: archived
 created: 2026-06-25
 updated: 2026-06-29
-archived_at: null
+archived_at: 2026-06-29T18:47:05Z
 ---
 
 ## Notes
