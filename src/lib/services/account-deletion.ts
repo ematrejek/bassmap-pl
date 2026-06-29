@@ -4,6 +4,7 @@ import { DELETED_USER_AUTHOR_LABEL } from "@/lib/auth/display-name";
 export type DeleteAccountResult = { success: true } | { error: string };
 
 type AnonymizeTable = "event_comments" | "forum_threads" | "forum_comments";
+type DeleteTable = "crews" | "crew_members" | "crew_join_requests";
 
 async function anonymizeAuthorContentOnTable(
   serviceClient: SupabaseClient,
@@ -48,6 +49,39 @@ export async function anonymizeUserForumContent(
   return anonymizeAuthorContentOnTable(serviceClient, "forum_comments", userId);
 }
 
+async function deleteRowsByColumn(
+  serviceClient: SupabaseClient,
+  table: DeleteTable,
+  column: string,
+  userId: string,
+): Promise<{ error?: string }> {
+  const response = await serviceClient.from(table).delete().eq(column, userId);
+
+  if (response.error) {
+    console.error(`[account-deletion] delete ${table} failed`, {
+      userId,
+      message: response.error.message,
+    });
+    return { error: response.error.message };
+  }
+
+  return {};
+}
+
+export async function cleanupUserCrewData(serviceClient: SupabaseClient, userId: string): Promise<{ error?: string }> {
+  const ownedCrewsResult = await deleteRowsByColumn(serviceClient, "crews", "owner_id", userId);
+  if (ownedCrewsResult.error) {
+    return ownedCrewsResult;
+  }
+
+  const membershipsResult = await deleteRowsByColumn(serviceClient, "crew_members", "user_id", userId);
+  if (membershipsResult.error) {
+    return membershipsResult;
+  }
+
+  return deleteRowsByColumn(serviceClient, "crew_join_requests", "requester_id", userId);
+}
+
 export async function deleteUserAccount(serviceClient: SupabaseClient, userId: string): Promise<DeleteAccountResult> {
   const eventCommentsResult = await anonymizeUserComments(serviceClient, userId);
   if (eventCommentsResult.error) {
@@ -57,6 +91,11 @@ export async function deleteUserAccount(serviceClient: SupabaseClient, userId: s
   const forumResult = await anonymizeUserForumContent(serviceClient, userId);
   if (forumResult.error) {
     return { error: forumResult.error };
+  }
+
+  const crewResult = await cleanupUserCrewData(serviceClient, userId);
+  if (crewResult.error) {
+    return { error: crewResult.error };
   }
 
   const deleteResult = await serviceClient.auth.admin.deleteUser(userId);

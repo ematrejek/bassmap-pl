@@ -12,6 +12,7 @@ import { ForumCreateThreadForm } from "./ForumCreateThreadForm";
 import { ThreadCard } from "./ThreadCard";
 
 const INITIAL_VISIBLE_PER_SECTION = 6;
+const DEFAULT_CREATE_CATEGORY: ForumThreadCategory = "pozostale";
 
 function sectionAnchorId(category: ForumThreadCategory): string {
   return `dzial-${category.replace(/_/g, "-")}`;
@@ -113,7 +114,7 @@ export default function ForumView({ initialThreads, replyCounts, isLoggedIn, isA
                 size="lg"
                 className={cn(shellBtnPrimary, "shrink-0")}
                 onClick={() => {
-                  setCreateCategory(FORUM_SECTIONS[0].category);
+                  setCreateCategory(DEFAULT_CREATE_CATEGORY);
                 }}
               >
                 Załóż wątek
