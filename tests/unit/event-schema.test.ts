@@ -14,6 +14,17 @@ describe("parseEventCreate", () => {
     expect(result.success).toBe(false);
   });
 
+  it("rejects legacy subgenre slugs", () => {
+    const payload = {
+      ...buildMutationCreatePayload(),
+      subgenres: ["halftime"],
+    };
+
+    const result = parseEventCreate(payload);
+
+    expect(result.success).toBe(false);
+  });
+
   it("rejects empty subgenres array (2b)", () => {
     const payload = {
       ...buildMutationCreatePayload(),

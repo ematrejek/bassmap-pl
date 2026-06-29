@@ -60,7 +60,7 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
   > Socrates: No counter-argument; it stands as written.
 
-- FR-003: Fan can filter events by subgenre from the fixed catalog (25 values \u2013 see Business Logic). An event may match multiple subgenre filters when tagged accordingly. Priority: must-have
+- FR-003: Fan can filter events by subgenre from the fixed catalog (13 active values – see Business Logic). An event may match multiple subgenre filters when tagged accordingly. Priority: must-have
 
   > Socrates: Counter-argument considered: "four broad buckets are enough for MVP." Resolution: expanded to 25 scene-accurate subgenres (closed enum); filter UI may group or search, but stored values are only from the catalog.
 
@@ -86,7 +86,7 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
 - FR-011: On mobile viewports, the subgenre filter uses a compact multi-select dropdown instead of a long scrolling checkbox list; desktop may keep the checkbox grid. Priority: must-have (Partia I)
 
-  > Socrates: Counter-argument considered: "one responsive checkbox list is enough." Resolution: kept \u2013 26 subgenres on a narrow screen dominate the filter panel; collapsed multichoice preserves discovery filters above the fold.
+  > Socrates: Counter-argument considered: "one responsive checkbox list is enough." Resolution: kept – 13 subgenres on a narrow screen still benefit from collapsed multichoice; catalog simplified in v2 (2026-06-28).
 
 - FR-012: Event price is a numeric amount or range with currency PLN, EUR, or CZK (modes: exact, from X, X–Y); not a free-text string. Priority: must-have (Partia I)
 
@@ -147,37 +147,25 @@ BassMap surfaces upcoming DnB events near the user, filtered by subgenre, and hi
 Supporting rules:
 
 - An event is "upcoming" if its date is today or in the future (local Polish time). Past events are hidden from the public list and map automatically.
-- Subgenre tags are set at entry time (admin or fan submitter). An event can have multiple subgenre tags. Each tag must be one of the **25 closed-catalog values** below (no free text). UI shows display labels; storage uses stable identifiers (e.g. `jump_up`, `hardcore_oldschool`).
+- Subgenre tags are set at entry time (admin or fan submitter). An event can have multiple subgenre tags. Each **new** tag must be one of the **13 active catalog values** below (no free text). UI shows display labels; storage uses stable identifiers (e.g. `jump_up`, `hardcore_oldschool`). Legacy enum values may remain in the database on old records but are hidden from UI and cannot be selected on new writes.
 
-  **Subgenre catalog (display label → storage id):**
+  **Subgenre catalog v2 (display label → storage id):**
 
-  | Display label        | Storage id           |
-  | -------------------- | -------------------- |
-  | Jungle               | `jungle`             |
-  | Hardcore (oldschool) | `hardcore_oldschool` |
-  | Liquid DnB           | `liquid_dnb`         |
-  | Liquid Funk          | `liquid_funk`        |
-  | Jump-up              | `jump_up`            |
-  | Anthem DnB           | `anthem_dnb`         |
-  | Darkstep             | `darkstep`           |
-  | Neurofunk            | `neurofunk`          |
-  | Techstep             | `techstep`           |
-  | Doomcore             | `doomcore`           |
-  | Funk DnB             | `funk_dnb`           |
-  | Jazz-step            | `jazz_step`          |
-  | Soul DnB             | `soul_dnb`           |
-  | Drumfunk             | `drumfunk`           |
-  | Abstract DnB         | `abstract_dnb`       |
-  | Autonomic            | `autonomic`          |
-  | Halftime             | `halftime`           |
-  | Sambass              | `sambass`            |
-  | Clownstep            | `clownstep`          |
-  | Trancestep           | `trancestep`         |
-  | Drumstep             | `drumstep`           |
-  | Crossbreed           | `crossbreed`         |
-  | Ragga DnB            | `ragga_dnb`          |
-  | Ambient DnB          | `ambient_dnb`        |
-  | Intelligent DnB      | `intelligent_dnb`    |
+  | Display label | Storage id           |
+  | ------------- | -------------------- |
+  | Liquid        | `liquid_dnb`         |
+  | Neurofunk     | `neurofunk`          |
+  | Jump-up       | `jump_up`            |
+  | Dancefloor    | `dancefloor`         |
+  | Garage        | `garage`             |
+  | Bassline      | `bassline`           |
+  | Dubstep       | `dubstep`            |
+  | Bass House    | `bass_house`         |
+  | Jungle        | `jungle`             |
+  | Techstep      | `techstep`           |
+  | Hardcore      | `hardcore_oldschool` |
+  | Bounce        | `bounce`             |
+  | Trance        | `trancestep`         |
 
 - An event requires: name, date, city, venue. Description, lineup, ticket link, and price are optional.
 - Events are visible publicly only after admin verification (admin-added events are immediately `published`; fan-submitted events start as `pending` until admin publishes or rejects).

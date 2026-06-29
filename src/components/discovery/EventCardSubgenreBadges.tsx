@@ -1,4 +1,5 @@
 import GenreBadge, { type NeonColor } from "@/components/fan/GenreBadge";
+import { filterActiveSubgenres } from "@/lib/subgenres";
 import { cn } from "@/lib/utils";
 import type { Subgenre } from "@/types";
 import { SUBGENRE_LABELS } from "@/types";
@@ -14,8 +15,9 @@ interface Props {
 
 export default function EventCardSubgenreBadges({ subgenres, className }: Props) {
   const [expanded, setExpanded] = useState(false);
-  const visible = subgenres.slice(0, VISIBLE_COUNT);
-  const rest = subgenres.slice(VISIBLE_COUNT);
+  const activeSubgenres = filterActiveSubgenres(subgenres);
+  const visible = activeSubgenres.slice(0, VISIBLE_COUNT);
+  const rest = activeSubgenres.slice(VISIBLE_COUNT);
 
   return (
     <div className={cn("flex flex-wrap gap-1.5", className)}>

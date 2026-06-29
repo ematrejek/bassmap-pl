@@ -10,7 +10,8 @@ import { buildDiscoverySearchUrl } from "@/lib/routes";
 import type { FanEventFilters } from "@/lib/events/fan-schema";
 import { shellBtnOutline, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
-import { SUBGENRES, type Subgenre } from "@/types";
+import { isActiveSubgenre } from "@/lib/subgenres";
+import type { Subgenre } from "@/types";
 import { CalendarIcon } from "lucide-react";
 import { lazy, Suspense, useRef, useState } from "react";
 import type { DateRange } from "react-day-picker";
@@ -35,12 +36,6 @@ const PRESET_LABELS: Record<DatePreset, string> = {
   month: "W tym miesiącu",
 };
 
-const SUBGENRE_SET = new Set<string>(SUBGENRES);
-
-function isSubgenre(value: string): value is Subgenre {
-  return SUBGENRE_SET.has(value);
-}
-
 function readLiveFiltersFromForm(form: HTMLFormElement | null, fallback: FanEventFilters): FanEventFilters {
   if (!form) {
     return fallback;
@@ -54,7 +49,7 @@ function readLiveFiltersFromForm(form: HTMLFormElement | null, fallback: FanEven
   const subgenres: Subgenre[] = [];
   for (const value of formData.getAll("subgenre")) {
     const trimmed = (typeof value === "string" ? value : "").trim();
-    if (trimmed && isSubgenre(trimmed) && !subgenres.includes(trimmed)) {
+    if (trimmed && isActiveSubgenre(trimmed) && !subgenres.includes(trimmed)) {
       subgenres.push(trimmed);
     }
   }

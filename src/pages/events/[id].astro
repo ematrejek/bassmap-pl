@@ -20,6 +20,7 @@ import { getEventCoverUrl } from "@/lib/storage/event-covers";
 import { createClient } from "@/lib/supabase";
 import Layout from "@/layouts/Layout.astro";
 import { shellBtnPrimary, shellLink } from "@/lib/shell-styles";
+import { filterActiveSubgenres } from "@/lib/subgenres";
 import { SUBGENRE_LABELS } from "@/types";
 import { SUPABASE_URL } from "astro:env/server";
 
@@ -46,6 +47,7 @@ const attendanceSummary =
   attendanceResult && "data" in attendanceResult
     ? attendanceResult.data
     : { goingCount: 0, interestedCount: 0, userStatus: null };
+const displaySubgenres = event ? filterActiveSubgenres(event.subgenres) : [];
 ---
 
 <Layout title={event ? `${event.name} – BassMap PL` : "Nie znaleziono – BassMap PL"} ogImage={coverUrl ?? undefined}>
@@ -131,7 +133,7 @@ const attendanceSummary =
             <section class="space-y-2">
               <h2 class="text-accent text-sm font-semibold tracking-wide uppercase">Podgatunki</h2>
               <div class="flex flex-wrap gap-2">
-                {event.subgenres.map((subgenre) => (
+                {displaySubgenres.map((subgenre) => (
                   <span class="border-primary/30 bg-primary/10 text-foreground inline-flex items-center rounded-full border px-2 py-0.5 text-xs font-medium">
                     {SUBGENRE_LABELS[subgenre]}
                   </span>

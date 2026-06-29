@@ -4,8 +4,8 @@ import { loadEnvTest } from "./tests/e2e/helpers/env";
 
 loadEnvTest();
 
-const host = "127.0.0.1";
-const port = 4321;
+const host = "localhost";
+const port = Number(process.env.PLAYWRIGHT_PORT ?? 4321);
 const baseURL = `http://${host}:${port}`;
 
 export default defineConfig({
@@ -29,7 +29,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: `npm run dev -- --host ${host} --port ${port}`,
+    command: `npx astro dev --host ${host} --port ${port}`,
     url: baseURL,
     reuseExistingServer: !process.env.CI,
     timeout: 120_000,

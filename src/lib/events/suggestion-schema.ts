@@ -18,6 +18,7 @@ const SUGGESTION_PAYLOAD_KEYS = [
   "priceMin",
   "priceMax",
   "currency",
+  "subgenres",
 ] as const satisfies readonly (keyof ChangeSuggestionPayload)[];
 
 const suggestionPayloadKeySet = new Set<string>(SUGGESTION_PAYLOAD_KEYS);

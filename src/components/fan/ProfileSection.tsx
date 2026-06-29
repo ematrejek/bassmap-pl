@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { readApiError } from "@/lib/api/json";
 import { loginFromEmailLocalPart } from "@/lib/auth/display-name";
 import { normalizeSuggestedLogin } from "@/lib/services/fan-profile";
+import { activeSubgenresChanged } from "@/lib/subgenres";
 import { DISCOVERY_PATH, MY_EVENTS_PATH } from "@/lib/routes";
 import { shellBtnPrimary, shellPanelFlat, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
@@ -52,17 +53,23 @@ function createDraftProfile(userId: string, email: string, profile: FanProfile |
 }
 
 function profileToPatchBody(nextProfile: FanProfile, previousProfile: FanProfile | null) {
-  const body = {
+  const body: Record<string, unknown> = {
     login: nextProfile.login,
     bio: nextProfile.bio,
     city: nextProfile.city,
-    favoriteSubgenres: nextProfile.favoriteSubgenres,
     instagramUrl: nextProfile.instagramUrl,
     soundcloudUrl: nextProfile.soundcloudUrl,
     facebookUrl: nextProfile.facebookUrl,
     spotifyUrl: nextProfile.spotifyUrl,
     twitchUrl: nextProfile.twitchUrl,
   };
+
+  const subgenresChanged =
+    !previousProfile || activeSubgenresChanged(previousProfile.favoriteSubgenres, nextProfile.favoriteSubgenres);
+
+  if (subgenresChanged) {
+    body.favoriteSubgenres = nextProfile.favoriteSubgenres;
+  }
 
   const previousUrl = previousProfile?.favouriteTrackUrl ?? null;
   const previousPlatform = previousProfile?.favouriteTrackPlatform ?? null;

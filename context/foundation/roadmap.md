@@ -3,8 +3,8 @@ project: BassMap PL
 version: 3
 status: active
 created: 2026-06-10
-updated: 2026-06-25
-subgenre_catalog_version: 1
+updated: 2026-06-28
+subgenre_catalog_version: 2
 prd_version: 2
 main_goal: market-feedback
 top_blocker: decisions
@@ -65,6 +65,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-25 | organizer-self-service    | zweryfikowany organizator publikuje eventy bez moderacji; ogłoszenia na forum                 | F-05, S-22    | notes 2026-06-22                 | proposed    |
 | S-26 | analytics-consent         | GA4 + baner zgody cookies + aktualizacja dokumentów prawnych                                | S-19          | NFR Privacy, notes 2026-06-22    | proposed    |
 | S-27 | mobile-app                | PWA lub aplikacja mobilna (Android/iOS) – po stabilnym web i pomiarze ruchu                 | S-26          | notes 2026-06-22                 | proposed    |
+| S-29 | subgenre-catalog-v2       | fan/admin wybiera 13 podgatunków z uproszczonego katalogu; legacy tagi ukryte w UI           | S-02          | FR-003, notes 2026-06-28         | implementing |
 
 ## Streams
 
@@ -556,7 +557,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 ### S-24: Moja ekipa (pełna funkcja)
 
-- **Outcome:** fan tworzy **ekipę** (nazwa, opcjonalnie miasto, podgatunki, opis); widzi członków; publikuje wątek forum z szablonem **«Szukam ludzi do ekipy»** (wybór ekipy); kandydat składa **prośbę** → właściciel **akceptuje/odrzuca** → udostępnienie **danych kontaktowych**. Placeholder `/team` zastąpiony.
+- **Outcome:** fan tworzy **ekipę** (nazwa, opcjonalnie miasto, podgatunki, opis); widzi członków; publikuje wątek forum w dziale ekipowym (wybór ekipy); kandydat składa **prośbę** → właściciel **akceptuje/odrzuca** → udostępnienie **danych kontaktowych**. Placeholder `/team` zastąpiony.
 - **Change ID:** crew-teams
 - **PRD refs:** notes 2026-06-22
 - **Prerequisites:** S-22, S-23

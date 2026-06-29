@@ -42,14 +42,14 @@ describe("ProfileEditor", () => {
     render(
       <ProfileEditor
         initialProfile={buildProfile({
-          favoriteSubgenres: ["jungle", "liquid_dnb", "jump_up", "neurofunk", "halftime"],
+          favoriteSubgenres: ["jungle", "liquid_dnb", "jump_up", "neurofunk", "dancefloor"],
         })}
         onSave={onSave}
         onCancel={vi.fn()}
       />,
     );
 
-    fireEvent.click(screen.getByRole("button", { name: SUBGENRE_LABELS.dancefloor }));
+    fireEvent.click(screen.getByRole("button", { name: SUBGENRE_LABELS.techstep }));
 
     expect(screen.getByText("Możesz wybrać maksymalnie 5 podgatunków")).toBeInTheDocument();
     expect(onSave).not.toHaveBeenCalled();

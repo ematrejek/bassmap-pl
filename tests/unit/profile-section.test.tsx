@@ -14,7 +14,7 @@ const mockProfile: FanProfile = {
   login: "test_fan",
   bio: "Moje bio",
   city: "Kraków",
-  favoriteSubgenres: ["neurofunk"],
+  favoriteSubgenres: ["neurofunk", "halftime"],
   instagramUrl: null,
   soundcloudUrl: null,
   facebookUrl: null,
@@ -40,6 +40,7 @@ describe("ProfileSection", () => {
 
     expect(screen.getByRole("heading", { name: /@test_fan/i })).toBeInTheDocument();
     expect(screen.getByText(SUBGENRE_LABELS.neurofunk)).toBeInTheDocument();
+    expect(screen.queryByText(SUBGENRE_LABELS.halftime)).not.toBeInTheDocument();
     expect(screen.getByText("fan@example.com")).toBeInTheDocument();
 
     fireEvent.click(screen.getByRole("button", { name: /Edytuj profil/i }));

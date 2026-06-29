@@ -3,7 +3,8 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import type { CreateCrewInput } from "@/lib/fan/crew-schema";
+import type { CreateCrewInput, UpdateCrewInput } from "@/lib/fan/crew-schema";
+import { filterActiveSubgenres, activeSubgenresChanged } from "@/lib/subgenres";
 import { cn } from "@/lib/utils";
 import { SUBGENRES, SUBGENRE_LABELS, type Subgenre } from "@/types";
 import { Loader2 } from "lucide-react";
@@ -18,11 +19,11 @@ function sortSelected(subgenres: Iterable<Subgenre>): Subgenre[] {
   return SUBGENRES.filter((subgenre) => set.has(subgenre));
 }
 
-export type CrewFormValues = CreateCrewInput;
+export type CrewFormValues = CreateCrewInput | UpdateCrewInput;
 
 interface Props {
   mode: "create" | "edit";
-  initialValues?: Partial<CrewFormValues>;
+  initialValues?: Partial<CreateCrewInput>;
   pendingAction: string | null;
   submitActionKey: string;
   submitLabel: string;
@@ -41,7 +42,7 @@ export default function CrewForm({
   const [city, setCity] = useState(initialValues?.city ?? "");
   const [description, setDescription] = useState(initialValues?.description ?? "");
   const [selectedSubgenres, setSelectedSubgenres] = useState<Set<Subgenre>>(
-    () => new Set(initialValues?.subgenres ?? []),
+    () => new Set(filterActiveSubgenres(initialValues?.subgenres ?? [])),
   );
   const [validationError, setValidationError] = useState<string | null>(null);
 
@@ -74,12 +75,20 @@ export default function CrewForm({
       return;
     }
 
-    await onSubmit({
+    const payload: CrewFormValues = {
       name: name.trim(),
       city: city.trim() === "" ? null : city.trim(),
       description: description.trim() === "" ? null : description.trim(),
       subgenres: selectedList,
-    });
+    };
+
+    if (mode === "edit" && initialValues?.subgenres && !activeSubgenresChanged(initialValues.subgenres, selectedList)) {
+      const { subgenres: _omitted, ...withoutSubgenres } = payload;
+      await onSubmit(withoutSubgenres);
+      return;
+    }
+
+    await onSubmit(payload);
   }
 
   return (

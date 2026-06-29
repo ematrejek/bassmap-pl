@@ -20,6 +20,15 @@ describe("parseFanFilters", () => {
     });
   });
 
+  it("drops legacy subgenre query params", () => {
+    const params = new URLSearchParams("subgenre=neurofunk&subgenre=halftime");
+
+    expect(parseFanFilters(params)).toEqual({
+      ...emptyFilters,
+      subgenres: ["neurofunk"],
+    });
+  });
+
   it("returns empty defaults when no filters are present (3b)", () => {
     const params = new URLSearchParams();
 

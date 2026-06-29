@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { formatEventDate, formatEventVenueLine } from "@/lib/events/format";
 import { STATUS_LABELS } from "@/lib/events/status-labels";
 import { MY_EVENTS_PATH } from "@/lib/routes";
+import { filterActiveSubgenres } from "@/lib/subgenres";
 import { cn } from "@/lib/utils";
 import type { Event, EventStatus } from "@/types";
 import { SUBGENRE_LABELS } from "@/types";
@@ -25,6 +26,7 @@ interface Props {
 export default function ProfileEventCard({ event }: Props) {
   const statusStyle = STATUS_STYLE[event.status];
   const detailHref = event.status === "published" ? `/events/${event.id}` : MY_EVENTS_PATH;
+  const activeSubgenres = filterActiveSubgenres(event.subgenres);
 
   return (
     <article className="group border-border bg-card/50 hover:border-primary/50 hover:shadow-glow-violet relative flex flex-col overflow-hidden rounded-xl border backdrop-blur-md transition-all duration-300 hover:-translate-y-1">
@@ -40,7 +42,7 @@ export default function ProfileEventCard({ event }: Props) {
 
       <div className="flex flex-1 flex-col p-5">
         <div className="flex flex-wrap gap-1.5">
-          {event.subgenres.map((subgenre, index) => (
+          {activeSubgenres.map((subgenre, index) => (
             <GenreBadge key={subgenre} color={NEON_CYCLE[index % NEON_CYCLE.length]}>
               {SUBGENRE_LABELS[subgenre]}
             </GenreBadge>

@@ -98,6 +98,15 @@ describe("EventDiscoveryCard", () => {
     expect(zobaczLink).toHaveAttribute("href", `/events/${event.id}`);
   });
 
+  it("hides legacy subgenre badges and shows only active catalog labels", () => {
+    const event = buildDiscoveryEvent({ subgenres: ["neurofunk", "halftime"] });
+
+    render(<EventDiscoveryCard event={event} />);
+
+    expect(screen.getByText(SUBGENRE_LABELS.neurofunk)).toBeInTheDocument();
+    expect(screen.queryByText(SUBGENRE_LABELS.halftime)).not.toBeInTheDocument();
+  });
+
   it("shows first two subgenres and collapses the rest behind +N until hover", () => {
     const subgenres = SUBGENRES.slice(0, 10);
     const event = buildDiscoveryEvent({ subgenres });

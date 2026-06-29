@@ -27,6 +27,7 @@ import {
   DECLARATION_LABELS,
   declarationKindForSource,
 } from "@/lib/legal/cover-rights";
+import { filterActiveSubgenres, activeSubgenresChanged } from "@/lib/subgenres";
 import { MY_EVENTS_PATH } from "@/lib/routes";
 import { getCoverAspectClassName, validateCoverFile } from "@/lib/storage/event-covers";
 import { FAN_CONTENT_RIGHTS_FIELD } from "@/lib/legal/fan-submit-consent";
@@ -176,7 +177,7 @@ export default function EventForm({
   const [longitude, setLongitude] = useState(
     initialEvent?.longitude !== null && initialEvent?.longitude !== undefined ? String(initialEvent.longitude) : "",
   );
-  const [subgenres, setSubgenres] = useState<Subgenre[]>(initialEvent?.subgenres ?? []);
+  const [subgenres, setSubgenres] = useState<Subgenre[]>(() => filterActiveSubgenres(initialEvent?.subgenres ?? []));
   const [lineup, setLineup] = useState(lineupToText(initialEvent?.lineup));
   const [description, setDescription] = useState(initialEvent?.description ?? "");
   const [ticketUrl, setTicketUrl] = useState(initialEvent?.ticketUrl ?? "");
@@ -409,6 +410,9 @@ export default function EventForm({
 
   async function performSubmit(options?: { skipCoverUpload?: boolean }) {
     const body = buildBody();
+    if (mode === "edit" && initialEvent && !activeSubgenresChanged(initialEvent.subgenres, subgenres)) {
+      delete body.subgenres;
+    }
     const shouldUploadCover =
       !options?.skipCoverUpload && showCoverUpload && coverFile !== null && coverSource !== null;
 

@@ -1,5 +1,7 @@
 import { formatEventDate, formatEventPrice, parseDatetimeLocalWarsaw } from "@/lib/events/format";
-import type { ChangeSuggestionPayload, ChangeSuggestionSource, Event } from "@/types";
+import { filterActiveSubgenres } from "@/lib/subgenres";
+import type { ChangeSuggestionPayload, ChangeSuggestionSource, Event, Subgenre } from "@/types";
+import { SUBGENRE_LABELS } from "@/types";
 
 export const CHANGE_SUGGESTION_SOURCE_LABELS: Record<ChangeSuggestionSource, string> = {
   duplicate_flow: "Duplikat",
@@ -23,6 +25,7 @@ export type SuggestionEventSnapshot = Pick<
   | "priceMin"
   | "priceMax"
   | "currency"
+  | "subgenres"
 >;
 
 export interface SuggestionReviewRow {
@@ -48,6 +51,7 @@ const PAYLOAD_FIELD_LABELS: Partial<Record<keyof ChangeSuggestionPayload, string
   priceMin: "cena",
   priceMax: "cena",
   currency: "cena",
+  subgenres: "podgatunki",
 };
 
 const ADMIN_REVIEW_FIELD_LABELS: Partial<Record<keyof ChangeSuggestionPayload, string>> = {
@@ -61,6 +65,7 @@ const ADMIN_REVIEW_FIELD_LABELS: Partial<Record<keyof ChangeSuggestionPayload, s
   description: "Opis",
   lineup: "Line-up",
   ticketUrl: "Link do biletów",
+  subgenres: "Podgatunki",
 };
 
 const REVIEW_FIELD_ORDER: (keyof ChangeSuggestionPayload)[] = [
@@ -74,6 +79,7 @@ const REVIEW_FIELD_ORDER: (keyof ChangeSuggestionPayload)[] = [
   "description",
   "lineup",
   "ticketUrl",
+  "subgenres",
 ];
 
 const PRICE_PAYLOAD_KEYS: (keyof ChangeSuggestionPayload)[] = [
@@ -137,6 +143,7 @@ export function pickSuggestionEventSnapshot(event: Event): SuggestionEventSnapsh
     priceMin: event.priceMin,
     priceMax: event.priceMax,
     currency: event.currency,
+    subgenres: filterActiveSubgenres(event.subgenres),
   };
 }
 
@@ -176,6 +183,18 @@ function mergePriceSnapshot(event: SuggestionEventSnapshot, payload: ChangeSugge
   };
 }
 
+function formatSubgenresValue(subgenres: readonly Subgenre[] | null | undefined): string {
+  if (!subgenres || subgenres.length === 0) {
+    return "–";
+  }
+
+  const labels: string[] = [];
+  for (const subgenre of subgenres) {
+    labels.push(SUBGENRE_LABELS[subgenre]);
+  }
+  return labels.join(", ");
+}
+
 function formatPayloadFieldValue(key: keyof ChangeSuggestionPayload, value: unknown): string {
   if (value === null || value === undefined) {
     return "–";
@@ -187,6 +206,10 @@ function formatPayloadFieldValue(key: keyof ChangeSuggestionPayload, value: unkn
 
   if (key === "lineup" && Array.isArray(value)) {
     return formatLineupValue(value as string[]);
+  }
+
+  if (key === "subgenres" && Array.isArray(value)) {
+    return formatSubgenresValue(value as Subgenre[]);
   }
 
   if (typeof value === "boolean") {
@@ -222,6 +245,8 @@ function formatCurrentFieldValue(key: keyof ChangeSuggestionPayload, event: Sugg
       return displayText(event.city);
     case "venueName":
       return displayText(event.venueName);
+    case "subgenres":
+      return formatSubgenresValue(event.subgenres);
     default:
       return "–";
   }

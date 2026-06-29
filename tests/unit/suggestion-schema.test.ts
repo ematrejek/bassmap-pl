@@ -84,4 +84,19 @@ describe("parseSuggestionPayload", () => {
 
     expect(result.success).toBe(false);
   });
+
+  it("accepts active subgenre update", () => {
+    const result = parseSuggestionPayload({ subgenres: ["garage", "neurofunk"] });
+
+    expect(result.success).toBe(true);
+    if (result.success) {
+      expect(result.data.subgenres).toEqual(["garage", "neurofunk"]);
+    }
+  });
+
+  it("rejects legacy subgenre in payload", () => {
+    const result = parseSuggestionPayload({ subgenres: ["halftime"] });
+
+    expect(result.success).toBe(false);
+  });
 });

@@ -7,6 +7,7 @@ import {
 } from "@/lib/fan/favourite-track";
 import { FAN_LOGIN_REGEX } from "@/lib/fan/profile-schema";
 import { getSocialMeta, SOCIAL_PLATFORMS, type SocialPlatform } from "@/lib/fan/profile-display";
+import { filterActiveSubgenres } from "@/lib/subgenres";
 import { cn } from "@/lib/utils";
 import type { FanProfile, Subgenre } from "@/types";
 import { SUBGENRE_LABELS, SUBGENRES } from "@/types";
@@ -85,10 +86,11 @@ function validateDraft(draft: ProfileDraft): string | null {
 }
 
 export default function ProfileEditor({ initialProfile, onSave, onCancel, isSaving = false, error }: Props) {
-  const [draft, setDraft] = useState<ProfileDraft>({
+  const [draft, setDraft] = useState<ProfileDraft>(() => ({
     ...initialProfile,
+    favoriteSubgenres: filterActiveSubgenres(initialProfile.favoriteSubgenres),
     favouriteTrackPlatform: initialProfile.favouriteTrackPlatform ?? "spotify",
-  });
+  }));
   const [localError, setLocalError] = useState<string | null>(null);
 
   const setField = <K extends keyof ProfileDraft>(key: K, value: ProfileDraft[K]) => {

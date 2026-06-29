@@ -10,8 +10,10 @@ import { readApiError } from "@/lib/api/json";
 import { formatEventAddress, formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
 import { MY_EVENTS_PATH, SIGN_IN_PATH } from "@/lib/routes";
 import { shellBtnPrimary, shellBtnOutline } from "@/lib/shell-styles";
+import { filterActiveSubgenres } from "@/lib/subgenres";
 import { cn } from "@/lib/utils";
-import type { Event, EventCurrency, EventPriceMode } from "@/types";
+import type { Event, EventCurrency, EventPriceMode, Subgenre } from "@/types";
+import { SUBGENRE_LABELS, SUBGENRES } from "@/types";
 
 const fieldClass =
   "border-border bg-card/60 text-foreground placeholder:text-muted-foreground focus-visible:border-primary/70 focus-visible:ring-ring/30";
@@ -37,6 +39,21 @@ function textToLineup(value: string): string[] | null {
   return lines.length > 0 ? lines : null;
 }
 
+function formatSubgenresList(subgenres: Subgenre[]): string {
+  if (subgenres.length === 0) {
+    return "Brak podgatunków";
+  }
+  return subgenres.map((subgenre) => SUBGENRE_LABELS[subgenre]).join(", ");
+}
+
+function sameSubgenres(a: readonly Subgenre[], b: readonly Subgenre[]): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+  const setB = new Set(b);
+  return a.every((subgenre) => setB.has(subgenre));
+}
+
 function CurrentValueHint({ children }: { children: string | null | undefined }) {
   if (!children) {
     return null;
@@ -54,6 +71,7 @@ interface Props {
 
 export default function EventSuggestChangesForm({ event, isLoggedIn, isAdmin, redirectPath }: Props) {
   const initialLocationMode = inferLocationMode(event);
+  const initialActiveSubgenres = filterActiveSubgenres(event.subgenres);
 
   const [startsAt, setStartsAt] = useState("");
   const [city, setCity] = useState("");
@@ -72,6 +90,8 @@ export default function EventSuggestChangesForm({ event, isLoggedIn, isAdmin, re
   const [priceMin, setPriceMin] = useState("");
   const [priceMax, setPriceMax] = useState("");
   const [currency, setCurrency] = useState<EventCurrency | null>(event.currency);
+  const [suggestSubgenres, setSuggestSubgenres] = useState(false);
+  const [subgenres, setSubgenres] = useState<Subgenre[]>(() => [...initialActiveSubgenres]);
   const [comment, setComment] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -152,6 +172,10 @@ export default function EventSuggestChangesForm({ event, isLoggedIn, isAdmin, re
         payload.priceMax = priceMode === "range" && priceMax !== "" ? Number(priceMax) : null;
         payload.currency = currency;
       }
+    }
+
+    if (suggestSubgenres && !sameSubgenres(subgenres, initialActiveSubgenres) && subgenres.length > 0) {
+      payload.subgenres = subgenres;
     }
 
     return Object.keys(payload).length > 0 ? payload : null;
@@ -424,6 +448,48 @@ export default function EventSuggestChangesForm({ event, isLoggedIn, isAdmin, re
             className={cn(fieldClass, "pl-10")}
           />
         </div>
+      </div>
+
+      <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">
+        <label htmlFor="suggest-subgenres" className="flex cursor-pointer items-start gap-3">
+          <Checkbox
+            id="suggest-subgenres"
+            checked={suggestSubgenres}
+            onCheckedChange={(checked) => {
+              const enabled = checked === true;
+              setSuggestSubgenres(enabled);
+              if (enabled) {
+                setSubgenres([...initialActiveSubgenres]);
+              }
+            }}
+            className="mt-0.5"
+          />
+          <div>
+            <span className="text-sm font-medium">Zasugeruj zmianę podgatunków</span>
+            <CurrentValueHint>{formatSubgenresList(initialActiveSubgenres)}</CurrentValueHint>
+          </div>
+        </label>
+
+        {suggestSubgenres ? (
+          <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+            {SUBGENRES.map((subgenre) => (
+              <label key={subgenre} className="flex cursor-pointer items-center gap-2 text-sm">
+                <Checkbox
+                  checked={subgenres.includes(subgenre)}
+                  onCheckedChange={(checked) => {
+                    setSubgenres((current) => {
+                      if (checked === true) {
+                        return current.includes(subgenre) ? current : [...current, subgenre];
+                      }
+                      return current.filter((item) => item !== subgenre);
+                    });
+                  }}
+                />
+                <span>{SUBGENRE_LABELS[subgenre]}</span>
+              </label>
+            ))}
+          </div>
+        ) : null}
       </div>
 
       <div className="space-y-3 rounded-xl border border-white/10 bg-white/5 p-4">

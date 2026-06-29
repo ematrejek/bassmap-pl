@@ -1,4 +1,4 @@
-/** Closed catalog – 1:1 with `public.subgenre` enum in Postgres. */
+/** All values in `public.subgenre` Postgres enum (legacy + active). */
 export type Subgenre =
   | "jungle"
   | "hardcore_oldschool"
@@ -25,41 +25,37 @@ export type Subgenre =
   | "ragga_dnb"
   | "ambient_dnb"
   | "intelligent_dnb"
-  | "dancefloor";
+  | "dancefloor"
+  | "garage"
+  | "bassline"
+  | "dubstep"
+  | "bass_house"
+  | "bounce";
 
-export const SUBGENRES: readonly Subgenre[] = [
-  "jungle",
-  "hardcore_oldschool",
+/** UI catalog v2 – selectable in forms, filters, and new writes. */
+export const ACTIVE_SUBGENRES = [
   "liquid_dnb",
-  "liquid_funk",
-  "jump_up",
-  "anthem_dnb",
-  "darkstep",
   "neurofunk",
-  "techstep",
-  "doomcore",
-  "funk_dnb",
-  "jazz_step",
-  "soul_dnb",
-  "drumfunk",
-  "abstract_dnb",
-  "autonomic",
-  "halftime",
-  "sambass",
-  "clownstep",
-  "trancestep",
-  "drumstep",
-  "crossbreed",
-  "ragga_dnb",
-  "ambient_dnb",
-  "intelligent_dnb",
+  "jump_up",
   "dancefloor",
-] as const;
+  "garage",
+  "bassline",
+  "dubstep",
+  "bass_house",
+  "jungle",
+  "techstep",
+  "hardcore_oldschool",
+  "bounce",
+  "trancestep",
+] as const satisfies readonly Subgenre[];
+
+/** Alias for forms and filters – active catalog only. */
+export const SUBGENRES: readonly Subgenre[] = ACTIVE_SUBGENRES;
 
 export const SUBGENRE_LABELS: Record<Subgenre, string> = {
   jungle: "Jungle",
-  hardcore_oldschool: "Hardcore (oldschool)",
-  liquid_dnb: "Liquid DnB",
+  hardcore_oldschool: "Hardcore",
+  liquid_dnb: "Liquid",
   liquid_funk: "Liquid Funk",
   jump_up: "Jump-up",
   anthem_dnb: "Anthem DnB",
@@ -76,13 +72,18 @@ export const SUBGENRE_LABELS: Record<Subgenre, string> = {
   halftime: "Halftime",
   sambass: "Sambass",
   clownstep: "Clownstep",
-  trancestep: "Trancestep",
+  trancestep: "Trance",
   drumstep: "Drumstep",
   crossbreed: "Crossbreed",
   ragga_dnb: "Ragga DnB",
   ambient_dnb: "Ambient DnB",
   intelligent_dnb: "Intelligent DnB",
   dancefloor: "Dancefloor",
+  garage: "Garage",
+  bassline: "Bassline",
+  dubstep: "Dubstep",
+  bass_house: "Bass House",
+  bounce: "Bounce",
 };
 
 export type EventStatus = "draft" | "pending" | "published" | "rejected";
@@ -214,6 +215,7 @@ export type ChangeSuggestionPayload = Partial<
     | "priceMin"
     | "priceMax"
     | "currency"
+    | "subgenres"
   >
 > & {
   locationMode?: "address" | "coordinates";

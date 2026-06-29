@@ -58,6 +58,7 @@ describe("formatSuggestionSummary", () => {
         priceMin: null,
         priceMax: null,
         currency: null,
+        subgenres: ["neurofunk"],
       },
     );
 

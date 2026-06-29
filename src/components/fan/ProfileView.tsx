@@ -11,7 +11,8 @@ import {
   SOCIAL_PLATFORMS,
   type SocialPlatform,
 } from "@/lib/fan/profile-display";
-import type { PublicFanProfile, Subgenre } from "@/types";
+import { filterActiveSubgenres } from "@/lib/subgenres";
+import type { PublicFanProfile } from "@/types";
 import { SUBGENRE_LABELS } from "@/types";
 import { AtSign, Mail, MapPin, Music, Music2, UserRound } from "lucide-react";
 import type { ReactNode } from "react";
@@ -27,6 +28,7 @@ interface Props {
 }
 
 export default function ProfileView({ profile, showEmail = false, email, onEdit, actionSlot }: Props) {
+  const activeFavoriteSubgenres = filterActiveSubgenres(profile.favoriteSubgenres);
   const filledSocials = SOCIAL_PLATFORMS.filter((platform) => {
     const value = getProfileSocialValue(profile, platform);
     return Boolean(value?.trim());
@@ -86,8 +88,8 @@ export default function ProfileView({ profile, showEmail = false, email, onEdit,
             Ulubione podgatunki
           </h4>
           <div className="mt-4 flex flex-wrap gap-2">
-            {profile.favoriteSubgenres.length > 0 ? (
-              profile.favoriteSubgenres.map((subgenre: Subgenre, index: number) => (
+            {activeFavoriteSubgenres.length > 0 ? (
+              activeFavoriteSubgenres.map((subgenre, index: number) => (
                 <GenreBadge key={subgenre} color={NEON_CYCLE[index % NEON_CYCLE.length]}>
                   {SUBGENRE_LABELS[subgenre]}
                 </GenreBadge>

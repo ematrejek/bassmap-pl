@@ -16,7 +16,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { Button } from "@/components/ui/button";
+import type { CreateCrewInput } from "@/lib/fan/crew-schema";
 import type { Crew, JoinableCrew } from "@/types";
+import type { CrewFormValues } from "@/components/fan/CrewForm";
 import { Loader2, Shield, Users } from "lucide-react";
 import { useState } from "react";
 
@@ -102,9 +104,9 @@ export default function CrewDashboard() {
   const isMember = membership !== null;
   const hasCrewContext = ownCrew !== null || isMember;
 
-  async function handleCreate(values: Parameters<typeof createCrew>[0]) {
+  async function handleCreate(values: CrewFormValues) {
     setSuccessMessage(null);
-    const result = await createCrew(values);
+    const result = await createCrew(values as CreateCrewInput);
     if ("data" in result) {
       setSuccessMessage("Ekipa utworzona – jesteś właścicielem.");
     }

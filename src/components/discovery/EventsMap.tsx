@@ -1,6 +1,7 @@
 import { Equalizer } from "@/components/shell/Equalizer";
 import { formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
 import { resolveMapCoordinates } from "@/lib/geocoding/city-centers";
+import { filterActiveSubgenres } from "@/lib/subgenres";
 import { shellPanelFlat } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import type { Event } from "@/types";
@@ -37,8 +38,9 @@ function createNeonMarkerIcon(color: string, active: boolean): L.DivIcon {
 }
 
 function EventMapTooltip({ event }: { event: Event }) {
-  const subgenreLabels = event.subgenres.slice(0, 2).map((subgenre) => SUBGENRE_LABELS[subgenre]);
-  const extraSubgenres = event.subgenres.length > 2 ? ` +${String(event.subgenres.length - 2)}` : "";
+  const activeSubgenres = filterActiveSubgenres(event.subgenres);
+  const subgenreLabels = activeSubgenres.slice(0, 2).map((subgenre) => SUBGENRE_LABELS[subgenre]);
+  const extraSubgenres = activeSubgenres.length > 2 ? ` +${String(activeSubgenres.length - 2)}` : "";
 
   return (
     <div className="discovery-map-tooltip__inner space-y-1">
