@@ -398,21 +398,21 @@ Aktualizacja dokumentów prawnych, testy RLS, zamknięcie slice'a.
 
 #### Automated
 
-- [x] 1.1 `npx supabase db reset` stosuje migrację bez błędu — 446fbde
-- [x] 1.2 `npm run lint` przechodzi po dodaniu typów — 446fbde
+- [x] 1.1 `npx supabase db reset` stosuje migrację bez błędu – 446fbde
+- [x] 1.2 `npm run lint` przechodzi po dodaniu typów – 446fbde
 
 #### Manual
 
-- [x] 1.3 RPC issue → verify → approve działa w testach lub Studio — 446fbde
+- [x] 1.3 RPC issue → verify → approve działa w testach lub Studio – 446fbde
 
 ### Phase 2: Warstwa auth i API
 
 #### Automated
 
-- [x] 2.1 `tests/unit/require-organizer.test.ts` przechodzi — 431b60a
-- [x] 2.2 `tests/unit/organizer-application-schema.test.ts` przechodzi — 431b60a
-- [x] 2.3 `tests/unit/organizer-applications-api.test.ts` przechodzi — 431b60a
-- [x] 2.4 `npm run check` i `npm run lint` przechodzą — 431b60a
+- [x] 2.1 `tests/unit/require-organizer.test.ts` przechodzi – 431b60a
+- [x] 2.2 `tests/unit/organizer-application-schema.test.ts` przechodzi – 431b60a
+- [x] 2.3 `tests/unit/organizer-applications-api.test.ts` przechodzi – 431b60a
+- [x] 2.4 `npm run check` i `npm run lint` przechodzą – 431b60a
 
 #### Manual
 
