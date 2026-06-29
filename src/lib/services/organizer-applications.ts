@@ -136,7 +136,12 @@ export async function verifyOrganizerCode(
     return { error: mapRpcError(response.error.message) };
   }
 
-  return { data: mapOrganizerApplicationRow(response.data as SafeApplicationRow) };
+  const application = mapOrganizerApplicationRow(response.data as SafeApplicationRow);
+  if (application.status !== "code_verified") {
+    return { error: "Nieprawidłowy kod weryfikacyjny" };
+  }
+
+  return { data: application };
 }
 
 export async function approveOrganizerApplication(

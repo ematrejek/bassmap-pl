@@ -416,7 +416,7 @@ Aktualizacja dokumentów prawnych, testy RLS, zamknięcie slice'a.
 
 #### Manual
 
-- [ ] 2.5 Fan submit → admin issue → fan verify → admin approve przez API
+- [x] 2.5 Fan submit → admin issue → fan verify → admin approve przez API – user confirmed 2026-06-29
 
 ### Phase 3: UI użytkownika i panel admina
 
@@ -426,8 +426,8 @@ Aktualizacja dokumentów prawnych, testy RLS, zamknięcie slice'a.
 
 #### Manual
 
-- [ ] 3.2 Pełna ścieżka w przeglądarce: wniosek, kod, zatwierdzenie
-- [ ] 3.3 Odrzucenie z powodem i ponowny wniosek
+- [x] 3.2 Pełna ścieżka w przeglądarce: wniosek, kod, zatwierdzenie – user confirmed 2026-06-29
+- [x] 3.3 Odrzucenie z powodem i ponowny wniosek – user confirmed 2026-06-29
 
 ### Phase 4: Legal sync i testy integracyjne
 
@@ -438,5 +438,5 @@ Aktualizacja dokumentów prawnych, testy RLS, zamknięcie slice'a.
 
 #### Manual
 
-- [ ] 4.3 Polityka prywatności i regulamin zaktualizowane; `LEGAL_UPDATED_AT` poprawny
-- [ ] 4.4 Ręczna weryfikacja anty-podszywanie (odrzucenie nieoficjalnego profilu)
+- [x] 4.3 Polityka prywatności i regulamin zaktualizowane; `LEGAL_UPDATED_AT` poprawny – user confirmed 2026-06-29
+- [x] 4.4 Ręczna weryfikacja anty-podszywanie (odrzucenie nieoficjalnego profilu) – user confirmed 2026-06-29

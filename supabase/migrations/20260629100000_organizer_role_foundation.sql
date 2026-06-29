@@ -331,9 +331,10 @@ BEGIN
 
     UPDATE public.organizer_applications
     SET code_attempt_count = existing_application.code_attempt_count + 1
-    WHERE id = p_application_id;
+    WHERE id = p_application_id
+    RETURNING * INTO updated_application;
 
-    RAISE EXCEPTION 'verify_organizer_application_code: invalid code';
+    RETURN public.organizer_application_to_safe(updated_application);
   END IF;
 
   PERFORM set_config('organizer_application.rpc_mutation', 'true', true);
@@ -479,9 +480,24 @@ GRANT EXECUTE ON FUNCTION public.reject_organizer_application(uuid, text) TO aut
 
 REVOKE ALL ON TABLE public.organizer_applications FROM anon, authenticated;
 
-GRANT SELECT, INSERT ON TABLE public.organizer_applications TO authenticated;
-
-REVOKE SELECT (verification_code_hash) ON TABLE public.organizer_applications FROM authenticated;
+GRANT INSERT ON TABLE public.organizer_applications TO authenticated;
+GRANT SELECT (
+  id,
+  user_id,
+  business_name,
+  social_platform,
+  social_profile_url,
+  description,
+  status,
+  code_issued_at,
+  code_verified_at,
+  code_attempt_count,
+  reviewed_by,
+  reviewed_at,
+  decision_reason,
+  created_at,
+  updated_at
+) ON TABLE public.organizer_applications TO authenticated;
 
 GRANT ALL ON TABLE public.organizer_applications TO service_role;
 

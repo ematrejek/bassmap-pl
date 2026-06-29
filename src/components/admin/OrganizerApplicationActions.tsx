@@ -122,6 +122,7 @@ export default function OrganizerApplicationActions({ applicationId, status }: P
 
   const canIssueCode = status === "pending" || status === "code_issued";
   const canDecide = status === "code_verified";
+  const isReissuingCode = status === "code_issued";
 
   return (
     <>
@@ -139,7 +140,7 @@ export default function OrganizerApplicationActions({ applicationId, status }: P
                 void handleIssueCode();
               }}
             >
-              {busy === "issue" ? "Generowanie…" : "Generuj kod"}
+              {busy === "issue" ? "Generowanie…" : isReissuingCode ? "Wygeneruj ponownie" : "Generuj kod"}
             </Button>
           ) : null}
           {canDecide ? (
@@ -183,6 +184,11 @@ export default function OrganizerApplicationActions({ applicationId, status }: P
                   Wyślij ten kod ręcznie z oficjalnego konta BassMap PL na wskazany profil Facebook lub Instagram.
                   Użytkownik wpisze go w aplikacji. Kod wyświetla się tylko raz.
                 </p>
+                {isReissuingCode ? (
+                  <p className="border-neon-orange/30 bg-neon-orange/10 text-neon-orange rounded-lg border px-3 py-2 text-sm">
+                    Poprzedni kod został unieważniony. Wyślij użytkownikowi tylko nowy kod widoczny poniżej.
+                  </p>
+                ) : null}
                 <p className="text-foreground bg-secondary/60 rounded-lg border px-4 py-3 text-center font-mono text-2xl tracking-[0.3em]">
                   {issuedCode}
                 </p>

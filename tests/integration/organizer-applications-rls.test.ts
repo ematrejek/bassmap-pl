@@ -22,6 +22,7 @@ const INTEGRATION_ORGANIZER_OTHER_PASSWORD = "IntegrationOrganizerOther!2026";
 
 interface OrganizerApplicationSafeRpcRow {
   status: OrganizerApplicationStatus;
+  decision_reason?: string | null;
 }
 
 async function ensureAuthUser(
@@ -170,6 +171,117 @@ describe.skipIf(!runIntegration)("organizer applications (RLS + RPC)", () => {
     expect(peekResponse.data).toEqual([]);
   });
 
+  it("hides verification code hash from authenticated SELECT", async () => {
+    const serviceClient = createServiceClient();
+    const applicantId = await ensureAuthUser(
+      serviceClient,
+      INTEGRATION_ORGANIZER_APPLICANT_EMAIL,
+      INTEGRATION_ORGANIZER_APPLICANT_PASSWORD,
+    );
+    cleanupUserIds.push(applicantId);
+
+    await serviceClient.from("organizer_roles").delete().eq("user_id", applicantId);
+    await serviceClient.from("organizer_applications").delete().eq("user_id", applicantId);
+
+    const insertResponse = await serviceClient
+      .from("organizer_applications")
+      .insert({
+        user_id: applicantId,
+        business_name: "Hidden Hash Crew",
+        social_platform: "instagram",
+        social_profile_url: "https://www.instagram.com/hidden-hash-crew/",
+        status: "pending",
+      })
+      .select("id")
+      .single();
+
+    if (insertResponse.error) {
+      throw new Error(`Failed to insert application: ${insertResponse.error.message}`);
+    }
+
+    const applicationId = insertResponse.data.id as string;
+    cleanupApplicationIds.push(applicationId);
+
+    const adminClient = await createAdminClient();
+    const issueResponse = await adminClient.rpc("issue_organizer_verification_code", {
+      p_application_id: applicationId,
+    });
+    expect(issueResponse.error).toBeNull();
+
+    const serviceHashSelect = await serviceClient
+      .from("organizer_applications")
+      .select("verification_code_hash")
+      .eq("id", applicationId)
+      .single();
+    expect(serviceHashSelect.error).toBeNull();
+    expect(serviceHashSelect.data?.verification_code_hash).toEqual(expect.any(String));
+
+    const applicantClient = await createAuthenticatedClient(
+      INTEGRATION_ORGANIZER_APPLICANT_EMAIL,
+      INTEGRATION_ORGANIZER_APPLICANT_PASSWORD,
+    );
+    const safeSelect = await applicantClient
+      .from("organizer_applications")
+      .select("id, status, code_attempt_count")
+      .eq("id", applicationId)
+      .single();
+
+    expect(safeSelect.error).toBeNull();
+    expect(safeSelect.data).not.toHaveProperty("verification_code_hash");
+
+    const hashSelect = await applicantClient
+      .from("organizer_applications")
+      .select("id, verification_code_hash")
+      .eq("id", applicationId)
+      .single();
+
+    expect(hashSelect.error).not.toBeNull();
+  });
+
+  it("denies direct fan UPDATE on own application", async () => {
+    const serviceClient = createServiceClient();
+    const applicantId = await ensureAuthUser(
+      serviceClient,
+      INTEGRATION_ORGANIZER_APPLICANT_EMAIL,
+      INTEGRATION_ORGANIZER_APPLICANT_PASSWORD,
+    );
+    cleanupUserIds.push(applicantId);
+
+    await serviceClient.from("organizer_roles").delete().eq("user_id", applicantId);
+    await serviceClient.from("organizer_applications").delete().eq("user_id", applicantId);
+
+    const applicantClient = await createAuthenticatedClient(
+      INTEGRATION_ORGANIZER_APPLICANT_EMAIL,
+      INTEGRATION_ORGANIZER_APPLICANT_PASSWORD,
+    );
+
+    const insertResponse = await applicantClient
+      .from("organizer_applications")
+      .insert({
+        user_id: applicantId,
+        business_name: "No Update Crew",
+        social_platform: "instagram",
+        social_profile_url: "https://www.instagram.com/no-update-crew/",
+        status: "pending",
+      })
+      .select("id")
+      .single();
+
+    if (insertResponse.error) {
+      throw new Error(`Expected application insert to succeed: ${insertResponse.error.message}`);
+    }
+
+    const applicationId = insertResponse.data.id as string;
+    cleanupApplicationIds.push(applicationId);
+
+    const updateResponse = await applicantClient
+      .from("organizer_applications")
+      .update({ business_name: "Changed by fan" })
+      .eq("id", applicationId);
+
+    expect(updateResponse.error).not.toBeNull();
+  });
+
   it("runs issue → verify → approve RPC flow and grants organizer role", async () => {
     const serviceClient = createServiceClient();
     const applicantId = await ensureAuthUser(
@@ -235,6 +347,111 @@ describe.skipIf(!runIntegration)("organizer applications (RLS + RPC)", () => {
     const isOrganizerResponse = await applicantClient.rpc("is_organizer");
     expect(isOrganizerResponse.error).toBeNull();
     expect(isOrganizerResponse.data).toBe(true);
+  });
+
+  it("allows admin to reject active application with reason", async () => {
+    const serviceClient = createServiceClient();
+    const applicantId = await ensureAuthUser(
+      serviceClient,
+      INTEGRATION_ORGANIZER_OTHER_EMAIL,
+      INTEGRATION_ORGANIZER_OTHER_PASSWORD,
+    );
+    cleanupUserIds.push(applicantId);
+
+    await serviceClient.from("organizer_roles").delete().eq("user_id", applicantId);
+    await serviceClient.from("organizer_applications").delete().eq("user_id", applicantId);
+
+    const insertResponse = await serviceClient
+      .from("organizer_applications")
+      .insert({
+        user_id: applicantId,
+        business_name: "Reject Flow Crew",
+        social_platform: "facebook",
+        social_profile_url: "https://www.facebook.com/reject-flow-crew",
+        status: "code_verified",
+        code_verified_at: new Date().toISOString(),
+      })
+      .select("id")
+      .single();
+
+    if (insertResponse.error) {
+      throw new Error(`Failed to insert application: ${insertResponse.error.message}`);
+    }
+
+    const applicationId = insertResponse.data.id as string;
+    cleanupApplicationIds.push(applicationId);
+
+    const adminClient = await createAdminClient();
+    const rejectResponse = await adminClient.rpc("reject_organizer_application", {
+      p_application_id: applicationId,
+      p_reason: "Profil nie wygląda na oficjalny",
+    });
+
+    expect(rejectResponse.error).toBeNull();
+    const rejectedApplication = rejectResponse.data as OrganizerApplicationSafeRpcRow;
+    expect(rejectedApplication.status).toBe("rejected");
+    expect(rejectedApplication.decision_reason).toBe("Profil nie wygląda na oficjalny");
+  });
+
+  it("enforces verification code attempt limit", async () => {
+    const serviceClient = createServiceClient();
+    const applicantId = await ensureAuthUser(
+      serviceClient,
+      INTEGRATION_ORGANIZER_APPLICANT_EMAIL,
+      INTEGRATION_ORGANIZER_APPLICANT_PASSWORD,
+    );
+    cleanupUserIds.push(applicantId);
+
+    await serviceClient.from("organizer_roles").delete().eq("user_id", applicantId);
+    await serviceClient.from("organizer_applications").delete().eq("user_id", applicantId);
+
+    const insertResponse = await serviceClient
+      .from("organizer_applications")
+      .insert({
+        user_id: applicantId,
+        business_name: "Attempt Limit Crew",
+        social_platform: "instagram",
+        social_profile_url: "https://www.instagram.com/attempt-limit-crew/",
+        status: "pending",
+      })
+      .select("id")
+      .single();
+
+    if (insertResponse.error) {
+      throw new Error(`Failed to insert application: ${insertResponse.error.message}`);
+    }
+
+    const applicationId = insertResponse.data.id as string;
+    cleanupApplicationIds.push(applicationId);
+
+    const adminClient = await createAdminClient();
+    const issueResponse = await adminClient.rpc("issue_organizer_verification_code", {
+      p_application_id: applicationId,
+    });
+    expect(issueResponse.error).toBeNull();
+
+    const applicantClient = await createAuthenticatedClient(
+      INTEGRATION_ORGANIZER_APPLICANT_EMAIL,
+      INTEGRATION_ORGANIZER_APPLICANT_PASSWORD,
+    );
+
+    for (let attempt = 0; attempt < 5; attempt += 1) {
+      const verifyResponse = await applicantClient.rpc("verify_organizer_application_code", {
+        p_application_id: applicationId,
+        p_code: "AAAAAA",
+      });
+      expect(verifyResponse.error).toBeNull();
+      const application = verifyResponse.data as OrganizerApplicationSafeRpcRow;
+      expect(application.status).toBe("code_issued");
+    }
+
+    const limitResponse = await applicantClient.rpc("verify_organizer_application_code", {
+      p_application_id: applicationId,
+      p_code: "AAAAAA",
+    });
+
+    expect(limitResponse.error).not.toBeNull();
+    expect(limitResponse.error?.message).toContain("attempt limit exceeded");
   });
 
   it("denies fan approve RPC and anon reads", async () => {

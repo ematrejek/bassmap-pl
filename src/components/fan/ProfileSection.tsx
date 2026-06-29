@@ -7,7 +7,7 @@ import { readApiError } from "@/lib/api/json";
 import { loginFromEmailLocalPart } from "@/lib/auth/display-name";
 import { normalizeSuggestedLogin } from "@/lib/services/fan-profile";
 import { activeSubgenresChanged } from "@/lib/subgenres";
-import { DISCOVERY_PATH, MY_EVENTS_PATH } from "@/lib/routes";
+import { DISCOVERY_PATH, MY_EVENTS_PATH, PROFILE_PATH } from "@/lib/routes";
 import { shellBtnPrimary, shellPanelFlat, shellTextMuted } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import type { Event, FanProfile } from "@/types";
@@ -102,7 +102,7 @@ export default function ProfileSection({
   initialIsOrganizer = false,
   goingEvents = [],
 }: Props) {
-  const [profile, setProfile] = useState<FanProfile | null>(initialProfile);
+  const [profile] = useState<FanProfile | null>(initialProfile);
   const [editing, setEditing] = useState(!initialProfile);
   const [isSaving, setIsSaving] = useState(false);
   const [saveError, setSaveError] = useState<string | null>(null);
@@ -126,13 +126,8 @@ export default function ProfileSection({
         return;
       }
 
-      const savedProfile =
-        typeof data === "object" && data !== null && "profile" in data && data.profile
-          ? (data.profile as FanProfile)
-          : nextProfile;
-
-      setProfile(savedProfile);
-      setEditing(false);
+      window.location.assign(`${PROFILE_PATH}#profile`);
+      return;
     } catch {
       setSaveError("Nie udało się zapisać profilu. Spróbuj ponownie.");
     } finally {
