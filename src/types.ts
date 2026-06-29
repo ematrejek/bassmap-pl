@@ -541,3 +541,49 @@ export interface JoinableCrew {
   crew: Crew;
   pendingRequest: CrewJoinRequest | null;
 }
+
+export type OrganizerSocialPlatform = "facebook" | "instagram";
+
+export type OrganizerApplicationStatus = "pending" | "code_issued" | "code_verified" | "approved" | "rejected";
+
+export interface OrganizerApplicationRow {
+  id: string;
+  user_id: string;
+  business_name: string;
+  social_platform: OrganizerSocialPlatform;
+  social_profile_url: string;
+  description: string | null;
+  status: OrganizerApplicationStatus;
+  code_issued_at: string | null;
+  code_verified_at: string | null;
+  code_attempt_count: number;
+  reviewed_by: string | null;
+  reviewed_at: string | null;
+  decision_reason: string | null;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface OrganizerApplication {
+  id: string;
+  userId: string;
+  businessName: string;
+  socialPlatform: OrganizerSocialPlatform;
+  socialProfileUrl: string;
+  description: string | null;
+  status: OrganizerApplicationStatus;
+  codeIssuedAt: string | null;
+  codeVerifiedAt: string | null;
+  codeAttemptCount: number;
+  reviewedBy: string | null;
+  reviewedAt: string | null;
+  decisionReason: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Admin queue row – no verification hash; optional submitter profile fields. */
+export type OrganizerApplicationListItem = OrganizerApplication & {
+  submitterEmail?: string | null;
+  submitterLogin?: string | null;
+};
