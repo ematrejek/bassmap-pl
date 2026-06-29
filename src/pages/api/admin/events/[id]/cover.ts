@@ -3,7 +3,7 @@ import { z } from "zod";
 import { jsonResponse } from "@/lib/api/json";
 import { requireAdmin } from "@/lib/auth/guards";
 import { parseCoverRightsFormData } from "@/lib/legal/cover-rights";
-import { getEventById, updateEvent } from "@/lib/services/events";
+import { applyEventCoverUpload, getEventById } from "@/lib/services/events";
 import {
   buildCoverStoragePath,
   EVENT_COVERS_BUCKET,
@@ -105,7 +105,7 @@ export const POST: APIRoute = async (context) => {
     return jsonResponse({ error: mapStorageUploadError(uploadResult.error.message) }, 400);
   }
 
-  const updateResult = await updateEvent(supabase, idResult.id, {
+  const updateResult = await applyEventCoverUpload(supabase, idResult.id, {
     coverPath: storagePath,
     coverAspect,
     coverSource: coverRights.coverSource,

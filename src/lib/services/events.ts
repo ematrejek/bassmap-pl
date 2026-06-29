@@ -424,13 +424,14 @@ export async function applyEventCoverUpload(
     coverCopyrightDeclaredAt: string;
   },
 ): Promise<ServiceResult<Event>> {
-  return updateEvent(supabase, eventId, data);
+  return updateEvent(supabase, eventId, data, { allowCoverPathChange: true });
 }
 
 export async function updateEvent(
   supabase: SupabaseClient,
   id: string,
   parsed: EventServiceUpdate,
+  options?: { allowCoverPathChange?: boolean },
 ): Promise<ServiceResult<Event>> {
   const existing = await getEventById(supabase, id);
   if (!existing) {
@@ -459,7 +460,7 @@ export async function updateEvent(
   let coverPathToRemoveAfterUpdate: string | null = null;
 
   if (parsed.coverPath !== undefined) {
-    if (parsed.coverPath !== null && parsed.coverPath !== existing.coverPath) {
+    if (!options?.allowCoverPathChange && parsed.coverPath !== null && parsed.coverPath !== existing.coverPath) {
       return { error: "Okładkę można wgrać tylko przez formularz uploadu okładki" };
     }
 
