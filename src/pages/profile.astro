@@ -1,27 +1,31 @@
 ---
 import AppShell from "@/components/shell/AppShell.astro";
 import DeleteAccountSection from "@/components/fan/DeleteAccountSection";
+import OrganizerApplicationSection from "@/components/fan/OrganizerApplicationSection";
 import ProfileSection from "@/components/fan/ProfileSection";
 import Layout from "@/layouts/Layout.astro";
 import { loginFromEmailLocalPart } from "@/lib/auth/display-name";
 import { PRIVACY_POLICY_PATH } from "@/lib/legal/paths";
+import { getOwnOrganizerApplication } from "@/lib/services/organizer-applications";
 import { ensureFanProfile, getFanProfileByUserId } from "@/lib/services/fan-profile";
 import { listEventsForUserAttendance } from "@/lib/services/event-attendance";
 import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
 import { shellLink, shellTextMuted } from "@/lib/shell-styles";
 import { createClient } from "@/lib/supabase";
-import type { Event, EventWithCoverUrl, FanProfile } from "@/types";
+import type { Event, EventWithCoverUrl, FanProfile, OrganizerApplication } from "@/types";
 import { SUPABASE_URL } from "astro:env/server";
 
 export const prerender = false;
 
-const { user, isAdmin } = Astro.locals;
+const { user, isAdmin, isOrganizer } = Astro.locals;
 const email = user?.email ?? "";
 
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 
 let profile: FanProfile | null = null;
 let profileError: string | null = null;
+let organizerApplication: OrganizerApplication | null = null;
+let organizerApplicationError: string | null = null;
 
 if (supabase && user && !isAdmin) {
   const suggestedLogin = email ? loginFromEmailLocalPart(email) : null;
@@ -35,6 +39,13 @@ if (supabase && user && !isAdmin) {
     } else {
       profile = profileResult.data;
     }
+  }
+
+  const organizerResult = await getOwnOrganizerApplication(supabase, user.id);
+  if ("error" in organizerResult) {
+    organizerApplicationError = organizerResult.error;
+  } else {
+    organizerApplication = organizerResult.data;
   }
 }
 
@@ -74,6 +85,24 @@ const goingEvents: EventWithCoverUrl[] = supabaseUrl
           userId={user.id}
           initialProfile={profile}
           goingEvents={goingEvents}
+          client:only="react"
+        />
+      ) : null
+    }
+    {
+      organizerApplicationError ? (
+        <div class="mx-auto max-w-6xl px-4 pt-8">
+          <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+            {organizerApplicationError}
+          </p>
+        </div>
+      ) : null
+    }
+    {
+      email && user && !isAdmin ? (
+        <OrganizerApplicationSection
+          initialApplication={organizerApplication}
+          initialIsOrganizer={isOrganizer}
           client:only="react"
         />
       ) : null

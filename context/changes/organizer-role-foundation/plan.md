@@ -409,10 +409,10 @@ Aktualizacja dokumentów prawnych, testy RLS, zamknięcie slice'a.
 
 #### Automated
 
-- [x] 2.1 `tests/unit/require-organizer.test.ts` przechodzi
-- [x] 2.2 `tests/unit/organizer-application-schema.test.ts` przechodzi
-- [x] 2.3 `tests/unit/organizer-applications-api.test.ts` przechodzi
-- [x] 2.4 `npm run check` i `npm run lint` przechodzą
+- [x] 2.1 `tests/unit/require-organizer.test.ts` przechodzi — 431b60a
+- [x] 2.2 `tests/unit/organizer-application-schema.test.ts` przechodzi — 431b60a
+- [x] 2.3 `tests/unit/organizer-applications-api.test.ts` przechodzi — 431b60a
+- [x] 2.4 `npm run check` i `npm run lint` przechodzą — 431b60a
 
 #### Manual
 
@@ -422,7 +422,7 @@ Aktualizacja dokumentów prawnych, testy RLS, zamknięcie slice'a.
 
 #### Automated
 
-- [ ] 3.1 `npm run build` przechodzi
+- [x] 3.1 `npm run build` przechodzi
 
 #### Manual
 

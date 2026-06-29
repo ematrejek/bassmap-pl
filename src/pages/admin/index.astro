@@ -3,8 +3,10 @@ import Layout from "@/layouts/Layout.astro";
 import AppShell from "@/components/shell/AppShell.astro";
 import AdminEventsTable from "@/components/admin/AdminEventsTable";
 import ChangeSuggestionsTable, { type ChangeSuggestionTableRow } from "@/components/admin/ChangeSuggestionsTable";
+import OrganizerApplicationsTable from "@/components/admin/OrganizerApplicationsTable";
 import { resolveSubmitterProfiles } from "@/lib/auth/submitter-profile";
 import { listChangeSuggestionsForAdmin, type AdminChangeSuggestionListItem } from "@/lib/services/change-suggestions";
+import { listOrganizerApplicationsForAdmin } from "@/lib/services/organizer-applications";
 import {
   formatSuggestionSummary,
   pickSuggestionEventSnapshot,
@@ -23,9 +25,12 @@ export const prerender = false;
 const supabase = createClient(Astro.request.headers, Astro.cookies);
 const listResult = supabase ? await listEventsForAdmin(supabase) : { data: [] };
 const suggestionsResult = supabase ? await listChangeSuggestionsForAdmin(supabase) : { data: [] };
+const organizerApplicationsResult = supabase ? await listOrganizerApplicationsForAdmin(supabase) : { data: [] };
 const rawEvents: Event[] = "data" in listResult ? listResult.data : [];
 const rawSuggestions: AdminChangeSuggestionListItem[] = "data" in suggestionsResult ? suggestionsResult.data : [];
+const organizerApplications = "data" in organizerApplicationsResult ? organizerApplicationsResult.data : [];
 const suggestionsError = "error" in suggestionsResult ? suggestionsResult.error : null;
+const organizerApplicationsError = "error" in organizerApplicationsResult ? organizerApplicationsResult.error : null;
 const supabaseUrl = SUPABASE_URL ?? "";
 
 function isFanSubmission(event: Event): boolean {
@@ -150,6 +155,28 @@ const listError = "error" in listResult ? listResult.error : null;
           ) : null
         }
         <ChangeSuggestionsTable suggestions={suggestionRows} emptyMessage="Brak sugestii zmian." client:only="react" />
+      </section>
+
+      <section class="mb-12">
+        <div class="mb-4">
+          <h2 class="font-heading text-foreground text-xl font-bold tracking-tight uppercase">Wnioski organizatorów</h2>
+          <p class:list={["mt-1 text-sm", shellTextMuted]}>
+            Weryfikacja organizatorów – wygeneruj kod, wyślij go na profil social z konta BassMap PL, potem zatwierdź
+            lub odrzuć wniosek.
+          </p>
+        </div>
+        {
+          organizerApplicationsError ? (
+            <p class="mb-4 flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+              {organizerApplicationsError}
+            </p>
+          ) : null
+        }
+        <OrganizerApplicationsTable
+          applications={organizerApplications}
+          emptyMessage="Brak wniosków organizatorów."
+          client:only="react"
+        />
       </section>
 
       <section class="mb-12">

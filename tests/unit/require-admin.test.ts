@@ -8,6 +8,7 @@ function mockLocals(overrides: Partial<App.Locals>): App.Locals {
   return {
     user: null,
     isAdmin: false,
+    isOrganizer: false,
     ...overrides,
   } as App.Locals;
 }
