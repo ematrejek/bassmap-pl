@@ -20,7 +20,11 @@ const events = supabaseUrl
 const listError = "error" in listResult ? listResult.error : null;
 ---
 
-<Layout title="Archiwum wydarzeń – BassMap PL">
+<Layout
+  title="Archiwum wydarzeń – BassMap PL"
+  description="Archiwum przeszłych imprez drum and bass w Polsce – data, miejsce i szczegóły na BassMap PL."
+  canonicalPath="/archive"
+>
   <AppShell>
     <div class="mx-auto w-full max-w-3xl flex-1 space-y-6 px-2 py-8 sm:px-4">
       <div>

@@ -25,7 +25,11 @@ const countsResult =
 const replyCounts = countsResult && "data" in countsResult ? countsResult.data : {};
 ---
 
-<Layout title="Forum – BassMap PL">
+<Layout
+  title="Forum – BassMap PL"
+  description="Forum społeczności BassMap PL – wątki o imprezach, ekipach i muzyce drum and bass."
+  canonicalPath="/forum"
+>
   <AppShell immersive={true}>
     <ForumView
       client:only="react"

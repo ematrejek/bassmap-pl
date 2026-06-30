@@ -6,13 +6,14 @@ import HomeHero from "@/components/home/HomeHero.astro";
 import HomeLegalLinks from "@/components/home/HomeLegalLinks.astro";
 import AppShell from "@/components/shell/AppShell.astro";
 import Layout from "@/layouts/Layout.astro";
+import { DEFAULT_SITE_DESCRIPTION, DEFAULT_SITE_TITLE } from "@/lib/site-meta";
 
 export const prerender = false;
 
 const accountDeleted = Astro.url.searchParams.get("accountDeleted") === "1";
 ---
 
-<Layout title="BassMap PL – Find the place, drop the bass!">
+<Layout title={DEFAULT_SITE_TITLE} description={DEFAULT_SITE_DESCRIPTION} canonicalPath="/">
   <AppShell showFooter={false} immersive>
     {
       accountDeleted ? (

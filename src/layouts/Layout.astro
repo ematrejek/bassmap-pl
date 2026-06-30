@@ -5,14 +5,32 @@ import Banner from "@/components/Banner.astro";
 import CookieConsentBanner from "@/components/CookieConsentBanner.astro";
 import PwaInstallBanner from "@/components/PwaInstallBanner.astro";
 import { missingConfigs } from "@/lib/config-status";
+import { DEFAULT_SITE_DESCRIPTION, DEFAULT_SITE_TITLE, resolveOgImageUrl } from "@/lib/site-meta";
+import { absoluteUrl } from "@/lib/site";
 import { PWA_THEME_COLOR } from "../../pwa.config.mjs";
 
 interface Props {
   title?: string;
+  description?: string;
+  canonicalPath?: string;
+  ogTitle?: string;
+  ogDescription?: string;
   ogImage?: string;
+  ogType?: string;
 }
 
-const { title = "BassMap PL", ogImage } = Astro.props;
+const {
+  title = DEFAULT_SITE_TITLE,
+  description = DEFAULT_SITE_DESCRIPTION,
+  canonicalPath = Astro.url.pathname,
+  ogTitle = title,
+  ogDescription = description,
+  ogImage: ogImageProp,
+  ogType = "website",
+} = Astro.props;
+
+const canonicalUrl = absoluteUrl(canonicalPath);
+const resolvedOgImage = resolveOgImageUrl(ogImageProp);
 ---
 
 <!doctype html>
@@ -20,6 +38,7 @@ const { title = "BassMap PL", ogImage } = Astro.props;
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
     <meta name="color-scheme" content="dark" />
     <meta name="theme-color" content={PWA_THEME_COLOR} />
     <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -28,6 +47,7 @@ const { title = "BassMap PL", ogImage } = Astro.props;
     <link rel="icon" type="image/png" sizes="48x48" href="/favicon.png" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="canonical" href={canonicalUrl} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -35,7 +55,16 @@ const { title = "BassMap PL", ogImage } = Astro.props;
       rel="stylesheet"
     />
     <title>{title}</title>
-    {ogImage && <meta property="og:image" content={ogImage} />}
+    <meta property="og:title" content={ogTitle} />
+    <meta property="og:description" content={ogDescription} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:image" content={resolvedOgImage} />
+    <meta property="og:locale" content="pl_PL" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={ogTitle} />
+    <meta name="twitter:description" content={ogDescription} />
+    <meta name="twitter:image" content={resolvedOgImage} />
   </head>
   <body class="antialiased">
     {

@@ -9,6 +9,7 @@ import { FORUM_PATH } from "@/lib/routes";
 import { shellBtnPrimary, shellLink } from "@/lib/shell-styles";
 import { listForumComments } from "@/lib/services/forum-comments";
 import { getForumThreadDetailForViewer } from "@/lib/services/forum-threads";
+import { buildForumThreadDescription } from "@/lib/site-meta";
 import { createClient } from "@/lib/supabase";
 import { ThreadCrewJoinPanel } from "@/components/forum/ThreadCrewJoinPanel";
 
@@ -37,9 +38,14 @@ const initialComments = commentsResult && "data" in commentsResult ? commentsRes
 
 const sectionMeta = thread ? getForumSectionMeta(thread.category) : undefined;
 const threadPath = thread ? `${FORUM_PATH}/${thread.id}` : FORUM_PATH;
+const threadDescription = thread ? buildForumThreadDescription(thread) : "Nie znaleziono wątku na forum BassMap PL.";
 ---
 
-<Layout title={thread ? `${thread.title} – Forum BassMap PL` : "Nie znaleziono – BassMap PL"}>
+<Layout
+  title={thread ? `${thread.title} – Forum BassMap PL` : "Nie znaleziono – BassMap PL"}
+  description={threadDescription}
+  canonicalPath={threadPath}
+>
   <AppShell>
     <div class="mx-auto w-full max-w-2xl flex-1 px-2 py-8 sm:px-4">
       {

@@ -7,12 +7,15 @@ import { LEGAL_UPDATED_AT } from "@/lib/legal/paths";
 interface Props {
   title: string;
   pageTitle: string;
+  description?: string;
+  canonicalPath?: string;
+  ogImage?: string;
 }
 
-const { title, pageTitle } = Astro.props;
+const { title, pageTitle, description, canonicalPath, ogImage } = Astro.props;
 ---
 
-<Layout title={title}>
+<Layout title={title} description={description} canonicalPath={canonicalPath} ogImage={ogImage}>
   <AppShell>
     <div class="mx-auto w-full max-w-2xl flex-1 px-2 py-8 sm:px-4">
       <article class="surface-panel text-foreground p-6 sm:p-8">

@@ -1,13 +1,18 @@
 ---
 import LegalDocumentShell from "@/components/legal/LegalDocumentShell.astro";
-import { PRIVACY_POLICY_PATH } from "@/lib/legal/paths";
+import { PRIVACY_POLICY_PATH, TERMS_PATH } from "@/lib/legal/paths";
 
 export const prerender = false;
 
 const privacyPolicyHref = PRIVACY_POLICY_PATH;
 ---
 
-<LegalDocumentShell title="Regulamin – BassMap PL" pageTitle="Regulamin serwisu">
+<LegalDocumentShell
+  title="Regulamin – BassMap PL"
+  pageTitle="Regulamin serwisu"
+  description="Regulamin serwisu BassMap PL – zasady korzystania z platformy wydarzeń drum and bass w Polsce."
+  canonicalPath={TERMS_PATH}
+>
   <h2>1. Postanowienia ogólne</h2>
   <p>
     <strong>1.1.</strong> Serwis BassMap PL dostępny pod adresem bassmap.pl (dalej: „Serwis”) prowadzony jest przez Emilię

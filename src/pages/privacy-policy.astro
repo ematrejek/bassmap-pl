@@ -1,10 +1,16 @@
 ---
 import LegalDocumentShell from "@/components/legal/LegalDocumentShell.astro";
+import { PRIVACY_POLICY_PATH } from "@/lib/legal/paths";
 
 export const prerender = false;
 ---
 
-<LegalDocumentShell title="Polityka prywatności – BassMap PL" pageTitle="Polityka prywatności">
+<LegalDocumentShell
+  title="Polityka prywatności – BassMap PL"
+  pageTitle="Polityka prywatności"
+  description="Polityka prywatności BassMap PL – jak przetwarzamy dane osobowe użytkowników serwisu."
+  canonicalPath={PRIVACY_POLICY_PATH}
+>
   <h2>1. Administrator danych osobowych</h2>
   <p>Administratorem danych osobowych jest:</p>
   <p>

@@ -8,6 +8,7 @@ import { parseFanFilters } from "@/lib/events/fan-schema";
 import { getGoingCountsByEventIds, getUserAttendanceByEventIds } from "@/lib/services/event-attendance";
 import { listDistinctCities, listPublishedEvents } from "@/lib/services/events";
 import { enrichEventWithCoverUrl } from "@/lib/storage/event-covers";
+import { buildDiscoveryPageDescription, DEFAULT_SITE_TITLE } from "@/lib/site-meta";
 import { createClient } from "@/lib/supabase";
 import Layout from "@/layouts/Layout.astro";
 import { shellHeading, shellPanelFlat, shellTextMuted } from "@/lib/shell-styles";
@@ -62,7 +63,7 @@ const listError =
 const hasActiveFilters = hasActiveFanFilters(currentFilters);
 ---
 
-<Layout title="BassMap PL – Find the place, drop the bass!">
+<Layout title={DEFAULT_SITE_TITLE} description={buildDiscoveryPageDescription(events.length)} canonicalPath="/events">
   <AppShell>
     <div class="mx-auto w-full max-w-6xl flex-1 space-y-8 px-2 py-8 sm:px-4">
       <DiscoveryShell

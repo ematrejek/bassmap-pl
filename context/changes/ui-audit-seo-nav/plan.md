@@ -496,8 +496,8 @@ Automatyzacja najważniejszych regresji SEO z audytu.
 
 #### Manual
 
-- [ ] 2.4 Meta i OG na `/` i `/events` w View Source
-- [ ] 2.5 Podgląd linku w Discord/FB
+- [x] 2.4 Meta i OG na `/` i `/events` w View Source
+- [x] 2.5 Podgląd linku w Discord/FB (pominięty – tylko View Source na localhost)
 
 ### Phase 3: Nawigacja SSR i desktop
 

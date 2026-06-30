@@ -17,6 +17,7 @@ import { getPublishedEventById } from "@/lib/services/events";
 import { getAttendanceSummary } from "@/lib/services/event-attendance";
 import { listEventComments } from "@/lib/services/event-comments";
 import { getEventCoverUrl } from "@/lib/storage/event-covers";
+import { buildEventPageDescription } from "@/lib/site-meta";
 import { createClient } from "@/lib/supabase";
 import Layout from "@/layouts/Layout.astro";
 import { shellBtnPrimary, shellLink } from "@/lib/shell-styles";
@@ -48,9 +49,17 @@ const attendanceSummary =
     ? attendanceResult.data
     : { goingCount: 0, interestedCount: 0, userStatus: null };
 const displaySubgenres = event ? filterActiveSubgenres(event.subgenres) : [];
+const eventPageDescription = event ? buildEventPageDescription(event) : "Nie znaleziono wydarzenia na BassMap PL.";
+const eventCanonicalPath = id ? `/events/${id}` : DISCOVERY_PATH;
 ---
 
-<Layout title={event ? `${event.name} – BassMap PL` : "Nie znaleziono – BassMap PL"} ogImage={coverUrl ?? undefined}>
+<Layout
+  title={event ? `${event.name} – BassMap PL` : "Nie znaleziono – BassMap PL"}
+  description={eventPageDescription}
+  canonicalPath={eventCanonicalPath}
+  ogImage={coverUrl ?? undefined}
+  ogType={event ? "article" : "website"}
+>
   <AppShell>
     <div class="mx-auto w-full max-w-2xl flex-1 px-2 py-8 sm:px-4">
       {
