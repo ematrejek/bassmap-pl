@@ -47,6 +47,9 @@ bassmap-pl-ui (1)/
 # root-level legal scratch only (tracked references: context/legal/)
 /legal/
 
+# Local database backups (may contain production data; never commit)
+/backups/
+
 # Partia III GitHub backlog automation (local one-off; issues already on GitHub)
 context/foundation/partia-iii-github-issues.md
 scripts/partia-iii-issues.json

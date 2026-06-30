@@ -125,12 +125,9 @@ const STORAGE_KEY = "bassmap-pwa-install-dismissed-v2";
     });
 
     const ua = navigator.userAgent;
-    const isIos =
-      /iphone|ipad|ipod/i.test(ua) && !(/** @type {Window & { MSStream?: unknown }} */ (window).MSStream);
+    const isIos = /iphone|ipad|ipod/i.test(ua) && !(/** @type {Window & { MSStream?: unknown }} */ (window).MSStream);
     const isMobile =
-      isIos ||
-      /android|iemobile|blackberry|bada|mobile/i.test(ua) ||
-      window.matchMedia("(pointer: coarse)").matches;
+      isIos || /android|iemobile|blackberry|bada|mobile/i.test(ua) || window.matchMedia("(pointer: coarse)").matches;
 
     // Desktop / laptop: install prompt is unreliable here, so show an
     // informational note pointing users to the mobile install instead.
