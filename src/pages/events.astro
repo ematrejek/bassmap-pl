@@ -1,6 +1,9 @@
 ---
 import DiscoveryShell from "@/components/discovery/DiscoveryShell";
+import EventDiscoveryListStatic from "@/components/discovery/EventDiscoveryListStatic.astro";
+import EventFiltersStatic from "@/components/discovery/EventFiltersStatic.astro";
 import AppShell from "@/components/shell/AppShell.astro";
+import { hasActiveFanFilters } from "@/lib/events/discovery-page";
 import { parseFanFilters } from "@/lib/events/fan-schema";
 import { getGoingCountsByEventIds, getUserAttendanceByEventIds } from "@/lib/services/event-attendance";
 import { listDistinctCities, listPublishedEvents } from "@/lib/services/events";
@@ -55,6 +58,8 @@ const listError =
   ]
     .filter(Boolean)
     .join(" ") || null;
+
+const hasActiveFilters = hasActiveFanFilters(currentFilters);
 ---
 
 <Layout title="BassMap PL – Find the place, drop the bass!">
@@ -68,11 +73,39 @@ const listError =
         isLoggedIn={isLoggedIn}
         client:only="react"
       >
-        <div slot="fallback" class:list={["space-y-6 p-8 text-center", shellPanelFlat, shellTextMuted]}>
-          <h1 class:list={shellHeading}>
-            MAP THE <span class="text-primary text-glow-violet">BASS</span>!
-          </h1>
-          <p class="text-sm">Ładowanie listy wydarzeń…</p>
+        <div slot="fallback" class="space-y-6">
+          <div>
+            <h1 class:list={shellHeading}>
+              MAP THE <span class="text-primary text-glow-violet">BASS</span>!
+            </h1>
+            <p class:list={["mt-1 text-sm", shellTextMuted]}>
+              Filtruj po dacie, mieście, podgatunku i cenie – znajdź imprezę na liście lub mapie.
+            </p>
+          </div>
+
+          {
+            listError ? (
+              <p class="flex items-center gap-2 rounded-lg border border-red-500/30 bg-red-900/30 px-3 py-2 text-sm text-red-300">
+                {listError}
+              </p>
+            ) : null
+          }
+
+          <div class="grid gap-6 md:grid-cols-2 md:items-start">
+            <EventFiltersStatic cities={cities} currentFilters={currentFilters} />
+            <div
+              class:list={[
+                "flex min-h-[320px] items-center justify-center p-6 text-center text-sm",
+                shellPanelFlat,
+                shellTextMuted,
+              ]}
+              aria-hidden="true"
+            >
+              Mapa interaktywna załaduje się po włączeniu JavaScript.
+            </div>
+          </div>
+
+          <EventDiscoveryListStatic events={events} hasActiveFilters={hasActiveFilters} />
         </div>
       </DiscoveryShell>
     </div>

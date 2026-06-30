@@ -10,6 +10,7 @@ const baseURL = `http://${host}:${port}`;
 
 export default defineConfig({
   testDir: "tests/e2e",
+  grep: process.env.CI ? /^(?!.*\.perf\.spec\.ts$)/u : undefined,
   globalSetup: "./tests/e2e/global-setup.ts",
   globalTeardown: "./tests/e2e/global-teardown.ts",
   fullyParallel: true,

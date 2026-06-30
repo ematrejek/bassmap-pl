@@ -1,0 +1,71 @@
+---
+import type { FanEventFilters } from "@/lib/events/fan-schema";
+import { DISCOVERY_PATH } from "@/lib/routes";
+import { shellBtnOutline, shellBtnPrimary, shellPanel, shellTextMuted } from "@/lib/shell-styles";
+
+interface Props {
+  cities: string[];
+  currentFilters: FanEventFilters;
+}
+
+const { cities, currentFilters } = Astro.props;
+const inputClass =
+  "border-border bg-card/60 text-foreground focus-visible:border-primary/70 focus-visible:ring-ring/30 focus-visible:shadow-glow-violet h-9 w-full rounded-md border px-3 text-sm focus-visible:ring-2 focus-visible:outline-none";
+---
+
+<form method="GET" action={DISCOVERY_PATH} class:list={["space-y-4 p-4", shellPanel]} data-discovery-filters-static>
+  <p class:list={["text-xs", shellTextMuted]}>
+    Filtruj po mieście i cenie bez JavaScript. Pełne filtry (data, podgatunek, mapa) wymagają włączonego JS.
+  </p>
+
+  {currentFilters.subgenres.map((subgenre) => <input type="hidden" name="subgenre" value={subgenre} />)}
+  {currentFilters.dateFrom ? <input type="hidden" name="from" value={currentFilters.dateFrom} /> : null}
+  {currentFilters.dateTo ? <input type="hidden" name="to" value={currentFilters.dateTo} /> : null}
+
+  <div class="space-y-2">
+    <label for="discovery-city-static" class="text-foreground/90 text-sm font-medium"> Miasto </label>
+    <select id="discovery-city-static" name="city" class:list={inputClass}>
+      <option value="" selected={currentFilters.city === null}>Wszystkie miasta</option>
+      {
+        cities.map((city) => (
+          <option value={city} selected={currentFilters.city === city}>
+            {city}
+          </option>
+        ))
+      }
+    </select>
+  </div>
+
+  <div class="space-y-2">
+    <label
+      for="discovery-free-static"
+      class="border-border bg-card/50 text-foreground hover:bg-secondary flex w-fit cursor-pointer items-center gap-2 rounded-md border px-2 py-1.5 text-sm"
+    >
+      <input
+        id="discovery-free-static"
+        type="checkbox"
+        name="free"
+        value="1"
+        checked={currentFilters.freeOnly}
+        class="border-border accent-primary size-4 rounded"
+      />
+      <span>Pokaż tylko darmowe</span>
+    </label>
+    <p class:list={["text-xs", shellTextMuted]}>Zostaw odznaczone, żeby zobaczyć też płatne wydarzenia.</p>
+  </div>
+
+  <div class="flex flex-wrap gap-2">
+    <button type="submit" class:list={["inline-flex h-9 items-center rounded-md px-4 text-sm", shellBtnPrimary]}>
+      Filtruj
+    </button>
+    <a
+      href={DISCOVERY_PATH}
+      class:list={[
+        "inline-flex h-9 items-center rounded-md border px-4 text-sm font-medium transition-colors",
+        shellBtnOutline,
+      ]}
+    >
+      Wyczyść filtry
+    </a>
+  </div>
+</form>

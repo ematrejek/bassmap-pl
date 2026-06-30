@@ -7,7 +7,7 @@ import { cn } from "@/lib/utils";
 import type { EventWithCoverUrl } from "@/types";
 import { lazy, Suspense, useState, useSyncExternalStore } from "react";
 
-/** Leaflet wymaga `window` – ładujemy mapę dopiero po montażu w przeglądarce. */
+/** MapLibre wymaga `window` – ładujemy mapę dopiero po montażu w przeglądarce. */
 const EventsMap = lazy(async () => {
   try {
     return await import("@/components/discovery/EventsMap");
@@ -47,6 +47,20 @@ function useIsClient(): boolean {
   );
 }
 
+function useMinMd(): boolean {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const mq = window.matchMedia("(min-width: 768px)");
+      mq.addEventListener("change", onStoreChange);
+      return () => {
+        mq.removeEventListener("change", onStoreChange);
+      };
+    },
+    () => window.matchMedia("(min-width: 768px)").matches,
+    () => false,
+  );
+}
+
 function MapPlaceholder({ className }: { className?: string }) {
   return (
     <div className={cn("flex min-h-[320px] items-center justify-center", shellPanelFlat, className)}>
@@ -69,6 +83,8 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
   const [hoveredEventId, setHoveredEventId] = useState<string | null>(null);
   const [mobileTab, setMobileTab] = useState<MobileTab>("list");
   const isClient = useIsClient();
+  const isMdUp = useMinMd();
+  const shouldMountMap = isClient && (isMdUp || mobileTab === "map");
 
   const hasActiveFilters =
     currentFilters.city !== null ||
@@ -79,6 +95,8 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
   const handleEventNavigate = (id: string) => {
     window.location.assign(`/events/${id}`);
   };
+
+  const mapPanelClassName = "h-full min-h-[320px] md:min-h-[min(60vh,520px)]";
 
   return (
     <div className="space-y-6">
@@ -126,18 +144,18 @@ export default function DiscoveryShell({ events, cities, currentFilters, listErr
         </div>
 
         <div className={cn("min-h-[320px]", mobileTab !== "map" && "hidden md:block")}>
-          {isClient ? (
-            <Suspense fallback={<MapPlaceholder className="h-full min-h-[320px]" />}>
+          {shouldMountMap ? (
+            <Suspense fallback={<MapPlaceholder className={mapPanelClassName} />}>
               <EventsMap
                 events={events}
                 highlightedEventId={hoveredEventId}
                 onEventNavigate={handleEventNavigate}
                 onHighlightEvent={setHoveredEventId}
-                className="h-full min-h-[320px] md:min-h-[min(60vh,520px)]"
+                className={mapPanelClassName}
               />
             </Suspense>
           ) : (
-            <MapPlaceholder className="h-full min-h-[320px] md:min-h-[min(60vh,520px)]" />
+            <MapPlaceholder className={mapPanelClassName} />
           )}
         </div>
       </div>

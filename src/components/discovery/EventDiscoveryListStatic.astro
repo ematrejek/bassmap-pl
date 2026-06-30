@@ -1,0 +1,77 @@
+---
+import { formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
+import { emptyDiscoveryListMessage } from "@/lib/events/discovery-page";
+import { shellPanelFlat, shellTextMuted } from "@/lib/shell-styles";
+import { filterActiveSubgenres } from "@/lib/subgenres";
+import type { EventWithCoverUrl } from "@/types";
+import { SUBGENRE_LABELS } from "@/types";
+
+interface Props {
+  events: EventWithCoverUrl[];
+  hasActiveFilters: boolean;
+}
+
+const { events, hasActiveFilters } = Astro.props;
+---
+
+{
+  events.length === 0 ? (
+    <p class:list={["p-8 text-center text-sm", shellPanelFlat, shellTextMuted]}>
+      {emptyDiscoveryListMessage(hasActiveFilters)}
+    </p>
+  ) : (
+    <ul class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3" data-discovery-ssr-list>
+      {events.map((event) => {
+        const activeSubgenres = filterActiveSubgenres(event.subgenres);
+        const detailHref = `/events/${event.id}`;
+        return (
+          <li>
+            <article class="border-border/70 bg-card/50 h-full rounded-xl border p-4 backdrop-blur-md">
+              {event.coverUrl ? (
+                <img
+                  src={event.coverUrl}
+                  alt={`Okładka: ${event.name}`}
+                  class="mb-3 aspect-video w-full rounded-lg object-cover"
+                  loading="lazy"
+                  decoding="async"
+                />
+              ) : null}
+              <h2 class="font-heading text-foreground text-lg leading-tight font-bold tracking-tight uppercase">
+                <a href={detailHref} class="hover:underline">
+                  {event.name}
+                </a>
+              </h2>
+              <dl class:list={["mt-3 space-y-1 text-sm", shellTextMuted]}>
+                <div>
+                  <dt class="sr-only">Data</dt>
+                  <dd>{formatEventDate(event.startsAt)}</dd>
+                </div>
+                <div>
+                  <dt class="sr-only">Miejsce</dt>
+                  <dd>{formatEventVenueLine(event)}</dd>
+                </div>
+                <div>
+                  <dt class="sr-only">Cena</dt>
+                  <dd class="text-accent font-medium">{formatEventPrice(event)}</dd>
+                </div>
+              </dl>
+              {activeSubgenres.length > 0 ? (
+                <p class:list={["mt-2 text-xs", shellTextMuted]}>
+                  {activeSubgenres.map((subgenre) => SUBGENRE_LABELS[subgenre]).join(" · ")}
+                </p>
+              ) : null}
+              <p class="mt-3">
+                <a
+                  href={detailHref}
+                  class="text-primary hover:text-accent text-sm font-semibold tracking-wide uppercase transition-colors hover:underline"
+                >
+                  Zobacz wydarzenie
+                </a>
+              </p>
+            </article>
+          </li>
+        );
+      })}
+    </ul>
+  )
+}

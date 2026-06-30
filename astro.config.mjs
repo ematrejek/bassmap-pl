@@ -79,15 +79,7 @@ export default defineConfig({
       dedupe: ["react", "react-dom"],
     },
     optimizeDeps: {
-      include: [
-        "react",
-        "react-dom",
-        "react/jsx-runtime",
-        "react/jsx-dev-runtime",
-        "leaflet",
-        "react-leaflet",
-        "lucide-react",
-      ],
+      include: ["react", "react-dom", "react/jsx-runtime", "react/jsx-dev-runtime", "maplibre-gl", "lucide-react"],
       exclude: ["@radix-ui/react-alert-dialog", "@radix-ui/react-checkbox", "@radix-ui/react-dialog"],
     },
     ssr: {

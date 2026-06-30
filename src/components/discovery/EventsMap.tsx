@@ -1,40 +1,28 @@
 import { Equalizer } from "@/components/shell/Equalizer";
 import { formatEventDate, formatEventPrice, formatEventVenueLine } from "@/lib/events/format";
 import { resolveMapCoordinates } from "@/lib/geocoding/city-centers";
+import { BASSMAP_MAP_STYLE, MAP_INITIAL_VIEW } from "@/lib/map/constants";
 import { filterActiveSubgenres } from "@/lib/subgenres";
 import { shellPanelFlat } from "@/lib/shell-styles";
 import { cn } from "@/lib/utils";
 import type { Event } from "@/types";
 import { SUBGENRE_LABELS } from "@/types";
-import L from "leaflet";
-import "leaflet/dist/leaflet.css";
-import { useMemo } from "react";
-import { MapContainer, Marker, TileLayer, Tooltip } from "react-leaflet";
+import "maplibre-gl/dist/maplibre-gl.css";
+import { useMemo, useState, useSyncExternalStore } from "react";
+import MapGL, { Marker, NavigationControl, Popup } from "react-map-gl/maplibre";
 
-const MAP_TILES_URL = "https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png";
-const MAP_ATTRIBUTION =
-  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>';
-
-const NEON_PRIMARY = "oklch(0.62 0.25 300)";
-const NEON_ACCENT = "oklch(0.85 0.2 175)";
-
-function createNeonMarkerIcon(color: string, active: boolean): L.DivIcon {
-  const size = active ? 14 : 10;
-  return L.divIcon({
-    className: "discovery-map-marker",
-    html: `<span style="
-      display:block;
-      width:${String(size)}px;
-      height:${String(size)}px;
-      border-radius:9999px;
-      background:${color};
-      box-shadow:0 0 12px ${color}, 0 0 4px ${color};
-      border:2px solid oklch(0.13 0.015 280);
-      transform:translate(-50%,-50%);
-    "></span>`,
-    iconSize: [size, size],
-    iconAnchor: [size / 2, size / 2],
-  });
+function usePrefersFinePointer(): boolean {
+  return useSyncExternalStore(
+    (onStoreChange) => {
+      const mq = window.matchMedia("(pointer: fine)");
+      mq.addEventListener("change", onStoreChange);
+      return () => {
+        mq.removeEventListener("change", onStoreChange);
+      };
+    },
+    () => window.matchMedia("(pointer: fine)").matches,
+    () => false,
+  );
 }
 
 function EventMapTooltip({ event }: { event: Event }) {
@@ -67,6 +55,9 @@ interface Props {
 }
 
 export default function EventsMap({ events, highlightedEventId, onEventNavigate, onHighlightEvent, className }: Props) {
+  const prefersFinePointer = usePrefersFinePointer();
+  const [coarseTapPinId, setCoarseTapPinId] = useState<string | null>(null);
+  const [mapLoadError, setMapLoadError] = useState(false);
   const eventCoordinates = useMemo(() => {
     const map = new Map<string, { latitude: number; longitude: number }>();
     for (const event of events) {
@@ -74,6 +65,44 @@ export default function EventsMap({ events, highlightedEventId, onEventNavigate,
     }
     return map;
   }, [events]);
+
+  const handlePinClick = (eventId: string) => {
+    if (prefersFinePointer) {
+      onEventNavigate(eventId);
+      return;
+    }
+    if (coarseTapPinId === eventId) {
+      onEventNavigate(eventId);
+      setCoarseTapPinId(null);
+      return;
+    }
+    setCoarseTapPinId(eventId);
+    onHighlightEvent?.(eventId);
+  };
+
+  if (mapLoadError) {
+    return (
+      <div
+        data-discovery-map
+        className={cn(
+          "flex min-h-[320px] flex-col items-center justify-center gap-2 px-4 text-center",
+          shellPanelFlat,
+          className,
+        )}
+      >
+        <p className="text-muted-foreground text-sm">Mapa chwilowo niedostępna.</p>
+        <button
+          type="button"
+          className="text-accent text-xs underline underline-offset-2"
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          Odśwież stronę
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -90,38 +119,67 @@ export default function EventsMap({ events, highlightedEventId, onEventNavigate,
         Polska · mapa
       </span>
 
-      <MapContainer center={[52.0, 19.0]} zoom={6} className="relative z-0 h-full min-h-[320px] w-full" scrollWheelZoom>
-        <TileLayer attribution={MAP_ATTRIBUTION} url={MAP_TILES_URL} />
-        {events.map((event) => {
-          const coords = eventCoordinates.get(event.id);
-          if (!coords) {
-            return null;
-          }
-          const isHighlighted = highlightedEventId === event.id;
-          return (
-            <Marker
-              key={event.id}
-              position={[coords.latitude, coords.longitude]}
-              icon={createNeonMarkerIcon(isHighlighted ? NEON_ACCENT : NEON_PRIMARY, isHighlighted)}
-              eventHandlers={{
-                click: () => {
-                  onEventNavigate(event.id);
-                },
-                mouseover: () => {
-                  onHighlightEvent?.(event.id);
-                },
-                mouseout: () => {
-                  onHighlightEvent?.(null);
-                },
-              }}
-            >
-              <Tooltip direction="top" offset={[0, -10]} opacity={1} interactive className="discovery-map-tooltip">
-                <EventMapTooltip event={event} />
-              </Tooltip>
-            </Marker>
-          );
-        })}
-      </MapContainer>
+      <div className="absolute inset-0 z-0">
+        <MapGL
+          initialViewState={MAP_INITIAL_VIEW}
+          mapStyle={BASSMAP_MAP_STYLE}
+          style={{ width: "100%", height: "100%" }}
+          scrollZoom={prefersFinePointer}
+          dragRotate={false}
+          pitchWithRotate={false}
+          touchPitch={false}
+          attributionControl={{ compact: true }}
+          onError={() => {
+            setMapLoadError(true);
+          }}
+        >
+          <NavigationControl position="top-right" showCompass={false} visualizePitch={false} />
+          {events.map((event) => {
+            const coords = eventCoordinates.get(event.id);
+            if (!coords) {
+              return null;
+            }
+            const isHighlighted = highlightedEventId === event.id || coarseTapPinId === event.id;
+            return (
+              <Marker key={event.id} longitude={coords.longitude} latitude={coords.latitude} anchor="center">
+                <button
+                  type="button"
+                  className={cn("discovery-map-pin", isHighlighted && "discovery-map-pin--active")}
+                  aria-label={event.name}
+                  onClick={() => {
+                    handlePinClick(event.id);
+                  }}
+                  onMouseEnter={() => {
+                    onHighlightEvent?.(event.id);
+                  }}
+                  onMouseLeave={() => {
+                    onHighlightEvent?.(null);
+                  }}
+                  onFocus={() => {
+                    onHighlightEvent?.(event.id);
+                  }}
+                  onBlur={() => {
+                    onHighlightEvent?.(null);
+                  }}
+                />
+                {isHighlighted ? (
+                  <Popup
+                    longitude={coords.longitude}
+                    latitude={coords.latitude}
+                    closeButton={false}
+                    closeOnClick={false}
+                    anchor="bottom"
+                    offset={10}
+                    className="discovery-map-popup"
+                  >
+                    <EventMapTooltip event={event} />
+                  </Popup>
+                ) : null}
+              </Marker>
+            );
+          })}
+        </MapGL>
+      </div>
     </div>
   );
 }

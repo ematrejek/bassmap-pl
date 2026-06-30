@@ -35,11 +35,11 @@ when `.env.test` is configured. With `.env.test` present, `git push` also runs
 Browser smoke tests live in `tests/e2e/`. They catch „React never hydrated”
 regressions (e.g. stuck on „Ładowanie listy wydarzeń…”) that Vitest cannot see.
 
-| Command | When |
-|---------|------|
-| `npm run test:e2e` | After `npm run build` in CI; locally uses `npm run dev` if nothing is running |
-| `npm run verify:full` | `verify` + `build` + `test:e2e` – full gate before a UI-heavy PR |
-| `npm run cache:clean` | After editing `astro.config.mjs` or Vite dep warnings |
+| Command               | When                                                                          |
+| --------------------- | ----------------------------------------------------------------------------- |
+| `npm run test:e2e`    | After `npm run build` in CI; locally uses `npm run dev` if nothing is running |
+| `npm run verify:full` | `verify` + `build` + `test:e2e` – full gate before a UI-heavy PR              |
+| `npm run cache:clean` | After editing `astro.config.mjs` or Vite dep warnings                         |
 
 First-time setup: `npx playwright install chromium`.
 
