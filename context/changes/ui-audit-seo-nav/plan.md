@@ -490,14 +490,14 @@ Automatyzacja najważniejszych regresji SEO z audytu.
 
 #### Automated
 
-- [x] 2.1 `npm run check`
-- [x] 2.2 `npm run lint:all`
-- [x] 2.3 `npm test` (`site-meta.test.ts`)
+- [x] 2.1 `npm run check` – 0ea8df2
+- [x] 2.2 `npm run lint:all` – 0ea8df2
+- [x] 2.3 `npm test` (`site-meta.test.ts`) – 0ea8df2
 
 #### Manual
 
-- [x] 2.4 Meta i OG na `/` i `/events` w View Source
-- [x] 2.5 Podgląd linku w Discord/FB (pominięty – tylko View Source na localhost)
+- [x] 2.4 Meta i OG na `/` i `/events` w View Source – 0ea8df2
+- [x] 2.5 Podgląd linku w Discord/FB (pominięty – tylko View Source na localhost) – 0ea8df2
 
 ### Phase 3: Nawigacja SSR i desktop
 
