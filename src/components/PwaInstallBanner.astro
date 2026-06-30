@@ -1,7 +1,7 @@
 ---
 import { shellBtnOutline } from "@/lib/shell-styles";
 
-const STORAGE_KEY = "bassmap-pwa-install-dismissed-v1";
+const STORAGE_KEY = "bassmap-pwa-install-dismissed-v2";
 ---
 
 <div
@@ -69,6 +69,10 @@ const STORAGE_KEY = "bassmap-pwa-install-dismissed-v1";
       return;
     }
 
+    // Closing the banner hides it only temporarily, so it can return later
+    // (e.g. after the user uninstalls the app and revisits the site).
+    const DISMISS_MS = 30 * 24 * 60 * 60 * 1000;
+
     const isStandalone =
       window.matchMedia("(display-mode: standalone)").matches ||
       /** @type {Window & { navigator: Navigator & { standalone?: boolean } }} */ (window).navigator.standalone ===
@@ -79,40 +83,66 @@ const STORAGE_KEY = "bassmap-pwa-install-dismissed-v1";
       return;
     }
 
-    let dismissed = false;
-    try {
-      dismissed = localStorage.getItem(STORAGE_KEY) === "1";
-    } catch {
-      dismissed = false;
+    function isDismissed() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return false;
+        const ts = parseInt(raw, 10);
+        if (Number.isNaN(ts)) return false;
+        return Date.now() - ts < DISMISS_MS;
+      } catch {
+        return false;
+      }
     }
 
-    if (dismissed) {
+    if (isDismissed()) {
       banner.remove();
       return;
     }
-
-    /** @type {Event | null} */
-    let deferredPrompt = null;
-
-    const isIos =
-      /iphone|ipad|ipod/i.test(navigator.userAgent) &&
-      !(/** @type {Window & { MSStream?: unknown }} */ (window).MSStream);
 
     function showBanner() {
       banner.removeAttribute("hidden");
     }
 
-    function hideBanner() {
+    function rememberDismiss() {
       try {
-        localStorage.setItem(STORAGE_KEY, "1");
+        localStorage.setItem(STORAGE_KEY, String(Date.now()));
       } catch {
         // Ignore storage failures.
       }
+    }
+
+    function dismissBanner() {
+      rememberDismiss();
       banner.remove();
     }
 
-    dismiss.addEventListener("click", hideBanner);
+    dismiss.addEventListener("click", dismissBanner);
 
+    // If the app gets installed, drop the banner without a long-term dismiss.
+    window.addEventListener("appinstalled", function () {
+      banner.remove();
+    });
+
+    const ua = navigator.userAgent;
+    const isIos =
+      /iphone|ipad|ipod/i.test(ua) && !(/** @type {Window & { MSStream?: unknown }} */ (window).MSStream);
+    const isMobile =
+      isIos ||
+      /android|iemobile|blackberry|bada|mobile/i.test(ua) ||
+      window.matchMedia("(pointer: coarse)").matches;
+
+    // Desktop / laptop: install prompt is unreliable here, so show an
+    // informational note pointing users to the mobile install instead.
+    if (!isMobile) {
+      message.textContent = "Wersja mobilna dostępna";
+      hint.textContent = "Otwórz BassMap na telefonie i dodaj do ekranu głównego, aby korzystać jak z aplikacji.";
+      hint.classList.remove("hidden");
+      showBanner();
+      return;
+    }
+
+    // iOS: no automatic prompt, so show a manual instruction.
     if (isIos) {
       message.textContent = "Dodaj BassMap do ekranu głównego";
       hint.textContent = "W Safari: Udostępnij → Dodaj do ekranu początkowego";
@@ -120,6 +150,10 @@ const STORAGE_KEY = "bassmap-pwa-install-dismissed-v1";
       showBanner();
       return;
     }
+
+    // Android / Chromium mobile: use the native install prompt.
+    /** @type {Event | null} */
+    let deferredPrompt = null;
 
     window.addEventListener("beforeinstallprompt", function (event) {
       event.preventDefault();
@@ -141,7 +175,9 @@ const STORAGE_KEY = "bassmap-pwa-install-dismissed-v1";
       await promptEvent.prompt();
       await promptEvent.userChoice;
       deferredPrompt = null;
-      hideBanner();
+      // Hide for now without a long-term dismiss; if installation succeeds the
+      // standalone check removes it on next load, and if not it can return.
+      banner.remove();
     });
   })();
 </script>
