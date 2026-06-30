@@ -503,13 +503,13 @@ Automatyzacja najważniejszych regresji SEO z audytu.
 
 #### Automated
 
-- [x] 3.1 `npm run check`
-- [x] 3.2 `npm run lint:all`
+- [x] 3.1 `npm run check` – 99792ca
+- [x] 3.2 `npm run lint:all` – 99792ca
 
 #### Manual
 
-- [x] 3.3 Linki logowania i zgłoszenia w HTML nagłówka
-- [x] 3.4 Desktop – linki poziome bez menu
+- [x] 3.3 Linki logowania i zgłoszenia w HTML nagłówka – 99792ca
+- [x] 3.4 Desktop – linki poziome bez menu – 99792ca
 
 ### Phase 4: Strona główna
 
