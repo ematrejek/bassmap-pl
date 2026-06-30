@@ -3,7 +3,7 @@ project: BassMap PL
 version: 3
 status: active
 created: 2026-06-10
-updated: 2026-06-29
+updated: 2026-06-30
 subgenre_catalog_version: 2
 prd_version: 2
 main_goal: market-feedback
@@ -61,7 +61,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | S-22 | forum-threads             | fan tworzy wątki (Szukam ekipy / Mamy ekipę / Ogólne) i komentuje; admin moderuje           | S-20          | notes 2026-06-22                 | done        |
 | S-23 | friends-and-recommendations | znajomi, polecenia eventów, panel powiadomień in-app (+ opcjonalny e-mail)                | S-20, S-19    | notes 2026-06-22                 | done        |
 | S-24 | crew-teams                | ekipa (nazwa, miasto, podgatunki, opis), rekrutacja przez forum, akceptacja + kontakt        | S-22, S-23    | notes 2026-06-22                 | done        |
-| F-05 | organizer-role-foundation | (foundation) rola organizatora + wniosek i ręczna weryfikacja admina                        | S-16          | notes 2026-06-22                 | proposed    |
+| F-05 | organizer-role-foundation | (foundation) rola organizatora + wniosek i ręczna weryfikacja admina                        | S-16          | notes 2026-06-22                 | done        |
 | S-25 | organizer-self-service    | zweryfikowany organizator publikuje eventy bez moderacji; ogłoszenia na forum                 | F-05, S-22    | notes 2026-06-22                 | proposed    |
 | S-26 | analytics-consent         | GA4 + baner zgody cookies + aktualizacja dokumentów prawnych                                | S-19          | NFR Privacy, notes 2026-06-22    | proposed    |
 | S-27 | mobile-app                | PWA lub aplikacja mobilna (Android/iOS) – po stabilnym web i pomiarze ruchu                 | S-26          | notes 2026-06-22                 | proposed    |
@@ -580,7 +580,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Unknowns:**
   - Czy fan i organizator na jednym koncie \u2013 Owner: user. Block: no (domyślnie: tak, rola dodatkowa).
 - **Risk:** Zaufanie – MVP = ręczna weryfikacja; bez automatyzacji KRS/NIP.
-- **Status:** proposed
+- **Status:** done
 
 ### S-25: Panel organizatora (self-service)
 
@@ -788,6 +788,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 - **S-24: ekipa (nazwa, miasto, podgatunki, opis), rekrutacja przez forum, akceptacja + kontakt.** – Archived 2026-06-29 → `context/archive/2026-06-25-s-24/`. Lesson: –.
 - **S-29: fan/admin wybiera 13 podgatunków z uproszczonego katalogu; legacy tagi ukryte w UI** – Archived 2026-06-29 → `context/archive/2026-06-28-subgenre-catalog-v2/`. Lesson: –.
+- **F-05: (foundation) nowa rola `organizer`; formularz wniosku o status organizatora; kolejka Zatwierdź / Odrzuć w panelu admina; guardy API i middleware.** – Archived 2026-06-30 → `context/archive/2026-06-29-organizer-role-foundation/`. Lesson: –.
 - **F-01: (foundation) tabela wydarzeń z migracjami, politykami RLS i regułami biznesowymi.** \u2013 Archived 2026-06-11 → `context/archive/2026-06-10-event-data-foundation/`. Lesson: \u2013.
 - **F-02: (foundation) tylko użytkownicy z rolą admina mogą dodawać, edytować i usuwać wydarzenia.** \u2013 Archived 2026-06-10 → `context/archive/2026-06-10-admin-role-guard/`. Lesson: allowlist e-mail musi dokładnie pasować do konta Auth.
 - **S-01: admin dodaje, edytuje i usuwa wydarzenia DnB.** \u2013 Archived 2026-06-11 → `context/archive/2026-06-10-admin-event-management/`. Lesson: \u2013.
