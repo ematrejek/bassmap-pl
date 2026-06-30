@@ -1,10 +1,10 @@
 ---
 change_id: mobile-app
 title: PWA instalowalna (S-27)
-status: implemented
+status: archived
 created: 2026-06-30
 updated: 2026-06-30
-archived_at: null
+archived_at: 2026-06-30T19:09:47Z
 ---
 
 ## Notes
