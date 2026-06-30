@@ -26,18 +26,32 @@ test.describe("Smoke – gość", () => {
     await expect(page.locator("[data-discovery-map] .maplibregl-canvas")).toBeVisible({ timeout: 30_000 });
 
     const map = page.locator("[data-discovery-map]");
-    const pins = map.locator(".discovery-map-pin");
-    if ((await pins.count()) === 0) {
+    const pinCount = await map.locator(".discovery-map-pin").count();
+    if (pinCount === 0) {
       test.skip(true, "Brak pinezek – brak opublikowanych eventów z współrzędnymi w bazie");
     }
 
-    // Seed „Liquid Sundays” (Kraków) – unikalna lokalizacja; inne testy E2E często tworzą eventy w Warszawie i pinezki się nakładają.
-    const isolatedPin = map.getByRole("button", { name: "Liquid Sundays" });
-    if ((await isolatedPin.count()) > 0) {
-      await isolatedPin.click();
-    } else {
-      await pins.last().click({ force: true });
-    }
+    // Pinezki w tym samym mieście nakładają się – klikamy pin faktycznie na wierzchu (DOM click).
+    const clicked = await map.evaluate(() => {
+      const pins = [...document.querySelectorAll<HTMLButtonElement>(".discovery-map-pin")];
+      for (const pin of pins) {
+        const rect = pin.getBoundingClientRect();
+        const cx = rect.left + rect.width / 2;
+        const cy = rect.top + rect.height / 2;
+        const top = document.elementFromPoint(cx, cy);
+        if (top === pin || pin.contains(top)) {
+          pin.click();
+          return true;
+        }
+      }
+      const fallback = pins.at(-1);
+      if (fallback) {
+        fallback.click();
+        return true;
+      }
+      return false;
+    });
+    expect(clicked).toBe(true);
     await expect(page).toHaveURL(/\/events\/[0-9a-f-]{36}/, { timeout: 15_000 });
   });
 

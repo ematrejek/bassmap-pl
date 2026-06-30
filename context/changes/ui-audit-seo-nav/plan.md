@@ -476,23 +476,23 @@ Automatyzacja najważniejszych regresji SEO z audytu.
 
 #### Automated
 
-- [x] 1.1 `npm run check` — 2c9de12
-- [x] 1.2 `npm run lint:all` — 2c9de12
-- [x] 1.3 `npm test` (w tym `event-discovery-ssr.test.ts`) — 2c9de12
-- [x] 1.4 `smoke.spec.ts` – asercja SEO/hydratacji zaktualizowana — 2c9de12
+- [x] 1.1 `npm run check` – 2c9de12
+- [x] 1.2 `npm run lint:all` – 2c9de12
+- [x] 1.3 `npm test` (w tym `event-discovery-ssr.test.ts`) – 2c9de12
+- [x] 1.4 `smoke.spec.ts` – asercja SEO/hydratacji zaktualizowana – 2c9de12
 
 #### Manual
 
-- [x] 1.5 View Source `/events` zawiera nazwy eventów — 2c9de12
-- [x] 1.6 Lista i filtr miasta działają bez JS — 2c9de12
+- [x] 1.5 View Source `/events` zawiera nazwy eventów – 2c9de12
+- [x] 1.6 Lista i filtr miasta działają bez JS – 2c9de12
 
 ### Phase 2: Meta description i Open Graph
 
 #### Automated
 
-- [ ] 2.1 `npm run check`
-- [ ] 2.2 `npm run lint:all`
-- [ ] 2.3 `npm test` (`site-meta.test.ts`)
+- [x] 2.1 `npm run check`
+- [x] 2.2 `npm run lint:all`
+- [x] 2.3 `npm test` (`site-meta.test.ts`)
 
 #### Manual
 
