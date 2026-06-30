@@ -1,0 +1,147 @@
+---
+import { shellBtnOutline } from "@/lib/shell-styles";
+
+const STORAGE_KEY = "bassmap-pwa-install-dismissed-v1";
+---
+
+<div
+  id="pwa-install-banner"
+  role="region"
+  aria-label="Zainstaluj aplikację BassMap"
+  hidden
+  class="border-primary/40 bg-card/95 text-foreground fixed inset-x-0 top-14 z-40 border-b px-4 py-3 shadow-lg backdrop-blur-md sm:top-16"
+>
+  <div class="mx-auto flex max-w-4xl flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div class="text-sm leading-relaxed">
+      <p id="pwa-install-message" class="text-foreground font-medium">Zainstaluj BassMap na telefonie</p>
+      <p id="pwa-install-hint" class="text-muted-foreground mt-1 hidden text-xs"></p>
+    </div>
+    <div class="flex shrink-0 items-center gap-2">
+      <button
+        id="pwa-install-action"
+        type="button"
+        hidden
+        class:list={[
+          shellBtnOutline,
+          "focus-visible:ring-ring/50 inline-flex cursor-pointer items-center justify-center gap-1.5 rounded-lg px-4 py-2 text-sm font-medium focus-visible:ring-2 focus-visible:outline-none",
+        ]}
+      >
+        Zainstaluj aplikację
+      </button>
+      <button
+        id="pwa-install-dismiss"
+        type="button"
+        aria-label="Zamknij"
+        class:list={[
+          shellBtnOutline,
+          "focus-visible:ring-ring/50 inline-flex cursor-pointer items-center justify-center rounded-lg px-3 py-2 text-sm focus-visible:ring-2 focus-visible:outline-none",
+        ]}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="16"
+          height="16"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <path d="M18 6 6 18"></path>
+          <path d="m6 6 12 12"></path>
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline define:vars={{ STORAGE_KEY }}>
+  (function initPwaInstallBanner() {
+    const banner = document.getElementById("pwa-install-banner");
+    const message = document.getElementById("pwa-install-message");
+    const hint = document.getElementById("pwa-install-hint");
+    const action = document.getElementById("pwa-install-action");
+    const dismiss = document.getElementById("pwa-install-dismiss");
+
+    if (!banner || !message || !hint || !action || !dismiss) {
+      return;
+    }
+
+    const isStandalone =
+      window.matchMedia("(display-mode: standalone)").matches ||
+      /** @type {Window & { navigator: Navigator & { standalone?: boolean } }} */ (window).navigator.standalone ===
+        true;
+
+    if (isStandalone) {
+      banner.remove();
+      return;
+    }
+
+    let dismissed = false;
+    try {
+      dismissed = localStorage.getItem(STORAGE_KEY) === "1";
+    } catch {
+      dismissed = false;
+    }
+
+    if (dismissed) {
+      banner.remove();
+      return;
+    }
+
+    /** @type {Event | null} */
+    let deferredPrompt = null;
+
+    const isIos =
+      /iphone|ipad|ipod/i.test(navigator.userAgent) &&
+      !(/** @type {Window & { MSStream?: unknown }} */ (window).MSStream);
+
+    function showBanner() {
+      banner.removeAttribute("hidden");
+    }
+
+    function hideBanner() {
+      try {
+        localStorage.setItem(STORAGE_KEY, "1");
+      } catch {
+        // Ignore storage failures.
+      }
+      banner.remove();
+    }
+
+    dismiss.addEventListener("click", hideBanner);
+
+    if (isIos) {
+      message.textContent = "Dodaj BassMap do ekranu głównego";
+      hint.textContent = "W Safari: Udostępnij → Dodaj do ekranu początkowego";
+      hint.classList.remove("hidden");
+      showBanner();
+      return;
+    }
+
+    window.addEventListener("beforeinstallprompt", function (event) {
+      event.preventDefault();
+      deferredPrompt = event;
+      message.textContent = "Zainstaluj BassMap na telefonie";
+      hint.textContent = "Szybki dostęp z ekranu głównego, bez sklepu z aplikacjami.";
+      hint.classList.remove("hidden");
+      action.removeAttribute("hidden");
+      showBanner();
+    });
+
+    action.addEventListener("click", async function () {
+      if (!deferredPrompt || typeof deferredPrompt !== "object" || !("prompt" in deferredPrompt)) {
+        return;
+      }
+      const promptEvent = /** @type {{ prompt: () => Promise<void>; userChoice: Promise<{ outcome: string }> }} */ (
+        deferredPrompt
+      );
+      await promptEvent.prompt();
+      await promptEvent.userChoice;
+      deferredPrompt = null;
+      hideBanner();
+    });
+  })();
+</script>

@@ -1,0 +1,40 @@
+---
+import AppShell from "@/components/shell/AppShell.astro";
+import Layout from "@/layouts/Layout.astro";
+import { HOME_PATH } from "@/lib/routes";
+import { shellBtnOutline } from "@/lib/shell-styles";
+
+/** Static shell for service worker offline fallback (precached at build). */
+export const prerender = true;
+---
+
+<Layout title="Brak połączenia">
+  <AppShell showFooter={true}>
+    <div class="mx-auto flex w-full max-w-md flex-1 flex-col justify-center px-4 py-8">
+      <div class="surface-panel p-8 text-center">
+        <h1 class="font-heading text-foreground mb-4 text-3xl font-black tracking-tight uppercase">Brak internetu</h1>
+        <p class="text-muted-foreground mb-6">
+          Nie udało się połączyć z BassMap. Sprawdź sieć Wi‑Fi lub dane mobilne i spróbuj ponownie.
+        </p>
+        <div class="flex flex-col gap-3 sm:flex-row sm:justify-center">
+          <button
+            type="button"
+            id="offline-retry"
+            class:list={[shellBtnOutline, "inline-flex cursor-pointer justify-center rounded-lg px-4 py-2 text-sm"]}
+          >
+            Spróbuj ponownie
+          </button>
+          <a href={HOME_PATH} class:list={[shellBtnOutline, "inline-flex justify-center rounded-lg px-4 py-2 text-sm"]}>
+            Strona główna
+          </a>
+        </div>
+      </div>
+    </div>
+  </AppShell>
+</Layout>
+
+<script is:inline>
+  document.getElementById("offline-retry")?.addEventListener("click", function () {
+    window.location.reload();
+  });
+</script>

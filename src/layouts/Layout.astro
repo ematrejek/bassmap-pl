@@ -3,7 +3,9 @@ import "../styles/global.css";
 import "../styles/equalizer.css";
 import Banner from "@/components/Banner.astro";
 import CookieConsentBanner from "@/components/CookieConsentBanner.astro";
+import PwaInstallBanner from "@/components/PwaInstallBanner.astro";
 import { missingConfigs } from "@/lib/config-status";
+import { PWA_THEME_COLOR } from "../../pwa.config.mjs";
 
 interface Props {
   title?: string;
@@ -17,11 +19,16 @@ const { title = "BassMap PL", ogImage } = Astro.props;
 <html lang="pl" class="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#08080c" />
+    <meta name="theme-color" content={PWA_THEME_COLOR} />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-title" content="BassMap" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/manifest.webmanifest" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -48,10 +55,17 @@ const { title = "BassMap PL", ogImage } = Astro.props;
         </Banner>
       ))
     }
+    <PwaInstallBanner />
     <slot />
     <CookieConsentBanner />
   </body>
 </html>
+
+<script>
+  import { registerSW } from "virtual:pwa-register";
+
+  registerSW({ immediate: true });
+</script>
 
 <style>
   html,

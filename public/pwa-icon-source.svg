@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <rect width="512" height="512" fill="#08080c"/>
+  <rect x="30.72" y="30.72" width="450.56" height="450.56" rx="99.1232" fill="#120f1c"/>
+  <rect x="31.72" y="31.72" width="448.56" height="448.56" rx="98.1232" fill="none" stroke="rgba(158, 100, 255, 0.55)" stroke-width="8"/>
+  <text x="256" y="332.5952" text-anchor="middle" font-family="Orbitron, ui-sans-serif, system-ui, sans-serif" font-size="153.1904" font-weight="900" letter-spacing="22.528000000000002" fill="#e9d5ff">BM</text>
+</svg>

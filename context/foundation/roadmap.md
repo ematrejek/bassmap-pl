@@ -64,7 +64,7 @@ MVP (F-01…F-03, S-01…S-03) jest **done** i działa na https://bassmap.pl. **
 | F-05 | organizer-role-foundation | (foundation) rola organizatora + wniosek i ręczna weryfikacja admina                        | S-16          | notes 2026-06-22                 | done        |
 | S-25 | organizer-self-service    | zweryfikowany organizator publikuje eventy bez moderacji; ogłoszenia na forum                 | F-05, S-22    | notes 2026-06-22                 | proposed    |
 | S-26 | analytics-consent         | GA4 + baner zgody cookies + aktualizacja dokumentów prawnych                                | S-19          | NFR Privacy, notes 2026-06-22    | proposed    |
-| S-27 | mobile-app                | PWA lub aplikacja mobilna (Android/iOS) – po stabilnym web i pomiarze ruchu                 | S-26          | notes 2026-06-22                 | proposed    |
+| S-27 | mobile-app                | PWA instalowalna (Dodaj do ekranu głównego) – bez sklepów w v1; Capacitor opcjonalnie później | S-26          | notes 2026-06-22, pwa-research 2026-06-30 | proposed    |
 | S-29 | subgenre-catalog-v2       | fan/admin wybiera 13 podgatunków z uproszczonego katalogu; legacy tagi ukryte w UI           | S-02          | FR-003, notes 2026-06-28         | done        |
 
 ## Streams
@@ -81,7 +81,7 @@ Nawigacja \u2013 grupy elementów współdzielących łańcuch zależności. Kan
 | F      | Partia III \u2013 profil   | `S-20` → `S-28` / `S-21` (równolegle po S-20)                               | Edycja + profil publiczny; udostępnianie linku; My vibes (Spotify + SoundCloud embed, bez API). |
 | G      | Partia III \u2013 społeczność | `S-22` → `S-23` → `S-24`                                                 | Forum MVP → znajomi i polecenia → pełna Moja ekipa. |
 | H      | Partia III \u2013 organizator | `F-05` → `S-25`                                                           | Rola + ręczna weryfikacja → self-service eventów i ogłoszeń. |
-| I      | Partia III \u2013 pomiar i mobile | `S-26` → `S-27`                                                       | GA4 + RODO, potem PWA / native. |
+| I      | Partia III \u2013 pomiar i mobile | `S-26` → `S-27`                                                       | GA4 + RODO, potem PWA instalowalna (v1 bez sklepów). |
 
 ## Baseline
 
@@ -443,7 +443,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - My vibes (S-21): **embed z URL** Spotify lub SoundCloud (tylko utwór), tytuł przez oEmbed, bez logowania do platform i bez pełnego API.
 - Weryfikacja organizatora MVP: **wniosek + ręczna akceptacja admina** (F-05).
 - GA4 (S-26): wymaga **baneru cookies** i aktualizacji polityki prywatności (konflikt z PRD „brak tracking cookies” – rozwiązać przy implementacji).
-- Mobile (S-27): preferować **PWA → Capacitor → native** w tej kolejności kosztowej.
+- Mobile (S-27): **v1 = PWA instalowalna** (`@vite-pwa/astro`, bez App Store / Google Play); **Capacitor → native** dopiero po danych z GA, jeśli PWA nie wystarczy. Research: `context/foundation/pwa-research.md` (2026-06-30).
 
 ### S-18: Kafelki wydarzeń (bassmap-pl-ui)
 
@@ -606,18 +606,22 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Risk:** PRD v2 mówi o braku tracking cookies – wymaga świadomej zmiany NFR przy wdrożeniu.
 - **Status:** proposed
 
-### S-27: Aplikacja mobilna
+### S-27: Aplikacja mobilna (PWA)
 
-- **Outcome:** użytkownik korzysta z BassMap na telefonie jako **PWA** (minimum) lub aplikacja w sklepach (**Capacitor** / native – decyzja przy planowaniu). Po S-26 (pomiar czy mobile jest potrzebne).
+- **Outcome:** użytkownik na telefonie **instaluje BassMap na ekran główny** (PWA): ikona, tryb `standalone` (bez paska przeglądarki), szybsze ponowne otwarcie, ekran offline przy braku sieci. **Bez publikacji w App Store / Google Play w v1.**
 - **Change ID:** mobile-app
 - **PRD refs:** NFR Device, notes 2026-06-22
-- **Prerequisites:** S-26 (zalecane)
+- **Research:** `context/foundation/pwa-research.md` (2026-06-30)
+- **Prerequisites:** S-26 (zalecane – pomiar ruchu mobile przed ewentualnym Capacitor; nie blokuje planu PWA)
 - **Parallel with:** \u2013
 - **Blockers:** \u2013
-- **Unknowns:**
-  - PWA vs Capacitor vs React Native \u2013 Owner: user + dane z GA. Block: planowanie S-27.
-- **Risk:** Native od zera = wielokrotność kosztu utrzymania vs SSR web.
-- **Status:** proposed
+- **Unknowns:** \u2013
+- **Resolved (2026-06-30):**
+  - **PWA vs Capacitor vs native:** v1 = **PWA** (`@vite-pwa/astro`); Capacitor tylko jeśli dane z S-26 pokażą potrzebę sklepów; React Native – mało prawdopodobne.
+  - **Offline:** nie pełny offline – precache statyków + `/offline`; strony SSR i API **network-first**, bez cache prywatnych tras.
+  - **iOS:** brak auto-promptu – opcjonalna podpowiedź „Dodaj do ekranu głównego” w UI.
+- **Risk:** Agresywny cache SW przy SSR może pokazać nieaktualne eventy – mitygacja: network-first dla HTML, wykluczenie `/api`, `/admin`, `/profile`, `/my-events`.
+- **Status:** proposed (change `mobile-app` otwarty – gotowy do `/10x-plan`)
 
 ## Backlog Handoff
 
@@ -661,7 +665,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 | F-05       | organizer-role-foundation | #45    | Rola organizatora + weryfikacja               | po S-16               | Ręczna akceptacja admina                           |
 | S-25       | organizer-self-service    | #46    | Panel organizatora                            | po F-05, S-22         | Promowanie – parked                                |
 | S-26       | analytics-consent         | #47    | GA4 + baner cookies RODO                      | po S-19+              | Aktualizacja NFR Privacy                           |
-| S-27       | mobile-app                | #48    | Aplikacja mobilna / PWA                       | po S-26               | PWA → Capacitor → native                           |
+| S-27       | mobile-app                | #48    | PWA instalowalna (bez sklepów v1)             | po S-26 (zalecane)    | Research: `pwa-research.md`; `@vite-pwa/astro`     |
 
 ## Open Roadmap Questions
 
@@ -674,9 +678,16 @@ Foundations below assume these are present and do NOT re-scaffold them.
 7. **Dane kontaktowe po akceptacji do ekipy** \u2013 Owner: user. **Resolved 2026-06-25:** login + linki social z profilu (bez e-maila); decyzja w `context/changes/s-24/change.md`.
 8. **Fan + organizator na jednym koncie?** \u2013 Owner: user. Block: no (domyślnie: tak).
 9. **Lokalizacja design systemu bassmap-pl-ui** \u2013 Owner: user. Block: planowanie S-18.
-10. **PWA vs Capacitor vs native (S-27)** \u2013 Owner: user + dane GA. Block: planowanie S-27.
+10. **PWA vs Capacitor vs native (S-27)** \u2013 Owner: user + dane GA. **Resolved 2026-06-30:** v1 = PWA (`@vite-pwa/astro`, bez sklepów); Capacitor deferred. Research: `context/foundation/pwa-research.md`.
 
 ## Resolved (history)
+
+### 2026-06-30 \u2013 research PWA (S-27)
+
+- **Decyzja:** v1 = **PWA instalowalna** bez App Store / Google Play; integracja `@vite-pwa/astro`; Capacitor deferred.
+- **Research:** `context/foundation/pwa-research.md`
+- **Change:** `context/changes/mobile-app/` (`/10x-new mobile-app`)
+- **Open question #10** (PWA vs Capacitor vs native) – **resolved**.
 
 ### 2026-06-23 \u2013 archiwum S-19 (event-attendance)
 

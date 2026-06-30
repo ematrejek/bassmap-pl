@@ -53,7 +53,7 @@ roadmap_version: 3
 | Moja ekipa (pełna) | **S-24** – po forum i znajomych |
 | Organizator | **F-05** (rola + weryfikacja) → **S-25** (funkcje) |
 | GA | **S-26** – wymaga aktualizacji prawnej (cookies) |
-| Mobile | **S-27** – na sam koniec; rozważyć **PWA** przed native |
+| Mobile | **S-27** – PWA instalowalna v1 (bez sklepów); research 2026-06-30 |
 
 ### Spotify – bez pełnego API na start
 
@@ -78,13 +78,15 @@ roadmap_version: 3
 - GA4 wymaga: **baner zgody na cookies**, aktualizacja **Polityki prywatności** i ewentualnie Regulaminu.
 - S-26 to nie „wklejenie skryptu” – to slice z warstwą prawną.
 
-### Aplikacja mobilna – ścieżka
+### Aplikacja mobilna – ścieżka (zaktualizowano 2026-06-30)
 
-1. **PWA** (Dodaj do ekranu głównego) – najtańszy krok pośredni
-2. **Capacitor** (owijka wokół istniejącej strony → sklepy) – jeśli PWA nie wystarczy
+**Decyzja v1:** PWA instalowalna – bez App Store / Google Play. Pełny research: `context/foundation/pwa-research.md`.
+
+1. **PWA** (Dodaj do ekranu głównego) – **S-27 v1**, integracja `@vite-pwa/astro`
+2. **Capacitor** (owijka wokół istniejącej strony → sklepy) – tylko jeśli PWA + dane GA nie wystarczą
 3. **React Native od zera** – tylko przy silnej potrzebie funkcji natywnych
 
-Mierzyć ruch na web (**S-26**) zanim inwestować w native (**S-27**).
+Mierzyć ruch na web (**S-26**) zanim inwestować w Capacitor / sklepy.
 
 ### Kafelki bassmap-pl-ui
 
@@ -125,6 +127,13 @@ S-18 → S-19 → S-20 → S-21
 4. **Dane kontaktowe po akceptacji do ekipy** – e-mail z konta, wybrane social z profilu, oba?
 5. **Organizator** – czy jeden użytkownik może być fanem i organizatorem jednocześnie?
 6. **bassmap-pl-ui** – gdzie leży repo / Figma i kto jest źródłem prawdy dla komponentów kafelków?
+
+## Research PWA (2026-06-30)
+
+- Slice **S-27** (`mobile-app`): v1 = PWA z `@vite-pwa/astro`, manifest, service worker, ikony, `/offline`.
+- Bez App Store / Google Play w pierwszej wersji.
+- Szczegóły: `context/foundation/pwa-research.md`
+- Następny krok: `/10x-plan mobile-app`
 
 ## Następny krok implementacyjny
 

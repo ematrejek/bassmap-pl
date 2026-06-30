@@ -136,7 +136,7 @@ Fan opens BassMap PL, filters by city and/or subgenre, sees a list of upcoming D
 
 - **Language**: all user-facing UI text in Polish.
 - **Privacy**: anonymous browsing requires no account; only essential auth-session cookies when logged in \u2013 no marketing or tracking cookies. Registered users provide email and password (hashed by auth provider); fan-submitted content (events, comments, suggestions) is linked to the account per the Privacy Policy. Legal pages at `/privacy-policy` and `/terms`.
-- **Device**: desktop-first web app (responsive layout, but desktop is the primary design target).
+- **Device**: desktop-first responsive web app; **planned mobile path (S-27):** installable **PWA** (add to home screen) without app-store distribution in v1. Capacitor / native stores only if analytics (S-26) justify later investment. Research: `context/foundation/pwa-research.md`.
 - **Scale path**: MVP serves a single tester; architecture must support growth to national use (thousands of users) without a ground-up rewrite.
 - **Operating cost**: MVP incurs no monetary cost for hosting or services; paid infrastructure is deferred until budget is available.
 

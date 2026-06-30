@@ -5,9 +5,20 @@ import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import cloudflare from "@astrojs/cloudflare";
+import AstroPWA from "@vite-pwa/astro";
 import { SITE_ORIGIN, SITEMAP_STATIC_PATHS } from "./site.config.mjs";
+import { PWA_NAVIGATE_FALLBACK_DENYLIST, isPwaNavigateCacheDenied, pwaManifest } from "./pwa.config.mjs";
 
-const SITEMAP_EXCLUDED = [/^\/auth(?:\/|$)/, /^\/admin(?:\/|$)/, /^\/api(?:\/|$)/, /^\/profile(?:\/|$)/, /^\/my-events(?:\/|$)/, /^\/403(?:\/|$)/];
+const SITEMAP_EXCLUDED = [
+  /^\/auth(?:\/|$)/,
+  /^\/admin(?:\/|$)/,
+  /^\/api(?:\/|$)/,
+  /^\/profile(?:\/|$)/,
+  /^\/my-events(?:\/|$)/,
+  /^\/403(?:\/|$)/,
+  /^\/offline(?:\/|$)/,
+  /^\/404(?:\/|$)/,
+];
 
 // https://astro.build/config
 export default defineConfig({
@@ -27,6 +38,38 @@ export default defineConfig({
           return undefined;
         }
         return item;
+      },
+    }),
+    AstroPWA({
+      registerType: "autoUpdate",
+      includeAssets: ["favicon.svg", "favicon.png", "apple-touch-icon.png"],
+      manifest: pwaManifest,
+      workbox: {
+        navigateFallback: "/offline",
+        navigateFallbackDenylist: PWA_NAVIGATE_FALLBACK_DENYLIST,
+        globPatterns: ["**/*.{css,js,svg,png,ico,webp,woff2}"],
+        globIgnores: ["**/node_modules/**", "**/_worker.js/**"],
+        runtimeCaching: [
+          {
+            urlPattern: ({ request, url }) => {
+              if (request.mode !== "navigate") return false;
+              const pathname = new URL(url).pathname;
+              return !isPwaNavigateCacheDenied(pathname);
+            },
+            handler: "NetworkFirst",
+            options: {
+              cacheName: "bassmap-pages",
+              networkTimeoutSeconds: 5,
+              expiration: {
+                maxEntries: 32,
+                maxAgeSeconds: 60 * 60 * 24,
+              },
+            },
+          },
+        ],
+      },
+      experimental: {
+        directoryAndTrailingSlashHandler: true,
       },
     }),
   ],

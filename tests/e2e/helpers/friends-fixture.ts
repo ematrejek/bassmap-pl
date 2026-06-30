@@ -26,14 +26,28 @@ async function ensureAuthUser(email: string, password: string): Promise<string> 
   return existing.id;
 }
 
+function isDuplicateError(message: string): boolean {
+  const normalized = message.toLowerCase();
+  return normalized.includes("duplicate") || normalized.includes("already");
+}
+
 async function ensureFanProfile(userId: string, login: string): Promise<void> {
   const serviceClient = createServiceClient();
-  const existing = await serviceClient.from("fan_profiles").select("user_id").eq("user_id", userId).maybeSingle();
-  if (existing.error) {
-    throw new Error(`Failed to read fan profile for ${login}: ${existing.error.message}`);
+
+  // Idempotent + race-safe: parallel Playwright workers may seed the same
+  // fixture user concurrently, so upsert on the primary key instead of
+  // a non-atomic select-then-insert.
+  const upsert = await serviceClient
+    .from("fan_profiles")
+    .upsert({ user_id: userId, login, favorite_subgenres: ["neurofunk"] }, { onConflict: "user_id" });
+
+  if (!upsert.error) {
+    return;
   }
 
-  if (existing.data) {
+  // A concurrent worker may win the insert race between our read and write;
+  // treat the resulting duplicate-key error as success and align the login.
+  if (isDuplicateError(upsert.error.message)) {
     const update = await serviceClient.from("fan_profiles").update({ login }).eq("user_id", userId);
     if (update.error) {
       throw new Error(`Failed to update fan profile ${login}: ${update.error.message}`);
@@ -41,14 +55,7 @@ async function ensureFanProfile(userId: string, login: string): Promise<void> {
     return;
   }
 
-  const insert = await serviceClient.from("fan_profiles").insert({
-    user_id: userId,
-    login,
-    favorite_subgenres: ["neurofunk"],
-  });
-  if (insert.error) {
-    throw new Error(`Failed to insert fan profile ${login}: ${insert.error.message}`);
-  }
+  throw new Error(`Failed to upsert fan profile ${login}: ${upsert.error.message}`);
 }
 
 export async function ensureFriendsE2eFixture(): Promise<{ fanALogin: string; fanBLogin: string }> {
