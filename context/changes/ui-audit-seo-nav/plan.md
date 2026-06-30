@@ -525,14 +525,14 @@ Automatyzacja najważniejszych regresji SEO z audytu.
 
 #### Automated
 
-- [x] 5.1 `npm run check`
-- [x] 5.2 `npm run lint:all`
-- [x] 5.3 `scripts/check-no-em-dash.mjs`
+- [x] 5.1 `npm run check` – 2da17a3
+- [x] 5.2 `npm run lint:all` – 2da17a3
+- [x] 5.3 `scripts/check-no-em-dash.mjs` – 2da17a3
 
 #### Manual
 
-- [x] 5.4 Stopka z kontaktem i social
-- [x] 5.5 Regulamin §2 + link Strona główna na legal
+- [x] 5.4 Stopka z kontaktem i social – 2da17a3
+- [x] 5.5 Regulamin §2 + link Strona główna na legal – 2da17a3
 
 ### Phase 6: Testy i weryfikacja
 
