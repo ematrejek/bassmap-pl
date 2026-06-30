@@ -3,6 +3,8 @@ import AppShell from "@/components/shell/AppShell.astro";
 import Layout from "@/layouts/Layout.astro";
 import LegalProse from "@/components/legal/LegalProse.astro";
 import { LEGAL_UPDATED_AT } from "@/lib/legal/paths";
+import { HOME_PATH } from "@/lib/routes";
+import { shellLink } from "@/lib/shell-styles";
 
 interface Props {
   title: string;
@@ -26,6 +28,10 @@ const { title, pageTitle, description, canonicalPath, ogImage } = Astro.props;
           <p class="text-muted-foreground text-sm">BassMap PL · bassmap.pl</p>
           <p class="text-muted-foreground text-sm">Data ostatniej aktualizacji: {LEGAL_UPDATED_AT}</p>
         </header>
+
+        <p class="mb-8">
+          <a href={HOME_PATH} class:list={[shellLink, "text-sm hover:underline"]}>← Strona główna</a>
+        </p>
 
         <LegalProse>
           <slot />

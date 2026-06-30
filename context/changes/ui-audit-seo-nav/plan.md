@@ -511,30 +511,28 @@ Automatyzacja najważniejszych regresji SEO z audytu.
 - [x] 3.3 Linki logowania i zgłoszenia w HTML nagłówka – 99792ca
 - [x] 3.4 Desktop – linki poziome bez menu – 99792ca
 
-### Phase 4: Strona główna
+### Phase 4: Strona główna (pominięta – decyzja użytkownika)
 
 #### Automated
 
-- [ ] 4.1 `npm run check`
-- [ ] 4.2 `npm run lint:all`
-- [ ] 4.3 `npm test`
+- [x] 4.1–4.3 Pominięte – bez zmian na home
 
 #### Manual
 
-- [ ] 4.4 Dwa CTA, stats i teaser mapy na home
+- [x] 4.4 Pominięte – bez drugiego CTA, liczników i teasera mapy
 
 ### Phase 5: Stopka i legal
 
 #### Automated
 
-- [ ] 5.1 `npm run check`
-- [ ] 5.2 `npm run lint:all`
-- [ ] 5.3 `scripts/check-no-em-dash.mjs`
+- [x] 5.1 `npm run check`
+- [x] 5.2 `npm run lint:all`
+- [x] 5.3 `scripts/check-no-em-dash.mjs`
 
 #### Manual
 
-- [ ] 5.4 Stopka z kontaktem i zgłoś event
-- [ ] 5.5 Regulamin §2 + link Strona główna na legal
+- [x] 5.4 Stopka z kontaktem i social
+- [x] 5.5 Regulamin §2 + link Strona główna na legal
 
 ### Phase 6: Testy i weryfikacja
 
