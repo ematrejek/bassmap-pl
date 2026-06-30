@@ -19,8 +19,8 @@ export const onRequest = defineMiddleware(async (context, next) => {
       data: { user },
     } = await supabase.auth.getUser();
     context.locals.user = user ?? null;
-    context.locals.isAdmin = await resolveIsAdmin(supabase, user ?? null);
-    context.locals.isOrganizer = await resolveIsOrganizer(supabase, user ?? null);
+    context.locals.isAdmin = user ? await resolveIsAdmin(supabase, user) : false;
+    context.locals.isOrganizer = user ? await resolveIsOrganizer(supabase, user) : false;
   } else {
     context.locals.user = null;
     context.locals.isAdmin = false;

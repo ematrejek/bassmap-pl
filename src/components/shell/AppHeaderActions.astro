@@ -1,0 +1,104 @@
+---
+import {
+  ADMIN_PATH,
+  DISCOVERY_PATH,
+  MY_EVENTS_NEW_PATH,
+  MY_EVENTS_PATH,
+  SIGN_IN_PATH,
+  SIGN_UP_PATH,
+} from "@/lib/routes";
+
+interface Props {
+  userEmail: string | null;
+  isAdmin: boolean;
+}
+
+const { userEmail, isAdmin } = Astro.props;
+
+const isLoggedIn = userEmail !== null;
+const showAdminNav = isLoggedIn && isAdmin;
+const showFanNav = isLoggedIn && !isAdmin;
+
+const eventsLinkClass =
+  "font-heading text-foreground hover:text-accent shrink-0 rounded-md px-2 py-1 text-xs font-semibold tracking-wide whitespace-nowrap uppercase transition-colors sm:text-sm";
+
+const secondaryLinkClass =
+  "font-heading text-muted-foreground hover:text-accent hidden rounded-md px-2 py-1 text-sm font-semibold tracking-wide whitespace-nowrap uppercase transition-colors md:inline";
+
+const iconButtonClass =
+  "border-border text-foreground hover:border-accent/60 hover:text-accent flex h-9 w-9 shrink-0 items-center justify-center rounded-md border transition-colors";
+
+const iconButtonPrimaryClass =
+  "border-primary/60 bg-primary/10 text-primary shadow-glow-violet hover:bg-primary/20 flex h-9 w-9 shrink-0 items-center justify-center rounded-md border transition-colors";
+---
+
+<div class="flex min-w-0 items-center gap-1 sm:gap-1.5">
+  <a href={DISCOVERY_PATH} class:list={eventsLinkClass}>Wydarzenia</a>
+
+  {
+    showAdminNav ? (
+      <a href={ADMIN_PATH} class:list={secondaryLinkClass}>
+        Panel admina
+      </a>
+    ) : null
+  }
+
+  {
+    showFanNav ? (
+      <>
+        <a href={MY_EVENTS_PATH} class:list={secondaryLinkClass}>
+          Moje wydarzenia
+        </a>
+        <a href={MY_EVENTS_NEW_PATH} class:list={secondaryLinkClass}>
+          Dodaj wydarzenie
+        </a>
+      </>
+    ) : null
+  }
+
+  {
+    !isLoggedIn ? (
+      <>
+        <a href={SIGN_IN_PATH} aria-label="Zaloguj się" class:list={iconButtonClass}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-5 w-5"
+            aria-hidden="true"
+          >
+            <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+            <polyline points="10 17 15 12 10 7" />
+            <line x1="15" x2="3" y1="12" y2="12" />
+          </svg>
+        </a>
+        <a href={SIGN_UP_PATH} aria-label="Zarejestruj się" class:list={iconButtonPrimaryClass}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="20"
+            height="20"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            class="h-5 w-5"
+            aria-hidden="true"
+          >
+            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+            <circle cx="9" cy="7" r="4" />
+            <line x1="19" x2="19" y1="8" y2="14" />
+            <line x1="22" x2="16" y1="11" y2="11" />
+          </svg>
+        </a>
+      </>
+    ) : null
+  }
+</div>

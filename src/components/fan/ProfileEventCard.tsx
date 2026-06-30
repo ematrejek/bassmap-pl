@@ -72,7 +72,7 @@ export default function ProfileEventCard({ event }: Props) {
             variant="secondary"
             className="hover:bg-primary hover:text-primary-foreground font-semibold tracking-wider uppercase"
           >
-            <a href={detailHref}>{event.status === "published" ? "Zobacz" : "Moje eventy"}</a>
+            <a href={detailHref}>{event.status === "published" ? "Zobacz" : "Moje wydarzenia"}</a>
           </Button>
         </div>
       </div>

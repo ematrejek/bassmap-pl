@@ -44,14 +44,14 @@ export default function AppMenu({ userEmail, isAdmin, isOrganizer }: Props) {
   const isLoggedIn = userEmail !== null;
 
   const navLinks: MenuLink[] = [
-    { label: "Lista eventów", href: DISCOVERY_PATH },
-    { label: "Archiwum wydarzeń", href: ARCHIVE_PATH },
+    { label: "Wydarzenia", href: DISCOVERY_PATH },
+    { label: "Archiwum", href: ARCHIVE_PATH },
     { label: "Zgłoś problem", href: REPORT_ISSUE_PATH },
   ];
 
   const fanLinks: MenuLink[] = [
     { label: "Mój profil", href: PROFILE_PATH },
-    { label: "Moje eventy", href: MY_EVENTS_PATH },
+    { label: "Moje wydarzenia", href: MY_EVENTS_PATH },
     { label: "Dodaj wydarzenie", href: MY_EVENTS_NEW_PATH },
     { label: "Znajomi i ekipa", href: TEAM_PATH },
     { label: "Forum", href: FORUM_PATH },
@@ -72,7 +72,7 @@ export default function AppMenu({ userEmail, isAdmin, isOrganizer }: Props) {
           size="sm"
           aria-label="Otwórz menu nawigacji"
           className={cn(
-            "font-heading border-border bg-card/60 text-foreground shadow-glow-violet h-10 gap-2 rounded-md px-3 uppercase backdrop-blur-md",
+            "font-heading border-border bg-card/60 text-foreground shadow-glow-violet h-9 w-9 shrink-0 gap-2 rounded-md p-0 uppercase backdrop-blur-md sm:h-10 sm:w-auto sm:px-3",
             "hover:border-primary/50 hover:bg-secondary hover:text-accent tracking-wider",
             "focus-visible:border-primary/50 focus-visible:ring-ring/30",
           )}

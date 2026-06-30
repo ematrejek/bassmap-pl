@@ -16,7 +16,12 @@ export function createClient(requestHeaders: Headers, cookies: AstroCookies) {
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) => {
-          cookies.set(name, value, options);
+          const cookieOptions = { ...options, path: options.path ?? "/" };
+          if (!value) {
+            cookies.delete(name, cookieOptions);
+          } else {
+            cookies.set(name, value, cookieOptions);
+          }
         });
       },
     },

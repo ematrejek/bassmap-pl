@@ -15,14 +15,14 @@ import { useState } from "react";
 
 function pluralGoing(count: number): string {
   if (count === 1) {
-    return "event";
+    return "wydarzenie";
   }
   const mod10 = count % 10;
   const mod100 = count % 100;
   if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-    return "eventy";
+    return "wydarzenia";
   }
-  return "eventów";
+  return "wydarzeń";
 }
 
 function createDraftProfile(userId: string, email: string, profile: FanProfile | null): FanProfile {
@@ -191,7 +191,9 @@ export default function ProfileSection({
           <div className="mt-12">
             <div className="flex flex-wrap items-center gap-3">
               <Equalizer bars={4} className="text-accent h-4" />
-              <h3 className="font-heading text-foreground text-2xl font-bold tracking-tight uppercase">Moje eventy</h3>
+              <h3 className="font-heading text-foreground text-2xl font-bold tracking-tight uppercase">
+                Moje wydarzenia
+              </h3>
               <span className="border-border bg-card/60 text-muted-foreground rounded-full border px-2.5 py-0.5 font-mono text-xs">
                 {goingEvents.length} {pluralGoing(goingEvents.length)}
               </span>
@@ -203,10 +205,10 @@ export default function ProfileSection({
                 <p className="text-sm">Nie idziesz jeszcze na żadne wydarzenie. Znajdź imprezę i zaznacz «Idę».</p>
                 <div className="mt-4 flex flex-col justify-center gap-2 sm:flex-row">
                   <Button asChild className={shellBtnPrimary}>
-                    <a href={DISCOVERY_PATH}>Lista eventów</a>
+                    <a href={DISCOVERY_PATH}>Wydarzenia</a>
                   </Button>
                   <Button asChild variant="outline">
-                    <a href={`${MY_EVENTS_PATH}#ide`}>Moje eventy</a>
+                    <a href={`${MY_EVENTS_PATH}#ide`}>Moje wydarzenia</a>
                   </Button>
                 </div>
               </div>

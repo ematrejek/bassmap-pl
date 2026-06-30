@@ -1,15 +1,22 @@
 ---
 import { HOME_PATH } from "@/lib/routes";
 
+interface Props {
+  /** Icon-only on narrow screens – avoids crowding the mobile header. */
+  compact?: boolean;
+}
+
+const { compact = false } = Astro.props;
 const EQ_DELAYS = ["0ms", "150ms", "300ms"];
 ---
 
 <a
   href={HOME_PATH}
-  class="focus-visible:ring-ring/50 inline-flex items-center gap-2 rounded-md transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:outline-none"
+  class="focus-visible:ring-ring/50 inline-flex max-w-full min-w-0 shrink-0 items-center gap-2 rounded-md transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:outline-none"
+  aria-label="BassMap PL – strona główna"
 >
   <span
-    class="border-primary/60 bg-primary/10 text-primary shadow-glow-violet relative flex h-9 w-9 items-center justify-center rounded-md border"
+    class="border-primary/60 bg-primary/10 text-primary shadow-glow-violet relative flex h-9 w-9 shrink-0 items-center justify-center rounded-md border"
   >
     <svg
       xmlns="http://www.w3.org/2000/svg"
@@ -32,7 +39,12 @@ const EQ_DELAYS = ["0ms", "150ms", "300ms"];
       {EQ_DELAYS.map((delay) => <span class="eq-bar" style={`animation-delay: ${delay}`} />)}
     </span>
   </span>
-  <span class="font-heading text-foreground text-lg font-black tracking-widest">
+  <span
+    class:list={[
+      "font-heading text-foreground text-lg font-black tracking-widest whitespace-nowrap",
+      compact && "hidden md:inline",
+    ]}
+  >
     BASS<span class="text-primary text-glow-violet">MAP</span><span class="text-accent ml-1 text-xs font-bold">PL</span>
   </span>
 </a>

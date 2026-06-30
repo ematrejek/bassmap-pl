@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  ADMIN_PATH,
+  ARCHIVE_PATH,
   buildDiscoverySearchUrl,
   DISCOVERY_PATH,
   fanPublicProfilePath,
@@ -7,6 +9,7 @@ import {
   MY_EVENTS_NEW_PATH,
   MY_EVENTS_PATH,
   PROFILE_PATH,
+  SIGN_IN_PATH,
   TEAM_PATH,
 } from "@/lib/routes";
 import type { Subgenre } from "@/types";
@@ -54,6 +57,18 @@ describe("fan account zone paths", () => {
     expect(MY_EVENTS_NEW_PATH).toBe("/my-events/new");
     expect(TEAM_PATH).toBe("/team");
     expect(FORUM_PATH).toBe("/forum");
+  });
+});
+
+describe("header navigation paths", () => {
+  it("exports public shell shortcuts", () => {
+    expect(ARCHIVE_PATH).toBe("/archive");
+    expect(SIGN_IN_PATH).toBe("/auth/signin");
+    expect(ADMIN_PATH).toBe("/admin");
+  });
+
+  it("my-events new path is under protected my-events prefix", () => {
+    expect(MY_EVENTS_NEW_PATH.startsWith(MY_EVENTS_PATH)).toBe(true);
   });
 });
 

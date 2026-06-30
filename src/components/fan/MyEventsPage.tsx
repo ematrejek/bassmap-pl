@@ -19,14 +19,14 @@ interface Props {
 
 function pluralEvents(count: number): string {
   if (count === 1) {
-    return "event";
+    return "wydarzenie";
   }
   const mod10 = count % 10;
   const mod100 = count % 100;
   if (mod10 >= 2 && mod10 <= 4 && (mod100 < 12 || mod100 > 14)) {
-    return "eventy";
+    return "wydarzenia";
   }
-  return "eventów";
+  return "wydarzeń";
 }
 
 function pluralSuggestions(count: number): string {
@@ -77,7 +77,7 @@ function EmptyAttendingPanel({ message }: { message: string }) {
     <div className={cn("p-8 text-center", shellPanelFlat, shellTextMuted)}>
       <p className="text-sm">{message}</p>
       <Button asChild className={cn(shellBtnPrimary, "mt-4")}>
-        <a href={DISCOVERY_PATH}>Przeglądaj listę eventów</a>
+        <a href={DISCOVERY_PATH}>Przeglądaj listę wydarzeń</a>
       </Button>
     </div>
   );
