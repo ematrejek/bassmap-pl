@@ -17,7 +17,6 @@ const required = [
   "pwa-maskable-512x512.png",
   "apple-touch-icon.png",
   "offline/index.html",
-  "404.html",
 ];
 
 let failed = false;

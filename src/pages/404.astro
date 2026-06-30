@@ -4,8 +4,7 @@ import Layout from "@/layouts/Layout.astro";
 import { HOME_PATH } from "@/lib/routes";
 import { shellBtnOutline } from "@/lib/shell-styles";
 
-/** Prerendered for Wrangler `not_found_handling: "404-page"` (static asset in dist/client). */
-export const prerender = true;
+export const prerender = false;
 
 Astro.response.status = 404;
 ---
