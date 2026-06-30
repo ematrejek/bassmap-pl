@@ -25,12 +25,19 @@ test.describe("Smoke – gość", () => {
     await expect(page.getByRole("button", { name: "Filtruj" }).first()).toBeVisible({ timeout: 30_000 });
     await expect(page.locator("[data-discovery-map] .maplibregl-canvas")).toBeVisible({ timeout: 30_000 });
 
-    const pin = page.locator("[data-discovery-map] .discovery-map-pin").first();
-    if ((await pin.count()) === 0) {
+    const map = page.locator("[data-discovery-map]");
+    const pins = map.locator(".discovery-map-pin");
+    if ((await pins.count()) === 0) {
       test.skip(true, "Brak pinezek – brak opublikowanych eventów z współrzędnymi w bazie");
     }
 
-    await pin.click();
+    // Seed „Liquid Sundays” (Kraków) – unikalna lokalizacja; inne testy E2E często tworzą eventy w Warszawie i pinezki się nakładają.
+    const isolatedPin = map.getByRole("button", { name: "Liquid Sundays" });
+    if ((await isolatedPin.count()) > 0) {
+      await isolatedPin.click();
+    } else {
+      await pins.last().click({ force: true });
+    }
     await expect(page).toHaveURL(/\/events\/[0-9a-f-]{36}/, { timeout: 15_000 });
   });
 
