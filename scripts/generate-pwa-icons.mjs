@@ -1,46 +1,62 @@
 /**
- * Generates PWA icon PNGs from the BassMap BM monogram (matches public/favicon.svg).
- * Run: node scripts/generate-pwa-icons.mjs
+ * Generates PWA + favicon PNGs from public/pwa-icon-source.png.
+ * Run: npm run pwa:icons
  */
-import { writeFile } from "node:fs/promises";
+import { access } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import sharp from "sharp";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const publicDir = path.join(__dirname, "..", "public");
+const sourcePath = path.join(publicDir, "pwa-icon-source.png");
 
-const BG = "#08080c";
-const STROKE = "rgba(158, 100, 255, 0.55)";
-const TEXT = "#e9d5ff";
+/** Matches PWA_THEME_COLOR in pwa.config.mjs */
+const BG = { r: 8, g: 8, b: 12, alpha: 1 };
 
-function iconSvg(size, { maskable = false } = {}) {
-  const pad = maskable ? size * 0.1 : size * 0.06;
-  const inner = size - pad * 2;
-  const rx = inner * 0.22;
-  const fontSize = inner * 0.34;
-  const y = pad + inner * 0.67;
-  const letterSpacing = inner * 0.05;
-
-  return `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">
-  <rect width="${size}" height="${size}" fill="${BG}"/>
-  <rect x="${pad}" y="${pad}" width="${inner}" height="${inner}" rx="${rx}" fill="#120f1c"/>
-  <rect x="${pad + 1}" y="${pad + 1}" width="${inner - 2}" height="${inner - 2}" rx="${rx - 1}" fill="none" stroke="${STROKE}" stroke-width="${Math.max(1, size / 64)}"/>
-  <text x="${size / 2}" y="${y}" text-anchor="middle" font-family="Orbitron, ui-sans-serif, system-ui, sans-serif" font-size="${fontSize}" font-weight="900" letter-spacing="${letterSpacing}" fill="${TEXT}">BM</text>
-</svg>`;
+async function ensureSource() {
+  try {
+    await access(sourcePath);
+  } catch {
+    throw new Error(`Missing ${sourcePath}. Add a square PNG (512×512 or larger) as the icon source.`);
+  }
 }
 
-async function writePng(filename, svg) {
+/**
+ * @param {number} size
+ * @param {{ maskable?: boolean }} [options]
+ */
+async function renderIcon(size, { maskable = false } = {}) {
+  if (!maskable) {
+    return sharp(sourcePath).resize(size, size, { fit: "cover" }).png();
+  }
+
+  const pad = Math.round(size * 0.1);
+  const inner = size - pad * 2;
+  const icon = await sharp(sourcePath).resize(inner, inner, { fit: "cover" }).png().toBuffer();
+
+  return sharp({
+    create: { width: size, height: size, channels: 4, background: BG },
+  }).composite([{ input: icon, top: pad, left: pad }]);
+}
+
+/**
+ * @param {string} filename
+ * @param {number} size
+ * @param {{ maskable?: boolean }} [options]
+ */
+async function writePng(filename, size, options) {
   const out = path.join(publicDir, filename);
-  await sharp(Buffer.from(svg)).png().toFile(out);
+  await (await renderIcon(size, options)).png().toFile(out);
   console.log("wrote", out);
 }
 
-await writePng("pwa-192x192.png", iconSvg(192));
-await writePng("pwa-512x512.png", iconSvg(512));
-await writePng("pwa-maskable-512x512.png", iconSvg(512, { maskable: true }));
-await writePng("apple-touch-icon.png", iconSvg(180));
+await ensureSource();
 
-// Keep a copy of source SVG for reference
-await writeFile(path.join(publicDir, "pwa-icon-source.svg"), iconSvg(512), "utf8");
+await writePng("pwa-192x192.png", 192);
+await writePng("pwa-512x512.png", 512);
+await writePng("pwa-maskable-512x512.png", 512, { maskable: true });
+await writePng("apple-touch-icon.png", 180);
+await writePng("favicon.png", 48);
+
 console.log("done");

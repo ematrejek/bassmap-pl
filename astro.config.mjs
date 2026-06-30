@@ -42,7 +42,7 @@ export default defineConfig({
     }),
     AstroPWA({
       registerType: "autoUpdate",
-      includeAssets: ["favicon.svg", "favicon.png", "apple-touch-icon.png"],
+      includeAssets: ["favicon.png", "apple-touch-icon.png"],
       manifest: pwaManifest,
       workbox: {
         navigateFallback: "/offline",
