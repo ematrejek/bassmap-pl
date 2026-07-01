@@ -34,45 +34,45 @@
 
 ## Findings (archive)
 
-### F1 — Komunikat po usunięciu konta ginie przez redirect
+### F1 – Komunikat po usunięciu konta ginie przez redirect
 
 - **Severity**: WARNING | **Decision**: FIXED
 - **Fix applied**: `src/middleware.ts` – wykluczenie `accountDeleted=1` z redirectu home → events
 
-### F2 — Faza 6 niezacommitowana
+### F2 – Faza 6 niezacommitowana
 
 - **Severity**: WARNING | **Decision**: DEFERRED
 - **Action**: Commit testów SEO + epilogue po manual 6.4
 
-### F3 — Desired End State nieaktualny
+### F3 – Desired End State nieaktualny
 
 - **Severity**: WARNING | **Decision**: FIXED
 - **Fix applied**: `plan.md` Desired End State + checklist
 
-### F4 — Pełny test:e2e pada lokalnie
+### F4 – Pełny test:e2e pada lokalnie
 
 - **Severity**: WARNING | **Decision**: FIXED (Fix A)
 - **Fix applied**: Progress 6.3 opisuje subset SEO; pełny suite w `verify:full`
 
-### F5 — Surowe błędy Supabase w HTML
+### F5 – Surowe błędy Supabase w HTML
 
 - **Severity**: WARNING | **Decision**: FIXED
 - **Fix applied**: `src/pages/events.astro` – generyczny komunikat PL
 
-### F6 — Nagłówek vs plan
+### F6 – Nagłówek vs plan
 
 - **Severity**: OBSERVATION | **Decision**: FIXED
 - **Fix applied**: notatka „Wykonany kontrakt” w Fazie 3 plan.md
 
-### F7 — Stopka vs plan
+### F7 – Stopka vs plan
 
 - **Severity**: OBSERVATION | **Decision**: FIXED
 - **Fix applied**: notatka „Wykonany kontrakt” w Fazie 5 plan.md
 
-### F8 — Walidacja URL social
+### F8 – Walidacja URL social
 
 - **Severity**: OBSERVATION | **Decision**: SKIPPED
 
-### F9 — Manual 6.4 + epilogue
+### F9 – Manual 6.4 + epilogue
 
 - **Severity**: OBSERVATION | **Decision**: DEFERRED
