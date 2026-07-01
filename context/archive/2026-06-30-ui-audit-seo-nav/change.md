@@ -1,12 +1,12 @@
 ---
 change_id: ui-audit-seo-nav
 title: Audyt UI – SEO, SSR discovery, nawigacja, home, legal
-status: implemented
+status: archived
 created: 2026-06-30
-updated: 2026-06-30
+updated: 2026-07-01
 plan_reviewed: 2026-06-30
 notes_followup: "Wynik audytu UI z rozmowy 2026-06-30; priorytety zgodne z rekomendacją audytora."
-archived_at: null
+archived_at: 2026-07-01T19:09:03Z
 ---
 
 ## Notes
