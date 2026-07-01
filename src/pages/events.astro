@@ -50,15 +50,14 @@ const events = supabaseUrl
       userAttendanceStatus: userAttendance[event.id] ?? null,
     }));
 const cities = "data" in citiesResult ? citiesResult.data : [];
-const listError =
-  [
-    "error" in listResult ? listResult.error : null,
-    "error" in citiesResult ? citiesResult.error : null,
-    goingCountsError,
-    userAttendanceError,
-  ]
-    .filter(Boolean)
-    .join(" ") || null;
+const discoveryErrors = [
+  "error" in listResult ? listResult.error : null,
+  "error" in citiesResult ? citiesResult.error : null,
+  goingCountsError,
+  userAttendanceError,
+].filter((message): message is string => message != null && message.length > 0);
+const hasListLoadError = discoveryErrors.length > 0;
+const listError = hasListLoadError ? "Nie udało się załadować listy wydarzeń. Spróbuj odświeżyć stronę." : null;
 
 const hasActiveFilters = hasActiveFanFilters(currentFilters);
 ---

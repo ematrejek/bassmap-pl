@@ -19,22 +19,23 @@ Domknięcie uwag z audytu UI BassMap: treść listy wydarzeń w pierwszym HTML (
 
 ## Desired End State
 
-Po wdrożeniu:
+Po wdrożeniu (Faza 4 pominięta na decyzję użytkownika):
 
 1. **View Source / `curl` na `/events`** zawiera `<h2>`/`<a>` z nazwami wydarzeń, datami i miastami (min. tyle, ile zwraca `listPublishedEvents` bez filtrów).
 2. **Udostępnianie linków** (`/`, `/events`, `/events/[id]`) generuje podgląd z tytułem, opisem i obrazem (domyślny lub okładka).
-3. **Nagłówek SSR** na desktopie: widoczne linki do listy, zgłoszenia eventu i logowania (lub skróty dla zalogowanego).
-4. **Home:** dwa CTA, linia social proof (liczba eventów i miast), sekcja wizualna zachęcająca do mapy.
-5. **Stopka:** kontakt, zgłoś event, social (jeśli skonfigurowane), polityka, regulamin.
+3. **Nagłówek SSR:** „Wydarzenia” w HTML; gość – ikony logowania/rejestracji; zalogowany fan – Moje wydarzenia, Dodaj wydarzenie; admin – Panel admina. Mobile: Wydarzenia + ikony + hamburger.
+4. **Home:** bez zmian względem MVP (Faza 4 pominięta – jeden CTA w hero).
+5. **Stopka:** kontakt, ikony social (Instagram, Facebook), polityka, regulamin – bez linku „Zgłoś wydarzenie”.
 6. **Regulamin §2** wymienia komentarze pod wydarzeniami; `LEGAL_UPDATED_AT` zaktualizowany.
 
 ### Weryfikacja ręczna (checklist)
 
-- [ ] View Source `/events` – widać nazwy eventów
-- [ ] [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) lub Discord – podgląd `/` i `/events`
-- [ ] Nagłówek bez JS (disable JS w DevTools) – linki Zaloguj / Zgłoś event
-- [ ] Home – dwa przyciski w hero
-- [ ] `/terms` – link „Strona główna" + bullet komentarze w §2
+- [x] View Source `/events` – widać nazwy eventów
+- [ ] [Facebook Sharing Debugger](https://developers.facebook.com/tools/debug/) lub Discord – podgląd `/` i `/events` (opcjonalnie na localhost)
+- [x] Nagłówek bez JS – linki logowania w HTML
+- [x] Home – bez zmian (Faza 4 pominięta)
+- [x] `/terms` – link „Strona główna" + bullet komentarze w §2
+- [x] Stopka – kontakt, social, dokumenty prawne
 
 ## What We're NOT Doing
 
@@ -201,6 +202,8 @@ Spójny zestaw tagów SEO i social sharing na wszystkich publicznych stronach.
 
 ## Phase 3: Nawigacja SSR i desktop
 
+> **Wykonany kontrakt (2026-06-30):** `AppHeaderActions.astro` zamiast `AppHeaderLinks`. Desktop: „Wydarzenia”, fan/admin linki tekstowe, gość – ikony logowania/rejestracji. Mobile: „Wydarzenia” + ikony + hamburger. Bez „Archiwum” w nagłówku (zostaje w menu). Dodatkowo: `authHeader` na stronach auth, fix ciasteczek przy wylogowaniu/rejestracji.
+
 ### Overview
 
 Kluczowe wejścia widoczne w HTML bez JavaScript; na szerokich ekranach linki poziome zamiast samego hamburgera.
@@ -320,6 +323,8 @@ Home lepiej komunikuje obie ścieżki (fan szuka / fan zgłasza) i buduje zaufan
 ---
 
 ## Phase 5: Stopka, kontakt, social, legal
+
+> **Wykonany kontrakt (2026-06-30):** `SiteFooterNav.astro` – Kontakt, ikony Instagram/Facebook (URL w `site.config.mjs`), Polityka, Regulamin. **Bez** linku „Zgłoś wydarzenie” (decyzja użytkownika). Home: `contactHref=/#contact`.
 
 ### Overview
 
@@ -538,10 +543,10 @@ Automatyzacja najważniejszych regresji SEO z audytu.
 
 #### Automated
 
-- [ ] 6.1 `npm run verify`
-- [ ] 6.2 `npm run build`
-- [ ] 6.3 `npm run test:e2e`
+- [x] 6.1 `npm run verify`
+- [x] 6.2 `npm run build`
+- [x] 6.3 `npm run test:e2e` (subset: seo-discovery + smoke meta; pełny suite w `verify:full`)
 
 #### Manual
 
-- [ ] 6.4 Pełna checklist audytu przed merge
+- [x] 6.4 Pełna checklist audytu przed merge

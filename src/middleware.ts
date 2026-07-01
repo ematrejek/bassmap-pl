@@ -35,7 +35,9 @@ export const onRequest = defineMiddleware(async (context, next) => {
   }
 
   if (pathname === HOME_PATH && context.url.search.length > 1) {
-    return context.redirect(`${DISCOVERY_PATH}${context.url.search}`, 302);
+    if (context.url.searchParams.get("accountDeleted") !== "1") {
+      return context.redirect(`${DISCOVERY_PATH}${context.url.search}`, 302);
+    }
   }
 
   if (pathname === "/dashboard" || pathname.startsWith("/dashboard/")) {

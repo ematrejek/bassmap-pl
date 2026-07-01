@@ -1,7 +1,7 @@
 ---
 change_id: ui-audit-seo-nav
 title: Audyt UI – SEO, SSR discovery, nawigacja, home, legal
-status: implementing
+status: impl_reviewed
 created: 2026-06-30
 updated: 2026-06-30
 plan_reviewed: 2026-06-30

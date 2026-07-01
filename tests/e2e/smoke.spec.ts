@@ -1,10 +1,19 @@
 import { expect, test } from "@playwright/test";
 
+import { getMetaDescription } from "./helpers/seo";
+
 /**
  * Stały zestaw dymny – uruchamiany w CI i lokalnie (`npm run test:e2e`).
  * Nie zastępuje testów integracyjnych; łapie regresje „React się nie załadował”.
  */
 test.describe("Smoke – gość", () => {
+  test("strona główna ma meta description", async ({ page }) => {
+    await page.goto("/", { waitUntil: "domcontentloaded" });
+
+    const description = await getMetaDescription(page);
+    expect(description).toMatch(/drum and bass|BassMap/i);
+  });
+
   test("lista eventów ładuje interaktywny shell i zawiera treść SSR", async ({ page }) => {
     await page.goto("/events", { waitUntil: "domcontentloaded" });
 
@@ -18,6 +27,13 @@ test.describe("Smoke – gość", () => {
 
     await expect(page.getByRole("heading", { name: /MAP THE/i })).toBeVisible();
     await expect(page.getByRole("button", { name: "Filtruj" }).first()).toBeVisible({ timeout: 30_000 });
+  });
+
+  test("lista eventów ma meta description", async ({ page }) => {
+    await page.goto("/events", { waitUntil: "domcontentloaded" });
+
+    const description = await getMetaDescription(page);
+    expect(description).toMatch(/drum and bass|imprez|wydarzeń/i);
   });
 
   test("mapa ładuje się na desktopie; pinezka nawiguje gdy są eventy", async ({ page }) => {
