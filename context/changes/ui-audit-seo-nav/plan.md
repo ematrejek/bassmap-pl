@@ -543,10 +543,10 @@ Automatyzacja najważniejszych regresji SEO z audytu.
 
 #### Automated
 
-- [x] 6.1 `npm run verify`
-- [x] 6.2 `npm run build`
-- [x] 6.3 `npm run test:e2e` (subset: seo-discovery + smoke meta; pełny suite w `verify:full`)
+- [x] 6.1 `npm run verify` – 55be628
+- [x] 6.2 `npm run build` – 55be628
+- [x] 6.3 `npm run test:e2e` (subset: seo-discovery + smoke meta; pełny suite w `verify:full`) – 55be628
 
 #### Manual
 
-- [x] 6.4 Pełna checklist audytu przed merge
+- [x] 6.4 Pełna checklist audytu przed merge – 55be628
